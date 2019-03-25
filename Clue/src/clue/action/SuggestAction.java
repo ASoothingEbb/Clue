@@ -10,5 +10,5 @@ package clue.action;
  * @author slb35
  */
 public class SuggestAction implements Action{
-    
+        public ActionType actionType = ActionType.SUGGEST;
 }

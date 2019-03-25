@@ -5,6 +5,7 @@
  */
 package clue.player;
 
+import clue.GameController;
 import clue.action.Action;
 import clue.card.Card;
 import clue.Observer;
@@ -25,10 +26,14 @@ public abstract class Player implements Observer{
     private Tile position;
     private int movements;
     private int id;
+    private GameController game;
+    
+    public Player(){
+        active = true;
+    }
     
     @Override
     public void onUpdate() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     private Action move(Tile s, Tile t){
         throw new UnsupportedOperationException("Not supported yet.");
@@ -39,5 +44,10 @@ public abstract class Player implements Observer{
     private Action Accuse(RoomCard room, PersonCard person, WeaponCard weapon){
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    private void sendAction(Action action){} 
+    private void sendAction(Action action){
+        game.makeAction(action);
+    }
+    public void removeFromPlay(){
+        active = false;
+    }
 }

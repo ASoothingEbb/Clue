@@ -18,17 +18,20 @@ public class GameState implements Subject{
     private Player currentPlayerTurn;
     @Override
     public void register(Observer observer) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        players.add((Player) observer);
     }
 
     @Override
     public void unregister(Observer observer) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ((Player)observer).removeFromPlay();
     }
 
     @Override
     public void notifyAllObservers() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        for(Player p: players){
+            p.onUpdate();
+        }
     }
+    
     
 }

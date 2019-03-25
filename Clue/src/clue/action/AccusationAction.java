@@ -10,5 +10,6 @@ package clue.action;
  * @author slb35
  */
 public class AccusationAction implements Action{
+    ActionType actionType = ActionType.ACCUSATION;
     
 }

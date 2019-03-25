@@ -18,5 +18,6 @@ public class GameController {
     }
     public void makeAction(Action action){
         
+        state.notifyAllObservers();
     }
 }

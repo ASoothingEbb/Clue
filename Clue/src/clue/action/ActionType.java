@@ -9,6 +9,12 @@ package clue.action;
  *
  * @author steve
  */
-public class KickAction implements Action{
-        public ActionType actionType = ActionType.KICK;
-}
+public enum ActionType{
+
+    DEFAULT,ACCUSATION,AVOIDSUGGESTIONCARD,EXTRATURN,KICK,MOVE,SHOWCARD,START,SUGGEST,THROWAGAIN;
+
+    private ActionType() {
+        
+    }
+    
+        }

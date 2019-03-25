@@ -10,5 +10,5 @@ package clue.action;
  * @author slb35
  */
 public class MoveAction implements Action{
-    
+        public ActionType actionType = ActionType.MOVE;
 }

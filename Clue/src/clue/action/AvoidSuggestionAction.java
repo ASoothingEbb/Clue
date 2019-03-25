@@ -10,5 +10,5 @@ package clue.action;
  * @author slb35
  */
 public class AvoidSuggestionAction implements Action{
-    
+        public ActionType actionType = ActionType.AVOIDSUGGESTIONCARD;
 }

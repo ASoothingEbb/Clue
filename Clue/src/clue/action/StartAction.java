@@ -10,5 +10,5 @@ package clue.action;
  * @author steve
  */
 public class StartAction implements Action{
-    
+        public ActionType actionType = ActionType.START;
 }
