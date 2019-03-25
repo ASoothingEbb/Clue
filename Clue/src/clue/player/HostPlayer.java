@@ -9,6 +9,6 @@ package clue.player;
  *
  * @author slb35
  */
-public class HostPlayer extends Player{
+public class HostPlayer extends NetworkPlayer{
     
 }

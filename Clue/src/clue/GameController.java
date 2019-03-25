@@ -5,11 +5,18 @@
  */
 package clue;
 
+import clue.action.Action;
+
 /**
  *
  * @author slb35
  */
 public class GameController {
     private GameState state;
-    
+    public GameController(){
+        
+    }
+    public void makeAction(Action action){
+        
+    }
 }

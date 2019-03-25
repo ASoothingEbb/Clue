@@ -20,9 +20,12 @@ import java.util.List;
  */
 public abstract class Player implements Observer{
 
+    public boolean active;
     private List<Card> cards;
     private Tile position;
     private int movements;
+    private int id;
+    
     @Override
     public void onUpdate() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

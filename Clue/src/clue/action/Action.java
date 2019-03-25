@@ -10,4 +10,5 @@ package clue.action;
  * @author slb35
  */
 public interface Action {
+    
 }

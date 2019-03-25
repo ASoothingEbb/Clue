@@ -11,4 +11,5 @@ package clue.player;
  */
 public class NetworkPlayer extends Player {
     
+    
 }
