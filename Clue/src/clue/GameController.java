@@ -16,8 +16,33 @@ public class GameController {
     public GameController(){
         
     }
-    public void makeAction(Action action){
-        
+    public void performAction(Action action){
+        switch(action.actionType){
+            default:
+                break;
+            case DEFAULT:
+                break;
+            case ACCUSATION:
+                break;
+            case AVOIDSUGGESTIONCARD:
+                break;
+            case ENDTURN:
+                break;
+            case EXTRATURN:
+                break;
+            case KICK:
+                break;
+            case MOVE:
+                break;
+            case SHOWCARD:
+                break;
+            case START:
+                break;
+            case SUGGEST:
+                break;
+            case THROWAGAIN:
+                break;
+        }
         state.notifyAllObservers();
     }
 }

@@ -9,12 +9,7 @@ package clue.action;
  *
  * @author steve
  */
-public enum ActionType{
-
-    DEFAULT,ACCUSATION,AVOIDSUGGESTIONCARD,ENDTURN,EXTRATURN,KICK,MOVE,SHOWCARD,START,SUGGEST,THROWAGAIN;
-
-    private ActionType() {
-        
-    }
+public class EndTurnAction implements Action{
+    ActionType actionType = ActionType.ENDTURN;
     
-        }
+}

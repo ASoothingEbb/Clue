@@ -5,7 +5,9 @@
  */
 package clue;
 
+import clue.action.Action;
 import clue.player.Player;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -15,7 +17,13 @@ import java.util.List;
 public class GameState implements Subject{
 
     private List<Player> players;
-    private Player currentPlayerTurn;
+    private Player previousPlayer;
+    private Player currentPlayer;
+    private Action lastAction;
+    private int turn;
+    public GameState(List<Player> players){
+        this.players = players;
+    }
     @Override
     public void register(Observer observer) {
         players.add((Player) observer);
@@ -32,6 +40,23 @@ public class GameState implements Subject{
             p.onUpdate();
         }
     }
-    
-    
+    public void nextTurn(){
+        previousPlayer = currentPlayer;
+        while(!currentPlayer.active){
+        turn++;
+        currentPlayer = players.get(turn);
+        }
+    }
+    public int getPlayerTurn(){
+        return this.currentPlayer.getId();
+    }
+    public void previousPlayer(){
+        currentPlayer = previousPlayer;
+    }
+    public Action getAction(){
+        return this.lastAction;
+    }
+    public void setAction(Action action){
+        this.lastAction = action;
+    }
 }

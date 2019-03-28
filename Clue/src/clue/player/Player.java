@@ -35,6 +35,9 @@ public abstract class Player implements Observer{
     @Override
     public void onUpdate() {
     }
+    public int getId(){
+        return this.id;
+    }
     private Action move(Tile s, Tile t){
         throw new UnsupportedOperationException("Not supported yet.");
     }
@@ -45,7 +48,9 @@ public abstract class Player implements Observer{
         throw new UnsupportedOperationException("Not supported yet.");
     }
     private void sendAction(Action action){
-        game.makeAction(action);
+        if(active){
+        game.performAction(action);
+        }
     }
     public void removeFromPlay(){
         active = false;
