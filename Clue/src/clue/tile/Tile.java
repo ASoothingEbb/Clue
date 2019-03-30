@@ -5,10 +5,24 @@
  */
 package clue.tile;
 
+import java.util.List;
+
 /**
  *
  * @author slb35
  */
 public class Tile {
+    private List<Tile> adjacentTiles;
+    public Tile(List<Tile> tiles) {
+        adjacentTiles = tiles;
+    }
     
+    public boolean isAdjacent(Tile tile){
+        if(adjacentTiles.contains(tile)){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 }

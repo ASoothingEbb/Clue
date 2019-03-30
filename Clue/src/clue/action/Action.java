@@ -5,10 +5,13 @@
  */
 package clue.action;
 
+import clue.player.Player;
+
 /**
  *
  * @author slb35
  */
 public interface Action {
+
     public ActionType actionType = ActionType.DEFAULT;
 }
