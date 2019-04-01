@@ -5,6 +5,7 @@
  */
 package clue.tile;
 
+import java.util.ArrayList;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -43,13 +44,17 @@ public class TileTest {
     @Test
     public void testIsAdjacent() {
         System.out.println("isAdjacent");
-        Tile tile = null;
-        Tile instance = null;
-        boolean expResult = false;
-        boolean result = instance.isAdjacent(tile);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Tile tileA = new Tile();
+        Tile tileB = new Tile();
+        Tile tileC = new Tile();
+        
+        ArrayList<Tile> adjacencyListForTileA = new ArrayList<>();
+        adjacencyListForTileA.add(tileB);
+        tileA.setAdjacent(adjacencyListForTileA);
+        
+        assertEquals(true, tileA.isAdjacent(tileB));
+        assertEquals(false, tileA.isAdjacent(tileC));
+        
     }
     
 }
