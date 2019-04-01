@@ -14,11 +14,15 @@ import java.util.List;
 public class Tile {
     public boolean special;
     private List<Tile> adjacentTiles;
-    public Tile(List<Tile> tiles) {
+    
+    public Tile() {
         special = false;
-        adjacentTiles = tiles;
     }
     
+    public void setAdjacent(List<Tile> adjacentTiles){
+        this.adjacentTiles = adjacentTiles;
+    }
+
     public boolean isAdjacent(Tile tile){
         if(adjacentTiles.contains(tile)){
             return true;
