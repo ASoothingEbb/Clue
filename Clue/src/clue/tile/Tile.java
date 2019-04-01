@@ -12,8 +12,10 @@ import java.util.List;
  * @author slb35
  */
 public class Tile {
+    public boolean special;
     private List<Tile> adjacentTiles;
     public Tile(List<Tile> tiles) {
+        special = false;
         adjacentTiles = tiles;
     }
     
@@ -25,4 +27,5 @@ public class Tile {
             return false;
         }
     }
+    
 }

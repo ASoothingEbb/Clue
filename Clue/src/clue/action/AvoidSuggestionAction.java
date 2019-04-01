@@ -5,10 +5,15 @@
  */
 package clue.action;
 
+import clue.player.Player;
+
 /**
  *
  * @author slb35
  */
-public class AvoidSuggestionAction implements Action{
+public class AvoidSuggestionAction extends Action{
         public ActionType actionType = ActionType.AVOIDSUGGESTIONCARD;
+        public AvoidSuggestionAction(Player player){
+            super(player);
+        }
 }

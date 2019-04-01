@@ -9,10 +9,6 @@ package clue.action;
  *
  * @author steve
  */
-public class EndTurnAction extends Action{
-    ActionType actionType = ActionType.ENDTURN;
-
-    public EndTurnAction() {
-        super(null);
-    }
+public class UnknownActionException extends Exception{
+    
 }

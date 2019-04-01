@@ -5,10 +5,25 @@
  */
 package clue.action;
 
+import clue.card.Card;
+import clue.player.Player;
+import java.util.List;
+
 /**
  *
  * @author slb35
  */
-public class ShowCardAction implements Action{
-        public ActionType actionType = ActionType.SHOWCARD;
+public class ShowCardAction extends Action {
+
+    public ActionType actionType = ActionType.SHOWCARD;
+
+    public ShowCardAction(Player player,List<Card> cards) {
+        super(player);
+    }
+
+    @Override
+    public void execute() {
+        
+    }
+
 }

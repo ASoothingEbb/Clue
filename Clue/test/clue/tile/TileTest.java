@@ -5,20 +5,49 @@
  */
 package clue.tile;
 
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
  *
- * @author slb35
+ * @author steve
  */
 public class TileTest {
     
     public TileTest() {
     }
+    
+    @BeforeClass
+    public static void setUpClass() {
+    }
+    
+    @AfterClass
+    public static void tearDownClass() {
+    }
+    
+    @Before
+    public void setUp() {
+    }
+    
+    @After
+    public void tearDown() {
+    }
 
+    /**
+     * Test of isAdjacent method, of class Tile.
+     */
     @Test
-    public void testSomeMethod() {
+    public void testIsAdjacent() {
+        System.out.println("isAdjacent");
+        Tile tile = null;
+        Tile instance = null;
+        boolean expResult = false;
+        boolean result = instance.isAdjacent(tile);
+        assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }

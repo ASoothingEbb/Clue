@@ -5,10 +5,16 @@
  */
 package clue.action;
 
+import clue.player.Player;
+
 /**
  *
  * @author slb35
  */
-public class ExtraTurnAction implements Action{
+public class ExtraTurnAction extends Action{
+
         public ActionType actionType = ActionType.EXTRATURN;
+        public ExtraTurnAction(Player player){
+            super(player);
+        }
 }

@@ -5,10 +5,15 @@
  */
 package clue.action;
 
+import clue.player.Player;
+
 /**
  *
  * @author slb35
  */
-public class ThrowAgainAction implements Action{
+public class ThrowAgainAction extends Action{
         public ActionType actionType = ActionType.THROWAGAIN;
+        public ThrowAgainAction(Player player){
+            super(player);
+        }
 }

@@ -14,7 +14,7 @@ import clue.player.Player;
  *
  * @author slb35
  */
-public class AccusationAction implements Action {
+public class AccusationAction extends Action {
 
     private PersonCard person;
     private RoomCard room;
@@ -24,19 +24,19 @@ public class AccusationAction implements Action {
     ActionType actionType = ActionType.ACCUSATION;
 
     public AccusationAction(Player player, PersonCard person, RoomCard room, WeaponCard weapon) {
-        super();
+        super(player);
         this.person = person;
         this.room = room;
         this.weapon = weapon;
         this.player = player;
     }
 
-    public boolean authenticate(PersonCard person, RoomCard room, WeaponCard weapon) {
+    public void execute(PersonCard person, RoomCard room, WeaponCard weapon) {
         player.removeFromPlay();
         if (this.person.getid() == person.getid() && this.room.getid() == room.getid() && this.weapon.getid() == weapon.getid()) {
-            return true;
+            result = true;
         } else {
-            return false;
+            result = false;
         }
     }
 }

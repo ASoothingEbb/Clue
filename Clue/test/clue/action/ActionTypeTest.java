@@ -16,9 +16,9 @@ import static org.junit.Assert.*;
  *
  * @author steve
  */
-public class ExtraTurnActionTest {
+public class ActionTypeTest {
     
-    public ExtraTurnActionTest() {
+    public ActionTypeTest() {
     }
     
     @BeforeClass
@@ -37,8 +37,29 @@ public class ExtraTurnActionTest {
     public void tearDown() {
     }
 
+    /**
+     * Test of values method, of class ActionType.
+     */
     @Test
-    public void testSomeMethod() {
+    public void testValues() {
+        System.out.println("values");
+        ActionType[] expResult = null;
+        ActionType[] result = ActionType.values();
+        assertArrayEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of valueOf method, of class ActionType.
+     */
+    @Test
+    public void testValueOf() {
+        System.out.println("valueOf");
+        String name = "";
+        ActionType expResult = null;
+        ActionType result = ActionType.valueOf(name);
+        assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }

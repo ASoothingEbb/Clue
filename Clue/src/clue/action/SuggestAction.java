@@ -5,10 +5,17 @@
  */
 package clue.action;
 
+import clue.player.Player;
+
 /**
  *
  * @author slb35
  */
-public class SuggestAction implements Action{
+public class SuggestAction extends Action{
         public ActionType actionType = ActionType.SUGGEST;
+
+    public SuggestAction(Player player) {
+        super(player);
+    }
+        
 }

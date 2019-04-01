@@ -5,15 +5,35 @@
  */
 package clue.tile;
 
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 /**
  *
- * @author slb35
+ * @author steve
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({clue.tile.TileTest.class, clue.tile.RoomTest.class, clue.tile.SpecialTileTest.class})
+@Suite.SuiteClasses({clue.tile.TileTest.class, clue.tile.SpecialTileTest.class, clue.tile.RoomTest.class})
 public class TileSuite {
+
+    @BeforeClass
+    public static void setUpClass() throws Exception {
+    }
+
+    @AfterClass
+    public static void tearDownClass() throws Exception {
+    }
+
+    @Before
+    public void setUp() throws Exception {
+    }
+
+    @After
+    public void tearDown() throws Exception {
+    }
     
 }

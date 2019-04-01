@@ -9,6 +9,11 @@ package clue.action;
  *
  * @author steve
  */
-public class StartAction implements Action{
+public class StartAction extends Action{
         public ActionType actionType = ActionType.START;
+
+    public StartAction() {
+        super(null);
+    }
+        
 }

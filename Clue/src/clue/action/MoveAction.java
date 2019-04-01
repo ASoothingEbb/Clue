@@ -12,19 +12,27 @@ import clue.tile.Tile;
  *
  * @author slb35
  */
-public class MoveAction implements Action{
+public class MoveAction extends Action {
+
     private Tile s;
     private Tile t;
-    public MoveAction(Tile s,Tile t) {
+
+    public MoveAction(Tile s, Tile t, Player player) {
+        super(player);
     }
-        
-        public ActionType actionType = ActionType.MOVE;
-        public boolean authenticate(){
-            if(s.isAdjacent(t)){
-                return true;
-            }
-            else{
-                return false;
-            }
+
+    public ActionType actionType = ActionType.MOVE;
+
+    @Override
+    public void execute() {
+        if (s.isAdjacent(t)) {
+            result = true;
+        } else {
+            result = false;
         }
+    }
+
+    public Tile getTile() {
+        return t;
+    }
 }

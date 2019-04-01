@@ -11,7 +11,20 @@ import clue.player.Player;
  *
  * @author slb35
  */
-public interface Action {
+public abstract class Action {
 
+    public Player player;
     public ActionType actionType = ActionType.DEFAULT;
+    public boolean result;
+
+    public Action(Player player) {
+        this.player = player;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void execute() {
+    }
 }

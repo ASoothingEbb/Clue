@@ -5,15 +5,35 @@
  */
 package clue.card;
 
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 /**
  *
- * @author slb35
+ * @author steve
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({clue.card.AvoidSuggestionIntrigueTest.class, clue.card.WeaponCardTest.class, clue.card.IntrigueCardTest.class, clue.card.PersonCardTest.class, clue.card.CardTest.class, clue.card.RoomCardTest.class, clue.card.ThrowAgainIntrigueTest.class, clue.card.ExtraTurnIntrigueTest.class, clue.card.TeleportIntrigueTest.class})
+@Suite.SuiteClasses({clue.card.CardTest.class, clue.card.TeleportIntrigueTest.class, clue.card.ExtraTurnIntrigueTest.class, clue.card.ThrowAgainIntrigueTest.class, clue.card.AvoidSuggestionIntrigueTest.class, clue.card.RoomCardTest.class, clue.card.WeaponCardTest.class, clue.card.IntrigueCardTest.class, clue.card.PersonCardTest.class})
 public class CardSuite {
+
+    @BeforeClass
+    public static void setUpClass() throws Exception {
+    }
+
+    @AfterClass
+    public static void tearDownClass() throws Exception {
+    }
+
+    @Before
+    public void setUp() throws Exception {
+    }
+
+    @After
+    public void tearDown() throws Exception {
+    }
     
 }

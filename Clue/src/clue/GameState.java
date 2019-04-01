@@ -63,7 +63,7 @@ public class GameState implements Subject{
     /**
      *
      */
-    public void nextTurn(){
+    public int nextTurn(){
         if(running){
         previousPlayer = currentPlayer;
         while(!currentPlayer.isActive()){
@@ -71,8 +71,13 @@ public class GameState implements Subject{
         currentPlayer = players.get(turn);
         }
         }
+        return getPlayerTurn();
     }
 
+        public void nextTurn(int player){
+        currentPlayer = players.get(turn);
+    }
+    
     /**
      *
      * @return
@@ -80,6 +85,8 @@ public class GameState implements Subject{
     public int getPlayerTurn(){
         return this.currentPlayer.getId();
     }
+    
+
 
     /**
      *

@@ -5,20 +5,52 @@
  */
 package clue.action;
 
+import clue.card.PersonCard;
+import clue.card.RoomCard;
+import clue.card.WeaponCard;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
  *
- * @author slb35
+ * @author steve
  */
 public class AccusationActionTest {
     
     public AccusationActionTest() {
     }
+    
+    @BeforeClass
+    public static void setUpClass() {
+    }
+    
+    @AfterClass
+    public static void tearDownClass() {
+    }
+    
+    @Before
+    public void setUp() {
+    }
+    
+    @After
+    public void tearDown() {
+    }
 
+    /**
+     * Test of execute method, of class AccusationAction.
+     */
     @Test
-    public void testSomeMethod() {
+    public void testExecute() {
+        System.out.println("execute");
+        PersonCard person = null;
+        RoomCard room = null;
+        WeaponCard weapon = null;
+        AccusationAction instance = null;
+        instance.execute(person, room, weapon);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }

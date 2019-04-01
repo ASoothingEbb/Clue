@@ -5,10 +5,17 @@
  */
 package clue.action;
 
+import clue.player.Player;
+
 /**
  *
  * @author steve
  */
-public class KickAction implements Action{
+public class KickAction extends Action{
         public ActionType actionType = ActionType.KICK;
+
+    public KickAction(Player player) {
+        super(player);
+    }
+        
 }

@@ -5,14 +5,17 @@
  */
 package clue.action;
 
+import clue.player.Player;
+
 /**
  *
  * @author steve
  */
-public class EndTurnAction extends Action{
-    ActionType actionType = ActionType.ENDTURN;
+public class StartTurnAction extends Action{
 
-    public EndTurnAction() {
-        super(null);
+    public ActionType actionType = ActionType.STARTTURN;
+    public StartTurnAction(Player player) {
+        super(player);
     }
+  
 }

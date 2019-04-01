@@ -16,9 +16,9 @@ import static org.junit.Assert.*;
  *
  * @author steve
  */
-public class ExtraTurnActionTest {
+public class StartTurnActionTest {
     
-    public ExtraTurnActionTest() {
+    public StartTurnActionTest() {
     }
     
     @BeforeClass
