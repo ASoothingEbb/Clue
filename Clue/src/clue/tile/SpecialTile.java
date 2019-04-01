@@ -22,11 +22,11 @@ public class SpecialTile extends Tile {
 
     private ActionType action;
 
-    public SpecialTile(List<Tile> tiles, ActionType t) {
-        super(tiles);
+    public SpecialTile(ActionType t) {
         action = t;
         special = true;
     }
+    
 
     public Action getSpecial(Player player) throws UnknownActionException {
         switch (action) {
