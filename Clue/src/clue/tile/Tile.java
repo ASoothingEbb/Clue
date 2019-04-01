@@ -5,6 +5,7 @@
  */
 package clue.tile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,10 +18,11 @@ public class Tile {
     
     public Tile() {
         special = false;
+        adjacentTiles = new ArrayList<>();
     }
     
     public void setAdjacent(List<Tile> adjacentTiles){
-        this.adjacentTiles = adjacentTiles;
+        this.adjacentTiles.addAll(adjacentTiles);
     }
 
     public boolean isAdjacent(Tile tile){
