@@ -63,7 +63,7 @@ public class GameController {
                 
                 break;
             case ENDTURN:
-                state.nextTurn();
+                state.nextTurn(state.nextPlayer());
                 while (working) {
                     wait();
                 }
@@ -96,7 +96,9 @@ public class GameController {
                 state.nextTurn(player.getId());
                 break;
             case SUGGEST:
-
+                if(action.result){
+                    
+                }
                 break;
             case THROWAGAIN:
                 while(working){

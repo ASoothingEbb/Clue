@@ -16,6 +16,7 @@ import java.util.List;
  */
 public class GameState implements Subject{
 
+    public int playersNumber;
     private List<Player> players;
     private Player previousPlayer;
     private Player currentPlayer;
@@ -30,6 +31,7 @@ public class GameState implements Subject{
     public GameState(List<Player> players){
         this.players = players;
         running = true;
+        playersNumber = players.size();
     }
 
     /**
@@ -63,19 +65,20 @@ public class GameState implements Subject{
     /**
      *
      */
-    public int nextTurn(){
+    public int nextPlayer(){
+        int next = 0;
         if(running){
-        previousPlayer = currentPlayer;
         while(!currentPlayer.isActive()){
         turn++;
-        currentPlayer = players.get(turn);
+        next = players.get(turn).getId();
         }
         }
-        return getPlayerTurn();
+        return next;
     }
 
         public void nextTurn(int player){
-        currentPlayer = players.get(turn);
+        previousPlayer = currentPlayer;
+        currentPlayer = players.get(player);
     }
     
     /**

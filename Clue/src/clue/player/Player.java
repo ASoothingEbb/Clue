@@ -48,7 +48,7 @@ public abstract class Player implements Observer{
         return new MoveAction(position,t,this);
     }
     private Action suggest(RoomCard room, PersonCard person, WeaponCard weapon){
-        return new SuggestAction(this);
+        return new SuggestAction(person, room, weapon, this);
     }
     private Action Accuse(PersonCard person, RoomCard room, WeaponCard weapon){
         return new AccusationAction(this,person,room,weapon);
