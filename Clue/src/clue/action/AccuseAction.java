@@ -11,10 +11,10 @@ import clue.card.WeaponCard;
 import clue.player.Player;
 
 /**
- *
+ *Represents a player making an accusation
  * @author slb35
  */
-public class AccusationAction extends Action {
+public class AccuseAction extends Action {
 
     private PersonCard person;
     private RoomCard room;
@@ -23,7 +23,14 @@ public class AccusationAction extends Action {
 
     ActionType actionType = ActionType.ACCUSATION;
 
-    public AccusationAction(Player player, PersonCard person, RoomCard room, WeaponCard weapon) {
+    /**
+     * Creates a new AccusationAction.
+     * @param player the accusing Player
+     * @param person the person card to accuse
+     * @param room the room card to accuse
+     * @param weapon the weapon card to accuse
+     */
+    public AccuseAction(Player player, PersonCard person, RoomCard room, WeaponCard weapon) {
         super(player);
         this.person = person;
         this.room = room;
@@ -31,6 +38,13 @@ public class AccusationAction extends Action {
         this.player = player;
     }
 
+    /**
+     * executes the AccusationAction. Result stores if the accusation was 
+     * correct.
+     * @param person the person to accuse
+     * @param room the room to accuse
+     * @param weapon the weapon to accuse
+     */
     public void execute(PersonCard person, RoomCard room, WeaponCard weapon) {
         player.removeFromPlay();
         if (this.person.getid() == person.getid() && this.room.getid() == room.getid() && this.weapon.getid() == weapon.getid()) {

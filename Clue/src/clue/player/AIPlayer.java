@@ -6,7 +6,7 @@
 package clue.player;
 
 /**
- *
+ *Represents a Player being simulated by an AI
  * @author slb35
  */
 public class AIPlayer extends Player{

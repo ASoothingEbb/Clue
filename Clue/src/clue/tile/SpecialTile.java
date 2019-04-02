@@ -15,7 +15,7 @@ import clue.player.Player;
 import java.util.List;
 
 /**
- *
+ *Represents a Tile with an intrigue card associated with it.
  * @author slb35
  */
 public class SpecialTile extends Tile {

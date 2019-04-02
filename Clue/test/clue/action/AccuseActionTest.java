@@ -19,9 +19,9 @@ import static org.junit.Assert.*;
  *
  * @author steve
  */
-public class AccusationActionTest {
+public class AccuseActionTest {
     
-    public AccusationActionTest() {
+    public AccuseActionTest() {
     }
     
     @BeforeClass
@@ -41,7 +41,7 @@ public class AccusationActionTest {
     }
 
     /**
-     * Test of execute method, of class AccusationAction.
+     * Test of execute method, of class AccuseAction.
      */
     @Test
     public void testExecute() {
@@ -49,7 +49,7 @@ public class AccusationActionTest {
         PersonCard person = null;
         RoomCard room = null;
         WeaponCard weapon = null;
-        AccusationAction instance = null;
+        AccuseAction instance = null;
         instance.execute(person, room, weapon);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");

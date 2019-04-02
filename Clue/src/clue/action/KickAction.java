@@ -8,7 +8,7 @@ package clue.action;
 import clue.player.Player;
 
 /**
- *
+ *Represents a Player on the network being removed from the game.
  * @author steve
  */
 public class KickAction extends Action{

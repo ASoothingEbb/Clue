@@ -5,10 +5,22 @@
  */
 package clue.tile;
 
+import clue.card.RoomCard;
+
 /**
- *
+ *Represents a room on the board. Each room should have an associated RoomCard.
  * @author slb35
  */
-public class Room {
+public class Room extends Tile{
+    public RoomCard card;
+
+    /**
+     * Creates a new Room
+     * @param card the RoomCard associated with this room.
+     */
+    public Room(RoomCard card) {
+        super();
+        this.card = card;
+    }
     
 }

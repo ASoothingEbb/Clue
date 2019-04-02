@@ -8,11 +8,16 @@ package clue.action;
 import clue.player.Player;
 
 /**
- *
+ *Represents a Player being able to roll again due to a roll again intrigue card
+ * being used.
  * @author slb35
  */
 public class ThrowAgainAction extends Action{
         public ActionType actionType = ActionType.THROWAGAIN;
+        /**
+         * Creates a new ThrowAgainAction
+         * @param player the Player to roll again
+         */
         public ThrowAgainAction(Player player){
             super(player);
         }

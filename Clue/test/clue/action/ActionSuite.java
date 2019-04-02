@@ -17,7 +17,7 @@ import org.junit.runners.Suite;
  * @author steve
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({clue.action.ShowCardActionTest.class, clue.action.StartActionTest.class, clue.action.AccusationActionTest.class, clue.action.AvoidSuggestionActionTest.class, clue.action.UnknownActionExceptionTest.class, clue.action.ActionTest.class, clue.action.EndTurnActionTest.class, clue.action.KickActionTest.class, clue.action.StartTurnActionTest.class, clue.action.ThrowAgainActionTest.class, clue.action.SuggestActionTest.class, clue.action.MoveActionTest.class, clue.action.ExtraTurnActionTest.class, clue.action.ActionTypeTest.class})
+@Suite.SuiteClasses({clue.action.ShowCardActionTest.class, clue.action.StartActionTest.class, clue.action.AccuseActionTest.class, clue.action.AvoidSuggestionActionTest.class, clue.action.UnknownActionExceptionTest.class, clue.action.ActionTest.class, clue.action.EndTurnActionTest.class, clue.action.KickActionTest.class, clue.action.StartTurnActionTest.class, clue.action.ThrowAgainActionTest.class, clue.action.SuggestActionTest.class, clue.action.MoveActionTest.class, clue.action.ExtraTurnActionTest.class, clue.action.ActionTypeTest.class})
 public class ActionSuite {
 
     @BeforeClass

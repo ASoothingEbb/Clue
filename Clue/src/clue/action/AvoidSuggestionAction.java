@@ -8,7 +8,8 @@ package clue.action;
 import clue.player.Player;
 
 /**
- *
+ *Represents a player avoiding showing cards during the ShowCardAction through
+ * use of an intrigue card.
  * @author slb35
  */
 public class AvoidSuggestionAction extends Action{

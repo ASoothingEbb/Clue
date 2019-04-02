@@ -8,7 +8,8 @@ package clue.card;
 import clue.action.Action;
 
 /**
- *
+ *Represents an intrigue card that allows players to teleport to a new Tile or
+ * room.
  * @author slb35
  */
 public class TeleportIntrigue implements IntrigueCard{

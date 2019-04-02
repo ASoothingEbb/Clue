@@ -12,7 +12,7 @@ import clue.card.WeaponCard;
 import clue.player.Player;
 
 /**
- *
+ *Represents a Player making a suggestion.
  * @author slb35
  */
 public class SuggestAction extends Action{
@@ -23,6 +23,13 @@ public class SuggestAction extends Action{
         private WeaponCard weapon;
         private GameState state;
 
+        /**
+         * Creates a new SuggestAction.
+         * @param person the person to suggest
+         * @param room the room to suggest
+         * @param weapon the weapon to suggest
+         * @param player the player making the suggestion
+         */
     public SuggestAction(PersonCard person, RoomCard room, WeaponCard weapon,Player player) {
         super(player);
         this.person = person;
@@ -31,6 +38,10 @@ public class SuggestAction extends Action{
         this.state = state;
     }
 
+    /**
+     * Executes the SuggestAction. Result stores if another player has any of 
+     * the suggested cards.
+     */
     @Override
     public void execute() {
         int j = player.getId();

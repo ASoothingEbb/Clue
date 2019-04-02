@@ -8,7 +8,8 @@ package clue.card;
 import clue.action.Action;
 
 /**
- *
+ *Represents an IntrigueCard that allows Players to roll their movement again 
+ * for this turn.
  * @author slb35
  */
 public class ThrowAgainIntrigue implements IntrigueCard {

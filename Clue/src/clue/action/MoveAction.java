@@ -9,7 +9,7 @@ import clue.player.Player;
 import clue.tile.Tile;
 
 /**
- *
+ *Represents a player moving from Tile s to Tile t
  * @author slb35
  */
 public class MoveAction extends Action {
@@ -17,12 +17,22 @@ public class MoveAction extends Action {
     private Tile s;
     private Tile t;
 
+    /**
+     * Creates a new MoveAction
+     * @param s source Tile
+     * @param t destination Tile
+     * @param player Player to move
+     */
     public MoveAction(Tile s, Tile t, Player player) {
         super(player);
     }
 
     public ActionType actionType = ActionType.MOVE;
 
+    /**
+     * Executes the MoveAction. result stores whether or not Tile t is a valid 
+     * destination from Tile s.
+     */
     @Override
     public void execute() {
         if (s.isAdjacent(t)) {
@@ -32,6 +42,10 @@ public class MoveAction extends Action {
         }
     }
 
+    /**
+     * gets the destination Tile
+     * @return tile t
+     */
     public Tile getTile() {
         return t;
     }

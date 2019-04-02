@@ -6,9 +6,13 @@
 package clue.card;
 
 /**
- *
+ *Represents a game card. This may be a person, room, weapon or intrigue card.
  * @author slb35
  */
 public interface Card {
+    /**
+     * Gets the card id.
+     * @return id
+     */
     public int getid();
 }

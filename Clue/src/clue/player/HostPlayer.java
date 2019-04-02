@@ -6,7 +6,7 @@
 package clue.player;
 
 /**
- *
+ *Represents the Player who created the game instance.
  * @author slb35
  */
 public class HostPlayer extends NetworkPlayer{

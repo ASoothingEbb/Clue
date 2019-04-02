@@ -8,7 +8,7 @@ package clue.action;
 import clue.player.Player;
 
 /**
- *
+ *Represents a player taking an extra turn through the use of an intrigue card.
  * @author slb35
  */
 public class ExtraTurnAction extends Action{

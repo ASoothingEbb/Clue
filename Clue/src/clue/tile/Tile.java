@@ -9,22 +9,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ *Represents a tile on the game board.
  * @author slb35
  */
 public class Tile {
     public boolean special;
     private List<Tile> adjacentTiles;
     
+    /**
+     * Creates a new Tile.
+     */
     public Tile() {
         special = false;
         adjacentTiles = new ArrayList<>();
     }
     
+    /**
+     * Adds Tiles to the list of adjacent tiles
+     * @param adjacentTiles list of tiles to add
+     */
     public void setAdjacent(List<Tile> adjacentTiles){
         this.adjacentTiles.addAll(adjacentTiles);
     }
 
+    /**
+     * Gets whether or not a Tile is adjacent to this one.
+     * @param tile Tile to check
+     * @return adjacency
+     */
     public boolean isAdjacent(Tile tile){
         if(adjacentTiles.contains(tile)){
             return true;

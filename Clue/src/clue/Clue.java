@@ -12,6 +12,7 @@ package clue;
 public class Clue {
 
     /**
+     * Initialise the main GameController instance with the GameState instance.
      * @param args the command line arguments
      */
     public static void main(String[] args) {

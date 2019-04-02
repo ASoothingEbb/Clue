@@ -6,12 +6,12 @@
 package clue.action;
 
 /**
- *
+ *Creates a public type accessor for use with Actions.
  * @author steve
  */
 public enum ActionType{
 
-    DEFAULT,ACCUSATION,AVOIDSUGGESTIONCARD,ENDTURN,EXTRATURN,KICK,MOVE,SHOWCARD,START,STARTTURN,SUGGEST,THROWAGAIN;
+    DEFAULT,ACCUSATION,AVOIDSUGGESTIONCARD,ENDTURN,EXTRATURN,KICK,MOVE,SHOWCARD,SHOWCARDS,START,STARTTURN,SUGGEST,THROWAGAIN;
 
     private ActionType() {
         

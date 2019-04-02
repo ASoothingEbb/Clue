@@ -6,7 +6,7 @@
 package clue.action;
 
 /**
- *
+ *Represents the end of the game turn.
  * @author steve
  */
 public class EndTurnAction extends Action{

@@ -8,7 +8,7 @@ package clue.card;
 import clue.action.Action;
 
 /**
- *
+ *Represents an IntrigueCard that allows players to take an extra turn.
  * @author slb35
  */
 public class ExtraTurnIntrigue implements IntrigueCard{

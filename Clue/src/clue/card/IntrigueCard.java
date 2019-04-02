@@ -8,9 +8,13 @@ package clue.card;
 import clue.action.Action;
 
 /**
- *
+ *Represents an intrigue card.
  * @author slb35
  */
 public interface IntrigueCard extends Card{
+    /**
+     * Creates an Action update for the intrigue action.
+     * @return intrigue Action.
+     */
     public Action doSpecial();
 }

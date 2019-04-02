@@ -6,12 +6,14 @@
 package clue.action;
 
 /**
- *
+ *Represents a game instance being started.
  * @author steve
  */
 public class StartAction extends Action{
         public ActionType actionType = ActionType.START;
-
+/**
+ * Creates a new StartAction.
+ */
     public StartAction() {
         super(null);
     }

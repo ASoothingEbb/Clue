@@ -5,7 +5,7 @@
  */
 package clue;
 
-import clue.action.AccusationAction;
+import clue.action.AccuseAction;
 import clue.action.Action;
 import clue.action.ExtraTurnAction;
 import clue.action.MoveAction;
@@ -23,7 +23,7 @@ import clue.tile.Tile;
 import java.util.List;
 
 /**
- * action = (AccusationAction) action;
+ * Keeps track of an instance of a Clue game state.
  *
  * @author slb35
  */
@@ -38,15 +38,26 @@ public class GameController {
     private Player winner;
     private Player player;
     private boolean working = false;
-
+/**
+ * Creates a new GameController.
+ */
     public GameController() {
 
     }
 
+    /**
+     * Takes an Action from a Player and executes it on the GameState
+     * @param action the Action to be performed
+     * @throws UnknownActionException Action type could not be resolved
+     * @throws InterruptedException Action was not performed at the correct time.
+     */
     public synchronized void performAction(Action action) throws UnknownActionException, InterruptedException {
+        //get the current player instance from the game state
         player = players.get(state.getPlayerTurn());
+        //thread lock
         working = true;
         action.execute();
+        //Action specific logic
         switch (action.actionType) {
             default:
                 throw new UnknownActionException();
@@ -106,12 +117,17 @@ public class GameController {
                 performAction(new StartTurnAction(player));
                 break;
         }
+        //update game state
         state.setAction(action);
         state.notifyAllObservers();
+        //thread unlock
         working = false;
         notify();
     }
 
+    /**
+     * Terminates the game instance and declares a winner.
+     */
     private void endGame() {
         if (winner == null) {
         } else {

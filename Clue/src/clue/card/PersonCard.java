@@ -6,7 +6,7 @@
 package clue.card;
 
 /**
- *
+ *Represents a card for a person.
  * @author slb35
  */
 public class PersonCard implements Card{

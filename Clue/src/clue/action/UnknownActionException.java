@@ -6,7 +6,7 @@
 package clue.action;
 
 /**
- *
+ *Represents a failure to identify an Action.
  * @author steve
  */
 public class UnknownActionException extends Exception{

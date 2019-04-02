@@ -8,7 +8,8 @@ package clue.card;
 import clue.action.Action;
 
 /**
- *
+ *Represents an IntrigueCard that allows players to avoid responding to a 
+ *suggestion.
  * @author slb35
  */
 public class AvoidSuggestionIntrigue implements IntrigueCard{

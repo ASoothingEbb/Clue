@@ -6,7 +6,7 @@
 package clue.player;
 
 /**
- *
+ *Represents a Player communicating via a network.
  * @author slb35
  */
 public class NetworkPlayer extends Player {

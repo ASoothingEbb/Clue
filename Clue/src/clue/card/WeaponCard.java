@@ -6,7 +6,7 @@
 package clue.card;
 
 /**
- *
+ *Represents a card for a weapon.
  * @author slb35
  */
 public class WeaponCard implements Card{
