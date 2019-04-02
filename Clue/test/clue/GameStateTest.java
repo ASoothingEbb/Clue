@@ -113,7 +113,7 @@ public class GameStateTest {
         System.out.println("setNextTurn");
         int player = 0;
         GameState instance = null;
-        instance.setNextTurn(player);
+        instance.nextTurn(player);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
