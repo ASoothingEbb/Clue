@@ -88,16 +88,26 @@ public class GameState implements Subject{
      *Returns the id of the next player in the player list
      */
     public int nextPlayer(){
-        int next = 0;
         if(running){
         while(!currentPlayer.isActive()){
-        turn++;
-        next = players.get(turn).getId();
+        turn = getNextPointer(turn);
         }
+                return players.get(turn).getId();
         }
-        return next;
+        else{
+            return currentPlayer.getId();
+        }
     }
 
+    public int getNextPointer(int i){
+        if(i+1 == playersNumber){
+            i = 0;
+        }
+        else{
+            i++;
+        }
+        return i;
+    }
     /**
      * Sets the current turn pointer to the player with the specified id
      * @param player id of next player
@@ -131,6 +141,9 @@ public class GameState implements Subject{
      */
     public Action getAction(){
         return this.lastAction;
+    }
+    public Player getPlayer(int id){
+        return players.get(id);
     }
     /**
      * gets whether or not the game is currently playing.

@@ -10,8 +10,10 @@ import clue.action.Action;
 import clue.action.ExtraTurnAction;
 import clue.action.MoveAction;
 import clue.action.ShowCardAction;
+import clue.action.ShowCardsAction;
 import clue.action.StartAction;
 import clue.action.StartTurnAction;
+import clue.action.SuggestAction;
 import clue.action.UnknownActionException;
 import clue.card.Card;
 import clue.card.PersonCard;
@@ -21,6 +23,7 @@ import clue.player.Player;
 import clue.tile.SpecialTile;
 import clue.tile.Tile;
 import java.util.List;
+import java.util.concurrent.SynchronousQueue;
 
 /**
  * Keeps track of an instance of a Clue game state.
@@ -38,24 +41,38 @@ public class GameController {
     private Player winner;
     private Player player;
     private boolean working = false;
-/**
- * Creates a new GameController.
- */
-    public GameController() {
+    private SynchronousQueue queue;
 
+    /**
+     * Creates a new GameController.
+     */
+    public GameController() {
+        queue = new SynchronousQueue();
     }
 
     /**
-     * Takes an Action from a Player and executes it on the GameState
+     * Takes an Action from a Player and adds it to the queue of Actions.
+     *
      * @param action the Action to be performed
      * @throws UnknownActionException Action type could not be resolved
-     * @throws InterruptedException Action was not performed at the correct time.
+     * @throws InterruptedException Action was not performed at the correct
+     * time.
      */
-    public synchronized void performAction(Action action) throws UnknownActionException, InterruptedException {
-        //get the current player instance from the game state
+    public void performAction(Action action) throws UnknownActionException {
+        queue.add(action);
+        execute();
+    }
+
+    /**
+     * Executes an action from the queue. Waits for the current action to 
+     * complete before executing.
+     *
+     * @throws UnknownActionException
+     * @throws InterruptedException
+     */
+    private void execute() throws UnknownActionException {
         player = players.get(state.getPlayerTurn());
-        //thread lock
-        working = true;
+        Action action = (Action) queue.poll();
         action.execute();
         //Action specific logic
         switch (action.actionType) {
@@ -71,19 +88,13 @@ public class GameController {
                 endGame();
                 break;
             case AVOIDSUGGESTIONCARD:
-                
+
                 break;
             case ENDTURN:
                 state.nextTurn(state.nextPlayer());
-                while (working) {
-                    wait();
-                }
                 performAction(new StartTurnAction(player));
                 break;
             case EXTRATURN:
-                while (working) {
-                    wait();
-                }
                 performAction(new StartTurnAction(player));
                 break;
             case KICK:
@@ -100,6 +111,9 @@ public class GameController {
             case SHOWCARD:
 
                 break;
+            case SHOWCARDS:
+                
+                break;
             case START:
                 state = new GameState(players);
                 break;
@@ -107,22 +121,17 @@ public class GameController {
                 state.nextTurn(player.getId());
                 break;
             case SUGGEST:
-                if(action.result){
-                    
+                if (action.result) {
+                    performAction(new ShowCardsAction(((SuggestAction) action).show, ((SuggestAction) action).foundCards));
                 }
                 break;
             case THROWAGAIN:
-                while(working){
-                wait();}
                 performAction(new StartTurnAction(player));
                 break;
         }
         //update game state
         state.setAction(action);
         state.notifyAllObservers();
-        //thread unlock
-        working = false;
-        notify();
     }
 
     /**
@@ -133,5 +142,9 @@ public class GameController {
         } else {
 
         }
+    }
+
+    public Action suggest(PersonCard person, RoomCard room, WeaponCard weapon, Player player) {
+        return new SuggestAction(person, room, weapon, player, state);
     }
 }

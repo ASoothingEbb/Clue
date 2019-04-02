@@ -14,7 +14,6 @@ import java.util.List;
  * @author slb35
  */
 public class ShowCardAction extends Action {
-
     public ActionType actionType = ActionType.SHOWCARD;
     private Card card;
 /**

@@ -67,7 +67,7 @@ public abstract class Player implements Observer{
      * @return new SuggestAction
      */
     private Action suggest(PersonCard person,RoomCard room, WeaponCard weapon){
-        return new SuggestAction(person, room, weapon, this);
+        return game.suggest(person,room,weapon,this);
     }
     /**
      * Accuses a set of cards, resulting in this player becoming removed from 
@@ -90,8 +90,6 @@ public abstract class Player implements Observer{
             try {
                 game.performAction(action);
             } catch (UnknownActionException ex) {
-                Logger.getLogger(Player.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (InterruptedException ex) {
                 Logger.getLogger(Player.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -123,5 +121,14 @@ public abstract class Player implements Observer{
      */
     public void setPosition(Tile t) {
         position = t;
+    }
+    public void addCard(Card card){
+        cards.add(card);
+    }
+    public void removeCard(Card card) throws NullPointerException{
+        cards.remove(card);
+    }
+    public boolean hasCard(Card card){
+        return cards.contains(card);
     }
 }
