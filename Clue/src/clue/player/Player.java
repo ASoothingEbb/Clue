@@ -77,8 +77,8 @@ public class MovementException extends Exception{
      * @param weapon murder weapon
      * @return new SuggestAction
      */
-    private Action suggest(PersonCard person,RoomCard room, WeaponCard weapon){
-        return game.suggest(person,room,weapon,this);
+    private void suggest(PersonCard person,RoomCard room, WeaponCard weapon){
+        sendAction(game.suggest(person,room,weapon,this));
     }
     /**
      * Accuses a set of cards, resulting in this player becoming removed from 

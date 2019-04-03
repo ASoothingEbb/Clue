@@ -107,7 +107,7 @@ public class GameState implements Subject {
     }
 
     public int getNextPointer(int i) {
-        if (i + 1 == playersNumber) {
+        if (i + 1 == players.size()) {
             i = 0;
         } else {
             i++;
