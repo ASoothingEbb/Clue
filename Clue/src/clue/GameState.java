@@ -85,7 +85,7 @@ public class GameState implements Subject{
     }
 
     /**
-     *Returns the id of the next player in the player list
+     *Returns the id of the next player in the player list.
      */
     public int nextPlayer(){
         if(running){

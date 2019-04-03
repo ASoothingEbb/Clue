@@ -42,5 +42,17 @@ public class SuggestActionTest {
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
+
+    /**
+     * Test of execute method, of class SuggestAction.
+     */
+    @Test
+    public void testExecute() {
+        System.out.println("execute");
+        SuggestAction instance = null;
+        instance.execute();
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
     
 }

@@ -54,5 +54,23 @@ public class ObserverTest {
         public void onUpdate() {
         }
     }
+
+    public class ObserverImpl implements Observer {
+
+        public void onUpdate() {
+        }
+    }
+
+    public class ObserverImpl implements Observer {
+
+        public void onUpdate() {
+        }
+    }
+
+    public class ObserverImpl implements Observer {
+
+        public void onUpdate() {
+        }
+    }
     
 }

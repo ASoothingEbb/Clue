@@ -184,5 +184,49 @@ public class GameStateTest {
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
+
+    /**
+     * Test of nextPlayer method, of class GameState.
+     */
+    @Test
+    public void testNextPlayer() {
+        System.out.println("nextPlayer");
+        GameState instance = null;
+        int expResult = 0;
+        int result = instance.nextPlayer();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getNextPointer method, of class GameState.
+     */
+    @Test
+    public void testGetNextPointer() {
+        System.out.println("getNextPointer");
+        int i = 0;
+        GameState instance = null;
+        int expResult = 0;
+        int result = instance.getNextPointer(i);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getPlayer method, of class GameState.
+     */
+    @Test
+    public void testGetPlayer() {
+        System.out.println("getPlayer");
+        int id = 0;
+        GameState instance = null;
+        Player expResult = null;
+        Player result = instance.getPlayer(id);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
     
 }

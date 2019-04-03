@@ -43,7 +43,7 @@ public class PersonCardTest {
     @Test
     public void testGetid() {
         System.out.println("getid");
-        PersonCard instance = new PersonCard();
+        PersonCard instance = new PersonCard(0);
         int expResult = 0;
         int result = instance.getid();
         assertEquals(expResult, result);

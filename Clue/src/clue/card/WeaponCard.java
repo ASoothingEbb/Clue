@@ -9,11 +9,12 @@ package clue.card;
  *Represents a card for a weapon.
  * @author slb35
  */
-public class WeaponCard implements Card{
+public class WeaponCard extends Card{
 
-    @Override
-    public int getid() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public WeaponCard(int id) {
+        super(id);
     }
+
+    
     
 }

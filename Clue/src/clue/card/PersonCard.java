@@ -9,11 +9,10 @@ package clue.card;
  *Represents a card for a person.
  * @author slb35
  */
-public class PersonCard implements Card{
+public class PersonCard extends Card{
 
-    @Override
-    public int getid() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public PersonCard(int id) {
+        super(id);
     }
     
 }

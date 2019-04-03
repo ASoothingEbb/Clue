@@ -6,6 +6,10 @@
 package clue;
 
 import clue.action.Action;
+import clue.card.PersonCard;
+import clue.card.RoomCard;
+import clue.card.WeaponCard;
+import clue.player.Player;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -47,6 +51,24 @@ public class GameControllerTest {
         Action action = null;
         GameController instance = new GameController();
         instance.performAction(action);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of suggest method, of class GameController.
+     */
+    @Test
+    public void testSuggest() {
+        System.out.println("suggest");
+        PersonCard person = null;
+        RoomCard room = null;
+        WeaponCard weapon = null;
+        Player player = null;
+        GameController instance = new GameController();
+        Action expResult = null;
+        Action result = instance.suggest(person, room, weapon, player);
+        assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }

@@ -9,11 +9,12 @@ package clue.card;
  *Represents a card for a room.
  * @author slb35
  */
-public class RoomCard implements Card{
+public class RoomCard extends Card{
 
-    @Override
-    public int getid() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public RoomCard(int id) {
+        super(id);
     }
+
+    
     
 }

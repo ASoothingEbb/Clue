@@ -44,7 +44,7 @@ public class ThrowAgainIntrigueTest {
     @Test
     public void testDoSpecial() {
         System.out.println("doSpecial");
-        ThrowAgainIntrigue instance = new ThrowAgainIntrigue();
+        ThrowAgainIntrigue instance = new ThrowAgainIntrigue(0);
         Action expResult = null;
         Action result = instance.doSpecial();
         assertEquals(expResult, result);
@@ -58,7 +58,7 @@ public class ThrowAgainIntrigueTest {
     @Test
     public void testGetid() {
         System.out.println("getid");
-        ThrowAgainIntrigue instance = new ThrowAgainIntrigue();
+        ThrowAgainIntrigue instance = new ThrowAgainIntrigue(0);
         int expResult = 0;
         int result = instance.getid();
         assertEquals(expResult, result);

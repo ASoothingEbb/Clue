@@ -12,16 +12,18 @@ import clue.action.Action;
  * room.
  * @author slb35
  */
-public class TeleportIntrigue implements IntrigueCard{
+public class TeleportIntrigue extends Card implements IntrigueCard{
 
+    public TeleportIntrigue(int id) {
+        super(id);
+    }
+
+    
     @Override
     public Action doSpecial() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    public int getid() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+
     
 }

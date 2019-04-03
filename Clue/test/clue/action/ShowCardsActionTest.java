@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package clue.card;
+package clue.action;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -16,9 +16,9 @@ import static org.junit.Assert.*;
  *
  * @author steve
  */
-public class WeaponCardTest {
+public class ShowCardsActionTest {
     
-    public WeaponCardTest() {
+    public ShowCardsActionTest() {
     }
     
     @BeforeClass
@@ -38,15 +38,13 @@ public class WeaponCardTest {
     }
 
     /**
-     * Test of getid method, of class WeaponCard.
+     * Test of execute method, of class ShowCardsAction.
      */
     @Test
-    public void testGetid() {
-        System.out.println("getid");
-        WeaponCard instance = new WeaponCard(0);
-        int expResult = 0;
-        int result = instance.getid();
-        assertEquals(expResult, result);
+    public void testExecute() {
+        System.out.println("execute");
+        ShowCardsAction instance = null;
+        instance.execute();
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }

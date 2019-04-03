@@ -44,7 +44,7 @@ public class ExtraTurnIntrigueTest {
     @Test
     public void testDoSpecial() {
         System.out.println("doSpecial");
-        ExtraTurnIntrigue instance = new ExtraTurnIntrigue();
+        ExtraTurnIntrigue instance = new ExtraTurnIntrigue(0);
         Action expResult = null;
         Action result = instance.doSpecial();
         assertEquals(expResult, result);
@@ -58,7 +58,7 @@ public class ExtraTurnIntrigueTest {
     @Test
     public void testGetid() {
         System.out.println("getid");
-        ExtraTurnIntrigue instance = new ExtraTurnIntrigue();
+        ExtraTurnIntrigue instance = new ExtraTurnIntrigue(0);
         int expResult = 0;
         int result = instance.getid();
         assertEquals(expResult, result);

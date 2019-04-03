@@ -6,6 +6,7 @@
 package clue.tile;
 
 import java.util.ArrayList;
+import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -55,6 +56,19 @@ public class TileTest {
         assertEquals(true, tileA.isAdjacent(tileB));
         assertEquals(false, tileA.isAdjacent(tileC));
         
+    }
+
+    /**
+     * Test of setAdjacent method, of class Tile.
+     */
+    @Test
+    public void testSetAdjacent() {
+        System.out.println("setAdjacent");
+        List<Tile> adjacentTiles = null;
+        Tile instance = new Tile();
+        instance.setAdjacent(adjacentTiles);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
     
 }

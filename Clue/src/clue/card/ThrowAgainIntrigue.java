@@ -12,16 +12,17 @@ import clue.action.Action;
  * for this turn.
  * @author slb35
  */
-public class ThrowAgainIntrigue implements IntrigueCard {
+public class ThrowAgainIntrigue extends Card implements IntrigueCard {
 
+    public ThrowAgainIntrigue(int id) {
+        super(id);
+    }
+
+    
     @Override
     public Action doSpecial() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    public int getid() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
     
 }

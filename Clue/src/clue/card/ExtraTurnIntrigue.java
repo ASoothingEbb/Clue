@@ -11,15 +11,15 @@ import clue.action.Action;
  *Represents an IntrigueCard that allows players to take an extra turn.
  * @author slb35
  */
-public class ExtraTurnIntrigue implements IntrigueCard{
+public class ExtraTurnIntrigue extends Card implements IntrigueCard{
 
-    @Override
-    public Action doSpecial() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public ExtraTurnIntrigue(int id) {
+        super(id);
     }
 
+    
     @Override
-    public int getid() {
+    public Action doSpecial() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

@@ -43,7 +43,7 @@ public class RoomCardTest {
     @Test
     public void testGetid() {
         System.out.println("getid");
-        RoomCard instance = new RoomCard();
+        RoomCard instance = new RoomCard(0);
         int expResult = 0;
         int result = instance.getid();
         assertEquals(expResult, result);

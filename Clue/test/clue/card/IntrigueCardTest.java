@@ -63,5 +63,33 @@ public class IntrigueCardTest {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
     }
+
+    public class IntrigueCardImpl implements IntrigueCard {
+
+        public Action doSpecial() {
+            return null;
+        }
+    }
+
+    public class IntrigueCardImpl implements IntrigueCard {
+
+        public Action doSpecial() {
+            return null;
+        }
+    }
+
+    public class IntrigueCardImpl implements IntrigueCard {
+
+        public Action doSpecial() {
+            return null;
+        }
+    }
+
+    public class IntrigueCardImpl implements IntrigueCard {
+
+        public Action doSpecial() {
+            return null;
+        }
+    }
     
 }

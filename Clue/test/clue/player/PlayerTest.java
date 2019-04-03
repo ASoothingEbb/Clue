@@ -5,6 +5,7 @@
  */
 package clue.player;
 
+import clue.card.Card;
 import clue.tile.Tile;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -115,6 +116,56 @@ public class PlayerTest {
         instance.setPosition(t);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
+    }
+
+    public class PlayerImpl extends Player {
+    }
+
+    /**
+     * Test of addCard method, of class Player.
+     */
+    @Test
+    public void testAddCard() {
+        System.out.println("addCard");
+        Card card = null;
+        Player instance = new PlayerImpl();
+        instance.addCard(card);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of removeCard method, of class Player.
+     */
+    @Test
+    public void testRemoveCard() {
+        System.out.println("removeCard");
+        Card card = null;
+        Player instance = new PlayerImpl();
+        instance.removeCard(card);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of hasCard method, of class Player.
+     */
+    @Test
+    public void testHasCard() {
+        System.out.println("hasCard");
+        Card card = null;
+        Player instance = new PlayerImpl();
+        boolean expResult = false;
+        boolean result = instance.hasCard(card);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    public class PlayerImpl extends Player {
+    }
+
+    public class PlayerImpl extends Player {
     }
 
     public class PlayerImpl extends Player {
