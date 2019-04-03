@@ -12,7 +12,6 @@ import clue.player.Player;
  * @author slb35
  */
 public abstract class Action {
-
     /**
      * the Player initiating the Action
      */

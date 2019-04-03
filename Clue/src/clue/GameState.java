@@ -7,14 +7,14 @@ package clue;
 
 import clue.action.Action;
 import clue.player.Player;
-import java.util.Iterator;
 import java.util.List;
 
 /**
- *Represents the state of an instance of a Clue game.
+ * Represents the state of an instance of a Clue game.
+ *
  * @author slb35
  */
-public class GameState implements Subject{
+public class GameState implements Subject {
 
     /**
      * the number of players in the game.
@@ -47,16 +47,20 @@ public class GameState implements Subject{
 
     /**
      * Creates a new GameState object to keep track of the game logic.
+     *
      * @param players A list of Players present in the game
      */
-    public GameState(List<Player> players){
+    public GameState(List<Player> players) {
         this.players = players;
+        previousPlayer = players.get(0);
+        currentPlayer = players.get(0);
         running = true;
         playersNumber = players.size();
     }
 
     /**
-     *Adds a Player to the list of Players.
+     * Adds a Player to the list of Players.
+     *
      * @param observer The player to add
      */
     @Override
@@ -66,110 +70,116 @@ public class GameState implements Subject{
     }
 
     /**
-     *Removes a player from the game.
-     *Note that players are not actually removed from the list of players, but instead they are marked as inactive.
+     * Removes a player from the game. Note that players are not actually
+     * removed from the list of players, but instead they are marked as
+     * inactive.
+     *
      * @param observer The player to remove
      */
     @Override
     public void unregister(Observer observer) {
-        ((Player)observer).removeFromPlay();
-        playersNumber = players.size()-1;
+        ((Player) observer).removeFromPlay();
+        playersNumber = players.size() - 1;
     }
 
     /**
-     *Issues a game state update to all players in the game.
+     * Issues a game state update to all players in the game.
      */
     @Override
     public void notifyAllObservers() {
-        for(Player p: players){
+        for (Player p : players) {
             p.onUpdate();
         }
     }
 
     /**
-     *Returns the id of the next player in the player list.
+     * Returns the id of the next player in the player list.
      */
-    public int nextPlayer(){
-        if(running){
-        while(!currentPlayer.isActive()){
-        turn = getNextPointer(turn);
-        }
-                return players.get(turn).getId();
-        }
-        else{
+    public int nextPlayer() {
+        if (running) {
+            while (!currentPlayer.isActive()) {
+                turn = getNextPointer(turn);
+            }
+            return players.get(turn).getId();
+        } else {
             return currentPlayer.getId();
         }
     }
 
-    public int getNextPointer(int i){
-        if(i+1 == playersNumber){
+    public int getNextPointer(int i) {
+        if (i + 1 == playersNumber) {
             i = 0;
-        }
-        else{
+        } else {
             i++;
         }
         return i;
     }
+
     /**
      * Sets the current turn pointer to the player with the specified id
+     *
      * @param player id of next player
      */
-        public void nextTurn(int player){
+    public void nextTurn(int player) {
         previousPlayer = currentPlayer;
         currentPlayer = players.get(player);
         turn = currentPlayer.getId();
     }
-    
+
     /**
-     *Returns the id of the current player
+     * Returns the id of the current player
+     *
      * @return player id
      */
-    public int getPlayerTurn(){
-        return this.currentPlayer.getId();
+    public int getPlayerTurn() {
+        return currentPlayer.getId();
     }
-    
-
 
     /**
-     *Sets the previous player to be the current player
+     * Sets the previous player to be the current player
      */
-    public void previousPlayer(){
+    public void previousPlayer() {
         currentPlayer = previousPlayer;
     }
 
     /**
-     *gets the last Action performed on this GameState.
+     * gets the last Action performed on this GameState.
+     *
      * @return last Action update
      */
-    public Action getAction(){
+    public Action getAction() {
         return this.lastAction;
     }
-    public Player getPlayer(int id){
+
+    public Player getPlayer(int id) {
         return players.get(id);
     }
-    /**
-     * gets whether or not the game is currently playing.
-     * @return active (true or false)
-     */
-    public boolean isRunning(){
-        return running;
-    }
-    
 
     /**
-     *Ends the current game instance.
+     * gets whether or not the game is currently playing.
+     *
+     * @return active (true or false)
+     */
+    public boolean isRunning() {
+        return running;
+    }
+
+    /**
+     * Ends the current game instance.
+     *
      * @return
      */
-    public Player endGame(){
+    public Player endGame() {
         running = false;
         return currentPlayer;
     }
 
     /**
-     *Updates the last performed Action.
+     * Updates the last performed Action.
+     *
      * @param action Action that was performed.
      */
-    public void setAction(Action action){
+    public void setAction(Action action) {
         this.lastAction = action;
     }
 }

@@ -12,7 +12,7 @@ import clue.card.RoomCard;
  * @author slb35
  */
 public class Room extends Tile{
-    public RoomCard card;
+    private RoomCard card;
 
     /**
      * Creates a new Room
@@ -21,6 +21,9 @@ public class Room extends Tile{
     public Room(RoomCard card) {
         super();
         this.card = card;
+        room = true;
     }
-    
+    public RoomCard getCard(){
+        return card;
+    }
 }

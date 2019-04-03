@@ -15,12 +15,14 @@ import java.util.List;
 public class Tile {
     public boolean special;
     private List<Tile> adjacentTiles;
+    public boolean room;
     
     /**
      * Creates a new Tile.
      */
     public Tile() {
         special = false;
+        room = false;
         adjacentTiles = new ArrayList<>();
     }
     

@@ -21,8 +21,9 @@ import static org.junit.Assert.*;
  * @author steve
  */
 public class GameStateTest {
-    
+    GameState instance;
     public GameStateTest() {
+        instance = new GameState(new ArrayList<Player>());
     }
     
     @BeforeClass
@@ -48,7 +49,6 @@ public class GameStateTest {
     public void testRegister() {
         System.out.println("register");
         Observer observer = new AIPlayer(0);
-        GameState instance = new GameState(new ArrayList());
         instance.register(observer);
         assertEquals(1,instance.playersNumber);
     }
@@ -60,9 +60,7 @@ public class GameStateTest {
     public void testUnregister() {
         System.out.println("unregister");
         Observer observer = new AIPlayer(0);
-        ArrayList<Player> players = new ArrayList();
-        players.add((Player)observer);
-        GameState instance = new GameState(players);
+        instance.register(observer);
         instance.unregister(observer);
         assertEquals(0,instance.playersNumber);
     }
@@ -80,7 +78,7 @@ public class GameStateTest {
         players.add(player0);
         players.add(player1);
         players.add(player2);
-        GameState instance = new GameState(players);
+        instance = new GameState(players);
         instance.notifyAllObservers();
     }
 
@@ -92,7 +90,7 @@ public class GameStateTest {
         System.out.println("nextTurn");
         ArrayList<Player> players = new ArrayList();
         players.add(new AIPlayer(0));
-        GameState instance = new GameState(players);
+        instance = new GameState(players);
         int expResult = 0;
         int result = instance.nextPlayer();
         assertEquals(expResult, result);
@@ -106,12 +104,10 @@ public class GameStateTest {
         System.out.println("getPlayerTurn");
         ArrayList<Player> players = new ArrayList();
         players.add(new AIPlayer(0));
-        GameState instance = new GameState(players);
+        instance = new GameState(players);
         int expResult = 0;
         int result = instance.getPlayerTurn();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -121,7 +117,6 @@ public class GameStateTest {
     public void testSetNextTurn() {
         System.out.println("setNextTurn");
         int player = 0;
-        GameState instance = new GameState(new ArrayList<Player>());
         instance.nextTurn(player);
         // TODO review the generated test code and remove the default call to fail.
         assertEquals(0,instance.getPlayerTurn());
@@ -133,7 +128,7 @@ public class GameStateTest {
     @Test
     public void testPreviousPlayer() {
         System.out.println("previousPlayer");
-        GameState instance = null;
+        instance.register(new AIPlayer(1));
         instance.previousPlayer();
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");

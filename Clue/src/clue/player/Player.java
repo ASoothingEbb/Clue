@@ -18,6 +18,7 @@ import clue.card.RoomCard;
 import clue.tile.Tile;
 import clue.card.WeaponCard;
 import java.util.List;
+import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,7 +27,8 @@ import java.util.logging.Logger;
  * @author slb35
  */
 public abstract class Player implements Observer{
-
+public class MovementException extends Exception{
+}
     private boolean active;
     private List<Card> cards;
     private Tile position;
@@ -51,13 +53,21 @@ public abstract class Player implements Observer{
     public int getId(){
         return this.id;
     }
+    
+    private void doMove(Queue<Tile> tiles) throws MovementException{
+        if(tiles.size()<= movements){
+            sendAction(move(tiles));
+        } else{
+            throw new MovementException();
+        }
+    }
     /**
      * Attempts to move from the current position to a new tile.
      * @param t the destination tile.
      * @return new MoveAction
      */
-    private Action move(Tile t){
-        return new MoveAction(getPosition(),t,this);
+    private Action move(Queue<Tile> t){
+        return new MoveAction(t,this);
     }
 
     /**
@@ -133,3 +143,4 @@ public abstract class Player implements Observer{
         return cards.contains(card);
     }
 }
+
