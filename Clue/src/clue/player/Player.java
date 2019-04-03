@@ -37,7 +37,8 @@ public abstract class Player implements Observer{
     /**
      * Creates a new player.
      */
-    public Player(){
+    public Player(int id){
+        this.id = id;
         active = true;
     }
     @Override

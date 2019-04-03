@@ -62,6 +62,7 @@ public class GameState implements Subject{
     @Override
     public void register(Observer observer) {
         players.add((Player) observer);
+        playersNumber = players.size();
     }
 
     /**
@@ -72,6 +73,7 @@ public class GameState implements Subject{
     @Override
     public void unregister(Observer observer) {
         ((Player)observer).removeFromPlay();
+        playersNumber = players.size();
     }
 
     /**

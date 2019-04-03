@@ -10,6 +10,10 @@ package clue.player;
  * @author slb35
  */
 public class NetworkPlayer extends Player {
+
+    public NetworkPlayer(int id) {
+        super(id);
+    }
     
     
 }

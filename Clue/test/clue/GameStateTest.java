@@ -6,7 +6,9 @@
 package clue;
 
 import clue.action.Action;
+import clue.player.AIPlayer;
 import clue.player.Player;
+import java.util.ArrayList;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -45,11 +47,10 @@ public class GameStateTest {
     @Test
     public void testRegister() {
         System.out.println("register");
-        Observer observer = null;
-        GameState instance = null;
+        Observer observer = new AIPlayer(0);
+        GameState instance = new GameState(new ArrayList());
         instance.register(observer);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(instance.playersNumber, 1);
     }
 
     /**

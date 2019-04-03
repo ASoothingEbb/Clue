@@ -10,5 +10,9 @@ package clue.player;
  * @author slb35
  */
 public class AIPlayer extends Player{
+
+    public AIPlayer(int id) {
+        super(id);
+    }
     
 }

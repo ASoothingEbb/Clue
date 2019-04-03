@@ -10,5 +10,9 @@ package clue.player;
  * @author slb35
  */
 public class HostPlayer extends NetworkPlayer{
+
+    public HostPlayer(int id) {
+        super(id);
+    }
     
 }
