@@ -86,41 +86,5 @@ public class SubjectTest {
         public void notifyAllObservers() {
         }
     }
-
-    public class SubjectImpl implements Subject {
-
-        public void register(Observer observer) {
-        }
-
-        public void unregister(Observer observer) {
-        }
-
-        public void notifyAllObservers() {
-        }
-    }
-
-    public class SubjectImpl implements Subject {
-
-        public void register(Observer observer) {
-        }
-
-        public void unregister(Observer observer) {
-        }
-
-        public void notifyAllObservers() {
-        }
-    }
-
-    public class SubjectImpl implements Subject {
-
-        public void register(Observer observer) {
-        }
-
-        public void unregister(Observer observer) {
-        }
-
-        public void notifyAllObservers() {
-        }
-    }
     
 }

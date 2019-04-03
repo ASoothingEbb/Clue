@@ -83,9 +83,12 @@ public class GameController {
             case ACCUSATION:
                 if (action.result) {
                     winner = state.endGame();
-                } else {
+                    endGame();
+                } else if(state.playersNumber == 0){
+                    state.endGame();
+                    endGame();
+                }else {
                 }
-                endGame();
                 break;
             case AVOIDSUGGESTIONCARD:
 

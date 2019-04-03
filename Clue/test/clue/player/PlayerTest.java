@@ -119,6 +119,11 @@ public class PlayerTest {
     }
 
     public class PlayerImpl extends Player {
+
+        public PlayerImpl() {
+            super(0);
+        }
+        
     }
 
     /**
@@ -160,15 +165,6 @@ public class PlayerTest {
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
-    }
-
-    public class PlayerImpl extends Player {
-    }
-
-    public class PlayerImpl extends Player {
-    }
-
-    public class PlayerImpl extends Player {
     }
     
 }

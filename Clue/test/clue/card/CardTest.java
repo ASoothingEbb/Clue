@@ -51,39 +51,13 @@ public class CardTest {
         fail("The test case is a prototype.");
     }
 
-    public class CardImpl implements Card {
-
-        public int getid() {
-            return 0;
-        }
-    }
-
-    public class CardImpl implements Card {
-
-        public int getid() {
-            return 0;
-        }
-    }
-
-    public class CardImpl implements Card {
-
-        public int getid() {
-            return 0;
-        }
-    }
-
     public class CardImpl extends Card {
 
         public CardImpl() {
             super(0);
         }
-    }
 
-    public class CardImpl extends Card {
-
-        public CardImpl() {
-            super(0);
-        }
+        
     }
     
 }

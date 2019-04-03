@@ -73,7 +73,7 @@ public class GameState implements Subject{
     @Override
     public void unregister(Observer observer) {
         ((Player)observer).removeFromPlay();
-        playersNumber = players.size();
+        playersNumber = players.size()-1;
     }
 
     /**

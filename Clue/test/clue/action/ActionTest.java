@@ -70,26 +70,5 @@ public class ActionTest {
             super(null);
         }
     }
-
-    public class ActionImpl extends Action {
-
-        public ActionImpl() {
-            super(null);
-        }
-    }
-
-    public class ActionImpl extends Action {
-
-        public ActionImpl() {
-            super(null);
-        }
-    }
-
-    public class ActionImpl extends Action {
-
-        public ActionImpl() {
-            super(null);
-        }
-    }
     
 }
