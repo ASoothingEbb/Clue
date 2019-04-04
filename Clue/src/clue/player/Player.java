@@ -23,81 +23,100 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *Represents a player in the game.
+ * Represents a player in the game.
+ *
  * @author slb35
  */
-public abstract class Player implements Observer{
-public class MovementException extends Exception{
-}
+public abstract class Player implements Observer {
+
+    public class MovementException extends Exception {
+    }
     private boolean active;
     private List<Card> cards;
     private Tile position;
     private int movements;
     private int id;
     private GameController game;
-    
+
     /**
      * Creates a new player.
      */
-    public Player(int id){
+    public Player(int id) {
         this.id = id;
         active = true;
     }
+
     @Override
     public void onUpdate() {
     }
+
     /**
      * Gets the id of this Player.
+     *
      * @return player id.
      */
-    public int getId(){
+    public int getId() {
         return this.id;
     }
-    
-    private void doMove(Queue<Tile> tiles) throws MovementException{
-        if(tiles.size()<= movements){
+
+    /**
+     * Executes a sequence of moves
+     * 
+     * @param tiles a queue of destination tiles
+     * @throws clue.player.Player.MovementException when the player makes an
+     * invalid move
+     */
+    private void doMove(Queue<Tile> tiles) throws MovementException {
+        if (tiles.size() <= movements) {
             sendAction(move(tiles));
-        } else{
+        } else {
             throw new MovementException();
         }
     }
+
     /**
      * Attempts to move from the current position to a new tile.
+     *
      * @param t the destination tile.
      * @return new MoveAction
      */
-    private Action move(Queue<Tile> t){
-        return new MoveAction(t,this);
+    private Action move(Queue<Tile> t) {
+        return new MoveAction(t, this);
     }
 
     /**
      * Suggests a set of cards as the murder details
+     *
      * @param person suspect
      * @param room crime scene
      * @param weapon murder weapon
      * @return new SuggestAction
      */
-    private void suggest(PersonCard person,RoomCard room, WeaponCard weapon){
-        sendAction(game.suggest(person,room,weapon,this));
+    private void suggest(PersonCard person, RoomCard room, WeaponCard weapon) {
+        sendAction(game.suggest(person, room, weapon, this));
     }
+
     /**
-     * Accuses a set of cards, resulting in this player becoming removed from 
-     * the game. If the accusation is correct, the game ends and this Player is 
+     * Accuses a set of cards, resulting in this player becoming removed from
+     * the game. If the accusation is correct, the game ends and this Player is
      * the winner.
+     *
      * @param person suspect
      * @param room crime scene
      * @param weapon murder weapon
      * @return new AccuseAction
      */
-    private Action Accuse(PersonCard person, RoomCard room, WeaponCard weapon){
-        return new AccuseAction(this,person,room,weapon);
+    private Action Accuse(PersonCard person, RoomCard room, WeaponCard weapon) {
+        return new AccuseAction(this, person, room, weapon);
     }
+
     /**
      * sends an action to the GameController to be executed.
+     *
      * @param action the action to be executed
      */
-    private void sendAction(Action action){
-        if(active){
+    private void sendAction(Action action) {
+        if (active) {
             try {
                 game.performAction(action);
             } catch (UnknownActionException ex) {
@@ -105,42 +124,68 @@ public class MovementException extends Exception{
             }
         }
     }
+
     /**
      * Gets whether or not this player is still in the game.
+     *
      * @return active
      */
-    public boolean isActive(){
+    public boolean isActive() {
         return active;
     }
+
     /**
      * Removes this player from the game, preventing it from taking any further
      * turns.
      */
-    public void removeFromPlay(){
+    public void removeFromPlay() {
         active = false;
     }
+
     /**
      * gets the current position of the Player on the board
+     *
      * @return Player location
      */
-    public Tile getPosition(){
+    public Tile getPosition() {
         return position;
     }
+
     /**
      * Moves the player to the specified location on the board
+     *
      * @param t destination
      */
     public void setPosition(Tile t) {
         position = t;
     }
-    public void addCard(Card card){
+
+    /**
+     * Adds the card to this player.
+     *
+     * @param card the card to add
+     */
+    public void addCard(Card card) {
         cards.add(card);
     }
-    public void removeCard(Card card) throws NullPointerException{
+
+    /**
+     * Removes a card from this player.
+     *
+     * @param card the card to remove
+     * @throws NullPointerException
+     */
+    public void removeCard(Card card) throws NullPointerException {
         cards.remove(card);
     }
-    public boolean hasCard(Card card){
+
+    /**
+     * Gets whether or not the player has the card
+     *
+     * @param card
+     * @return
+     */
+    public boolean hasCard(Card card) {
         return cards.contains(card);
     }
 }
-
