@@ -137,10 +137,21 @@ public class GameController {
         state.notifyAllObservers();
     }
     
+    /**
+     * Returns the last action executed on the state
+     * @return Action
+     */
     public Action getLastAction(){
         return state.getAction();
     }
 
+    /**
+     * Returns the player whose turn it is
+     * @return Current player
+     */
+    public Player getPlayer(){
+        return player;
+    }
     /**
      * Terminates the game instance and declares a winner.
      */
