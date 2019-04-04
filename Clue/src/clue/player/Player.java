@@ -32,9 +32,9 @@ public class MovementException extends Exception{
     private boolean active;
     private List<Card> cards;
     private Tile position;
-    private int movements;
+    protected int movements;
     private int id;
-    private GameController game;
+    protected GameController game;
     
     /**
      * Creates a new player.
