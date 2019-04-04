@@ -22,6 +22,7 @@ import clue.card.WeaponCard;
 import clue.player.Player;
 import clue.tile.SpecialTile;
 import clue.tile.Tile;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.SynchronousQueue;
 
@@ -145,6 +146,14 @@ public class GameController {
         return state.getAction();
     }
 
+    public HashMap getLocations(){
+        HashMap loc = new HashMap();
+        for(Player p: players){
+            loc.put(p.getId(), p.getPosition());
+        }
+        return loc;
+    }
+            
     /**
      * Returns the player whose turn it is
      * @return Current player
@@ -162,6 +171,15 @@ public class GameController {
         }
     }
 
+    /**
+     * Creates a new SuggestAction for a player
+     * 
+     * @param person the person to be suggested
+     * @param room the room to be suggested
+     * @param weapon the weapon to be suggested
+     * @param player the suggesting player
+     * @return new SuggestAction
+     */
     public Action suggest(PersonCard person, RoomCard room, WeaponCard weapon, Player player) {
         return new SuggestAction(person, room, weapon, player, state);
     }
