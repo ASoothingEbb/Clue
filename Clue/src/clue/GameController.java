@@ -136,6 +136,10 @@ public class GameController {
         state.setAction(action);
         state.notifyAllObservers();
     }
+    
+    public Action getLastAction(){
+        return state.getAction();
+    }
 
     /**
      * Terminates the game instance and declares a winner.
