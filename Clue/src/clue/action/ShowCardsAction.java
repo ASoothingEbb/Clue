@@ -17,14 +17,16 @@ public class ShowCardsAction extends Action{
 
     ActionType actionType = ActionType.SHOWCARDS;
     private List<Card> cards;
+    private Player suggestor;
     /**
      * Creates a new ShowCardsAction
      * @param player the Player to be prompted
      * @param cards the cards to prompt
      */
-    public ShowCardsAction(Player player, List<Card> cards) {
+    public ShowCardsAction(Player player,Player suggestor, List<Card> cards) {
         super(player);
         this.cards = cards;
+        this.suggestor = suggestor;
     }
 
     /**
@@ -33,5 +35,9 @@ public class ShowCardsAction extends Action{
     @Override
     public void execute() {
         super.execute(); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    public Player getSuggestor(){
+        return suggestor;
     }
 }

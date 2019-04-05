@@ -5,6 +5,11 @@
  */
 package clue;
 
+import clue.player.AIPlayer;
+import clue.player.Player;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author slb35
@@ -14,10 +19,13 @@ public class Clue {
     /**
      * Initialise the main GameController instance with the GameState instance.
      * @param args the command line arguments
+     * @throws java.lang.InterruptedException
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
+        Player player = new AIPlayer(0);
+        List<Player> players = new ArrayList();
         // TODO code application logic here
-        GameController game = new GameController();
+        GameController game = new GameController(players);
     }
     
 }
