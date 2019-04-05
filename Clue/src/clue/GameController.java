@@ -9,6 +9,7 @@ import clue.action.Action;
 import clue.action.ActionType;
 import clue.action.MoveAction;
 import clue.action.ShowCardsAction;
+import clue.action.StartAction;
 import clue.action.StartTurnAction;
 import clue.action.SuggestAction;
 import clue.action.UnknownActionException;
@@ -22,6 +23,8 @@ import clue.tile.Tile;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.SynchronousQueue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Keeps track of an instance of a Clue game state.
@@ -44,8 +47,10 @@ public class GameController {
     /**
      * Creates a new GameController.
      */
-    public GameController() {
-        queue = new SynchronousQueue();
+    public GameController(List<Player> players) throws InterruptedException, UnknownActionException {
+        queue = new SynchronousQueue(true);
+        this.players = players;
+        performAction(new StartAction());
     }
 
     /**
@@ -56,9 +61,9 @@ public class GameController {
      * @throws InterruptedException Action was not performed at the correct
      * time.
      */
-    public void performAction(Action action) throws UnknownActionException {
-        queue.add(action);
-        execute();
+    public void performAction(Action action) throws UnknownActionException, InterruptedException {
+        execute((Action) queue.poll());
+        queue.offer(action);
     }
 
     /**
@@ -68,10 +73,10 @@ public class GameController {
      * @throws UnknownActionException
      * @throws InterruptedException
      */
-    private void execute() throws UnknownActionException {
+    private void execute(Action action) throws UnknownActionException, InterruptedException {
         player = players.get(state.getPlayerTurn());
-        Action action = (Action) queue.poll();
         action.execute();
+        System.out.println(action.actionType + "executing");
         //Action specific logic
         switch (action.actionType) {
             default:
@@ -129,7 +134,7 @@ public class GameController {
                 break;
             case SUGGEST:
                 if (action.result && state.getAction().actionType == ActionType.STARTTURN | state.getAction().actionType == ActionType.MOVE) {
-                    performAction(new ShowCardsAction(((SuggestAction) action).show, ((SuggestAction) action).foundCards));
+                    performAction(new ShowCardsAction(((SuggestAction) action).show, ((SuggestAction)action).player, ((SuggestAction) action).foundCards));
                 }
                 break;
             case THROWAGAIN:

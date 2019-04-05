@@ -66,7 +66,7 @@ public abstract class Player implements Observer {
      * @throws clue.player.Player.MovementException when the player makes an
      * invalid move
      */
-    private void doMove(Queue<Tile> tiles) throws MovementException {
+    private void doMove(Queue<Tile> tiles) throws MovementException, InterruptedException {
         if (tiles.size() <= movements) {
             sendAction(move(tiles));
         } else {
@@ -92,7 +92,7 @@ public abstract class Player implements Observer {
      * @param weapon murder weapon
      * @return new SuggestAction
      */
-    private void suggest(PersonCard person, RoomCard room, WeaponCard weapon) {
+    private void suggest(PersonCard person, RoomCard room, WeaponCard weapon) throws InterruptedException {
         sendAction(game.suggest(person, room, weapon, this));
     }
 
@@ -115,7 +115,7 @@ public abstract class Player implements Observer {
      *
      * @param action the action to be executed
      */
-    private void sendAction(Action action) {
+    private void sendAction(Action action) throws InterruptedException {
         if (active) {
             try {
                 game.performAction(action);

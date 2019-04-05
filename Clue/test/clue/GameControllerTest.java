@@ -6,10 +6,12 @@
 package clue;
 
 import clue.action.Action;
+import clue.action.UnknownActionException;
 import clue.card.PersonCard;
 import clue.card.RoomCard;
 import clue.card.WeaponCard;
 import clue.player.Player;
+import java.util.ArrayList;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -49,7 +51,7 @@ public class GameControllerTest {
     public void testPerformAction() throws Exception {
         System.out.println("performAction");
         Action action = null;
-        GameController instance = new GameController();
+        GameController instance = new GameController(new ArrayList<Player>());
         instance.performAction(action);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
@@ -59,13 +61,13 @@ public class GameControllerTest {
      * Test of suggest method, of class GameController.
      */
     @Test
-    public void testSuggest() {
+    public void testSuggest() throws InterruptedException, UnknownActionException {
         System.out.println("suggest");
         PersonCard person = null;
         RoomCard room = null;
         WeaponCard weapon = null;
         Player player = null;
-        GameController instance = new GameController();
+        GameController instance = new GameController(new ArrayList<Player>());
         Action expResult = null;
         Action result = instance.suggest(person, room, weapon, player);
         assertEquals(expResult, result);
