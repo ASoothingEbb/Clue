@@ -96,7 +96,7 @@ public class MovementException extends Exception{
      * sends an action to the GameController to be executed.
      * @param action the action to be executed
      */
-    private void sendAction(Action action){
+    public void sendAction(Action action){
         if(active){
             try {
                 game.performAction(action);
@@ -142,5 +142,14 @@ public class MovementException extends Exception{
     public boolean hasCard(Card card){
         return cards.contains(card);
     }
+    
+    /**
+     * Returns the game controller object.
+     * @return game
+     */
+    public GameController getGameController(){
+        return game;
+    }
+    
 }
 

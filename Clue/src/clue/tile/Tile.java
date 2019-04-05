@@ -15,7 +15,7 @@ import java.util.List;
 public class Tile {
     public boolean special;
     private List<Tile> adjacentTiles;
-    public boolean room;
+    private boolean room;
     
     /**
      * Creates a new Tile.
@@ -46,6 +46,14 @@ public class Tile {
         else{
             return false;
         }
+    }
+    
+    /**
+     * Returns true if the tile is room, false otherwise.
+     * @return room
+     */
+    public boolean isRoom(){
+        return room;
     }
     
 }
