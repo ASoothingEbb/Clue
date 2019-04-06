@@ -36,19 +36,18 @@ public abstract class Player implements Observer {
     private Tile position;
     protected int movements;
     private int id;
-<<<<<<< HEAD
+    private boolean activeSuggestionBlock;
+
     protected GameController game;
     
-=======
-    private GameController game;
 
->>>>>>> backend
     /**
      * Creates a new player.
      */
     public Player(int id) {
         this.id = id;
         active = true;
+        activeSuggestionBlock = false;
     }
 
     @Override
@@ -192,5 +191,23 @@ public abstract class Player implements Observer {
      */
     public boolean hasCard(Card card) {
         return cards.contains(card);
+    }
+    
+    /**
+     * Sets whether or not the player has an active suggestion block
+     *
+     * @param newActiveSuggestionBlockValue
+     */
+    public void setActiveSuggestionBlock(boolean newActiveSuggestionBlockValue){
+        activeSuggestionBlock = newActiveSuggestionBlockValue;
+    }
+    
+    /**
+     * Gets whether or not the player has an active suggestion block
+     *
+     * @return activeSuggestionBlock
+     */
+    public boolean getActiveSuggestionBlock(){
+        return activeSuggestionBlock;
     }
 }
