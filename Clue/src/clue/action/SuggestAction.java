@@ -52,8 +52,8 @@ public class SuggestAction extends Action {
         int j = player.getId();
         boolean found = false;
         for (int i = 0; i < state.playersNumber; i++) {
-            if (j != player.getId()) {
-                check = state.getPlayer(j);
+            check = state.getPlayer(j);
+            if (j != player.getId() && check.getActiveSuggestionBlock() == false) {
                 for (Card c : cards) {
                     if (check.hasCard(c)) {
                         show = state.getPlayer(j);
