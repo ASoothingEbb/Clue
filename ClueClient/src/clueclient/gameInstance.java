@@ -44,9 +44,9 @@ public class gameInstance {
     private GridPane createBoard() {
         GridPane boardPane = new GridPane();
         
-        Image boardImage = new Image(getClass().getResource("assets/boardImage.jpg").toExternalForm());
+        Image boardImage = new Image(getClass().getResource("assets/boardImage.png").toExternalForm());
         
-        boardPane.setBackground(new Background(new BackgroundImage(boardImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
+        boardPane.setBackground(new Background(new BackgroundImage(boardImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
         boardPane.setPrefSize(width, height);
         
         // create base Tiles
