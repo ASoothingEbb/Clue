@@ -38,26 +38,25 @@ public class IntrigueCardTest {
     public void tearDown() {
     }
 
+    public class IntrigueCardImpl extends IntrigueCard {
+
+        public IntrigueCardImpl() {
+            super(0);
+        }
+    }
+
     /**
-     * Test of doSpecial method, of class IntrigueCard.
+     * Test of getCardType method, of class IntrigueCard.
      */
     @Test
-    public void testDoSpecial() {
-        System.out.println("doSpecial");
-        IntrigueCard instance = new IntrigueCardImpl();
-        Action expResult = null;
-        Action result = instance.doSpecial();
+    public void testGetCardType() {
+        System.out.println("getCardType");
+        IntrigueCard instance = null;
+        CardType expResult = null;
+        CardType result = instance.getCardType();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
-
-    public class IntrigueCardImpl implements IntrigueCard {
-
-        public Action doSpecial() {
-            return null;
-        }
-    }
-
 
 }

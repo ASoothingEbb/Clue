@@ -38,19 +38,6 @@ public class AvoidSuggestionIntrigueTest {
     public void tearDown() {
     }
 
-    /**
-     * Test of doSpecial method, of class AvoidSuggestionIntrigue.
-     */
-    @Test
-    public void testDoSpecial() {
-        System.out.println("doSpecial");
-        AvoidSuggestionIntrigue instance = new AvoidSuggestionIntrigue(0);
-        Action expResult = null;
-        Action result = instance.doSpecial();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
 
     /**
      * Test of getid method, of class AvoidSuggestionIntrigue.
@@ -61,6 +48,20 @@ public class AvoidSuggestionIntrigueTest {
         AvoidSuggestionIntrigue instance = new AvoidSuggestionIntrigue(0);
         int expResult = 0;
         int result = instance.getid();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getCardType method, of class AvoidSuggestionIntrigue.
+     */
+    @Test
+    public void testGetCardType() {
+        System.out.println("getCardType");
+        AvoidSuggestionIntrigue instance = null;
+        CardType expResult = null;
+        CardType result = instance.getCardType();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");

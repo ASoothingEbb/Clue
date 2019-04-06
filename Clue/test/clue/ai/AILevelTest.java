@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package clue.AI;
+package clue.ai;
 
+import clue.ai.AILevel;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

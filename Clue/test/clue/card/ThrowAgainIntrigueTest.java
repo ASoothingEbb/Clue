@@ -39,20 +39,6 @@ public class ThrowAgainIntrigueTest {
     }
 
     /**
-     * Test of doSpecial method, of class ThrowAgainIntrigue.
-     */
-    @Test
-    public void testDoSpecial() {
-        System.out.println("doSpecial");
-        ThrowAgainIntrigue instance = new ThrowAgainIntrigue(0);
-        Action expResult = null;
-        Action result = instance.doSpecial();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
      * Test of getid method, of class ThrowAgainIntrigue.
      */
     @Test
@@ -61,6 +47,20 @@ public class ThrowAgainIntrigueTest {
         ThrowAgainIntrigue instance = new ThrowAgainIntrigue(0);
         int expResult = 0;
         int result = instance.getid();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getCardType method, of class ThrowAgainIntrigue.
+     */
+    @Test
+    public void testGetCardType() {
+        System.out.println("getCardType");
+        ThrowAgainIntrigue instance = null;
+        CardType expResult = null;
+        CardType result = instance.getCardType();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");

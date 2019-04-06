@@ -39,20 +39,6 @@ public class TeleportIntrigueTest {
     }
 
     /**
-     * Test of doSpecial method, of class TeleportIntrigue.
-     */
-    @Test
-    public void testDoSpecial() {
-        System.out.println("doSpecial");
-        TeleportIntrigue instance = new TeleportIntrigue(0);
-        Action expResult = null;
-        Action result = instance.doSpecial();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
      * Test of getid method, of class TeleportIntrigue.
      */
     @Test
@@ -61,6 +47,20 @@ public class TeleportIntrigueTest {
         TeleportIntrigue instance = new TeleportIntrigue(0);
         int expResult = 0;
         int result = instance.getid();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getCardType method, of class TeleportIntrigue.
+     */
+    @Test
+    public void testGetCardType() {
+        System.out.println("getCardType");
+        TeleportIntrigue instance = null;
+        CardType expResult = null;
+        CardType result = instance.getCardType();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
