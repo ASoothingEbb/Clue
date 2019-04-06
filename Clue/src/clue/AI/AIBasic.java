@@ -40,8 +40,6 @@ public class AIBasic extends AIPlayer{
     Random rand;
     
     
-    
-    
     public AIBasic(int id) {
         super(id);
         
@@ -49,12 +47,10 @@ public class AIBasic extends AIPlayer{
         rand = new Random();
     }
     
-    
-    
     @Override
     public void onUpdate() {
        
-        
+        //Generating Random Cards (ids).
         PersonCard randPersonCard = new PersonCard(rand.nextInt(6) + 1);
         RoomCard randRoomCard = new RoomCard(rand.nextInt(6) + 1);
         WeaponCard randWeaponCard = new WeaponCard(rand.nextInt(9)+ 1);
@@ -74,7 +70,7 @@ public class AIBasic extends AIPlayer{
 
                 ShowCardsAction action = (ShowCardsAction) gameController.getLastAction();
                 Card card = action.getCardList().get(0);
-                ShowCardAction newAction = new ShowCardAction(action.getSuggester(), card);
+                ShowCardAction newAction = new ShowCardAction(action.getSuggester(), card);//Shows one card to person who requested cards to be shown(suggested).
 
                 try {
                     sendAction(newAction);//Show Card.
@@ -84,5 +80,7 @@ public class AIBasic extends AIPlayer{
             }
         }
     }
+    
+    
     
 }
