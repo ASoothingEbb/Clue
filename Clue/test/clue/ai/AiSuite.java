@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package clue.ai;
+package clue.AI;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -17,8 +17,8 @@ import org.junit.runners.Suite;
  * @author steve
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({})
-public class AiSuite {
+@Suite.SuiteClasses({clue.AI.AIBasicTest.class, clue.AI.AILevelTest.class})
+public class AISuite {
 
     @BeforeClass
     public static void setUpClass() throws Exception {

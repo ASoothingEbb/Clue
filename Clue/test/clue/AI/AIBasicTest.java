@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package clue.AI;
+package clue.ai;
 
+import clue.AI.AIBasic;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -14,7 +15,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author steve
+ * @author zemig
  */
 public class AIBasicTest {
     
@@ -40,13 +41,21 @@ public class AIBasicTest {
     /**
      * Test of onUpdate method, of class AIBasic.
      */
+//    @Test
+//    public void testOnUpdate() {
+//        System.out.println("onUpdate");
+//        AIBasic instance = null;
+//        instance.onUpdate();
+//        // TODO review the generated test code and remove the default call to fail.
+//        fail("The test case is a prototype.");
+//    }
+    
     @Test
-    public void testOnUpdate() {
-        System.out.println("onUpdate");
-        AIBasic instance = null;
-        instance.onUpdate();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void testConstructor(){
+        AIBasic aItest = new AIBasic(1);
+        int expInt = 1;
+        int id = aItest.getId();
+        assertEquals(id, expInt);
     }
     
 }
