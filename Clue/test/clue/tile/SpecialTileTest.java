@@ -6,6 +6,12 @@
 package clue.tile;
 
 import clue.action.Action;
+import clue.action.ActionType;
+import clue.action.AvoidSuggestionAction;
+import clue.action.ExtraTurnAction;
+import clue.action.TeleportAction;
+import clue.action.ThrowAgainAction;
+import clue.player.AIPlayer;
 import clue.player.Player;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -44,14 +50,20 @@ public class SpecialTileTest {
      */
     @Test
     public void testGetSpecial() throws Exception {
-        System.out.println("getSpecial");
-        Player player = null;
-        SpecialTile instance = null;
-        Action expResult = null;
-        Action result = instance.getSpecial(player);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Player p = new AIPlayer(1);
+        
+        SpecialTile t1 = new SpecialTile(ActionType.AVOIDSUGGESTIONCARD);
+        assertTrue(t1.getSpecial(p) instanceof AvoidSuggestionAction);
+        
+        SpecialTile t2 = new SpecialTile(ActionType.EXTRATURN);
+        assertTrue(t2.getSpecial(p) instanceof ExtraTurnAction);
+        
+        SpecialTile t3 = new SpecialTile(ActionType.TELEPORT);
+        assertTrue(t3.getSpecial(p) instanceof TeleportAction);
+        
+        SpecialTile t4 = new SpecialTile(ActionType.THROWAGAIN);
+        assertTrue(t4.getSpecial(p) instanceof ThrowAgainAction);
+        
     }
     
 }
