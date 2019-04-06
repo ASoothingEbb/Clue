@@ -99,8 +99,15 @@ public class ClueClient extends Application {
         playersNum.setSnapToTicks(true);
 
         // Number of AI Players
-        Label numberOfAIPlayersLabel = new Label("AI Players");
-        CheckBox aiPlayersNum = new CheckBox();
+        Label aiPlayersLabel = new Label("AI Players");
+        CheckBox aiPlayers = new CheckBox();
+        
+        // Create Game Instance
+        Button newGameButton = new Button("Create Game");
+        newGameButton.setOnAction((ActionEvent e) -> {
+            stage.hide();
+            gameInstance.startGame((int) playersNum.getValue(), aiPlayers.isSelected(), width, height);
+        });
 
         // Return to menu
         Button returnButton = new Button("Back");
@@ -109,9 +116,10 @@ public class ClueClient extends Application {
         createGameOptions.add(createGameTitle, 0, 0);
         createGameOptions.add(numberOfPlayersLabel, 0, 1);
         createGameOptions.add(playersNum, 1, 1);
-        createGameOptions.add(numberOfAIPlayersLabel, 0, 2);
-        createGameOptions.add(aiPlayersNum, 1, 2);
-        createGameOptions.add(returnButton, 0, 3);
+        createGameOptions.add(aiPlayersLabel, 0, 2);
+        createGameOptions.add(aiPlayers, 1, 2);
+        createGameOptions.add(newGameButton, 0, 3);
+        createGameOptions.add(returnButton, 0, 4);
         
         Scene scene = new Scene(createGameOptions, width, height);
         prevScene = stage.getScene();
@@ -180,11 +188,23 @@ public class ClueClient extends Application {
         }); 
         
         // Audio Settings
-        Label AudioSettingsLabel = new Label("Audio");
+        Label audioSettingsLabel = new Label("Audio");
+        
+        Label masterVolumeLabel = new Label("Master Volume");
+        
+        Label musicVolumeLabel = new Label("Music Volume");
+        
+        Label effectVoumeLabel = new Label("Sound Effect Volume");
+        
+        
+        // Gameplay Settings
+        Label gameplaySettingsLabel = new Label("Gameplay");
+        
+        
         
         // Return to menu
         Button returnButton = new Button("Back");
-        returnButton.setOnAction(e -> stage.setScene(prevScene));   
+        returnButton.setOnAction(e -> stage.setScene(prevScene));
         
         settingsOptions.add(displaySettingsLabel, 0, 0);
         settingsOptions.add(gameResolutionLabel, 0, 1);
