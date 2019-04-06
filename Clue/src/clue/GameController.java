@@ -209,4 +209,8 @@ public class GameController {
     public Action suggest(PersonCard person, RoomCard room, WeaponCard weapon, Player player) {
         return new SuggestAction(person, room, weapon, player, state);
     }
+    
+    public boolean CheckAccuse(PersonCard person,RoomCard room, WeaponCard weapon){
+        return person == this.person && room == this.room && weapon == this.weapon;
+    }
 }
