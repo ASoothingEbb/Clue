@@ -14,6 +14,12 @@ import clue.player.Player;
  */
 public class AvoidSuggestionAction extends Action{
         public ActionType actionType = ActionType.AVOIDSUGGESTIONCARD;
+        
+        /**
+         * Creates a new AvoidSuggestionAction
+         * @param player the Player to roll again
+         */
+        
         public AvoidSuggestionAction(Player player){
             super(player);
         }
