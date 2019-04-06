@@ -21,6 +21,7 @@ public class ShowCardsAction extends Action{
     /**
      * Creates a new ShowCardsAction
      * @param player the Player to be prompted
+     * @param suggestor the Player who made the suggestion
      * @param cards the cards to prompt
      */
     public ShowCardsAction(Player player,Player suggestor, List<Card> cards) {
