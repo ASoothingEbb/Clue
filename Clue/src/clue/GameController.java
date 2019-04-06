@@ -99,6 +99,18 @@ public class GameController {
                 break;
             case ENDTURN:
                 state.nextTurn(state.nextPlayer());
+                
+                int j = player.getId();
+                
+                for (int i = 0; i < state.playersNumber; i++){
+                    
+                    if (j != player.getId()){
+                        state.getPlayer(j).setActiveSuggestionBlock(false);//remove any suggestion blocks players may have 
+                    }  
+                    
+                    j = state.getNextPointer(j);
+                }
+                
                 performAction(new StartTurnAction(player));
                 break;
             case EXTRATURN:
