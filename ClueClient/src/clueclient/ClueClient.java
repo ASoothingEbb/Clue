@@ -65,12 +65,12 @@ public class ClueClient extends Application {
         Label gameTitle = new Label("Clue");
 
         // Create Game Button
-        Button createGame = new Button("Create Game");
-        createGame.setOnAction(e -> createGameScene(stage));
+        Button createGame = new Button("Play");
+        createGame.setOnAction(e -> startGameScene(stage));
 
         // Join Game Button
-        Button joinGame = new Button("Join Game");
-        joinGame.setOnAction(e -> joinGameScene(stage));
+        Button joinGame = new Button("How to play");
+        joinGame.setOnAction(e -> howToPlayScene(stage));
 
         // Settings Button
         Button settings = new Button("Settings");
@@ -79,11 +79,11 @@ public class ClueClient extends Application {
          menuOptions.getChildren().addAll(gameTitle, createGame, joinGame, settings);
     }
     
-    private void createGameScene(Stage stage) {
-        GridPane createGameOptions = new GridPane();
+    private void startGameScene(Stage stage) {
+        GridPane startGameOptions = new GridPane();
         
         // Scene Title
-        Label createGameTitle = new Label("Create Game");
+        Label startGameTitle = new Label("Create Game");
 
         // Number of Players
         final int numberOfPlayers = 6;
@@ -103,53 +103,40 @@ public class ClueClient extends Application {
         CheckBox aiPlayers = new CheckBox();
         
         // Create Game Instance
-        Button newGameButton = new Button("Create Game");
+        
+        gameInstance game = new gameInstance();
+        
+        Button newGameButton = new Button("Start Game");
         newGameButton.setOnAction((ActionEvent e) -> {
             stage.hide();
-            gameInstance.startGame((int) playersNum.getValue(), aiPlayers.isSelected(), width, height);
+            game.startGame((int) playersNum.getValue(), aiPlayers.isSelected(), width, height);
         });
 
         // Return to menu
         Button returnButton = new Button("Back");
         returnButton.setOnAction(e -> stage.setScene(prevScene));
         
-        createGameOptions.add(createGameTitle, 0, 0);
-        createGameOptions.add(numberOfPlayersLabel, 0, 1);
-        createGameOptions.add(playersNum, 1, 1);
-        createGameOptions.add(aiPlayersLabel, 0, 2);
-        createGameOptions.add(aiPlayers, 1, 2);
-        createGameOptions.add(newGameButton, 0, 3);
-        createGameOptions.add(returnButton, 0, 4);
+        startGameOptions.add(startGameTitle, 0, 0);
+        startGameOptions.add(numberOfPlayersLabel, 0, 1);
+        startGameOptions.add(playersNum, 1, 1);
+        startGameOptions.add(aiPlayersLabel, 0, 2);
+        startGameOptions.add(aiPlayers, 1, 2);
+        startGameOptions.add(newGameButton, 0, 3);
+        startGameOptions.add(returnButton, 0, 4);
         
-        Scene scene = new Scene(createGameOptions, width, height);
+        Scene scene = new Scene(startGameOptions, width, height);
         prevScene = stage.getScene();
         stage.setScene(scene);
     }
     
-    private void joinGameScene(Stage stage) {
+    private void howToPlayScene(Stage stage) {
         GridPane joinGameOptions = new GridPane();
         joinGameOptions.setAlignment(Pos.CENTER);
 
         // Scene Title
-        Label joinGameTitle = new Label("Join Game");
+        Label howToPlayTitle = new Label("How to Play");
 
-        // IP Address
-        Label ipAddressTitle = new Label("IP Address");
-        TextField ipAddress = new TextField();
-
-        // Port
-        Label portTitle = new Label("Port");
-        TextField port = new TextField();
-        
-        // join Game Button
-        Button joinGameButton = new Button("Join Game");
-
-        joinGameOptions.add(joinGameTitle, 0,0);
-        joinGameOptions.add(ipAddressTitle, 0, 1);
-        joinGameOptions.add(ipAddress, 1, 1);
-        joinGameOptions.add(portTitle, 0, 2);
-        joinGameOptions.add(port, 1, 2);
-        joinGameOptions.add(joinGameButton, 0, 3);
+        joinGameOptions.add(howToPlayTitle, 0,0);
 
         Scene scene = new Scene(joinGameOptions, width, height);
         prevScene = stage.getScene();
