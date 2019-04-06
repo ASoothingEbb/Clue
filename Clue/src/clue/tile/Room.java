@@ -18,8 +18,8 @@ public class Room extends Tile{
      * Creates a new Room
      * @param card the RoomCard associated with this room.
      */
-    public Room(RoomCard card) {
-        super();
+    public Room(RoomCard card, int x, int y) {
+        super(x,y);
         this.card = card;
         room = true;
     }
