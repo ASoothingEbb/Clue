@@ -116,7 +116,7 @@ public abstract class Player implements Observer {
      * @param action the action to be executed
      */
 
-    private void sendAction(Action action) throws InterruptedException {
+    public void sendAction(Action action) throws InterruptedException {
         if (active) {
             try {
                 game.performAction(action);

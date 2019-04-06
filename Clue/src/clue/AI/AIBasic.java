@@ -20,6 +20,8 @@ import clue.player.Player;
 import clue.tile.Tile;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -60,8 +62,12 @@ public class AIBasic extends AIPlayer{
         
         if(gameController.getPlayer().getId() == getId()){//If I need to respond.
             if(gameController.getLastAction() instanceof EndTurnAction){//If my turn, last action was end turn.
-                if(this.getPosition().isRoom()){//If I'm in a room 
-                    sendAction(new AccuseAction(this, randPersonCard, randRoomCard, randWeaponCard));
+                if(this.getPosition().isRoom()){//If I'm in a room
+                    try {           
+                        sendAction(new AccuseAction(this, randPersonCard, randRoomCard, randWeaponCard));
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(AIBasic.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
                 
             } else if (gameController.getLastAction() instanceof ShowCardsAction){//If I need to show a card 
@@ -70,7 +76,11 @@ public class AIBasic extends AIPlayer{
                 Card card = action.getCardList().get(0);
                 ShowCardAction newAction = new ShowCardAction(action.getSuggester(), card);
 
-                sendAction(newAction);//Show Card.
+                try {
+                    sendAction(newAction);//Show Card.
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(AIBasic.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
     }

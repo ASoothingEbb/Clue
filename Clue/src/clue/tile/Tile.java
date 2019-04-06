@@ -15,7 +15,7 @@ import java.util.List;
 public class Tile {
     public boolean special;
     private List<Tile> adjacentTiles;
-    private boolean room;
+    public boolean room;
     
     /**
      * Creates a new Tile.

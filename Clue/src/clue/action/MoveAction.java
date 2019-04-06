@@ -48,7 +48,7 @@ public class MoveAction extends Action {
             if (!s.isAdjacent(t)) {
                 result = false;
                 break;
-            } else if (t.room) {
+            } else if (t.isRoom()) {
                 last = t;
                 result = tiles.isEmpty();
                 break;
