@@ -94,19 +94,20 @@ public class GameController {
                 }
                 break;
             case AVOIDSUGGESTIONCARD:
-
+                action.getPlayer().setActiveSuggestionBlock(true);//player will not be checked in next turns suggestion check
+                //TODO: notify player they have a suggestion block
                 break;
             case ENDTURN:
                 state.nextTurn(state.nextPlayer());
                 performAction(new StartTurnAction(player));
                 break;
             case EXTRATURN:
-                performAction(new StartTurnAction(player));
+                performAction(new StartTurnAction(action.getPlayer()));
                 break;
             case KICK:
                 break;
             case MOVE:
-                if (action.result && state.getAction().actionType == ActionType.STARTTURN) {
+                if (action.result && (state.getAction().actionType == ActionType.STARTTURN || state.getAction().actionType == ActionType.THROWAGAIN)) {
                     Tile loc = ((MoveAction) action).getTile();
                     player.setPosition(loc);
                     if (loc.special) {
@@ -138,8 +139,10 @@ public class GameController {
                 }
                 break;
             case THROWAGAIN:
-                performAction(new StartTurnAction(player));
+                //TODO: tell gui to roll again
+                //TODO: allow players to roll again
                 break;
+            
         }
         //update game state
         state.setAction(action);
