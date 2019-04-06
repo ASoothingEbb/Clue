@@ -64,7 +64,7 @@ public class AIBasic extends AIPlayer{
             if(gameController.getLastAction() instanceof EndTurnAction){//If my turn, last action was end turn.
                 if(this.getPosition().isRoom()){//If I'm in a room
                     try {           
-                        sendAction(new AccuseAction(this, randPersonCard, randRoomCard, randWeaponCard));
+                        sendAction(Accuse(randPersonCard, randRoomCard, randWeaponCard));
                     } catch (InterruptedException ex) {
                         Logger.getLogger(AIBasic.class.getName()).log(Level.SEVERE, null, ex);
                     }

@@ -17,9 +17,9 @@ import clue.player.Player;
 public class AccuseAction extends Action {
 
     private PersonCard person;
-    private RoomCard room;
-    private WeaponCard weapon;
-    private Player player;
+    public RoomCard room;
+    public WeaponCard weapon;
+    public Player player;
 
     ActionType actionType = ActionType.ACCUSATION;
 
@@ -30,12 +30,13 @@ public class AccuseAction extends Action {
      * @param room the room card to accuse
      * @param weapon the weapon card to accuse
      */
-    public AccuseAction(Player player, PersonCard person, RoomCard room, WeaponCard weapon) {
+    public AccuseAction(Player player, PersonCard person, RoomCard room, WeaponCard weapon,boolean result) {
         super(player);
         this.person = person;
         this.room = room;
         this.weapon = weapon;
         this.player = player;
+        this.result = result;
     }
 
     /**
@@ -45,12 +46,7 @@ public class AccuseAction extends Action {
      * @param room the room to accuse
      * @param weapon the weapon to accuse
      */
-    public void execute(PersonCard person, RoomCard room, WeaponCard weapon) {
+    public void execute() {
         player.removeFromPlay();
-        if (this.person.getid() == person.getid() && this.room.getid() == room.getid() && this.weapon.getid() == weapon.getid()) {
-            result = true;
-        } else {
-            result = false;
-        }
     }
 }

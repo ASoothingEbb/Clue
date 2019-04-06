@@ -110,8 +110,8 @@ public abstract class Player implements Observer {
      * @param weapon murder weapon
      * @return new AccuseAction
      */
-    private Action Accuse(PersonCard person, RoomCard room, WeaponCard weapon) {
-        return new AccuseAction(this, person, room, weapon);
+    public Action Accuse(PersonCard person, RoomCard room, WeaponCard weapon) {
+        return new AccuseAction(this, person, room, weapon,game.CheckAccuse(person, room, weapon));
     }
 
     /**
