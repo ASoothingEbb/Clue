@@ -48,4 +48,12 @@ public class Tile {
         }
     }
     
+    /**
+     * Returns true if the tile is room, false otherwise.
+     * @return room
+     */
+    public boolean isRoom(){
+        return room;
+    }
+    
 }

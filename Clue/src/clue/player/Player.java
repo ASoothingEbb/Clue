@@ -38,8 +38,8 @@ public abstract class Player implements Observer {
     private int id;
     private boolean activeSuggestionBlock;
 
-    protected GameController game;
     
+    public GameController game;
 
     /**
      * Creates a new player.
@@ -119,7 +119,8 @@ public abstract class Player implements Observer {
      *
      * @param action the action to be executed
      */
-    private void sendAction(Action action) throws InterruptedException {
+
+    public void sendAction(Action action) throws InterruptedException {
         if (active) {
             try {
                 game.performAction(action);
@@ -210,4 +211,12 @@ public abstract class Player implements Observer {
     public boolean getActiveSuggestionBlock(){
         return activeSuggestionBlock;
     }
+    /**
+     * Returns the game controller object.
+     * @return game
+     */
+    public GameController getGameController(){
+        return game;
+    }
+    
 }

@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"clue"},{"l":"clue.action"},{"l":"clue.card"},{"l":"clue.player"},{"l":"clue.tile"}]

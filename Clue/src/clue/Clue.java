@@ -5,6 +5,7 @@
  */
 package clue;
 
+import clue.action.UnknownActionException;
 import clue.player.AIPlayer;
 import clue.player.Player;
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public class Clue {
      * @param args the command line arguments
      * @throws java.lang.InterruptedException
      */
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, UnknownActionException {
         Player player = new AIPlayer(0);
         List<Player> players = new ArrayList();
         // TODO code application logic here
