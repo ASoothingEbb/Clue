@@ -22,7 +22,8 @@ public class SpecialTile extends Tile {
 
     private ActionType action;
 
-    public SpecialTile(ActionType t) {
+    public SpecialTile(ActionType t, int x, int y) {
+        super(x,y);
         action = t;
         special = true;
     }
