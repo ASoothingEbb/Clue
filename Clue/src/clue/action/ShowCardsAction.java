@@ -18,15 +18,18 @@ public class ShowCardsAction extends Action{
     ActionType actionType = ActionType.SHOWCARDS;
     private List<Card> cards;
     private Player suggester;
+
     /**
      * Creates a new ShowCardsAction
      * @param player the Player to be prompted
      * @param cards the cards to prompt
      */
+
     public ShowCardsAction(Player player, Player suggester, List<Card> cards) {
         super(player);
         this.cards = cards;
         this.suggester = suggester;
+
     }
 
     /**
@@ -37,6 +40,7 @@ public class ShowCardsAction extends Action{
         super.execute(); //To change body of generated methods, choose Tools | Templates.
     }
     
+
     /**
      * Returns the Card list for this action.
      * @return cards

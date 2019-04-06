@@ -5,11 +5,9 @@
  */
 package clue;
 
-import clue.action.AccuseAction;
 import clue.action.Action;
-import clue.action.ExtraTurnAction;
+import clue.action.ActionType;
 import clue.action.MoveAction;
-import clue.action.ShowCardAction;
 import clue.action.ShowCardsAction;
 import clue.action.StartAction;
 import clue.action.StartTurnAction;
@@ -22,8 +20,11 @@ import clue.card.WeaponCard;
 import clue.player.Player;
 import clue.tile.SpecialTile;
 import clue.tile.Tile;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.SynchronousQueue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Keeps track of an instance of a Clue game state.
@@ -46,8 +47,10 @@ public class GameController {
     /**
      * Creates a new GameController.
      */
-    public GameController() {
-        queue = new SynchronousQueue();
+    public GameController(List<Player> players) throws InterruptedException, UnknownActionException {
+        queue = new SynchronousQueue(true);
+        this.players = players;
+        performAction(new StartAction());
     }
 
     /**
@@ -58,22 +61,22 @@ public class GameController {
      * @throws InterruptedException Action was not performed at the correct
      * time.
      */
-    public void performAction(Action action) throws UnknownActionException {
-        queue.add(action);
-        execute();
+    public void performAction(Action action) throws UnknownActionException, InterruptedException {
+        execute((Action) queue.poll());
+        queue.offer(action);
     }
 
     /**
-     * Executes an action from the queue. Waits for the current action to 
+     * Executes an action from the queue. Waits for the current action to
      * complete before executing.
      *
      * @throws UnknownActionException
      * @throws InterruptedException
      */
-    private void execute() throws UnknownActionException {
+    private void execute(Action action) throws UnknownActionException, InterruptedException {
         player = players.get(state.getPlayerTurn());
-        Action action = (Action) queue.poll();
         action.execute();
+        System.out.println(action.actionType + "executing");
         //Action specific logic
         switch (action.actionType) {
             default:
@@ -84,10 +87,10 @@ public class GameController {
                 if (action.result) {
                     winner = state.endGame();
                     endGame();
-                } else if(state.playersNumber == 0){
+                } else if (state.playersNumber == 0) {
                     state.endGame();
                     endGame();
-                }else {
+                } else {
                 }
                 break;
             case AVOIDSUGGESTIONCARD:
@@ -103,7 +106,7 @@ public class GameController {
             case KICK:
                 break;
             case MOVE:
-                if (action.result) {
+                if (action.result && state.getAction().actionType == ActionType.STARTTURN) {
                     Tile loc = ((MoveAction) action).getTile();
                     player.setPosition(loc);
                     if (loc.special) {
@@ -112,20 +115,26 @@ public class GameController {
                 }
                 break;
             case SHOWCARD:
+                if (state.getAction().actionType == ActionType.SHOWCARDS) {
 
+                }
                 break;
             case SHOWCARDS:
-                
+                if (state.getAction().actionType == ActionType.SUGGEST) {
+
+                }
                 break;
             case START:
                 state = new GameState(players);
                 break;
             case STARTTURN:
-                state.nextTurn(player.getId());
+                if (state.getAction().actionType == ActionType.ENDTURN || state.getAction().actionType == ActionType.EXTRATURN) {
+                    state.nextTurn(player.getId());
+                }
                 break;
             case SUGGEST:
-                if (action.result) {
-                    performAction(new ShowCardsAction(((SuggestAction) action).show, ((SuggestAction) action).foundCards));
+                if (action.result && state.getAction().actionType == ActionType.STARTTURN | state.getAction().actionType == ActionType.MOVE) {
+                    performAction(new ShowCardsAction(((SuggestAction) action).show, ((SuggestAction)action).player, ((SuggestAction) action).foundCards));
                 }
                 break;
             case THROWAGAIN:
@@ -136,22 +145,33 @@ public class GameController {
         state.setAction(action);
         state.notifyAllObservers();
     }
-    
+
     /**
      * Returns the last action executed on the state
+     *
      * @return Action
      */
-    public Action getLastAction(){
+    public Action getLastAction() {
         return state.getAction();
+    }
+
+    public HashMap getLocations() {
+        HashMap loc = new HashMap();
+        for (Player p : players) {
+            loc.put(p.getId(), p.getPosition());
+        }
+        return loc;
     }
 
     /**
      * Returns the player whose turn it is
+     *
      * @return Current player
      */
-    public Player getPlayer(){
+    public Player getPlayer() {
         return player;
     }
+
     /**
      * Terminates the game instance and declares a winner.
      */
@@ -162,6 +182,15 @@ public class GameController {
         }
     }
 
+    /**
+     * Creates a new SuggestAction for a player
+     *
+     * @param person the person to be suggested
+     * @param room the room to be suggested
+     * @param weapon the weapon to be suggested
+     * @param player the suggesting player
+     * @return new SuggestAction
+     */
     public Action suggest(PersonCard person, RoomCard room, WeaponCard weapon, Player player) {
         return new SuggestAction(person, room, weapon, player, state);
     }

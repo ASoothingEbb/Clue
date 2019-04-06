@@ -44,7 +44,7 @@ public class TeleportIntrigueTest {
     @Test
     public void testDoSpecial() {
         System.out.println("doSpecial");
-        TeleportIntrigue instance = new TeleportIntrigue();
+        TeleportIntrigue instance = new TeleportIntrigue(0);
         Action expResult = null;
         Action result = instance.doSpecial();
         assertEquals(expResult, result);
@@ -58,7 +58,7 @@ public class TeleportIntrigueTest {
     @Test
     public void testGetid() {
         System.out.println("getid");
-        TeleportIntrigue instance = new TeleportIntrigue();
+        TeleportIntrigue instance = new TeleportIntrigue(0);
         int expResult = 0;
         int result = instance.getid();
         assertEquals(expResult, result);
