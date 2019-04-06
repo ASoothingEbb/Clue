@@ -13,6 +13,7 @@ public class WeaponCard extends Card{
 
     public WeaponCard(int id) {
         super(id);
+        cardType = CardType.WEAPON;
     }
 
     

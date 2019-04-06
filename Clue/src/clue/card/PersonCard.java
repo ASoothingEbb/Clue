@@ -13,6 +13,7 @@ public class PersonCard extends Card{
 
     public PersonCard(int id) {
         super(id);
+        cardType = CardType.PERSON;
     }
     
 }

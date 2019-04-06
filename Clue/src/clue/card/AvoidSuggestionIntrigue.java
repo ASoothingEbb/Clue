@@ -8,19 +8,20 @@ package clue.card;
 import clue.action.Action;
 
 /**
- *Represents an IntrigueCard that allows players to avoid responding to a 
- *suggestion.
+ * Represents an IntrigueCard that allows players to avoid responding to a
+ * suggestion.
+ *
  * @author slb35
  */
-public class AvoidSuggestionIntrigue extends Card implements IntrigueCard{
+public class AvoidSuggestionIntrigue extends IntrigueCard {
 
     public AvoidSuggestionIntrigue(int id) {
         super(id);
+        cardType = CardType.AVOIDSUGGESTION;
     }
 
-    
     @Override
-    public Action doSpecial() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public CardType getCardType() {
+        return cardType;
     }
 }
