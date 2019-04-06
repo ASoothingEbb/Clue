@@ -16,9 +16,9 @@ import static org.junit.Assert.*;
  *
  * @author zemig
  */
-public class AIBasicTest {
+public class AiBasicTest {
     
-    public AIBasicTest() {
+    public AiBasicTest() {
     }
     
     @BeforeClass
@@ -38,12 +38,12 @@ public class AIBasicTest {
     }
 
     /**
-     * Test of onUpdate method, of class AIBasic.
+     * Test of onUpdate method, of class AiBasic.
      */
 //    @Test
 //    public void testOnUpdate() {
 //        System.out.println("onUpdate");
-//        AIBasic instance = null;
+//        AiBasic instance = null;
 //        instance.onUpdate();
 //        // TODO review the generated test code and remove the default call to fail.
 //        fail("The test case is a prototype.");
@@ -51,7 +51,7 @@ public class AIBasicTest {
     
     @Test
     public void testConstructor(){
-        AIBasic aItest = new AIBasic(1);
+        AiBasic aItest = new AiBasic(1);
         int expInt = 1;
         int id = aItest.getId();
         assertEquals(id, expInt);

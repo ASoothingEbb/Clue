@@ -17,8 +17,8 @@ import org.junit.runners.Suite;
  * @author steve
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({clue.ai.AIBasicTest.class, clue.ai.AILevelTest.class})
-public class aiSuite {
+@Suite.SuiteClasses({clue.ai.AiBasicTest.class, clue.ai.AiLevelTest.class})
+public class AiSuite {
 
     @BeforeClass
     public static void setUpClass() throws Exception {

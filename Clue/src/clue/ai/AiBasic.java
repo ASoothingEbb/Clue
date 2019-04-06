@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package clue.AI;
+package clue.ai;
 
 import clue.GameController;
 import clue.action.AccuseAction;
@@ -27,7 +27,7 @@ import java.util.logging.Logger;
  *
  * @author zemig
  */
-public class AIBasic extends AIPlayer{
+public class AiBasic extends AIPlayer{
     
 //    private boolean active;
 //    private List<Card> cards;
@@ -40,7 +40,7 @@ public class AIBasic extends AIPlayer{
     Random rand;
     
     
-    public AIBasic(int id) {
+    public AiBasic(int id) {
         super(id);
         
         gameController = getGameController();
@@ -62,7 +62,7 @@ public class AIBasic extends AIPlayer{
                     try {           
                         sendAction(Accuse(randPersonCard, randRoomCard, randWeaponCard));
                     } catch (InterruptedException ex) {
-                        Logger.getLogger(AIBasic.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(AiBasic.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
                 
@@ -75,7 +75,7 @@ public class AIBasic extends AIPlayer{
                 try {
                     sendAction(newAction);//Show Card.
                 } catch (InterruptedException ex) {
-                    Logger.getLogger(AIBasic.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(AiBasic.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }

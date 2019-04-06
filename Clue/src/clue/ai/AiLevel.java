@@ -3,18 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package clue.AI;
+package clue.ai;
 
 /**
  *
  * @author zemig
  */
-public enum AILevel {
+public enum AiLevel {
     
     BASIC,
     ADVANCED;
     
-    private AILevel() {
+    private AiLevel() {
         
     }
     
