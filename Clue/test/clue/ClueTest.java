@@ -5,6 +5,7 @@
  */
 package clue;
 
+import clue.action.UnknownActionException;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -41,7 +42,7 @@ public class ClueTest {
      * Test of main method, of class Clue.
      */
     @Test
-    public void testMain() {
+    public void testMain() throws InterruptedException, UnknownActionException {
         System.out.println("main");
         String[] args = null;
         Clue.main(args);

@@ -70,5 +70,19 @@ public class TileTest {
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
+
+    /**
+     * Test of isRoom method, of class Tile.
+     */
+    @Test
+    public void testIsRoom() {
+        System.out.println("isRoom");
+        Tile instance = new Tile();
+        boolean expResult = false;
+        boolean result = instance.isRoom();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
     
 }

@@ -51,5 +51,19 @@ public class RoomTest {
         assertEquals(roomCard1, new Room(roomCard1));
     
     }
+
+    /**
+     * Test of getCard method, of class Room.
+     */
+    @Test
+    public void testGetCard() {
+        System.out.println("getCard");
+        Room instance = null;
+        RoomCard expResult = null;
+        RoomCard result = instance.getCard();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
     
 }

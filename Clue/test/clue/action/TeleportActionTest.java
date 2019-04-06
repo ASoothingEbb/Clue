@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package clue.card;
+package clue.action;
 
-import clue.action.Action;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -17,9 +16,9 @@ import static org.junit.Assert.*;
  *
  * @author steve
  */
-public class IntrigueCardTest {
+public class TeleportActionTest {
     
-    public IntrigueCardTest() {
+    public TeleportActionTest() {
     }
     
     @BeforeClass
@@ -38,26 +37,10 @@ public class IntrigueCardTest {
     public void tearDown() {
     }
 
-    /**
-     * Test of doSpecial method, of class IntrigueCard.
-     */
     @Test
-    public void testDoSpecial() {
-        System.out.println("doSpecial");
-        IntrigueCard instance = new IntrigueCardImpl();
-        Action expResult = null;
-        Action result = instance.doSpecial();
-        assertEquals(expResult, result);
+    public void testSomeMethod() {
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
-
-    public class IntrigueCardImpl implements IntrigueCard {
-
-        public Action doSpecial() {
-            return null;
-        }
-    }
-
-
+    
 }

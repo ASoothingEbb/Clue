@@ -86,5 +86,5 @@ public class SubjectTest {
         public void notifyAllObservers() {
         }
     }
-    
+
 }

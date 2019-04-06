@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package clue.card;
+package clue.AI;
 
-import clue.action.Action;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -17,9 +16,9 @@ import static org.junit.Assert.*;
  *
  * @author steve
  */
-public class IntrigueCardTest {
+public class AILevelTest {
     
-    public IntrigueCardTest() {
+    public AILevelTest() {
     }
     
     @BeforeClass
@@ -39,25 +38,30 @@ public class IntrigueCardTest {
     }
 
     /**
-     * Test of doSpecial method, of class IntrigueCard.
+     * Test of values method, of class AILevel.
      */
     @Test
-    public void testDoSpecial() {
-        System.out.println("doSpecial");
-        IntrigueCard instance = new IntrigueCardImpl();
-        Action expResult = null;
-        Action result = instance.doSpecial();
-        assertEquals(expResult, result);
+    public void testValues() {
+        System.out.println("values");
+        AILevel[] expResult = null;
+        AILevel[] result = AILevel.values();
+        assertArrayEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
-    public class IntrigueCardImpl implements IntrigueCard {
-
-        public Action doSpecial() {
-            return null;
-        }
+    /**
+     * Test of valueOf method, of class AILevel.
+     */
+    @Test
+    public void testValueOf() {
+        System.out.println("valueOf");
+        String arg0 = "";
+        AILevel expResult = null;
+        AILevel result = AILevel.valueOf(arg0);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
-
-
+    
 }
