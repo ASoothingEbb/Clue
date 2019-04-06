@@ -97,9 +97,10 @@ public class GameState implements Subject {
      */
     public int nextPlayer() {
         if (running) {
-            while (!currentPlayer.isActive()) {
+            do {
                 turn = getNextPointer(turn);
             }
+            while (!currentPlayer.isActive());
             return players.get(turn).getId();
         } else {
             return currentPlayer.getId();
@@ -181,5 +182,17 @@ public class GameState implements Subject {
      */
     public void setAction(Action action) {
         this.lastAction = action;
+    }
+    
+    public Player getCurrentPlayer(){
+        return currentPlayer;
+    }
+    
+    public Player getPreviousPlayer(){
+        return previousPlayer;
+    }
+    
+    public List<Player> getPlayerList(){
+        return players;
     }
 }
