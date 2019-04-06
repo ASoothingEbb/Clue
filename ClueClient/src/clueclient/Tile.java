@@ -27,7 +27,7 @@ public class Tile extends Rectangle {
         setStrokeType(StrokeType.INSIDE);
         //setFill(Color.BROWN);
         
-        setFill(Color.rgb(200, 200, 200, 0.5));
+        setFill(Color.rgb(200, 200, 200, 0.0));   
     }
     
     public void setPlayer(Player player) {
