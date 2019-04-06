@@ -16,14 +16,21 @@ public class Tile {
     public boolean special;
     private List<Tile> adjacentTiles;
     public boolean room;
+    private boolean occupied;
+    private int x;
+    private int y;
+    
     
     /**
      * Creates a new Tile.
      */
-    public Tile() {
+    public Tile(int x, int y) {
         special = false;
         room = false;
         adjacentTiles = new ArrayList<>();
+        this.x = x;
+        this.y = y;
+        occupied = false;
     }
     
     /**
@@ -55,5 +62,33 @@ public class Tile {
     public boolean isRoom(){
         return room;
     }
+    
+    
+    /**
+     * @returns false if the tile is a non room tile and someone is already in the tile;
+     * 
+     */
+    public boolean isFull(){
+        return occupied && !isRoom();
+    }
+    
+    /**
+     * sets the occupied state of the tile
+     * @param occupied the new occupied state of the square
+     * 
+     */
+    public void setOccupied(boolean occupied){
+        this.occupied = occupied;
+    }
+    
+    /**
+     * gets the occupied state of the tile
+     * @return occupied the occupied state of the square
+     * 
+     */
+    public boolean setOccupied(){
+        return occupied;
+    }
+    
     
 }
