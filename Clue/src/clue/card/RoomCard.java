@@ -13,6 +13,7 @@ public class RoomCard extends Card{
 
     public RoomCard(int id) {
         super(id);
+        cardType = CardType.ROOM;
     }
 
     

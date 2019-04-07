@@ -7,21 +7,30 @@ package clue;
 
 import clue.action.Action;
 import clue.action.ActionType;
+import clue.action.AvoidSuggestionAction;
+import clue.action.ExtraTurnAction;
 import clue.action.MoveAction;
 import clue.action.ShowCardsAction;
 import clue.action.StartAction;
 import clue.action.StartTurnAction;
 import clue.action.SuggestAction;
+import clue.action.TeleportAction;
+import clue.action.ThrowAgainAction;
 import clue.action.UnknownActionException;
+import clue.card.AvoidSuggestionIntrigue;
 import clue.card.Card;
+import clue.card.IntrigueCard;
 import clue.card.PersonCard;
 import clue.card.RoomCard;
 import clue.card.WeaponCard;
 import clue.player.Player;
 import clue.tile.SpecialTile;
 import clue.tile.Tile;
+import com.sun.org.apache.xerces.internal.impl.dv.xs.DateTimeDV;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.SynchronousQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,7 +43,7 @@ import java.util.logging.Logger;
 public class GameController {
 
     private GameState state;
-    private List<Card> cards;
+    private List<IntrigueCard> cards;
     private PersonCard person;
     private RoomCard room;
     private WeaponCard weapon;
@@ -43,6 +52,7 @@ public class GameController {
     private Player player;
     private boolean working = false;
     private SynchronousQueue queue;
+    private Random random;
 
     /**
      * Creates a new GameController.
@@ -50,6 +60,7 @@ public class GameController {
     public GameController(List<Player> players) throws InterruptedException, UnknownActionException {
         queue = new SynchronousQueue(true);
         this.players = players;
+        random = new Random(Calendar.getInstance().getTimeInMillis());
         performAction(new StartAction());
     }
 
@@ -94,23 +105,54 @@ public class GameController {
                 }
                 break;
             case AVOIDSUGGESTIONCARD:
-
+                action.getPlayer().setActiveSuggestionBlock(true);//player will not be checked in next turns suggestion check
+                //TODO: notify player they have a suggestion block
+                returnCard((IntrigueCard)action.getPlayer().removeCard(((AvoidSuggestionAction)action).card));
                 break;
             case ENDTURN:
                 state.nextTurn(state.nextPlayer());
+                
+                int j = player.getId();
+                
+                for (int i = 0; i < state.playersNumber; i++){
+                    
+                    if (j != player.getId()){
+                        state.getPlayer(j).setActiveSuggestionBlock(false);//remove any suggestion blocks players may have 
+                    }  
+                    
+                    j = state.getNextPointer(j);
+                }
+                
                 performAction(new StartTurnAction(player));
                 break;
             case EXTRATURN:
-                performAction(new StartTurnAction(player));
+                performAction(new StartTurnAction(action.getPlayer()));
                 break;
             case KICK:
                 break;
             case MOVE:
-                if (action.result && state.getAction().actionType == ActionType.STARTTURN) {
+                if (action.result && (state.getAction().actionType == ActionType.STARTTURN || state.getAction().actionType == ActionType.THROWAGAIN)) {
                     Tile loc = ((MoveAction) action).getTile();
                     player.setPosition(loc);
                     if (loc.special) {
-                        ((SpecialTile) loc).getSpecial(player);
+                        IntrigueCard card = ((SpecialTile) loc).getIntrigue(player);
+                        switch(card.cardType){
+                            case AVOIDSUGGESTION:
+                                performAction(new AvoidSuggestionAction(player, (AvoidSuggestionIntrigue) card));
+                                break;
+                            case EXTRATURN:
+                                //TODOplayer
+                                performAction(new ExtraTurnAction(player));
+                                break;
+                            case TELEPORT:
+                                //TODO
+                                performAction(new TeleportAction(player));
+                                break;
+                            case THROWAGAIN:
+                                //TODO
+                                performAction(new ThrowAgainAction(player));
+                                break;
+                        }
                     }
                 }
                 break;
@@ -138,8 +180,10 @@ public class GameController {
                 }
                 break;
             case THROWAGAIN:
-                performAction(new StartTurnAction(player));
+                //TODO: tell gui to roll again
+                //TODO: allow players to roll again
                 break;
+            
         }
         //update game state
         state.setAction(action);
@@ -193,5 +237,18 @@ public class GameController {
      */
     public Action suggest(PersonCard person, RoomCard room, WeaponCard weapon, Player player) {
         return new SuggestAction(person, room, weapon, player, state);
+    }
+    
+    public boolean CheckAccuse(PersonCard person,RoomCard room, WeaponCard weapon){
+        return person == this.person && room == this.room && weapon == this.weapon;
+    }
+    
+    public IntrigueCard drawCard(){
+        int nextCard = random.nextInt(cards.size());
+                return cards.remove(nextCard);
+    }
+    
+    private void returnCard(IntrigueCard card){
+        cards.add(card);
     }
 }

@@ -8,21 +8,21 @@ package clue.card;
 import clue.action.Action;
 
 /**
- *Represents an IntrigueCard that allows Players to roll their movement again 
+ * Represents an IntrigueCard that allows Players to roll their movement again
  * for this turn.
+ *
  * @author slb35
  */
-public class ThrowAgainIntrigue extends Card implements IntrigueCard {
+public class ThrowAgainIntrigue extends IntrigueCard {
 
     public ThrowAgainIntrigue(int id) {
         super(id);
+        cardType = CardType.THROWAGAIN;
     }
 
-    
     @Override
-    public Action doSpecial() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public CardType getCardType() {
+        return cardType;
     }
 
-    
 }

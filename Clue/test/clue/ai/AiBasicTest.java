@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package clue.action;
+package clue.ai;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -14,11 +14,11 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author steve
+ * @author zemig
  */
-public class ShowCardActionTest {
+public class AiBasicTest {
     
-    public ShowCardActionTest() {
+    public AiBasicTest() {
     }
     
     @BeforeClass
@@ -38,14 +38,23 @@ public class ShowCardActionTest {
     }
 
     /**
-     * Test of execute method, of class ShowCardAction.
+     * Test of onUpdate method, of class AiBasic.
      */
+//    @Test
+//    public void testOnUpdate() {
+//        System.out.println("onUpdate");
+//        AiBasic instance = null;
+//        instance.onUpdate();
+//        // TODO review the generated test code and remove the default call to fail.
+//        fail("The test case is a prototype.");
+//    }
+    
     @Test
-    public void testExecute() {
-        System.out.println("execute");
-        ShowCardAction instance = null;
-        instance.execute();
-        
+    public void testConstructor(){
+        AiBasic aItest = new AiBasic(1);
+        int expInt = 1;
+        int id = aItest.getId();
+        assertEquals(id, expInt);
     }
     
 }

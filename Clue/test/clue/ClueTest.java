@@ -5,6 +5,7 @@
  */
 package clue;
 
+import clue.action.UnknownActionException;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -41,10 +42,10 @@ public class ClueTest {
      * Test of main method, of class Clue.
      */
     @Test
-    public void testMain() {
+    public void testMain() throws InterruptedException, UnknownActionException {
         System.out.println("main");
         String[] args = null;
-        Clue.main(args);
+        //Clue.main(args);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }

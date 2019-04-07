@@ -5,6 +5,12 @@
  */
 package clue;
 
+import clue.ai.AiSuite;
+import clue.action.ActionSuite;
+import clue.card.CardSuite;
+import clue.gameConstructor.GameConstructorSuite;
+import clue.player.PlayerSuite;
+import clue.tile.TileSuite;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -17,7 +23,7 @@ import org.junit.runners.Suite;
  * @author steve
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({clue.player.PlayerSuite.class, clue.ai.AiSuite.class, clue.SubjectTest.class, clue.action.ActionSuite.class, clue.card.CardSuite.class, clue.ObserverTest.class, clue.GameStateTest.class, clue.ClueTest.class, clue.GameControllerTest.class, clue.tile.TileSuite.class})
+@Suite.SuiteClasses({PlayerSuite.class, SubjectTest.class, AiSuite.class, GameConstructorSuite.class, ActionSuite.class, CardSuite.class, ObserverTest.class, GameStateTest.class, ClueTest.class, GameControllerTest.class, TileSuite.class})
 public class ClueSuite {
 
     @BeforeClass

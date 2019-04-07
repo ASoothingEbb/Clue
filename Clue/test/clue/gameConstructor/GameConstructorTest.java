@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package clue.card;
+package clue.gameConstructor;
 
-import clue.action.Action;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -17,9 +16,9 @@ import static org.junit.Assert.*;
  *
  * @author steve
  */
-public class IntrigueCardTest {
+public class GameConstructorTest {
     
-    public IntrigueCardTest() {
+    public GameConstructorTest() {
     }
     
     @BeforeClass
@@ -38,25 +37,16 @@ public class IntrigueCardTest {
     public void tearDown() {
     }
 
-    public class IntrigueCardImpl extends IntrigueCard {
-
-        public IntrigueCardImpl() {
-            super(0);
-        }
-    }
-
     /**
-     * Test of getCardType method, of class IntrigueCard.
+     * Test of GameConstructor method, of class GameConstructor.
      */
     @Test
-    public void testGetCardType() {
-        System.out.println("getCardType");
-        IntrigueCard instance = null;
-        CardType expResult = null;
-        CardType result = instance.getCardType();
-        assertEquals(expResult, result);
+    public void testGameConstructor() {
+        System.out.println("GameConstructor");
+        GameConstructor instance = new GameConstructor();
+        instance.GameConstructor();
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
-
+    
 }

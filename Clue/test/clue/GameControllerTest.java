@@ -12,6 +12,7 @@ import clue.card.RoomCard;
 import clue.card.WeaponCard;
 import clue.player.Player;
 import java.util.ArrayList;
+import java.util.HashMap;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -70,6 +71,48 @@ public class GameControllerTest {
         GameController instance = new GameController(new ArrayList<Player>());
         Action expResult = null;
         Action result = instance.suggest(person, room, weapon, player);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getLastAction method, of class GameController.
+     */
+    @Test
+    public void testGetLastAction() {
+        System.out.println("getLastAction");
+        GameController instance = null;
+        Action expResult = null;
+        Action result = instance.getLastAction();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getLocations method, of class GameController.
+     */
+    @Test
+    public void testGetLocations() {
+        System.out.println("getLocations");
+        GameController instance = null;
+        HashMap expResult = null;
+        HashMap result = instance.getLocations();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getPlayer method, of class GameController.
+     */
+    @Test
+    public void testGetPlayer() {
+        System.out.println("getPlayer");
+        GameController instance = null;
+        Player expResult = null;
+        Player result = instance.getPlayer();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");

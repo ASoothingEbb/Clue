@@ -3,19 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package clue.AI;
+package clue.card;
 
 /**
  *
- * @author zemig
+ * @author steve
  */
-public enum AILevel {
-    
-    BASIC,
-    ADVANCED;
-    
-    private AILevel() {
-        
-    }
-    
+public enum CardType {
+    AVOIDSUGGESTION, CARD, CARDTYPE, EXTRATURN, PERSON, ROOM, TELEPORT, THROWAGAIN, WEAPON
 }

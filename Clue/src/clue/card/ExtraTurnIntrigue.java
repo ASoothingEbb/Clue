@@ -8,19 +8,20 @@ package clue.card;
 import clue.action.Action;
 
 /**
- *Represents an IntrigueCard that allows players to take an extra turn.
+ * Represents an IntrigueCard that allows players to take an extra turn.
+ *
  * @author slb35
  */
-public class ExtraTurnIntrigue extends Card implements IntrigueCard{
+public class ExtraTurnIntrigue extends IntrigueCard {
 
     public ExtraTurnIntrigue(int id) {
         super(id);
+        cardType = CardType.EXTRATURN;
     }
 
-    
     @Override
-    public Action doSpecial() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public CardType getCardType() {
+        return cardType;
     }
-    
+
 }

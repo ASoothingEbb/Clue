@@ -6,22 +6,25 @@
 package clue.card;
 
 /**
- *Represents a game card. This may be a person, room, weapon or intrigue card.
+ * Represents a game card. This may be a person, room, weapon or intrigue card.
+ *
  * @author slb35
  */
 public abstract class Card {
 
     private int id;
+    public CardType cardType = CardType.CARD;
 
     public Card(int id) {
         this.id = id;
     }
-    
+
     /**
      * Gets the card id.
+     *
      * @return id
      */
-    public int getid(){
+    public int getid() {
         return id;
     }
 }

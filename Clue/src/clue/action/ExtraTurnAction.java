@@ -14,6 +14,13 @@ import clue.player.Player;
 public class ExtraTurnAction extends Action{
 
         public ActionType actionType = ActionType.EXTRATURN;
+        
+        /**
+         * Creates a new ExtraTurnAction
+         * @param player the Player to roll again
+         */
+        
+        
         public ExtraTurnAction(Player player){
             super(player);
         }

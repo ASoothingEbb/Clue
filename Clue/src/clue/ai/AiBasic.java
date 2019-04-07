@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package clue.AI;
+package clue.ai;
 
 import clue.GameController;
 import clue.action.AccuseAction;
@@ -27,7 +27,7 @@ import java.util.logging.Logger;
  *
  * @author zemig
  */
-public class AIBasic extends AIPlayer{
+public class AiBasic extends AIPlayer{
     
 //    private boolean active;
 //    private List<Card> cards;
@@ -40,21 +40,17 @@ public class AIBasic extends AIPlayer{
     Random rand;
     
     
-    
-    
-    public AIBasic(int id) {
+    public AiBasic(int id) {
         super(id);
         
         gameController = getGameController();
         rand = new Random();
     }
     
-    
-    
     @Override
     public void onUpdate() {
        
-        
+        //Generating Random Cards (ids).
         PersonCard randPersonCard = new PersonCard(rand.nextInt(6) + 1);
         RoomCard randRoomCard = new RoomCard(rand.nextInt(6) + 1);
         WeaponCard randWeaponCard = new WeaponCard(rand.nextInt(9)+ 1);
@@ -64,9 +60,9 @@ public class AIBasic extends AIPlayer{
             if(gameController.getLastAction() instanceof EndTurnAction){//If my turn, last action was end turn.
                 if(this.getPosition().isRoom()){//If I'm in a room
                     try {           
-                        sendAction(new AccuseAction(this, randPersonCard, randRoomCard, randWeaponCard));
+                        sendAction(Accuse(randPersonCard, randRoomCard, randWeaponCard));
                     } catch (InterruptedException ex) {
-                        Logger.getLogger(AIBasic.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(AiBasic.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
                 
@@ -74,15 +70,17 @@ public class AIBasic extends AIPlayer{
 
                 ShowCardsAction action = (ShowCardsAction) gameController.getLastAction();
                 Card card = action.getCardList().get(0);
-                ShowCardAction newAction = new ShowCardAction(action.getSuggester(), card);
+                ShowCardAction newAction = new ShowCardAction(action.getSuggester(), card);//Shows one card to person who requested cards to be shown(suggested).
 
                 try {
                     sendAction(newAction);//Show Card.
                 } catch (InterruptedException ex) {
-                    Logger.getLogger(AIBasic.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(AiBasic.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
     }
+    
+    
     
 }

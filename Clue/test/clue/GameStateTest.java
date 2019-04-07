@@ -25,12 +25,13 @@ import static org.junit.Assert.*;
 public class GameStateTest {
 
     GameState instance;
+    ArrayList<Player> players;
 
     public GameStateTest() {
         Player player0 = new AIPlayer(0);
         Player player1 = new AIPlayer(1);
         Player player2 = new AIPlayer(2);
-        ArrayList<Player> players = new ArrayList();
+        players = new ArrayList();
         players.add(player0);
         players.add(player1);
         players.add(player2);
@@ -59,9 +60,21 @@ public class GameStateTest {
     @Test
     public void testRegister() {
         System.out.println("register");
-        Observer observer = new AIPlayer(0);
-        instance.register(observer);
-        assertEquals(1, instance.playersNumber);
+        
+        Player player0 = new AIPlayer(0);
+        Player player1 = new AIPlayer(1);
+        ArrayList<Player> playerList = new ArrayList();
+        
+        playerList.add(player0);
+        playerList.add(player1);
+        
+        GameState testGame = new GameState(playerList);
+        
+        Player testPlayer = new AIPlayer(2);
+        
+        testGame.register(testPlayer);
+        int expNum = 3 ;//Since we are only adding one AIPlayer(original size + 1).
+        assertEquals(expNum, testGame.playersNumber);
     }
 
     /**
@@ -72,8 +85,9 @@ public class GameStateTest {
         System.out.println("unregister");
         Observer observer = new AIPlayer(0);
         instance.register(observer);
+        assertEquals(4, instance.playersNumber);//+1
         instance.unregister(observer);
-        assertEquals(0, instance.playersNumber);
+        assertEquals(3, instance.playersNumber);//-1
     }
 
     /**
@@ -133,8 +147,16 @@ public class GameStateTest {
         System.out.println("previousPlayer");
         instance.register(new AIPlayer(1));
         instance.previousPlayer();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        assertEquals(players.get(0), instance.getCurrentPlayer());
+        
+        instance.nextTurn(1);
+        instance.nextTurn(2);//Skipping two turns.
+        
+        instance.previousPlayer();
+        
+        assertEquals(players.get(1), instance.getPreviousPlayer());//Checking if second turn player's previous player is player 1
+       
     }
 
     /**
@@ -182,8 +204,11 @@ public class GameStateTest {
         players.add(new AIPlayer(0));
         players.add(new AIPlayer(1));
         GameState instance = new GameState(players);
+        instance.nextTurn(0);
+         
         int expResult = 1;
         int result = instance.nextPlayer();
+       
         assertEquals(expResult, result);
     }
 
@@ -199,12 +224,17 @@ public class GameStateTest {
         players.get(1).removeFromPlay();
         players.add(new AIPlayer(2));
         int i = 0;
-        int expResult = 2;
+        int expResult = 1;
         int result = instance.getNextPointer(i);
         assertEquals(expResult, result);
-        expResult = 0;
+        expResult = 2;
         result = instance.getNextPointer(result);
         assertEquals(expResult,result);
+        
+        int test = instance.getNextPointer(instance.getPlayerList().size()-1);//nextPointer(size of playerList)
+        
+        //should look back ariund to first player(0)
+        assertEquals(0, test);
     }
 
     /**
@@ -214,12 +244,16 @@ public class GameStateTest {
     public void testGetPlayer() {
         System.out.println("getPlayer");
         int id = 0;
-        GameState instance = null;
-        Player expResult = null;
+       
+        ArrayList<Player> players = new ArrayList();
+        players.add(new AIPlayer(0));
+        players.add(new AIPlayer(1));
+        GameState instance = new GameState(players);
+   
+        Player expResult = players.get(0);
         Player result = instance.getPlayer(id);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+       
     }
 
     /**

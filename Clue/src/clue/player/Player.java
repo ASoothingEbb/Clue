@@ -13,10 +13,12 @@ import clue.action.AccuseAction;
 import clue.action.MoveAction;
 import clue.action.SuggestAction;
 import clue.action.UnknownActionException;
+import clue.card.IntrigueCard;
 import clue.card.PersonCard;
 import clue.card.RoomCard;
 import clue.tile.Tile;
 import clue.card.WeaponCard;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 import java.util.logging.Level;
@@ -33,9 +35,12 @@ public abstract class Player implements Observer {
     }
     private boolean active;
     private List<Card> cards;
+    private List<IntrigueCard> intrigues;
     private Tile position;
     protected int movements;
     private int id;
+    private boolean activeSuggestionBlock;
+
     public GameController game;
 
     /**
@@ -44,6 +49,9 @@ public abstract class Player implements Observer {
     public Player(int id) {
         this.id = id;
         active = true;
+        activeSuggestionBlock = false;
+        cards = new ArrayList();
+        intrigues = new ArrayList();
     }
 
     @Override
@@ -61,7 +69,7 @@ public abstract class Player implements Observer {
 
     /**
      * Executes a sequence of moves
-     * 
+     *
      * @param tiles a queue of destination tiles
      * @throws clue.player.Player.MovementException when the player makes an
      * invalid move
@@ -106,8 +114,8 @@ public abstract class Player implements Observer {
      * @param weapon murder weapon
      * @return new AccuseAction
      */
-    private Action Accuse(PersonCard person, RoomCard room, WeaponCard weapon) {
-        return new AccuseAction(this, person, room, weapon);
+    public Action Accuse(PersonCard person, RoomCard room, WeaponCard weapon) {
+        return new AccuseAction(this, person, room, weapon, game.CheckAccuse(person, room, weapon));
     }
 
     /**
@@ -115,7 +123,6 @@ public abstract class Player implements Observer {
      *
      * @param action the action to be executed
      */
-
     public void sendAction(Action action) throws InterruptedException {
         if (active) {
             try {
@@ -170,14 +177,21 @@ public abstract class Player implements Observer {
         cards.add(card);
     }
 
+    public IntrigueCard addIntrigue() {
+        IntrigueCard card = (IntrigueCard) game.drawCard();
+        intrigues.add(card);
+        return card;
+    }
+
     /**
      * Removes a card from this player.
      *
      * @param card the card to remove
      * @throws NullPointerException
      */
-    public void removeCard(Card card) throws NullPointerException {
+    public Card removeCard(Card card) throws NullPointerException {
         cards.remove(card);
+        return card;
     }
 
     /**
@@ -189,13 +203,32 @@ public abstract class Player implements Observer {
     public boolean hasCard(Card card) {
         return cards.contains(card);
     }
-    
+
+    /**
+     * Sets whether or not the player has an active suggestion block
+     *
+     * @param newActiveSuggestionBlockValue
+     */
+    public void setActiveSuggestionBlock(boolean newActiveSuggestionBlockValue) {
+        activeSuggestionBlock = newActiveSuggestionBlockValue;
+    }
+
+    /**
+     * Gets whether or not the player has an active suggestion block
+     *
+     * @return activeSuggestionBlock
+     */
+    public boolean getActiveSuggestionBlock() {
+        return activeSuggestionBlock;
+    }
+
     /**
      * Returns the game controller object.
+     *
      * @return game
      */
-    public GameController getGameController(){
+    public GameController getGameController() {
         return game;
     }
-    
+
 }
