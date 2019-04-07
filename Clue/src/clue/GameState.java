@@ -52,8 +52,8 @@ public class GameState implements Subject {
      */
     public GameState(List<Player> players) {
         this.players = players;
-        previousPlayer = players.get(0);
-        currentPlayer = players.get(0);
+        previousPlayer = players.get(1);
+        currentPlayer = players.get(1);
         running = true;
         playersNumber = players.size();
     }
@@ -109,7 +109,7 @@ public class GameState implements Subject {
 
     public int getNextPointer(int i) {
         if (i + 1 == players.size()) {
-            i = 0;
+            i = 1;
         } else {
             i++;
         }
