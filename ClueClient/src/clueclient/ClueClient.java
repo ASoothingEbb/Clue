@@ -7,9 +7,11 @@ package clueclient;
 
 import java.util.HashMap;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -22,14 +24,18 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
@@ -45,6 +51,13 @@ public class ClueClient extends Application {
     private int width;
     private int height;
     private String currentWindowMode;
+
+    // Fonts
+    private Font avenirTitle = Font.loadFont(getClass().getResourceAsStream("assets/fonts/Avenir-Book.ttf"), 20);
+    private Font avenirNormal = Font.loadFont(getClass().getResourceAsStream("assets/fonts/Avenir-Book.ttf"), 12);   
+    
+    // BackgroundFill
+    private Background blackFill = new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY));
     
     @Override
     public void start(Stage primaryStage) {
@@ -64,15 +77,10 @@ public class ClueClient extends Application {
 
         Scene scene = new Scene(menuOptions, width, height);
         
-        Image bg = new Image(getClass().getResource("assets/bgALTsmall.jpg").toExternalForm());
+        Image bg = new Image(getClass().getResource("assets/cluedoMansion.jpg").toExternalForm());
         
-        BackgroundImage background = new BackgroundImage(bg,
-                                                        BackgroundRepeat.NO_REPEAT,
-                                                        BackgroundRepeat.NO_REPEAT,
-                                                        BackgroundPosition.CENTER,
-                                                        BackgroundSize.DEFAULT);
-       
-        menuOptions.setBackground(new Background(background));
+        //BackgroundImage background = new BackgroundImage(bg, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
+        menuOptions.setBackground(blackFill);
         
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -80,36 +88,45 @@ public class ClueClient extends Application {
     
     private void addUIControls(VBox menuOptions) {
         // Game Title
-        Font titleFont = Font.loadFont(getClass().getResourceAsStream("assets/ringbearer.ttf"), 80);
+        Font titleFont = Font.loadFont(getClass().getResourceAsStream("assets/fonts/ringbearer.ttf"), 80);
         Label gameTitle = new Label("cluE");
         gameTitle.setFont(titleFont);
         gameTitle.setTextFill(Color.WHITE);
+        
+        // Test new Button design
+        MenuItem createGameButton = new MenuItem("Play", avenirTitle);
+        createGameButton.setOnMouseClicked(e -> startGameScene(stage));
+        
+        MenuItem howToPlayButton = new MenuItem("How To Play", avenirTitle);
+        howToPlayButton.setOnMouseClicked(e -> howToPlayScene(stage));
+        
+        MenuItem settingsButton = new MenuItem("Settings", avenirTitle);
+        settingsButton.setOnMouseClicked(e -> settingScene(stage));
 
-        // Create Game Button
-        Button createGame = new Button("Play");
-        createGame.setOnAction(e -> startGameScene(stage));
-
-        // Join Game Button
-        Button joinGame = new Button("How to play");
-        joinGame.setOnAction(e -> howToPlayScene(stage));
-
-        // Settings Button
-        Button settings = new Button("Settings");
-        settings.setOnAction(e -> settingScene(stage));
-
-         menuOptions.getChildren().addAll(gameTitle, createGame, joinGame, settings);
+         menuOptions.getChildren().addAll(gameTitle, createGameButton, howToPlayButton, settingsButton);
     }
     
     private void startGameScene(Stage stage) {
+        BorderPane alignmentPane = new BorderPane();
+        alignmentPane.setBackground(blackFill);
+
         GridPane startGameOptions = new GridPane();
+        startGameOptions.setAlignment(Pos.CENTER);
+        startGameOptions.setBackground(blackFill);
+        
+        alignmentPane.setCenter(startGameOptions);
         
         // Scene Title
         Label startGameTitle = new Label("Create Game");
+        startGameTitle.setFont(avenirTitle);
+        startGameTitle.setTextFill(Color.WHITE);
 
         // Number of Players
         final int numberOfPlayers = 6;
         
         Label numberOfPlayersLabel = new Label("Number of Players");
+        numberOfPlayersLabel.setFont(avenirNormal);
+        numberOfPlayersLabel.setTextFill(Color.WHITE);
         
         Slider playersNum = new Slider(1,numberOfPlayers,6);
         
@@ -121,31 +138,45 @@ public class ClueClient extends Application {
 
         // Number of AI Players
         Label aiPlayersLabel = new Label("AI Players");
+        aiPlayersLabel.setFont(avenirNormal);
+        aiPlayersLabel.setTextFill(Color.WHITE);
+        
         CheckBox aiPlayers = new CheckBox();
         
         // Create Game Instance
-        
         gameInstance game = new gameInstance();
         
-        Button newGameButton = new Button("Start Game");
-        newGameButton.setOnAction((ActionEvent e) -> {
+        MenuItem startGameButton = new MenuItem("Start Game", avenirTitle);
+        startGameButton.setOnMouseClicked(e -> {
             stage.hide();
             game.startGame((int) playersNum.getValue(), aiPlayers.isSelected(), width, height);
         });
 
         // Return to menu
-        Button returnButton = new Button("Back");
-        returnButton.setOnAction(e -> stage.setScene(prevScene));
+        MenuItem returnButton = new MenuItem("Back", avenirTitle);
+        returnButton.setOnMouseClicked(e -> stage.setScene(prevScene));
         
-        startGameOptions.add(startGameTitle, 0, 0);
+        startGameOptions.add(startGameTitle, 0, 0, 2, 1);
+        GridPane.setHalignment(startGameTitle, HPos.CENTER);
+        
         startGameOptions.add(numberOfPlayersLabel, 0, 1);
-        startGameOptions.add(playersNum, 1, 1);
-        startGameOptions.add(aiPlayersLabel, 0, 2);
-        startGameOptions.add(aiPlayers, 1, 2);
-        startGameOptions.add(newGameButton, 0, 3);
-        startGameOptions.add(returnButton, 0, 4);
+        GridPane.setHalignment(numberOfPlayersLabel, HPos.CENTER);
         
-        Scene scene = new Scene(startGameOptions, width, height);
+        startGameOptions.add(playersNum, 1, 1);
+        
+        startGameOptions.add(aiPlayersLabel, 0, 2);
+        GridPane.setHalignment(aiPlayersLabel, HPos.CENTER);
+        
+        startGameOptions.add(aiPlayers, 1, 2);
+        GridPane.setHalignment(aiPlayers, HPos.CENTER);
+        
+        startGameOptions.add(startGameButton, 0, 3, 2, 1);
+        GridPane.setHalignment(startGameButton, HPos.CENTER);
+        
+        alignmentPane.setBottom(returnButton);
+        BorderPane.setMargin(returnButton, new Insets(0,0,10,20));
+        
+        Scene scene = new Scene(alignmentPane, width, height);
         prevScene = stage.getScene();
         stage.setScene(scene);
     }
