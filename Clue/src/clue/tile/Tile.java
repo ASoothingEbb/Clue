@@ -89,6 +89,32 @@ public class Tile {
     public boolean setOccupied(){
         return occupied;
     }
+
+    /**
+     * Adds Tile to the list of adjacent tiles for the current tile, the tile being added will have this tile added to its adjacency list
+     * @param adjacentTile tile to add
+     */
+    public void addAdjacentBoth(Tile adjacentTile) {
+        this.adjacentTiles.add(adjacentTile);
+        adjacentTile.addAdjacent(this);//non recursive add to prevent them keep on adding and calling each other
+    }
+   
+    /**
+     * Adds Tile to the list of adjacent tiles for the current tile 
+     * @param adjacentTile tile to add
+     */
+    public void addAdjacent(Tile adjacentTile) {
+        this.adjacentTiles.add(adjacentTile);
+    }
     
-    
+    public int getX(){
+        return x;
+    }
+    public int getY(){
+        return y;
+    }
+    public List<Tile> getAdjacent(){
+        return adjacentTiles;
+    }
+        
 }
