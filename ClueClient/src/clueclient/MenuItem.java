@@ -17,12 +17,17 @@ import javafx.scene.text.Font;
  * @author hungb
  */
 public class MenuItem extends Label {
+    private Color activeColor;
+    private Color inactiveColor;
 
     public MenuItem(String name, Font font) {
         super(name);
         setAlignment(Pos.CENTER);
         
         setFont(font);
+        
+        activeColor = Color.WHITE;
+        inactiveColor = Color.GREY;
         
         setActive(false);
         
@@ -36,8 +41,10 @@ public class MenuItem extends Label {
     }
     
     public void setActive(boolean active) {
-        setTextFill(active ? Color.WHITE : Color.GREY);
+        setTextFill(active ? activeColor : inactiveColor);
     }
     
-    
+    public void setActiveColor(Color color) {
+        this.activeColor = color;
+    }
 }
