@@ -25,10 +25,15 @@ import java.util.logging.Logger;
  */
 public class BoardMappings {
     
-    public static void main(String[] args){
+    public static void main(String[] args){//TODO:              delete me final submission
+        System.out.println("[BoardMappings.main (temp, delete main later)] running example1");
         try {
             BoardMappings boardMappings = new BoardMappings("tiles.csv", "doors.csv");
         } catch (NoSuchRoomException ex) {
+            System.out.println("oof");
+            Logger.getLogger(BoardMappings.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchTileException ex) {
+            System.out.println("oof2");
             Logger.getLogger(BoardMappings.class.getName()).log(Level.SEVERE, null, ex);
         }
     
@@ -38,7 +43,7 @@ public class BoardMappings {
     int boardWidth;
     int boardHeight;
     
-    public BoardMappings(String tileRoomLayoutPath, String doorLocationsPath) throws NoSuchRoomException{
+    public BoardMappings(String tileRoomLayoutPath, String doorLocationsPath) throws NoSuchRoomException, NoSuchTileException{
         boardWidth = 6;//24
         boardHeight = 8;//25
         int roomCount = 9;
@@ -71,9 +76,9 @@ public class BoardMappings {
         
         //System.out.println("Rooms");
         //for (Tile t : rooms){        
-        //    System.out.print("id_"+(t.getY()+1)+": ");
+        //    System.out.print("id_"+(t.getY())+": ");
         //    for (Tile aj : t.getAdjacent()){
-        //        System.out.print((aj.getX()+1)+","+(aj.getY()+1));
+        //        System.out.print((aj.getX())+","+(aj.getY()));
         //    }
         //    System.out.println();
         //}  
@@ -160,7 +165,7 @@ public class BoardMappings {
         
         Door door;
         for (ArrayList<String> row : csvData){
-            door = new Door(Integer.parseInt(row.get(0).replaceAll("[^0-9]+", "")), Integer.parseInt(row.get(1).replaceAll("[^0-9]+", "")), Integer.parseInt(row.get(1).replaceAll("[^0-9]+", "")));
+            door = new Door(Integer.parseInt(row.get(0).replaceAll("[^0-9]+", "")), Integer.parseInt(row.get(1).replaceAll("[^0-9]+", "")), Integer.parseInt(row.get(2).replaceAll("[^0-9]+", "")));
             doors.add(door);
         }
         return doors;
@@ -246,7 +251,7 @@ public class BoardMappings {
         return localMappings;
     }
 
-    private void addDoorsToTileAdjacencies(List<Door> doorLocations) throws NoSuchRoomException {
+    private void addDoorsToTileAdjacencies(List<Door> doorLocations) throws NoSuchRoomException, NoSuchTileException {
         Tile outside;
         Tile room;
         for (Door door: doorLocations){
@@ -258,6 +263,9 @@ public class BoardMappings {
                 room.addAdjacentBoth(outside);
             } catch (NoSuchRoomException ex) {
                 throw ex;
+            }
+            catch (NullPointerException ex){
+                throw new NoSuchTileException("door csv file contains an illegal door, the outside tile index (1,2) must be the x y coordinates of a base tile or special tile");
             }
         }
     }
