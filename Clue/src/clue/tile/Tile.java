@@ -95,8 +95,13 @@ public class Tile {
      * @param adjacentTile tile to add
      */
     public void addAdjacentBoth(Tile adjacentTile) {
-        this.adjacentTiles.add(adjacentTile);
-        adjacentTile.addAdjacent(this);//non recursive add to prevent them keep on adding and calling each other
+        this.addAdjacent(adjacentTile);
+        if (adjacentTile.isAdjacent(this)){
+            System.out.println("[Tile.addAdjacentBoth]target tile allready knowns about this adjacency, dont add both");                    
+        }
+        else{
+                adjacentTile.addAdjacent(this);//non recursive add to prevent them keep on adding and calling each other
+        }  
     }
    
     /**
@@ -104,7 +109,12 @@ public class Tile {
      * @param adjacentTile tile to add
      */
     public void addAdjacent(Tile adjacentTile) {
-        this.adjacentTiles.add(adjacentTile);
+        if (isAdjacent(adjacentTile)){
+            System.out.println("[Tile.addAdjacent]this tile allready knows about this adjacency!");
+        }
+        else{
+            this.adjacentTiles.add(adjacentTile);
+        }
     }
     
     public int getX(){
