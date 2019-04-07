@@ -5,6 +5,7 @@
  */
 package clueclient;
 
+import java.io.File;
 import java.util.HashMap;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
@@ -32,11 +33,14 @@ import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 
 /**
@@ -53,8 +57,9 @@ public class ClueClient extends Application {
     private String currentWindowMode;
 
     // Fonts
-    private Font avenirTitle = Font.loadFont(getClass().getResourceAsStream("assets/fonts/Avenir-Book.ttf"), 20);
-    private Font avenirNormal = Font.loadFont(getClass().getResourceAsStream("assets/fonts/Avenir-Book.ttf"), 12);   
+    private final Font avenirLarge = Font.loadFont(getClass().getResourceAsStream("assets/fonts/Avenir-Book.ttf"), 30);
+    private final Font avenirTitle = Font.loadFont(getClass().getResourceAsStream("assets/fonts/Avenir-Book.ttf"), 20);
+    private final Font avenirNormal = Font.loadFont(getClass().getResourceAsStream("assets/fonts/Avenir-Book.ttf"), 12);   
     
     // BackgroundFill
     private Background blackFill = new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY));
@@ -195,64 +200,91 @@ public class ClueClient extends Application {
         stage.setScene(scene);
     }
     
-    private void settingScene(Stage stage) {
-        GridPane settingsOptions = new GridPane();
+    private void settingScene(Stage stage) {        
+        BorderPane settingsLayout = new BorderPane();
+        settingsLayout.setBackground(blackFill);
         
-        // Display Settings
-        Label displaySettingsLabel = new Label("Display");
+        BorderPane leftLayout = new BorderPane();
         
-        // Resolutions
-        Label gameResolutionLabel = new Label("Resolution");
+        VBox settingsOptions = new VBox();
         
-        ChoiceBox gameResolution = new ChoiceBox();
-        gameResolution.setValue(width+"x"+height);
-        gameResolution.getItems().addAll("1280x720", "1920x1080", "2560x1440");
-
-        // TODO: make it refresh changes
-        gameResolution.getSelectionModel().selectedItemProperty().addListener((v, name, value) -> {
-            String[] resolution = value.toString().split("x");
-            width =Integer.parseInt(resolution[0]);
-            height = Integer.parseInt(resolution[1]);
+        GridPane textureSettings = new GridPane();
+        textureSettings.setBackground(new Background(new BackgroundFill(Color.rgb(50, 50, 50), CornerRadii.EMPTY, Insets.EMPTY)));
+        textureSettings.setPadding(new Insets(20,30,20,30));
+        GridPane audioSettings = new GridPane();
+        audioSettings.setBackground(new Background(new BackgroundFill(Color.rgb(50, 50, 50), CornerRadii.EMPTY, Insets.EMPTY)));
+        GridPane creditsPane = new GridPane();
+        creditsPane.setBackground(new Background(new BackgroundFill(Color.rgb(50, 50, 50), CornerRadii.EMPTY, Insets.EMPTY)));
+        
+        
+        Label settingsTitle = new Label("Settings");
+        settingsTitle.setTextFill(Color.WHITE);
+        settingsTitle.setFont(avenirLarge);
+        
+        MenuItem texturesButton = new MenuItem("Textures", avenirTitle);
+        texturesButton.setOnMouseClicked(e -> {
+            settingsLayout.setCenter(textureSettings);
+            BorderPane.setMargin(textureSettings, new Insets(0,50,50,0));
         });
         
-        // Window Mode
-        Label windowModeLabel = new Label("Window Mode");
+        MenuItem audioButton = new MenuItem("Audio", avenirTitle);
+        audioButton.setOnMouseClicked(e -> {
+            settingsLayout.setCenter(audioSettings);
+            BorderPane.setMargin(audioSettings, new Insets(0,50,50,0));
+        });
         
-        ChoiceBox windowMode = new ChoiceBox();
-        windowMode.setValue("Windowed");
-        windowMode.getItems().addAll("Windowed", "Borderless", "Fullscreen");
+        MenuItem creditsButton = new MenuItem("Credits", avenirTitle);
+        creditsButton.setOnMouseClicked(e -> {
+            settingsLayout.setCenter(creditsPane);
+            BorderPane.setMargin(creditsPane, new Insets(0,50,50,0));
+        });
         
-        windowMode.getSelectionModel().selectedItemProperty().addListener((v, name, value) -> {
-            currentWindowMode = value.toString();
-        }); 
+        MenuItem returnButton = new MenuItem("Back", avenirTitle);
+        returnButton.setOnMouseClicked(e -> stage.setScene(prevScene));
         
-        // Audio Settings
-        Label audioSettingsLabel = new Label("Audio");
+        // Textures
+        Label boardTextureLabel = new Label("Board");
+        boardTextureLabel.setTextFill(Color.WHITE);
+        boardTextureLabel.setFont(avenirTitle);
         
-        Label masterVolumeLabel = new Label("Master Volume");
+        TextField filePath = new TextField();
+        filePath.setEditable(false);        
+        filePath.setPrefColumnCount(40);
         
-        Label musicVolumeLabel = new Label("Music Volume");
+        ExtensionFilter imageFormats = new ExtensionFilter("*.jpg", "*.png", "*.jpeg");
         
-        Label effectVoumeLabel = new Label("Sound Effect Volume");
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setSelectedExtensionFilter(imageFormats);
+        fileChooser.setTitle("Select");
+
+        MenuItem fileSelector = new MenuItem("Choose", avenirTitle);
+        fileSelector.setOnMouseClicked(e -> {
+            File boardTexture = fileChooser.showOpenDialog(stage);
+            filePath.setText(boardTexture.getAbsolutePath());
+        });
         
+        // adding nodes to panes
         
-        // Gameplay Settings
-        Label gameplaySettingsLabel = new Label("Gameplay");
+        settingsOptions.getChildren().addAll(texturesButton, audioButton, creditsButton);
+        settingsOptions.setPadding(new Insets(0,10,0,20));
         
+        textureSettings.add(boardTextureLabel, 0, 0);
+        GridPane.setMargin(boardTextureLabel, new Insets(0,10,0,0));
+        textureSettings.add(filePath, 1, 0);
+        textureSettings.add(fileSelector, 2, 0);
+        GridPane.setMargin(fileSelector, new Insets(0,0,0,10));
         
+        settingsLayout.setLeft(leftLayout);
         
-        // Return to menu
-        Button returnButton = new Button("Back");
-        returnButton.setOnAction(e -> stage.setScene(prevScene));
+        settingsLayout.setTop(settingsTitle);
+        BorderPane.setAlignment(settingsTitle, Pos.CENTER_LEFT);
+        BorderPane.setMargin(settingsTitle, new Insets(10,0,10,20));
         
-        settingsOptions.add(displaySettingsLabel, 0, 0);
-        settingsOptions.add(gameResolutionLabel, 0, 1);
-        settingsOptions.add(gameResolution, 1, 1);
-        settingsOptions.add(windowModeLabel, 0, 2);
-        settingsOptions.add(windowMode, 1, 2);
-        settingsOptions.add(returnButton, 0, 3);
-                
-        Scene scene = new Scene(settingsOptions, width, height);
+        leftLayout.setTop(settingsOptions);
+        leftLayout.setBottom(returnButton);
+        BorderPane.setMargin(returnButton, new Insets(0,0,10,20));
+        
+        Scene scene = new Scene(settingsLayout, width, height);
         prevScene = stage.getScene();
         stage.setScene(scene);
    }
