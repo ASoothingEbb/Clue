@@ -23,6 +23,13 @@ public abstract class IntrigueCard extends Card {
      *
      * @return intrigue Action.
      */
+    
+    
+    /**
+     * Gets the card enum type.
+     *
+     * @return Card Type
+     */
     public CardType getCardType() {
         return cardType;
     }

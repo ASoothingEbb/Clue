@@ -5,6 +5,7 @@
  */
 package clue.ai;
 
+import clue.player.AIPlayer;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -16,9 +17,9 @@ import static org.junit.Assert.*;
  *
  * @author zemig
  */
-public class AiBasicTest {
+public class AIBasicTest {
     
-    public AiBasicTest() {
+    public AIBasicTest() {
     }
     
     @BeforeClass
@@ -40,14 +41,12 @@ public class AiBasicTest {
     /**
      * Test of onUpdate method, of class AiBasic.
      */
-//    @Test
-//    public void testOnUpdate() {
-//        System.out.println("onUpdate");
-//        AiBasic instance = null;
-//        instance.onUpdate();
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
+    @Test
+    public void testOnUpdate() {
+        System.out.println("onUpdate");
+        AiBasic instance = new AiBasic(0);
+        instance.onUpdate();
+    }
     
     @Test
     public void testConstructor(){

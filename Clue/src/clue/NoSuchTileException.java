@@ -3,18 +3,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package clue.card;
+package clue;
 
 /**
- *Represents a card for a person.
- * @author slb35
+ *
+ * @author Malter
  */
-public class PersonCard extends Card{
+public class NoSuchTileException extends Exception {
 
-    public PersonCard(int id) {
-        super(id);
-        cardType = CardType.PERSON;
+    public NoSuchTileException(String message) {
+        super(message);
     }
-    
+        
+    public NoSuchTileException() {
+    }
     
 }

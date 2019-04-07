@@ -19,6 +19,11 @@ public class ExtraTurnIntrigue extends IntrigueCard {
         cardType = CardType.EXTRATURN;
     }
 
+    /**
+     * Gets the card enum type.
+     *
+     * @return Card Type
+     */
     @Override
     public CardType getCardType() {
         return cardType;
