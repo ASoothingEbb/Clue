@@ -56,7 +56,7 @@ public class AccuseActionTest {
         ArrayList<Player> players = new ArrayList();
         players.add(player);
         GameController game = new GameController(players);
-        AccuseAction instance = new AccuseAction(player, person, room, weapon,game.CheckAccuse(person, room, weapon));
+        AccuseAction instance = new AccuseAction(player, person, room, weapon, true);
         instance.execute();
         // TODO review the generated test code and remove the default call to fail.
         boolean expResult = true;
