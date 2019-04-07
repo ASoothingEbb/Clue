@@ -47,12 +47,7 @@ public class Tile {
      * @return adjacency
      */
     public boolean isAdjacent(Tile tile){
-        if(adjacentTiles.contains(tile)){
-            return true;
-        }
-        else{
-            return false;
-        }
+        return adjacentTiles.contains(tile);
     }
     
     /**
