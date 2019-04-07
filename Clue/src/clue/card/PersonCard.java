@@ -16,4 +16,5 @@ public class PersonCard extends Card{
         cardType = CardType.PERSON;
     }
     
+    
 }

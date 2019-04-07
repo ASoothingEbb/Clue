@@ -229,10 +229,10 @@ public class GameController {
     /**
      * Creates a new SuggestAction for a player
      *
-     * @param person the person to be suggested
-     * @param room the room to be suggested
-     * @param weapon the weapon to be suggested
-     * @param player the suggesting player
+     * @param person the person card to be suggested
+     * @param room the room card to be suggested
+     * @param weapon the weapon card to be suggested
+     * @param player the suggesting Player
      * @return new SuggestAction
      */
     public Action suggest(PersonCard person, RoomCard room, WeaponCard weapon, Player player) {
