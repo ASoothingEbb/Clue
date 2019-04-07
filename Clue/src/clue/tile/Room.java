@@ -5,6 +5,7 @@
  */
 package clue.tile;
 
+import clue.NoSuchRoomException;
 import clue.card.RoomCard;
 
 /**
@@ -18,8 +19,8 @@ public class Room extends Tile{
      * Creates a new Room
      * @param card the RoomCard associated with this room.
      */
-    public Room(RoomCard card, int x, int y) {
-        super(x,y);
+    public Room(RoomCard card) {
+        super(-1,card.getid());
         this.card = card;
         room = true;
     }
@@ -29,8 +30,8 @@ public class Room extends Tile{
      * @param x
      * @param y
      */
-    public Room(int x, int y){
-        super(x,y);
+    public Room(){
+        super(-1,-1);
         this.card = card;
         room = true;
     }
@@ -40,10 +41,13 @@ public class Room extends Tile{
      * @param card the RoomCard to set
      */
     public void setCard(RoomCard card){
-        this.card = card;
+        System.err.println("[Room.setCard] //DO NOT IMPLEMENT, IF YOU MUST SPEAK TO MW434");        
     }
     
-    public RoomCard getCard(){
+    public RoomCard getCard() throws NoSuchRoomException{
+        if (getY() == -1){
+            throw new NoSuchRoomException("room does not contain a valid roomCard");
+        }
         return card;
     }
 }
