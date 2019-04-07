@@ -47,4 +47,8 @@ public class MenuItem extends Label {
     public void setActiveColor(Color color) {
         this.activeColor = color;
     }
+    
+    public void setInactiveColor(Color color) {
+        this.inactiveColor = color;
+    }
 }
