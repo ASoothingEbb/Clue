@@ -31,7 +31,6 @@ import java.util.logging.Logger;
  */
 public class Player implements Observer {
 
-
     private boolean active;
     private List<Card> cards;
     private List<IntrigueCard> intrigues;
@@ -66,11 +65,11 @@ public class Player implements Observer {
         return this.id;
     }
 
-    public int getMoves(){
+    public int getMoves() {
         return movements;
     }
-    
-    public void setMoves(int moves){
+
+    public void setMoves(int moves) {
         movements = moves;
     }
 
@@ -145,6 +144,14 @@ public class Player implements Observer {
         return cards.contains(card);
     }
 
+    public List<Card> getCards() {
+        return cards;
+    }
+
+    public List<IntrigueCard> getIntrigue() {
+        return intrigues;
+    }
+
     /**
      * Sets whether or not the player has an active suggestion block
      *
@@ -186,7 +193,6 @@ public class Player implements Observer {
 //            throw new MovementException();
 //        }
 //    }
-
 //    /**
 //     * Attempts to move from the current position to a new tile.
 //     *
@@ -196,7 +202,6 @@ public class Player implements Observer {
 //    private Action move(Queue<Tile> t) {
 //        return new MoveAction(t, this);
 //    }
-
 //    /**
 //     * Suggests a set of cards as the murder details
 //     *
@@ -208,7 +213,6 @@ public class Player implements Observer {
 //    private void suggest(PersonCard person, RoomCard room, WeaponCard weapon) throws InterruptedException {
 //        sendAction(game.suggest(person, room, weapon, this));
 //    }
-
 //    /**
 //     * Accuses a set of cards, resulting in this player becoming removed from
 //     * the game. If the accusation is correct, the game ends and this Player is
@@ -222,7 +226,6 @@ public class Player implements Observer {
 //    public Action Accuse(PersonCard person, RoomCard room, WeaponCard weapon) {
 //        return new AccuseAction(this, person, room, weapon, game.CheckAccuse(person, room, weapon));
 //    }
-
 //    /**
 //     * sends an action to the GameController to be executed.
 //     *
@@ -237,5 +240,4 @@ public class Player implements Observer {
 //            }
 //        }
 //    }
-
 }
