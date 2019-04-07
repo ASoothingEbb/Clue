@@ -9,7 +9,6 @@ import clue.GameController;
 import clue.card.PersonCard;
 import clue.card.RoomCard;
 import clue.card.WeaponCard;
-import clue.player.AIPlayer;
 import clue.player.Player;
 import java.util.ArrayList;
 import org.junit.After;
@@ -53,11 +52,11 @@ public class AccuseActionTest {
         PersonCard person = new PersonCard(1);
         RoomCard room = new RoomCard(1);
         WeaponCard weapon = new WeaponCard(1);
-        Player player = new AIPlayer(1);
+        Player player = new Player(1);
         ArrayList<Player> players = new ArrayList();
         players.add(player);
         GameController game = new GameController(players);
-        AccuseAction instance = new AccuseAction(player, person, room, weapon,game.CheckAccuse(person, room, weapon));
+        AccuseAction instance = new AccuseAction(player, person, room, weapon, true);
         instance.execute();
         // TODO review the generated test code and remove the default call to fail.
         boolean expResult = true;

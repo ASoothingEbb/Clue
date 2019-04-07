@@ -29,10 +29,8 @@ import java.util.logging.Logger;
  *
  * @author slb35
  */
-public abstract class Player implements Observer {
+public class Player implements Observer {
 
-    public class MovementException extends Exception {
-    }
     private boolean active;
     private List<Card> cards;
     private List<IntrigueCard> intrigues;
@@ -67,70 +65,12 @@ public abstract class Player implements Observer {
         return this.id;
     }
 
-    /**
-     * Executes a sequence of moves
-     *
-     * @param tiles a queue of destination tiles
-     * @throws clue.player.Player.MovementException when the player makes an
-     * invalid move
-     */
-    private void doMove(Queue<Tile> tiles) throws MovementException, InterruptedException {
-        if (tiles.size() <= movements) {
-            sendAction(move(tiles));
-        } else {
-            throw new MovementException();
-        }
+    public int getMoves() {
+        return movements;
     }
 
-    /**
-     * Attempts to move from the current position to a new tile.
-     *
-     * @param t the destination tile.
-     * @return new MoveAction
-     */
-    private Action move(Queue<Tile> t) {
-        return new MoveAction(t, this);
-    }
-
-    /**
-     * Suggests a set of cards as the murder details
-     *
-     * @param person suspect
-     * @param room crime scene
-     * @param weapon murder weapon
-     * @return new SuggestAction
-     */
-    private void suggest(PersonCard person, RoomCard room, WeaponCard weapon) throws InterruptedException {
-        sendAction(game.suggest(person, room, weapon, this));
-    }
-
-    /**
-     * Accuses a set of cards, resulting in this player becoming removed from
-     * the game. If the accusation is correct, the game ends and this Player is
-     * the winner.
-     *
-     * @param person suspect
-     * @param room crime scene
-     * @param weapon murder weapon
-     * @return new AccuseAction
-     */
-    public Action Accuse(PersonCard person, RoomCard room, WeaponCard weapon) {
-        return new AccuseAction(this, person, room, weapon, game.CheckAccuse(person, room, weapon));
-    }
-
-    /**
-     * sends an action to the GameController to be executed.
-     *
-     * @param action the action to be executed
-     */
-    public void sendAction(Action action) throws InterruptedException {
-        if (active) {
-            try {
-                game.performAction(action);
-            } catch (UnknownActionException ex) {
-                Logger.getLogger(Player.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+    public void setMoves(int moves) {
+        movements = moves;
     }
 
     /**
@@ -204,6 +144,14 @@ public abstract class Player implements Observer {
         return cards.contains(card);
     }
 
+    public List<Card> getCards() {
+        return cards;
+    }
+
+    public List<IntrigueCard> getIntrigue() {
+        return intrigues;
+    }
+
     /**
      * Sets whether or not the player has an active suggestion block
      *
@@ -231,4 +179,65 @@ public abstract class Player implements Observer {
         return game;
     }
 
+    //    /**
+//     * Executes a sequence of moves
+//     *
+//     * @param tiles a queue of destination tiles
+//     * @throws clue.player.Player.MovementException when the player makes an
+//     * invalid move
+//     */
+//    private void doMove(Queue<Tile> tiles) throws MovementException, InterruptedException {
+//        if (tiles.size() <= movements) {
+//            sendAction(move(tiles));
+//        } else {
+//            throw new MovementException();
+//        }
+//    }
+//    /**
+//     * Attempts to move from the current position to a new tile.
+//     *
+//     * @param t the destination tile.
+//     * @return new MoveAction
+//     */
+//    private Action move(Queue<Tile> t) {
+//        return new MoveAction(t, this);
+//    }
+//    /**
+//     * Suggests a set of cards as the murder details
+//     *
+//     * @param person suspect
+//     * @param room crime scene
+//     * @param weapon murder weapon
+//     * @return new SuggestAction
+//     */
+//    private void suggest(PersonCard person, RoomCard room, WeaponCard weapon) throws InterruptedException {
+//        sendAction(game.suggest(person, room, weapon, this));
+//    }
+//    /**
+//     * Accuses a set of cards, resulting in this player becoming removed from
+//     * the game. If the accusation is correct, the game ends and this Player is
+//     * the winner.
+//     *
+//     * @param person suspect
+//     * @param room crime scene
+//     * @param weapon murder weapon
+//     * @return new AccuseAction
+//     */
+//    public Action Accuse(PersonCard person, RoomCard room, WeaponCard weapon) {
+//        return new AccuseAction(this, person, room, weapon, game.CheckAccuse(person, room, weapon));
+//    }
+//    /**
+//     * sends an action to the GameController to be executed.
+//     *
+//     * @param action the action to be executed
+//     */
+//    public void sendAction(Action action) throws InterruptedException {
+//        if (active) {
+//            try {
+//                game.performAction(action);
+//            } catch (UnknownActionException ex) {
+//                Logger.getLogger(Player.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//        }
+//    }
 }

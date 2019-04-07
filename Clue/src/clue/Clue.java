@@ -6,7 +6,6 @@
 package clue;
 
 import clue.action.UnknownActionException;
-import clue.player.AIPlayer;
 import clue.player.Player;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +22,7 @@ public class Clue {
      * @throws java.lang.InterruptedException
      */
     public static void main(String[] args) throws InterruptedException, UnknownActionException {
-        Player player = new AIPlayer(0);
+        Player player = new Player(1);
         List<Player> players = new ArrayList();
         // TODO code application logic here
         GameController game = new GameController(players);
