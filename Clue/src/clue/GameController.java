@@ -137,8 +137,6 @@ public class GameController {
             case EXTRATURN:
                 performAction(new StartTurnAction(action.getPlayer()));
                 break;
-            case KICK:
-                break;
             case MOVE:
                 if (action.result && (state.getAction().actionType == ActionType.STARTTURN || state.getAction().actionType == ActionType.THROWAGAIN)) {
                     Tile loc = ((MoveAction) action).getTile();
@@ -167,12 +165,12 @@ public class GameController {
                 break;
             case SHOWCARD:
                 if (state.getAction().actionType == ActionType.SHOWCARDS) {
-
+                    //TODO
                 }
                 break;
             case SHOWCARDS:
                 if (state.getAction().actionType == ActionType.SUGGEST) {
-
+                    //TODO
                 }
                 break;
             case START:
