@@ -7,25 +7,33 @@ package clueclient;
 
 import javafx.event.EventHandler;
 import javafx.event.EventType;
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -41,10 +49,18 @@ public class gameInstance {
     private int counter;
    
     private Tile[][] board = new Tile[25][24];
+
+    private final Font avenirButtonLarge = Font.loadFont(getClass().getResourceAsStream("assets/fonts/Avenir-Book.ttf"), 30);
+    private final Font avenirTitle = Font.loadFont(getClass().getResourceAsStream("assets/fonts/Avenir-Book.ttf"), 20);
+    private final Font avenirText = Font.loadFont(getClass().getResourceAsStream("assets/fonts/Avenir-Book.ttf"), 15);
+    private final Background blackFill = new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY));
     
-    private GridPane createBoard() {
+    private StackPane createBoard() {
+        StackPane root = new StackPane();
+        root.setPadding(new Insets(10, 0, 0, 0));
+                
         GridPane boardPane = new GridPane();
-        
+                
         Image boardImage = new Image(getClass().getResource("assets/boardImage.png").toExternalForm());
         
         boardPane.setBackground(new Background(new BackgroundImage(boardImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
@@ -68,41 +84,97 @@ public class gameInstance {
         
         // TODO: spawn players
         
-        return boardPane;
+        root.getChildren().add(boardPane);
+        
+        return root;
     }
     
-    public VBox createNotepad() {
-        VBox notepadLayout = new VBox();
+    public VBox createLeftPanel() {
+        VBox leftPanelLayout = new VBox();
+        leftPanelLayout.setPadding(new Insets(0, 10, 10, 10));
         
+        // Notepad
         Label notepadLabel = new Label("Notepad");
+        notepadLabel.setTextFill(Color.WHITE);
+        notepadLabel.setFont(avenirTitle);
         
         TextArea notepad = new TextArea();
         notepad.setPrefRowCount(20);
-        notepad.setPrefColumnCount(15);
+        notepad.setPrefColumnCount(20);
         
-        notepadLayout.getChildren().addAll(notepadLabel, notepad);
+        // suggestion accusation history
+        Label historyLabel = new Label("History");
+        historyLabel.setTextFill(Color.WHITE);
+        historyLabel.setFont(avenirTitle);
         
-        return notepadLayout;
+        StackPane history = new StackPane();
+        
+        ScrollPane historyPane = new ScrollPane();
+        historyPane.setPannable(false);
+        historyPane.setContent(history);
+        
+        leftPanelLayout.getChildren().addAll(notepadLabel, notepad, historyLabel, historyPane);
+        
+        return leftPanelLayout;
+    }
+    
+    private Label formatHistoryItem() {
+        // TODO String processing
+        // waiting for definite format from backend
+        Label historyItem = new Label();
+        
+        return historyItem;
     }
     
     public GridPane createCardsDisplay() {
         GridPane cardsLayout = new GridPane();
         
         Label playerCardsLabel = new Label("Cards");
+        playerCardsLabel.setTextFill(Color.WHITE);
+        playerCardsLabel.setFont(avenirTitle);
+
+        Card weaponCard = new Card(new Image(getClass().getResourceAsStream("assets/card.png")), "weapon", 1);
+        ImageView View1 = new ImageView(weaponCard.getImage());
+        ImageView View2 = new ImageView(weaponCard.getImage());
+        ImageView View3 = new ImageView(weaponCard.getImage());
         
-        cardsLayout.add(playerCardsLabel, 0, 0);
+        // Insets(top, right, bottom, left);
+        cardsLayout.add(View1, 0, 1);
+        GridPane.setMargin(View1, new Insets(0,10,10,0));
+        cardsLayout.add(View2, 1, 1);
+        GridPane.setMargin(View2, new Insets(0,10,10,0));
+        cardsLayout.add(View3, 0, 2);
+        GridPane.setMargin(View3, new Insets(0,10,10,0));
+        cardsLayout.add(playerCardsLabel, 0, 0, 2, 1);
+        GridPane.setHalignment(playerCardsLabel,HPos.CENTER);
         
         return cardsLayout;
     }
     
     private GridPane createPlayerControls() {
         GridPane playerControlsLayout = new GridPane();
+        playerControlsLayout.setAlignment(Pos.CENTER);
         
-        selectCards cardsWindow = new selectCards();
+        MenuItem suggestionButton = new MenuItem("Suggestion", avenirButtonLarge);
+        suggestionButton.setActiveColor(Color.ORANGE);
+        suggestionButton.setInactiveColor(Color.DARKORANGE);
+        suggestionButton.setActive(false); //refresh Colour
+        suggestionButton.setOnMouseClicked(e -> {
+            createCardsWindow("Suggetsion", Color.ORANGE);
+        });
+        
         Button suggestButton = new Button("Suggestion");
         suggestButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         suggestButton.setOnAction(e -> {
             createCardsWindow("Suggestion", Color.ORANGE);
+        });
+        
+        MenuItem accusationButton = new MenuItem("Accusation", avenirButtonLarge);
+        accusationButton.setActiveColor(Color.RED);
+        accusationButton.setInactiveColor(Color.DARKRED);
+        accusationButton.setActive(false);
+        accusationButton.setOnMouseClicked(e -> {
+            createCardsWindow("Accusation", Color.RED);
         });
         
         Button accuseButton = new Button("Accusation");
@@ -111,14 +183,28 @@ public class gameInstance {
             createCardsWindow("Accusation", Color.RED);
         });
         
+        MenuItem rollButton = new MenuItem("Roll", avenirButtonLarge);
+        rollButton.setOnMouseClicked(e -> {
+            System.out.println("Roll Dices");
+        });
+        
         Button rollDiceButton = new Button("Roll");
         
-        Button endTurnButton = new Button("End Turn");
+        MenuItem endButton = new MenuItem("End Turn", avenirButtonLarge);
+        endButton.setOnMouseClicked(e -> {
+            System.out.println("End Turn");
+        });
         
-        playerControlsLayout.add(suggestButton, 0, 0, 2, 1);
-        playerControlsLayout.add(accuseButton, 0, 1, 2, 1);
-        playerControlsLayout.add(rollDiceButton, 0, 2);
-        playerControlsLayout.add(endTurnButton, 1, 2);
+        Button endTurnButton = new Button("End Turn");
+        // Insets(top, right, bottom, left);
+        playerControlsLayout.add(suggestionButton, 0, 0, 2, 1);
+        GridPane.setHalignment(suggestionButton, HPos.CENTER);
+        playerControlsLayout.add(accusationButton, 0, 1, 2, 1);
+        GridPane.setHalignment(accusationButton, HPos.CENTER);
+        playerControlsLayout.add(rollButton, 0, 2);
+        GridPane.setMargin(rollButton, new Insets(0, 0, 10, 10));
+        playerControlsLayout.add(endButton, 1, 2);
+        GridPane.setMargin(endButton, new Insets(0, 10, 10, 10));
         
         return playerControlsLayout;        
     }
@@ -130,12 +216,15 @@ public class gameInstance {
     
     private BorderPane createUI() {
         BorderPane main = new BorderPane();
-        main.setLeft(createNotepad());
+        main.setBackground(blackFill);
+        
+        main.setLeft(createLeftPanel());
         
         main.setCenter(createBoard());
         
-        VBox rightPanel = new VBox();
-        rightPanel.getChildren().addAll(createCardsDisplay(), createPlayerControls());
+        BorderPane rightPanel = new BorderPane();
+        rightPanel.setTop(createCardsDisplay());
+        rightPanel.setBottom(createPlayerControls());
         
         main.setRight(rightPanel);
         
