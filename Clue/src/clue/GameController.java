@@ -5,11 +5,14 @@
  */
 package clue;
 
+import clue.action.AccuseAction;
 import clue.action.Action;
 import clue.action.ActionType;
 import clue.action.AvoidSuggestionAction;
+import clue.action.EndTurnAction;
 import clue.action.ExtraTurnAction;
 import clue.action.MoveAction;
+import clue.action.ShowCardAction;
 import clue.action.ShowCardsAction;
 import clue.action.StartAction;
 import clue.action.StartTurnAction;
@@ -27,9 +30,11 @@ import clue.player.Player;
 import clue.tile.SpecialTile;
 import clue.tile.Tile;
 import com.sun.org.apache.xerces.internal.impl.dv.xs.DateTimeDV;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.SynchronousQueue;
 import java.util.logging.Level;
@@ -41,6 +46,9 @@ import java.util.logging.Logger;
  * @author slb35
  */
 public class GameController {
+
+    public class MovementException extends Exception {
+    }
 
     private GameState state;
     private List<IntrigueCard> cards;
@@ -102,27 +110,28 @@ public class GameController {
                     state.endGame();
                     endGame();
                 } else {
+                    performAction(new EndTurnAction());
                 }
                 break;
             case AVOIDSUGGESTIONCARD:
                 action.getPlayer().setActiveSuggestionBlock(true);//player will not be checked in next turns suggestion check
                 //TODO: notify player they have a suggestion block
-                returnCard((IntrigueCard)action.getPlayer().removeCard(((AvoidSuggestionAction)action).card));
+                returnCard((IntrigueCard) action.getPlayer().removeCard(((AvoidSuggestionAction) action).card));
                 break;
             case ENDTURN:
                 state.nextTurn(state.nextPlayer());
-                
+
                 int j = player.getId();
-                
-                for (int i = 0; i < state.playersNumber; i++){
-                    
-                    if (j != player.getId()){
+
+                for (int i = 0; i < state.playersNumber; i++) {
+
+                    if (j != player.getId()) {
                         state.getPlayer(j).setActiveSuggestionBlock(false);//remove any suggestion blocks players may have 
-                    }  
-                    
+                    }
+
                     j = state.getNextPointer(j);
                 }
-                
+
                 performAction(new StartTurnAction(player));
                 break;
             case EXTRATURN:
@@ -136,7 +145,7 @@ public class GameController {
                     player.setPosition(loc);
                     if (loc.special) {
                         IntrigueCard card = ((SpecialTile) loc).getIntrigue(player);
-                        switch(card.cardType){
+                        switch (card.cardType) {
                             case AVOIDSUGGESTION:
                                 performAction(new AvoidSuggestionAction(player, (AvoidSuggestionIntrigue) card));
                                 break;
@@ -176,14 +185,15 @@ public class GameController {
                 break;
             case SUGGEST:
                 if (action.result && state.getAction().actionType == ActionType.STARTTURN | state.getAction().actionType == ActionType.MOVE) {
-                    performAction(new ShowCardsAction(((SuggestAction) action).show, ((SuggestAction)action).player, ((SuggestAction) action).foundCards));
+                    performAction(new ShowCardsAction(((SuggestAction) action).show, ((SuggestAction) action).player, ((SuggestAction) action).foundCards));
                 }
                 break;
             case THROWAGAIN:
                 //TODO: tell gui to roll again
                 //TODO: allow players to roll again
+                roll();
                 break;
-            
+
         }
         //update game state
         state.setAction(action);
@@ -197,14 +207,6 @@ public class GameController {
      */
     public Action getLastAction() {
         return state.getAction();
-    }
-
-    public HashMap getLocations() {
-        HashMap loc = new HashMap();
-        for (Player p : players) {
-            loc.put(p.getId(), p.getPosition());
-        }
-        return loc;
     }
 
     /**
@@ -227,6 +229,30 @@ public class GameController {
     }
 
     /**
+     * rolls the current player's moves
+     * @return new movement limit
+     */
+    public int roll(){
+        player.setMoves(random.nextInt(10)+2);
+        return player.getMoves();
+    }
+    /**
+     * Moves the current player
+     * 
+     * @param tiles tiles to move to
+     * @throws UnknownActionException
+     * @throws InterruptedException
+     * @throws clue.GameController.MovementException 
+     */
+    public void move(Queue<Tile> tiles) throws UnknownActionException, InterruptedException, MovementException {
+        if (tiles.size() <= player.getMoves()) {
+            performAction(new MoveAction(tiles, player));
+        } else {
+            throw new MovementException();
+        }
+    }
+
+    /**
      * Creates a new SuggestAction for a player
      *
      * @param person the person to be suggested
@@ -235,20 +261,46 @@ public class GameController {
      * @param player the suggesting player
      * @return new SuggestAction
      */
-    public Action suggest(PersonCard person, RoomCard room, WeaponCard weapon, Player player) {
-        return new SuggestAction(person, room, weapon, player, state);
+    public void suggest(PersonCard person, RoomCard room, WeaponCard weapon, Player player) throws UnknownActionException, InterruptedException {
+        performAction(new SuggestAction(person, room, weapon, player, state));
+    }
+
+    /**
+     * 
+     * @param card
+     * @throws UnknownActionException
+     * @throws InterruptedException 
+     */
+    public void showCard(Card card) throws UnknownActionException, InterruptedException{
+        performAction(new ShowCardAction(player, card));
     }
     
-    public boolean CheckAccuse(PersonCard person,RoomCard room, WeaponCard weapon){
-        return person == this.person && room == this.room && weapon == this.weapon;
+    /**
+     *
+     * @param person
+     * @param room
+     * @param weapon
+     * @throws UnknownActionException
+     * @throws InterruptedException
+     */
+    public void accuse(PersonCard person, RoomCard room, WeaponCard weapon) throws UnknownActionException, InterruptedException {
+        performAction(new AccuseAction(player, person, room, weapon, person == this.person && room == this.room && weapon == this.weapon));
     }
-    
-    public IntrigueCard drawCard(){
+
+    /**
+     *
+     * @return
+     */
+    public IntrigueCard drawCard() {
         int nextCard = random.nextInt(cards.size());
-                return cards.remove(nextCard);
+        return cards.remove(nextCard);
     }
-    
-    private void returnCard(IntrigueCard card){
+
+    /**
+     *
+     * @param card
+     */
+    private void returnCard(IntrigueCard card) {
         cards.add(card);
     }
 }

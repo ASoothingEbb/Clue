@@ -11,6 +11,7 @@ import clue.action.Action;
 import clue.action.EndTurnAction;
 import clue.action.ShowCardAction;
 import clue.action.ShowCardsAction;
+import clue.action.UnknownActionException;
 import clue.card.Card;
 import clue.card.PersonCard;
 import clue.card.RoomCard;
@@ -60,8 +61,8 @@ public class AiBasic extends AIPlayer{
             if(gameController.getLastAction() instanceof EndTurnAction){//If my turn, last action was end turn.
                 if(this.getPosition().isRoom()){//If I'm in a room
                     try {           
-                        sendAction(Accuse(randPersonCard, randRoomCard, randWeaponCard));
-                    } catch (InterruptedException ex) {
+                        game.accuse(randPersonCard, randRoomCard, randWeaponCard);
+                    } catch (InterruptedException | UnknownActionException ex) {
                         Logger.getLogger(AiBasic.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
@@ -70,11 +71,10 @@ public class AiBasic extends AIPlayer{
 
                 ShowCardsAction action = (ShowCardsAction) gameController.getLastAction();
                 Card card = action.getCardList().get(0);
-                ShowCardAction newAction = new ShowCardAction(action.getSuggester(), card);//Shows one card to person who requested cards to be shown(suggested).
 
                 try {
-                    sendAction(newAction);//Show Card.
-                } catch (InterruptedException ex) {
+                    gameController.showCard(card);//Show Card.
+                }catch (UnknownActionException | InterruptedException ex) {
                     Logger.getLogger(AiBasic.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
