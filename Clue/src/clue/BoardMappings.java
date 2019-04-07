@@ -44,6 +44,27 @@ public class BoardMappings {
     int boardWidth;
     int boardHeight;
     
+    /**
+     * BoardMappings will create the board (the Tiles and there adjacencies) from csv files and provide mappings from (int x, y) coordinates to tiles/rooms.
+     * Required key for csv files is as follows: 
+     *      tile csv: each cell in the csv represents one tile at the same location
+     *          0 = basic tile
+     *          -1 = no tile
+     *          S = starting tile
+     *          int n > 0 = room with id n
+     *          0* = intrigue tile
+     *
+     *      door csv: each row represents one door
+     *          index 0: the room id that the door leads to
+     *          index 1: the x coordinate of the tile that leads to that room
+     *          index 2: the y coordinate of the tile that leads to that room
+     *          *Note, doors cannot exist between two rooms, instead addShortcut should be used
+     * 
+     * @param tileRoomLayoutPath
+     * @param doorLocationsPath
+     * @throws NoSuchRoomException
+     * @throws NoSuchTileException 
+     */
     public BoardMappings(String tileRoomLayoutPath, String doorLocationsPath) throws NoSuchRoomException, NoSuchTileException{
         boardWidth = 6;//24
         boardHeight = 8;//25
@@ -85,7 +106,11 @@ public class BoardMappings {
         //    System.out.println();
         //}  
     }
-    
+    /**
+     * loads the data from the csv file for the tiles
+     * @param path the path of the csv file
+     * @return 2d list of strings which represnt the data which was in the csv file
+     */
     private ArrayList<ArrayList<String>> loadCsvTileLocations(String path){
         
         ArrayList<ArrayList<String>> csvData = new ArrayList<>();
@@ -136,6 +161,11 @@ public class BoardMappings {
         }
     }
 
+    /**
+     * loads the Door objects from the csv file
+     * @param path the path of the csv file
+     * @return List<Door> list of Door objects 
+     */
     private List<Door> loadCsvDoors(String path) {
         ArrayList<Door> doors = new ArrayList<>();
         ArrayList<ArrayList<String>> csvData = new ArrayList<>();
@@ -173,6 +203,11 @@ public class BoardMappings {
         return doors;
     }
 
+    /**
+     * creates the Room objects for the board
+     * @param roomCount number of rooms to create
+     * @return Room[] list of rooms created 
+     */
     private Room[] loadRooms(int roomCount) {
         Room [] loadedRooms = new Room[roomCount];
         for (int i = 0; i < roomCount; i++){
@@ -181,6 +216,13 @@ public class BoardMappings {
         return loadedRooms;
     }
 
+    /**
+     * creates the mappings for non room / non empty tiles, maps int coordinates to the index of the array
+     * @param tiles
+     * @param roomCount
+     * @return Tile[][] the tile mappings of the board, rooms and empty tiles will be null in this structure
+     * @throws NoSuchRoomException 
+     */
     private Tile[][] createTileMappings(ArrayList<ArrayList<String>> tiles, int roomCount) throws NoSuchRoomException {
         Tile[][] localMappings = new Tile[boardHeight][boardWidth];      
         String cell = null;      
@@ -257,6 +299,12 @@ public class BoardMappings {
         return localMappings;
     }
 
+    /**
+     * each Door object will add an equivalent adjacency to the tiles associated for that Door to allow movement between a basic Tile and a Room
+     * @param doorLocations
+     * @throws NoSuchRoomException
+     * @throws NoSuchTileException 
+     */
     private void addDoorsToTileAdjacencies(List<Door> doorLocations) throws NoSuchRoomException, NoSuchTileException {
         Tile outside;
         Tile room;
@@ -275,8 +323,25 @@ public class BoardMappings {
             }
         }
     }
-    
+     /**
+      * gets the starting locations of the board
+      * @return List<Tile> the list of starting tiles on the board
+      */
     public List<Tile> getStartingTiles(){
         return startingTiles;
-    }   
+    }  
+    
+    /**
+     * adds a shortcut between two rooms
+     * @param r1
+     * @param r2
+     * @throws NoSuchRoomException 
+     */
+    public void addShortcut(int r1, int r2) throws NoSuchRoomException{
+        Room room1 = (Room)getTile(-1,r1);
+        Room room2 = (Room)getTile(-1,r2);
+        
+        room1.addAdjacentBoth(room2);
+    
+    }
 }
