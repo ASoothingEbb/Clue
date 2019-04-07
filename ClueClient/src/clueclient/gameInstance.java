@@ -25,6 +25,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -97,16 +98,17 @@ public class gameInstance {
     private GridPane createPlayerControls() {
         GridPane playerControlsLayout = new GridPane();
         
+        selectCards cardsWindow = new selectCards();
         Button suggestButton = new Button("Suggestion");
         suggestButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         suggestButton.setOnAction(e -> {
-            System.out.println("Suggest");
+            createCardsWindow("Suggestion", Color.ORANGE);
         });
         
         Button accuseButton = new Button("Accusation");
         accuseButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         accuseButton.setOnAction(e -> {
-            System.out.println("Accuse");
+            createCardsWindow("Accusation", Color.RED);
         });
         
         Button rollDiceButton = new Button("Roll");
@@ -119,6 +121,11 @@ public class gameInstance {
         playerControlsLayout.add(endTurnButton, 1, 2);
         
         return playerControlsLayout;        
+    }
+    
+    private void createCardsWindow(String title, Color color) {
+        selectCards cardsWindow = new selectCards();
+        cardsWindow.show(title, color);
     }
     
     private BorderPane createUI() {
