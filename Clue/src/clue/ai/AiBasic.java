@@ -5,6 +5,7 @@
  */
 package clue.ai;
 
+import clue.BoardMappings;
 import clue.GameController;
 import clue.action.AccuseAction;
 import clue.action.Action;
@@ -18,6 +19,7 @@ import clue.card.WeaponCard;
 import clue.player.AIPlayer;
 import clue.player.Player;
 import clue.tile.Tile;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
@@ -29,12 +31,9 @@ import java.util.logging.Logger;
  */
 public class AiBasic extends AIPlayer{
     
-//    private boolean active;
-//    private List<Card> cards;
-//    private Tile position;
-//    private int movements;
-//    private int id;
-//    private GameController game;
+    private int targetY;//Y value of the closest room tile.
+    private int targetX;////Y value of the closest room tile.
+    private List<Player> players;
     
     private GameController gameController;
     Random rand;
@@ -45,6 +44,8 @@ public class AiBasic extends AIPlayer{
         
         gameController = getGameController();
         rand = new Random();
+        
+        players = gameController.getPlayers();
     }
     
     @Override
@@ -80,6 +81,34 @@ public class AiBasic extends AIPlayer{
             }
         }
     }
+    
+    /*This  method will set the 
+    *
+    */
+    public void findNewRoom(){
+        
+        List<Tile> path = BFS(tileMap);
+        
+        targetX = path.get(path.size()-1).getX();//Values of the room tile(last tile).
+        targetY = path.get(path.size()-1).getY();
+        
+    }
+   /**
+    * This method finds the closest Tile to the player that is a room.
+    *    
+    *@param A map of all the tiles.
+    *@return The path to the closest Room.
+    */
+    private List<Tile> BFS(BoardMappings map){
+     
+        //TODO
+        List<Tile> path = new ArrayList<Tile>();
+        
+        return path;
+    }
+    
+    
+    
     
     
     

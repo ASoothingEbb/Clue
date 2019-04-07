@@ -5,6 +5,11 @@
  */
 package clue.player;
 
+import clue.BoardMappings;
+import clue.tile.Tile;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *Represents a Player being simulated by an AI
  * @author slb35
@@ -14,5 +19,11 @@ public class AIPlayer extends Player{
     public AIPlayer(int id) {
         super(id);
     }
+    
+    public void findNewRoom(){
+        
+    }
+    
+    
     
 }

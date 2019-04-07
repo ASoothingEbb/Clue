@@ -215,6 +215,15 @@ public class GameController {
     public Player getPlayer() {
         return player;
     }
+    
+     /**
+     * Returns the List of every Player in the game.
+     *
+     * @return List of all Players.
+     */
+    public List<Player> getPlayers(){
+        return players;
+    }
 
     /**
      * Terminates the game instance and declares a winner.
