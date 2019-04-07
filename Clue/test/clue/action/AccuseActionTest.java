@@ -9,7 +9,6 @@ import clue.GameController;
 import clue.card.PersonCard;
 import clue.card.RoomCard;
 import clue.card.WeaponCard;
-import clue.player.AIPlayer;
 import clue.player.Player;
 import java.util.ArrayList;
 import org.junit.After;
@@ -53,7 +52,7 @@ public class AccuseActionTest {
         PersonCard person = new PersonCard(1);
         RoomCard room = new RoomCard(1);
         WeaponCard weapon = new WeaponCard(1);
-        Player player = new AIPlayer(1);
+        Player player = new Player(1);
         ArrayList<Player> players = new ArrayList();
         players.add(player);
         GameController game = new GameController(players);

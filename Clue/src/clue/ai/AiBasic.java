@@ -16,7 +16,6 @@ import clue.card.Card;
 import clue.card.PersonCard;
 import clue.card.RoomCard;
 import clue.card.WeaponCard;
-import clue.player.AIPlayer;
 import clue.player.Player;
 import clue.tile.Tile;
 import java.util.List;
@@ -28,7 +27,7 @@ import java.util.logging.Logger;
  *
  * @author zemig
  */
-public class AiBasic extends AIPlayer{
+public class AiBasic extends Player{
     
 //    private boolean active;
 //    private List<Card> cards;
