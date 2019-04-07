@@ -29,23 +29,19 @@ import clue.card.WeaponCard;
 import clue.player.Player;
 import clue.tile.SpecialTile;
 import clue.tile.Tile;
-import com.sun.org.apache.xerces.internal.impl.dv.xs.DateTimeDV;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.SynchronousQueue;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Keeps track of an instance of a Clue game state.
  *
  * @author slb35
  */
-public class GameController {
+public final class GameController {
 
     public class MovementException extends Exception {
     }
@@ -58,17 +54,26 @@ public class GameController {
     private List<Player> players;
     private Player winner;
     private Player player;
-    private boolean working = false;
-    private SynchronousQueue queue;
-    private Random random;
+    private final boolean working = false;
+    private final SynchronousQueue queue;
+    private final Random random;
+    private List<Action> actionLog;
+    private Queue<Action> actions;
+    private int turns = 0;
+    private int turnPointer = player.getId();
 
     /**
      * Creates a new GameController.
+     *
+     * @param players
+     * @throws java.lang.InterruptedException
+     * @throws clue.action.UnknownActionException
      */
     public GameController(List<Player> players) throws InterruptedException, UnknownActionException {
         queue = new SynchronousQueue(true);
         this.players = players;
         random = new Random(Calendar.getInstance().getTimeInMillis());
+        actionLog = new ArrayList();
         performAction(new StartAction());
     }
 
@@ -112,6 +117,7 @@ public class GameController {
                 } else {
                     performAction(new EndTurnAction());
                 }
+                actions.offer(action);
                 break;
             case AVOIDSUGGESTIONCARD:
                 action.getPlayer().setActiveSuggestionBlock(true);//player will not be checked in next turns suggestion check
@@ -131,7 +137,9 @@ public class GameController {
 
                     j = state.getNextPointer(j);
                 }
-
+                turnPointer = player.getId();
+                moveActionLog();
+                turns++;
                 performAction(new StartTurnAction(player));
                 break;
             case EXTRATURN:
@@ -167,6 +175,7 @@ public class GameController {
                 if (state.getAction().actionType == ActionType.SHOWCARDS) {
                     //TODO
                 }
+                actions.offer(action);
                 break;
             case SHOWCARDS:
                 if (state.getAction().actionType == ActionType.SUGGEST) {
@@ -185,6 +194,7 @@ public class GameController {
                 if (action.result && state.getAction().actionType == ActionType.STARTTURN | state.getAction().actionType == ActionType.MOVE) {
                     performAction(new ShowCardsAction(((SuggestAction) action).show, ((SuggestAction) action).player, ((SuggestAction) action).foundCards));
                 }
+                actions.offer(action);
                 break;
             case THROWAGAIN:
                 //TODO: tell gui to roll again
@@ -196,6 +206,7 @@ public class GameController {
         //update game state
         state.setAction(action);
         state.notifyAllObservers();
+        actionLog.add(action);
     }
 
     /**
@@ -228,19 +239,21 @@ public class GameController {
 
     /**
      * rolls the current player's moves
+     *
      * @return new movement limit
      */
-    public int roll(){
-        player.setMoves(random.nextInt(10)+2);
+    public int roll() {
+        player.setMoves(random.nextInt(10) + 2);
         return player.getMoves();
     }
+
     /**
      * Moves the current player
-     * 
+     *
      * @param tiles tiles to move to
      * @throws UnknownActionException
      * @throws InterruptedException
-     * @throws clue.GameController.MovementException 
+     * @throws clue.GameController.MovementException
      */
     public void move(Queue<Tile> tiles) throws UnknownActionException, InterruptedException, MovementException {
         if (tiles.size() <= player.getMoves()) {
@@ -264,15 +277,15 @@ public class GameController {
     }
 
     /**
-     * 
+     *
      * @param card
      * @throws UnknownActionException
-     * @throws InterruptedException 
+     * @throws InterruptedException
      */
-    public void showCard(Card card) throws UnknownActionException, InterruptedException{
+    public void showCard(Card card) throws UnknownActionException, InterruptedException {
         performAction(new ShowCardAction(player, card));
     }
-    
+
     /**
      *
      * @param person
@@ -292,6 +305,18 @@ public class GameController {
     public IntrigueCard drawCard() {
         int nextCard = random.nextInt(cards.size());
         return cards.remove(nextCard);
+    }
+
+    private void moveActionLog() {
+        //TODO
+        Action action = new StartTurnAction(player);
+        while (!actions.isEmpty() && action.player.getId() == player.getId()) {
+            action = actions.poll();
+        }
+    }
+
+    public Queue<Action> getActions() {
+        return actions;
     }
 
     /**
