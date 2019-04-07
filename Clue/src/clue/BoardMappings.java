@@ -39,6 +39,7 @@ public class BoardMappings {
     
     }
     Tile[][] mappings;
+    List<Tile> startingTiles;
     Room[] rooms;
     int boardWidth;
     int boardHeight;
@@ -47,6 +48,7 @@ public class BoardMappings {
         boardWidth = 6;//24
         boardHeight = 8;//25
         int roomCount = 9;
+        startingTiles = new ArrayList<>();
         
         ArrayList<ArrayList<String>> tiles = loadCsvTileLocations(tileRoomLayoutPath);
         rooms = loadRooms(roomCount);
@@ -199,6 +201,10 @@ public class BoardMappings {
                     localMappings[y][x] = new SpecialTile(x,y);
                     tiles.get(y).set(x, "0");
                 }
+                else if (cell.equals("S")){
+                    localMappings[y][x] = new Tile(x,y);
+                    startingTiles.add(localMappings[y][x]);
+                }
                 else{
                     localMappings[y][x] = null;
                     cell = cell.replaceAll("[^0-9]+", "");
@@ -269,4 +275,8 @@ public class BoardMappings {
             }
         }
     }
+    
+    public List<Tile> getStartingTiles(){
+        return startingTiles;
+    }   
 }
