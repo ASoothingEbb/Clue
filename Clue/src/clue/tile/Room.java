@@ -23,6 +23,26 @@ public class Room extends Tile{
         this.card = card;
         room = true;
     }
+    
+    /**
+     * Creates a new Room
+     * @param x
+     * @param y
+     */
+    public Room(int x, int y){
+        super(x,y);
+        this.card = card;
+        room = true;
+    }
+    
+    /**
+     * sets the RoomCard of the Room
+     * @param card the RoomCard to set
+     */
+    public void setCard(RoomCard card){
+        this.card = card;
+    }
+    
     public RoomCard getCard(){
         return card;
     }
