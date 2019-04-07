@@ -11,6 +11,10 @@ package clue;
  */
 public class NoSuchTileException extends Exception {
 
+    public NoSuchTileException(String message) {
+        super(message);
+    }
+        
     public NoSuchTileException() {
     }
     
