@@ -19,6 +19,12 @@ public class AvoidSuggestionIntrigue extends IntrigueCard {
         super(id);
         cardType = CardType.AVOIDSUGGESTION;
     }
+    
+    /**
+     * Gets the card enum type.
+     *
+     * @return cardType
+     */
 
     @Override
     public CardType getCardType() {

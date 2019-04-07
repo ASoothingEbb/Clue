@@ -48,7 +48,7 @@ public class AiBasic extends AIPlayer{
     }
     
     @Override
-    public void onUpdate() {
+    public void onUpdate() {//Runs after every event.
        
         //Generating Random Cards (ids).
         PersonCard randPersonCard = new PersonCard(rand.nextInt(6) + 1);
