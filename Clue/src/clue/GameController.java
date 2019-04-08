@@ -114,7 +114,7 @@ public final class GameController {
                     state.endGame();
                     endGame();
                 } else {
-                    performAction(new EndTurnAction());
+                    performAction(new EndTurnAction(state.getCurrentPlayer()));
                 }
                 actionLog.add(turns,action);
                 break;
@@ -256,7 +256,7 @@ public final class GameController {
      */
     public void move(Queue<Tile> tiles) throws UnknownActionException, InterruptedException, MovementException {
         if (tiles.size() <= player.getMoves()) {
-            performAction(new MoveAction(tiles, player));
+            performAction(new MoveAction(player,tiles));
         } else {
             throw new MovementException();
         }
