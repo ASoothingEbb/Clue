@@ -60,7 +60,6 @@ public final class GameController {
     private List<Action> actionLog;
     private Queue<Action> actions;
     private int turns = 0;
-    private int turnPointer = player.getId();
 
     /**
      * Creates a new GameController.
@@ -117,7 +116,7 @@ public final class GameController {
                 } else {
                     performAction(new EndTurnAction());
                 }
-                actions.offer(action);
+                actionLog.add(turns,action);
                 break;
             case AVOIDSUGGESTIONCARD:
                 action.getPlayer().setActiveSuggestionBlock(true);//player will not be checked in next turns suggestion check
@@ -137,7 +136,6 @@ public final class GameController {
 
                     j = state.getNextPointer(j);
                 }
-                turnPointer = player.getId();
                 moveActionLog();
                 turns++;
                 performAction(new StartTurnAction(player));
@@ -175,12 +173,12 @@ public final class GameController {
                 if (state.getAction().actionType == ActionType.SHOWCARDS) {
                     //TODO
                 }
-                actions.offer(action);
                 break;
             case SHOWCARDS:
                 if (state.getAction().actionType == ActionType.SUGGEST) {
                     //TODO
                 }
+                actionLog.add(turns,action);
                 break;
             case START:
                 state = new GameState(players);
@@ -194,7 +192,7 @@ public final class GameController {
                 if (action.result && state.getAction().actionType == ActionType.STARTTURN | state.getAction().actionType == ActionType.MOVE) {
                     performAction(new ShowCardsAction(((SuggestAction) action).show, ((SuggestAction) action).player, ((SuggestAction) action).foundCards));
                 }
-                actions.offer(action);
+                actionLog.add(turns,action);
                 break;
             case THROWAGAIN:
                 //TODO: tell gui to roll again
@@ -206,7 +204,6 @@ public final class GameController {
         //update game state
         state.setAction(action);
         state.notifyAllObservers();
-        actionLog.add(action);
     }
 
     /**
@@ -309,10 +306,12 @@ public final class GameController {
 
     private void moveActionLog() {
         //TODO
-        Action action = new StartTurnAction(player);
-        while (!actions.isEmpty() && action.player.getId() == player.getId()) {
-            action = actions.poll();
+        int pointer = player.getLogPointer();
+        while (pointer != turns) {
+            actions.offer(actionLog.get(pointer));
+            pointer++;
         }
+        player.setLogPointer(pointer);
     }
 
     public Queue<Action> getActions() {

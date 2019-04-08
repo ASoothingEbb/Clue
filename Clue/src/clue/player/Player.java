@@ -38,6 +38,7 @@ public class Player implements Observer {
     protected int movements;
     private int id;
     private boolean activeSuggestionBlock;
+    private int lastSeen = 0;
 
     public GameController game;
 
@@ -179,6 +180,13 @@ public class Player implements Observer {
         return game;
     }
 
+    public int getLogPointer(){
+        return lastSeen;
+    }
+    
+    public void setLogPointer(int pointer){
+        lastSeen = pointer;
+    }
     //    /**
 //     * Executes a sequence of moves
 //     *
