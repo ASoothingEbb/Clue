@@ -45,9 +45,9 @@ public class TileTest {
     @Test
     public void testIsAdjacent() {
         System.out.println("isAdjacent");
-        Tile tileA = new Tile();
-        Tile tileB = new Tile();
-        Tile tileC = new Tile();
+        Tile tileA = new Tile(0,0);
+        Tile tileB = new Tile(0,1);
+        Tile tileC = new Tile(1,0);
         
         ArrayList<Tile> adjacencyListForTileA = new ArrayList<>();
         adjacencyListForTileA.add(tileB);
@@ -64,11 +64,12 @@ public class TileTest {
     @Test
     public void testSetAdjacent() {
         System.out.println("setAdjacent");
-        List<Tile> adjacentTiles = null;
-        Tile instance = new Tile();
+        List<Tile> adjacentTiles = new ArrayList();
+        Tile instance = new Tile(0,0);
+        Tile tileA = new Tile(0,1);
+        adjacentTiles.add(tileA);
         instance.setAdjacent(adjacentTiles);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(true,instance.isAdjacent(tileA));
     }
 
     /**
@@ -77,12 +78,10 @@ public class TileTest {
     @Test
     public void testIsRoom() {
         System.out.println("isRoom");
-        Tile instance = new Tile();
+        Tile instance = new Tile(0,0);
         boolean expResult = false;
         boolean result = instance.isRoom();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
     
 }

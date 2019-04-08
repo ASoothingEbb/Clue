@@ -8,7 +8,6 @@ package clue;
 import clue.action.Action;
 import clue.action.EndTurnAction;
 import clue.action.StartAction;
-import clue.player.AIPlayer;
 import clue.player.Player;
 import java.util.ArrayList;
 import org.junit.After;
@@ -28,9 +27,9 @@ public class GameStateTest {
     ArrayList<Player> players;
 
     public GameStateTest() {
-        Player player0 = new AIPlayer(0);
-        Player player1 = new AIPlayer(1);
-        Player player2 = new AIPlayer(2);
+        Player player0 = new Player(0);
+        Player player1 = new Player(1);
+        Player player2 = new Player(2);
         players = new ArrayList();
         players.add(player0);
         players.add(player1);
@@ -61,8 +60,8 @@ public class GameStateTest {
     public void testRegister() {
         System.out.println("register");
         
-        Player player0 = new AIPlayer(0);
-        Player player1 = new AIPlayer(1);
+        Player player0 = new Player(0);
+        Player player1 = new Player(1);
         ArrayList<Player> playerList = new ArrayList();
         
         playerList.add(player0);
@@ -70,7 +69,7 @@ public class GameStateTest {
         
         GameState testGame = new GameState(playerList);
         
-        Player testPlayer = new AIPlayer(2);
+        Player testPlayer = new Player(2);
         
         testGame.register(testPlayer);
         int expNum = 3 ;//Since we are only adding one AIPlayer(original size + 1).
@@ -83,7 +82,7 @@ public class GameStateTest {
     @Test
     public void testUnregister() {
         System.out.println("unregister");
-        Observer observer = new AIPlayer(0);
+        Observer observer = new Player(0);
         instance.register(observer);
         assertEquals(4, instance.playersNumber);//+1
         instance.unregister(observer);
@@ -106,7 +105,7 @@ public class GameStateTest {
     public void testNextTurn() {
         System.out.println("nextTurn");
         ArrayList<Player> players = new ArrayList();
-        players.add(new AIPlayer(0));
+        players.add(new Player(0));
         instance = new GameState(players);
         int expResult = 0;
         int result = instance.nextPlayer();
@@ -120,7 +119,7 @@ public class GameStateTest {
     public void testGetPlayerTurn() {
         System.out.println("getPlayerTurn");
         ArrayList<Player> players = new ArrayList();
-        players.add(new AIPlayer(0));
+        players.add(new Player(0));
         instance = new GameState(players);
         int expResult = 0;
         int result = instance.getPlayerTurn();
@@ -145,7 +144,7 @@ public class GameStateTest {
     @Test
     public void testPreviousPlayer() {
         System.out.println("previousPlayer");
-        instance.register(new AIPlayer(1));
+        instance.register(new Player(1));
         instance.previousPlayer();
         
         assertEquals(players.get(0), instance.getCurrentPlayer());
@@ -165,7 +164,7 @@ public class GameStateTest {
     @Test
     public void testGetAction() {
         System.out.println("getAction");
-        Action action = new EndTurnAction();
+        Action action = new EndTurnAction(new Player(0));
         instance.setAction(action);
         Action expResult = action;
         Action result = instance.getAction();
@@ -201,8 +200,8 @@ public class GameStateTest {
     public void testNextPlayer() {
         System.out.println("nextPlayer");
         ArrayList<Player> players = new ArrayList();
-        players.add(new AIPlayer(0));
-        players.add(new AIPlayer(1));
+        players.add(new Player(0));
+        players.add(new Player(1));
         GameState instance = new GameState(players);
         instance.nextTurn(0);
          
@@ -219,10 +218,10 @@ public class GameStateTest {
     public void testGetNextPointer() {
         System.out.println("getNextPointer");
         ArrayList<Player> players = new ArrayList();
-        players.add(new AIPlayer(0));
-        players.add(new AIPlayer(1));
+        players.add(new Player(0));
+        players.add(new Player(1));
         players.get(1).removeFromPlay();
-        players.add(new AIPlayer(2));
+        players.add(new Player(2));
         int i = 0;
         int expResult = 1;
         int result = instance.getNextPointer(i);
@@ -246,8 +245,8 @@ public class GameStateTest {
         int id = 0;
        
         ArrayList<Player> players = new ArrayList();
-        players.add(new AIPlayer(0));
-        players.add(new AIPlayer(1));
+        players.add(new Player(0));
+        players.add(new Player(1));
         GameState instance = new GameState(players);
    
         Player expResult = players.get(0);
