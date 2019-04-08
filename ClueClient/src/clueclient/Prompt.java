@@ -27,7 +27,6 @@ public class Prompt extends Dialog {
     private final DialogPane dialogPane;
     
     public Prompt(String text) {
-        setTitle("Error");
         initStyle(StageStyle.UNDECORATED);
         dialogPane = getDialogPane();
         dialogPane.setBackground(new Background(new BackgroundFill(Color.rgb(160, 160, 160), CornerRadii.EMPTY, Insets.EMPTY)));
