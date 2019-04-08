@@ -24,7 +24,14 @@ public class Room extends Tile{
         this.card = card;
         room = true;
     }
+    /**
+     * gets the room id of the room
+     * @return the room id
+     */
+    public int getId(){
+        return getY();
     
+    }
     /**
      * Creates a new Room
      * @param x
