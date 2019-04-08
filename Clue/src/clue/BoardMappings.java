@@ -28,7 +28,7 @@ public class BoardMappings {
     public static void main(String[] args){//TODO:              delete me final submission
         System.out.println("[BoardMappings.main (temp, delete main later)] running example1");
         try {
-            BoardMappings boardMappings = new BoardMappings("tiles.csv", "doors.csv");
+            BoardMappings boardMappings = new BoardMappings("tiles.csv", "doors.csv",8,6);
         } catch (NoSuchRoomException ex) {
             System.out.println("oof");
             Logger.getLogger(BoardMappings.class.getName()).log(Level.SEVERE, null, ex);
@@ -44,6 +44,7 @@ public class BoardMappings {
     int boardWidth;
     int boardHeight;
     
+
     /**
      * BoardMappings will create the board (the Tiles and there adjacencies) from csv files and provide mappings from (int x, y) coordinates to tiles/rooms.
      * Required key for csv files is as follows: 
@@ -62,16 +63,22 @@ public class BoardMappings {
      * 
      * @param tileRoomLayoutPath
      * @param doorLocationsPath
+     * @param w board width
+     * @param h board height
      * @throws NoSuchRoomException
      * @throws NoSuchTileException 
      */
-    public BoardMappings(String tileRoomLayoutPath, String doorLocationsPath) throws NoSuchRoomException, NoSuchTileException{
-        boardWidth = 6;//24
-        boardHeight = 8;//25
+    public BoardMappings(String tileRoomLayoutPath, String doorLocationsPath, int w, int h) throws NoSuchRoomException, NoSuchTileException{
+
         int roomCount = 9;
         startingTiles = new ArrayList<>();
         
         ArrayList<ArrayList<String>> tiles = loadCsv2D(tileRoomLayoutPath);
+        
+        boardWidth = w;//24
+        boardHeight = h;//25
+        
+        System.out.println(boardWidth+","+boardHeight);
         rooms = loadRooms(roomCount);
         mappings = createTileMappings(tiles, roomCount);
 
@@ -111,7 +118,7 @@ public class BoardMappings {
      * @param path the path of the csv file
      * @return 2d list of strings which represents the data which was in the csv file
      */
-    private ArrayList<ArrayList<String>> loadCsv2D(String path){
+    public ArrayList<ArrayList<String>> loadCsv2D(String path){
         
         ArrayList<ArrayList<String>> csvData = new ArrayList<>();
         try{
@@ -127,7 +134,8 @@ public class BoardMappings {
             ArrayList<String> rowBuffer;
             for (String[] row : lines){//store ourput from csv into 2d arraylist
                 rowBuffer = new ArrayList<>();
-                for (String cell : row){                  
+                for (String cell : row){  
+                    cell = cell.replaceAll("[^0-9A-Z]+", "");
                     rowBuffer.add(cell);
                 }
                 csvData.add(rowBuffer);
@@ -164,7 +172,7 @@ public class BoardMappings {
      * @return
      * @throws NoSuchRoomException this is thrown when trying to get a room tile that doesn't exist
      */
-    public final Tile getTile(int x, int y) throws NoSuchRoomException{
+    public final Tile getTile(int x, int y) throws NoSuchRoomException, ArrayIndexOutOfBoundsException{
         if (x >= 0 && x < mappings[0].length && y >= 0 && y < mappings.length){//trying to get a non room tile when x >=0
             
             return mappings[y][x];
@@ -174,7 +182,7 @@ public class BoardMappings {
             
         }
         else{
-            throw new ArrayIndexOutOfBoundsException("Tile.getTile was called with an illegal x,y");
+            throw new ArrayIndexOutOfBoundsException("Tile.getTile was called with an illegal x,y: "+x+","+y+ ",,"+mappings[0].length+ ",,"+ mappings.length);
         }
     }
 
@@ -224,7 +232,7 @@ public class BoardMappings {
                 
                 cell = tiles.get(y).get(x);
                 //System.out.println(""+x+","+y+": "+cell);
-                if (cell.equals(-1)){
+                if (cell.equals("-1")){
                     localMappings[y][x] = null;
                     
                 }
@@ -240,11 +248,19 @@ public class BoardMappings {
                     startingTiles.add(localMappings[y][x]);
                 }
                 else{
-                    localMappings[y][x] = null;
+                    System.out.println("b "+cell);
                     cell = cell.replaceAll("[^0-9]+", "");
+                    System.out.println("a "+cell);
+                    localMappings[y][x] = null;
+                    
                     //System.out.println(Integer.parseInt(cell));
-                    if (Integer.parseInt(cell) > roomCount){
-                        throw new NoSuchRoomException();
+                    try{
+                        if (Integer.parseInt(cell) > roomCount){
+                            throw new NoSuchRoomException();
+                        }
+                    }
+                    catch (NumberFormatException ex){
+                        throw new NumberFormatException("values in tiles csv must be -1,0,0*,S or a number that is less than the total room count, found: "+cell+"\n"+ex.toString());
                     }
                 }
    
@@ -312,6 +328,9 @@ public class BoardMappings {
             }
             catch (NullPointerException ex){
                 throw new NoSuchTileException("door csv file contains an illegal door, the outside tile index (1,2) must be the x y coordinates of a base tile or special tile");
+            }
+            catch (ArrayIndexOutOfBoundsException ec){
+                throw new NoSuchTileException("attempted to create door outside of tile grid at: "+door.getTileX()+","+ door.getTileY());
             }
         }
     }
