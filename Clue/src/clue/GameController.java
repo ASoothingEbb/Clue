@@ -37,7 +37,7 @@ import java.util.Random;
 import java.util.concurrent.SynchronousQueue;
 
 /**
- * Keeps track of an instance of a Clue game state.
+ * Performs internal game logic for a Clue game instance
  *
  * @author slb35
  */
@@ -77,7 +77,7 @@ public final class GameController {
     }
 
     /**
-     * Takes an Action from a Player and adds it to the queue of Actions.
+     * Performs an Action on the GameState. The action must wait for other actions to finish before executing to ensure synchronous turns.
      *
      * @param action the Action to be performed
      * @throws UnknownActionException Action type could not be resolved
@@ -247,12 +247,12 @@ public final class GameController {
     }
 
     /**
-     * Moves the current player
+     * Moves the current player in a sequence of moves.
      *
      * @param tiles tiles to move to
      * @throws UnknownActionException
      * @throws InterruptedException
-     * @throws clue.GameController.MovementException
+     * @throws clue.GameController.MovementException the movements were invalid
      */
     public void move(Queue<Tile> tiles) throws UnknownActionException, InterruptedException, MovementException {
         if (tiles.size() <= player.getMoves()) {
@@ -269,15 +269,16 @@ public final class GameController {
      * @param room the room card to be suggested
      * @param weapon the weapon card to be suggested
      * @param player the suggesting Player
-     * @return new SuggestAction
+     * @throws clue.action.UnknownActionException
+     * @throws java.lang.InterruptedException
      */
     public void suggest(PersonCard person, RoomCard room, WeaponCard weapon, Player player) throws UnknownActionException, InterruptedException {
         performAction(new SuggestAction(person, room, weapon, player, state));
     }
 
     /**
-     *
-     * @param card
+     *Shows a card to a suggesting player
+     * @param card the card to be shown
      * @throws UnknownActionException
      * @throws InterruptedException
      */
@@ -286,10 +287,11 @@ public final class GameController {
     }
 
     /**
-     *
-     * @param person
-     * @param room
-     * @param weapon
+     *makes an accusation. The player is immediately removed from the GameState's
+     * active player list.
+     * @param person the character to accuse
+     * @param room the crime scene to accuse
+     * @param weapon the murder weapon to accuse
      * @throws UnknownActionException
      * @throws InterruptedException
      */
@@ -298,14 +300,18 @@ public final class GameController {
     }
 
     /**
-     *
-     * @return
+     *Gets a new intrigue card from the GameController's deck.
+     * @return a random intrigue card
      */
     public IntrigueCard drawCard() {
         int nextCard = random.nextInt(cards.size());
         return cards.remove(nextCard);
     }
 
+    /**
+     * gets a log of all actions that have happened since the previous player turn
+     * and updates the player's pointer
+     */
     private void moveActionLog() {
         //TODO
         int pointer = player.getLogPointer();
@@ -316,13 +322,17 @@ public final class GameController {
         player.setLogPointer(pointer);
     }
 
+    /**
+     * gets the current list of actions that the player should be notified about
+     * @return action sublist
+     */
     public Queue<Action> getActions() {
         return actions;
     }
 
     /**
-     *
-     * @param card
+     *Puts an intrigue card back in the game's deck.
+     * @param card the card to be returned to the deck.
      */
     private void returnCard(IntrigueCard card) {
         cards.add(card);
