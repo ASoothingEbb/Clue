@@ -138,7 +138,7 @@ public final class GameController {
                 }
                 moveActionLog();
                 turns++;
-                performAction(new StartTurnAction(player));
+                performAction(new StartTurnAction(state.getCurrentPlayer()));
                 break;
             case EXTRATURN:
                 performAction(new StartTurnAction(action.getPlayer()));
@@ -159,7 +159,9 @@ public final class GameController {
                                 break;
                             case TELEPORT:
                                 //TODO
-                                performAction(new TeleportAction(player));
+                                //Prompt GUI to choose tile
+                                //Construct action from result
+                                //performAction(new TeleportAction(player));
                                 break;
                             case THROWAGAIN:
                                 //TODO
