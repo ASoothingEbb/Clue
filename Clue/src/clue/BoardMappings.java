@@ -71,7 +71,7 @@ public class BoardMappings {
         int roomCount = 9;
         startingTiles = new ArrayList<>();
         
-        ArrayList<ArrayList<String>> tiles = loadCsvTileLocations(tileRoomLayoutPath);
+        ArrayList<ArrayList<String>> tiles = loadCsv2D(tileRoomLayoutPath);
         rooms = loadRooms(roomCount);
         mappings = createTileMappings(tiles, roomCount);
 
@@ -105,13 +105,13 @@ public class BoardMappings {
         //    }
         //    System.out.println();
         //}  
-    }
+    }    
     /**
      * loads the data from the csv file for the tiles
      * @param path the path of the csv file
      * @return 2d list of strings which represnt the data which was in the csv file
      */
-    private ArrayList<ArrayList<String>> loadCsvTileLocations(String path){
+    private ArrayList<ArrayList<String>> loadCsv2D(String path){
         
         ArrayList<ArrayList<String>> csvData = new ArrayList<>();
         try{
@@ -142,18 +142,35 @@ public class BoardMappings {
         return csvData;
     }
     
+    /**
+     * gets Room object of room given the room id
+     * @param roomId the id of the room to be fetched
+     * @return room object that matches the given id
+     * @throws NoSuchRoomException when the room id does not match a valid room
+     */
+    public Room getRoom(int roomId) throws NoSuchRoomException{
+
+        if (roomId <= rooms.length && roomId > 0){
+            return rooms[roomId-1];//room with id n is stored at index n-1
+        }
+        throw new NoSuchRoomException();
+
+    }
+    /**
+     * gets the tile that is associated with the given x y coordinate
+     * this method can be used to get a room tile if you give it the Room.x (-1) and Room.y (roomId) values
+     * @param x the x coordinate of the tile
+     * @param y the y coordinate of the tile
+     * @return
+     * @throws NoSuchRoomException this is thrown when trying to get a room tile that doesn't exist
+     */
     public final Tile getTile(int x, int y) throws NoSuchRoomException{
         if (x >= 0 && x < mappings[0].length && y >= 0 && y < mappings.length){//trying to get a non room tile when x >=0
             
             return mappings[y][x];
         }
         else if ( x == -1){//trying to get a room tile
-            if (y <= rooms.length && y > 0){
-                return rooms[y-1];//room with id n is stored at index n-1
-            }
-            else{
-                throw new NoSuchRoomException();
-            }
+            return getRoom(y);
             
         }
         else{
@@ -164,36 +181,11 @@ public class BoardMappings {
     /**
      * loads the Door objects from the csv file
      * @param path the path of the csv file
-     * @return List<Door> list of Door objects 
+     * @return list of Door objects 
      */
     private List<Door> loadCsvDoors(String path) {
         ArrayList<Door> doors = new ArrayList<>();
-        ArrayList<ArrayList<String>> csvData = new ArrayList<>();
-        try{
-            
-            BufferedReader br = new BufferedReader(new FileReader(path));//open file      
-            ArrayList<String[]> lines = new ArrayList<>();            
-            String thisLine;
-            
-            while((thisLine = br.readLine()) != null){//read all lines from csv
-                lines.add(thisLine.split(","));
-            }
-            
-            ArrayList<String> rowBuffer;
-            for (String[] row : lines){//store ourput from csv into 2d arraylist
-                rowBuffer = new ArrayList<>();
-                for (String cell : row){                  
-                    rowBuffer.add(cell);
-                }
-                csvData.add(rowBuffer);
-            }    
-        }
-        catch(FileNotFoundException e){
-            System.out.println(e);
-        } 
-        catch (IOException ex) { 
-            System.out.println(ex);
-        }
+        ArrayList<ArrayList<String>> csvData = loadCsv2D(path);
         
         Door door;
         for (ArrayList<String> row : csvData){
@@ -208,7 +200,7 @@ public class BoardMappings {
      * @param roomCount number of rooms to create
      * @return Room[] list of rooms created 
      */
-    private Room[] loadRooms(int roomCount) {
+    public Room[] loadRooms(int roomCount) {
         Room [] loadedRooms = new Room[roomCount];
         for (int i = 0; i < roomCount; i++){
             loadedRooms[i] = new Room(new RoomCard(i+1));//room n is stored at index n-1
