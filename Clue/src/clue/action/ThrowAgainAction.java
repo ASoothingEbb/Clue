@@ -5,6 +5,7 @@
  */
 package clue.action;
 
+import clue.card.ThrowAgainIntrigue;
 import clue.player.Player;
 
 /**
@@ -17,8 +18,14 @@ public class ThrowAgainAction extends Action{
          * Creates a new ThrowAgainAction
          * @param player the Player to roll again
          */
-        public ThrowAgainAction(Player player){
-            super(player);
+        public ThrowAgainAction(Player player,ThrowAgainIntrigue card){
+            super(player,card);
         this.actionType = ActionType.THROWAGAIN;
         }
+
+    @Override
+    public void execute() {
+        player.removeCard(card);
+    }
+        
 }

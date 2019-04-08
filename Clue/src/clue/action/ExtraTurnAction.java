@@ -5,23 +5,30 @@
  */
 package clue.action;
 
+import clue.card.ExtraTurnIntrigue;
 import clue.player.Player;
 
 /**
- *Represents a player taking an extra turn through the use of an intrigue card.
+ * Represents a player taking an extra turn through the use of an intrigue card.
+ *
  * @author slb35
  */
-public class ExtraTurnAction extends Action{
+public class ExtraTurnAction extends Action {
 
-        
-        /**
-         * Creates a new ExtraTurnAction
-         * @param player the Player to roll again
-         */
-        
-        
-        public ExtraTurnAction(Player player){
-            super(player);
+    /**
+     * Creates a new ExtraTurnAction
+     *
+     * @param player the Player to roll again
+     * @param card
+     */
+    public ExtraTurnAction(Player player, ExtraTurnIntrigue card) {
+        super(player, card);
         this.actionType = ActionType.EXTRATURN;
-        }
+    }
+
+    @Override
+    public void execute() {
+        player.removeCard(card);
+    }
+    
 }

@@ -22,10 +22,15 @@ public class AvoidSuggestionAction extends Action {
      * Creates a new AvoidSuggestionAction
      *
      * @param player the Player to roll again
+     * @param card the AvoidSuggestionIntrigue associated with this action
      */
     public AvoidSuggestionAction(Player player, AvoidSuggestionIntrigue card) {
-        super(player);
+        super(player,card);
         this.actionType = ActionType.AVOIDSUGGESTIONCARD;
-        this.card = card;
+    }
+
+    @Override
+    public void execute() {
+        player.removeCard(card);
     }
 }

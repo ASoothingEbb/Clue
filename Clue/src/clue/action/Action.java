@@ -5,6 +5,7 @@
  */
 package clue.action;
 
+import clue.card.Card;
 import clue.player.Player;
 
 /**
@@ -24,7 +25,10 @@ public abstract class Action {
      * Stores whether or not the execute() method was permitted in the game rules.
      */
     public boolean result;
-
+    /**
+     * 
+     */
+    public Card card;
     /**
      * Creates an instance of the Action
      * @param player the player taking the action
@@ -32,6 +36,10 @@ public abstract class Action {
     public Action(Player player) {
         this.actionType = ActionType.DEFAULT;
         this.player = player;
+    }
+    public Action(Player player, Card card){
+        this.player = player;
+        this.card = card;
     }
 
     /**
