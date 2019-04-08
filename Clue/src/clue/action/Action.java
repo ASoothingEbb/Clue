@@ -19,7 +19,7 @@ public abstract class Action {
     /**
      * Provides access to the type of action being taken.
      */
-    public ActionType actionType = ActionType.DEFAULT;
+    public ActionType actionType;
     /**
      * Stores whether or not the execute() method was permitted in the game rules.
      */
@@ -30,6 +30,7 @@ public abstract class Action {
      * @param player the player taking the action
      */
     public Action(Player player) {
+        this.actionType = ActionType.DEFAULT;
         this.player = player;
     }
 

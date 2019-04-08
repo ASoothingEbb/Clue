@@ -13,12 +13,12 @@ import clue.player.Player;
  * @author slb35
  */
 public class ThrowAgainAction extends Action{
-        public ActionType actionType = ActionType.THROWAGAIN;
         /**
          * Creates a new ThrowAgainAction
          * @param player the Player to roll again
          */
         public ThrowAgainAction(Player player){
             super(player);
+        this.actionType = ActionType.THROWAGAIN;
         }
 }

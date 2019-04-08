@@ -13,13 +13,13 @@ import clue.player.Player;
  */
 public class StartTurnAction extends Action{
 
-    public ActionType actionType = ActionType.STARTTURN;
     /**
      * Creates a new StartTurnAction.
      * @param player the Player whose turn it is.
      */
     public StartTurnAction(Player player) {
         super(player);
+        this.actionType = ActionType.STARTTURN;
     }
   
 }

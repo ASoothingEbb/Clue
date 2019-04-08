@@ -21,10 +21,9 @@ import java.util.List;
  */
 public class SuggestAction extends Action {
 
-    public ActionType actionType = ActionType.SUGGEST;
     public Player show;
     public List<Card> foundCards;
-    private Card[] cards;
+    private final Card[] cards;
     private GameState state;
 
     /**
@@ -34,9 +33,11 @@ public class SuggestAction extends Action {
      * @param room the room to suggest
      * @param weapon the weapon to suggest
      * @param player the player making the suggestion
+     * @param state the game state reference for the current game instance
      */
     public SuggestAction(PersonCard person, RoomCard room, WeaponCard weapon, Player player,GameState state) {
         super(player);
+        this.actionType = ActionType.SUGGEST;
         this.cards = new Card[]{person, room, weapon};
         this.state = state;
         this.foundCards = new ArrayList();

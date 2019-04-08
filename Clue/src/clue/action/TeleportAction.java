@@ -14,11 +14,11 @@ import clue.tile.Tile;
  * @author mw434
  */
 public class TeleportAction extends Action{
-    public ActionType actionType = ActionType.TELEPORT;
-    private Tile t;
+    private final Tile t;
     
     public TeleportAction(Player p,Tile t){
         super(p);
+        this.actionType = ActionType.TELEPORT;
         this.t = t;
     }
 

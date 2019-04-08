@@ -13,7 +13,6 @@ import clue.player.Player;
  */
 public class ExtraTurnAction extends Action{
 
-        public ActionType actionType = ActionType.EXTRATURN;
         
         /**
          * Creates a new ExtraTurnAction
@@ -23,5 +22,6 @@ public class ExtraTurnAction extends Action{
         
         public ExtraTurnAction(Player player){
             super(player);
+        this.actionType = ActionType.EXTRATURN;
         }
 }

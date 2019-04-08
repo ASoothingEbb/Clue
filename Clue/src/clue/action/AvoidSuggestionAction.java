@@ -16,7 +16,6 @@ import clue.player.Player;
  */
 public class AvoidSuggestionAction extends Action {
 
-    public ActionType actionType = ActionType.AVOIDSUGGESTIONCARD;
     public AvoidSuggestionIntrigue card;
 
     /**
@@ -26,6 +25,7 @@ public class AvoidSuggestionAction extends Action {
      */
     public AvoidSuggestionAction(Player player, AvoidSuggestionIntrigue card) {
         super(player);
+        this.actionType = ActionType.AVOIDSUGGESTIONCARD;
         this.card = card;
     }
 }

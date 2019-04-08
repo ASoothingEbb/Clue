@@ -16,12 +16,9 @@ import clue.player.Player;
  */
 public class AccuseAction extends Action {
 
-    private PersonCard person;
+    private final PersonCard person;
     public RoomCard room;
     public WeaponCard weapon;
-    public Player player;
-
-    ActionType actionType = ActionType.ACCUSATION;
 
     /**
      * Creates a new AccusationAction.
@@ -32,6 +29,7 @@ public class AccuseAction extends Action {
      */
     public AccuseAction(Player player, PersonCard person, RoomCard room, WeaponCard weapon,boolean result) {
         super(player);
+        this.actionType = ActionType.ACCUSATION;
         this.person = person;
         this.room = room;
         this.weapon = weapon;

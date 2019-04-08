@@ -10,5 +10,9 @@ package clue.action;
  * @author steve
  */
 public class UnknownActionException extends Exception {
+
+    public UnknownActionException() {
+        super();
+    }
     
 }

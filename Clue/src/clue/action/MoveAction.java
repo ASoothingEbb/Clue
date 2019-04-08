@@ -17,8 +17,8 @@ import java.util.Queue;
  */
 public class MoveAction extends Action {
 
-    private Tile s;
-    private Queue<Tile> tiles;
+    private final Tile s;
+    private final Queue<Tile> tiles;
     private Tile last;
 
     /**
@@ -28,13 +28,13 @@ public class MoveAction extends Action {
      * @param t destination Tile
      * @param player Player to move
      */
-    public MoveAction(Queue<Tile> t, Player player) {
+    public MoveAction(Player player,Queue<Tile> t) {
         super(player);
+        this.actionType = ActionType.MOVE;
         this.s = player.getPosition();
         this.tiles = t;
     }
 
-    public ActionType actionType = ActionType.MOVE;
 
     /**
      * Executes the MoveAction. result stores whether or not Tile t is a valid
