@@ -107,9 +107,9 @@ public class BoardMappings {
         //}  
     }    
     /**
-     * loads the data from the csv file for the tiles
+     * loads the data from the csv file for the tiles maintaining the 2d structure of the csv
      * @param path the path of the csv file
-     * @return 2d list of strings which represnt the data which was in the csv file
+     * @return 2d list of strings which represents the data which was in the csv file
      */
     private ArrayList<ArrayList<String>> loadCsv2D(String path){
         
