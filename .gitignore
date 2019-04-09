@@ -30,3 +30,5 @@ nbbuild/
 dist/
 nbdist/
 .nb-gradle/
+Clue/nbproject/private/private.properties
+Clue/nbproject/private/private.xml
