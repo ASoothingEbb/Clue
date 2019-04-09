@@ -5,6 +5,8 @@
  */
 package clue;
 
+import clue.tile.NoSuchRoomException;
+import clue.tile.NoSuchTileException;
 import clue.tile.Door;
 import clue.card.RoomCard;
 import clue.tile.Room;

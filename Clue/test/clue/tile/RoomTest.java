@@ -5,7 +5,6 @@
  */
 package clue.tile;
 
-import clue.NoSuchRoomException;
 import clue.card.RoomCard;
 import org.junit.After;
 import org.junit.AfterClass;
