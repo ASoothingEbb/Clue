@@ -57,14 +57,7 @@ public class Tile {
     }
     
     
-    
-    /**
-     * Adds Tiles to the list of adjacent tiles
-     * @param adjacentTiles list of tiles to add
-     */
-    public void setAdjacent(List<Tile> adjacentTiles){
-        this.adjacentTiles.addAll(adjacentTiles);
-    }
+   
 
     /**
      * Gets whether or not a Tile is adjacent to this one.
