@@ -23,6 +23,8 @@ public class Tile {
     
     /**
      * Creates a new Tile.
+     * @param x the x coordinate of the tile
+     * @param y the y coordinate of the tile
      */
     public Tile(int x, int y) {
         special = false;
@@ -32,6 +34,29 @@ public class Tile {
         this.y = y;
         occupied = false;
     }
+    
+    /**
+     * Creates a new Tile that does not have valid x y coordinates
+     */
+    public Tile() {
+        special = false;
+        room = false;
+        adjacentTiles = new ArrayList<>();
+        this.x = -1;
+        this.y = -1;
+        occupied = false;
+    }
+    
+    
+    /**
+     * gets if the tile is a valid tile, non valid tiles are effectively null tiles
+     * @return false if the tile is part of the board, true if the tile is a empty placeholder tile
+     */
+    public boolean isPlaceholder(){
+        return x == -1 && y == -1;
+    }
+    
+    
     
     /**
      * Adds Tiles to the list of adjacent tiles
