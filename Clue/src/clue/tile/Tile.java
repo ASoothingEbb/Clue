@@ -44,7 +44,7 @@ public class Tile {
         adjacentTiles = new ArrayList<>();
         this.x = -1;
         this.y = -1;
-        occupied = false;
+        occupied = true;//tile is not traverseable
     }
     
     
