@@ -32,6 +32,7 @@ import clue.tile.SpecialTile;
 import clue.tile.Tile;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Random;
@@ -246,6 +247,12 @@ public final class GameController {
         } else {
             throw new MovementException();
         }
+    }
+    
+    public void move(Tile tile) throws UnknownActionException, InterruptedException, MovementException{
+        Queue<Tile> list = new LinkedList();
+        list.add(tile);
+        performAction(new MoveAction(player, list));
     }
 
     /**
