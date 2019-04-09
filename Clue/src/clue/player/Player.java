@@ -8,7 +8,6 @@ package clue.player;
 import clue.GameController;
 import clue.action.Action;
 import clue.card.Card;
-import clue.Observer;
 import clue.action.AccuseAction;
 import clue.action.MoveAction;
 import clue.action.SuggestAction;
@@ -29,7 +28,7 @@ import java.util.logging.Logger;
  *
  * @author slb35
  */
-public class Player implements Observer {
+public class Player {
 
     private boolean active;
     private List<Card> cards;
@@ -38,6 +37,8 @@ public class Player implements Observer {
     protected int movements;
     private int id;
     private boolean activeSuggestionBlock;
+    private int lastSeen = 0;
+    private String notes;
 
     public GameController game;
 
@@ -46,13 +47,13 @@ public class Player implements Observer {
      */
     public Player(int id) {
         this.id = id;
+        notes = "";
         active = true;
         activeSuggestionBlock = false;
         cards = new ArrayList();
         intrigues = new ArrayList();
     }
 
-    @Override
     public void onUpdate() {
     }
 
@@ -179,6 +180,21 @@ public class Player implements Observer {
         return game;
     }
 
+    public int getLogPointer() {
+        return lastSeen;
+    }
+
+    public void setLogPointer(int pointer) {
+        lastSeen = pointer;
+    }
+    
+    public String getNotes(){
+        return notes;
+    }
+    
+    public void setNotes(String notes){
+        this.notes = notes;
+    }
     //    /**
 //     * Executes a sequence of moves
 //     *

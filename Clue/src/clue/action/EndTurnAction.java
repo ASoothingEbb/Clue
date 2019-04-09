@@ -5,14 +5,20 @@
  */
 package clue.action;
 
+import clue.player.Player;
+
 /**
  *Represents the end of the game turn.
  * @author steve
  */
 public class EndTurnAction extends Action{
-    ActionType actionType = ActionType.ENDTURN;
 
-    public EndTurnAction() {
-        super(null);
+    /**
+     *
+     * @param player
+     */
+    public EndTurnAction(Player player) {
+        super(player);
+        this.actionType = ActionType.ENDTURN;
     }
 }

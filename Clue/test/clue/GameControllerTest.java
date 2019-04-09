@@ -7,12 +7,15 @@ package clue;
 
 import clue.action.Action;
 import clue.action.UnknownActionException;
+import clue.card.Card;
+import clue.card.IntrigueCard;
 import clue.card.PersonCard;
 import clue.card.RoomCard;
 import clue.card.WeaponCard;
 import clue.player.Player;
+import clue.tile.Tile;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Queue;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -69,9 +72,7 @@ public class GameControllerTest {
         WeaponCard weapon = null;
         Player player = null;
         GameController instance = new GameController(new ArrayList<Player>());
-        Action expResult = null;
-        Action result = instance.suggest(person, room, weapon, player);
-        assertEquals(expResult, result);
+        instance.suggest(person, room, weapon, player);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
@@ -91,20 +92,6 @@ public class GameControllerTest {
     }
 
     /**
-     * Test of getLocations method, of class GameController.
-     */
-    @Test
-    public void testGetLocations() {
-        System.out.println("getLocations");
-        GameController instance = null;
-        HashMap expResult = null;
-        HashMap result = instance.getLocations();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
      * Test of getPlayer method, of class GameController.
      */
     @Test
@@ -113,6 +100,89 @@ public class GameControllerTest {
         GameController instance = null;
         Player expResult = null;
         Player result = instance.getPlayer();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of roll method, of class GameController.
+     */
+    @Test
+    public void testRoll() {
+        System.out.println("roll");
+        GameController instance = null;
+        int expResult = 0;
+        int result = instance.roll();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of move method, of class GameController.
+     */
+    @Test
+    public void testMove() throws Exception {
+        System.out.println("move");
+        Queue<Tile> tiles = null;
+        GameController instance = null;
+        instance.move(tiles);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of showCard method, of class GameController.
+     */
+    @Test
+    public void testShowCard() throws Exception {
+        System.out.println("showCard");
+        Card card = null;
+        GameController instance = null;
+        instance.showCard(card);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of accuse method, of class GameController.
+     */
+    @Test
+    public void testAccuse() throws Exception {
+        System.out.println("accuse");
+        PersonCard person = null;
+        RoomCard room = null;
+        WeaponCard weapon = null;
+        GameController instance = null;
+        instance.accuse(person, room, weapon);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of drawCard method, of class GameController.
+     */
+    @Test
+    public void testDrawCard() {
+        System.out.println("drawCard");
+        GameController instance = null;
+        IntrigueCard expResult = null;
+        IntrigueCard result = instance.drawCard();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getActions method, of class GameController.
+     */
+    @Test
+    public void testGetActions() {
+        System.out.println("getActions");
+        GameController instance = null;
+        Queue<Action> expResult = null;
+        Queue<Action> result = instance.getActions();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");

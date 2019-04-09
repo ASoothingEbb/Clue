@@ -14,8 +14,7 @@ import java.util.List;
  * @author slb35
  */
 public class ShowCardAction extends Action {
-    public ActionType actionType = ActionType.SHOWCARD;
-    private Card card;
+    private final Card card;
 /**
  * Creates a new ShowCardAction
  * @param player the Player to show the Card to
@@ -23,6 +22,7 @@ public class ShowCardAction extends Action {
  */
     public ShowCardAction(Player player,Card card) {
         super(player);
+        this.actionType = ActionType.SHOWCARD;
         this.card = card;
     }
 /**

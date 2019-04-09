@@ -6,19 +6,28 @@
 package clue.action;
 
 import clue.player.Player;
+import clue.card.TeleportIntrigue;
+import clue.tile.Tile;
 
 /**
- *Represents a Player being able to teleport to any tile of the board, cannot teleport to occupied non-room tiles - intrigue card
- * being used.
+ * Represents a Player being able to teleport to any tile of the board, cannot
+ * teleport to occupied non-room tiles - intrigue card being used.
+ *
  * @author mw434
  */
-public class TeleportAction extends Action{
-    public ActionType actionType = ActionType.TELEPORT;
-    
-    public TeleportAction(Player p){
-        super(p);
-    
-    
+public class TeleportAction extends Action {
+
+    private final Tile t;
+
+    public TeleportAction(Player p, TeleportIntrigue card, Tile t) {
+        super(p, card);
+        this.actionType = ActionType.TELEPORT;
+        this.t = t;
     }
-    
+
+    @Override
+    public void execute() {
+        player.setPosition(t);
+        player.removeCard(card);
+    }
 }

@@ -15,18 +15,19 @@ import java.util.List;
  */
 public class ShowCardsAction extends Action{
 
-    ActionType actionType = ActionType.SHOWCARDS;
-    private List<Card> cards;
-    private Player suggester;
+    private final List<Card> cards;
+    private final Player suggester;
 
     /**
      * Creates a new ShowCardsAction
      * @param player the Player to be prompted
+     * @param suggester the Player who initiated the suggestion
      * @param cards the cards to prompt
      */
 
     public ShowCardsAction(Player player, Player suggester, List<Card> cards) {
         super(player);
+        this.actionType = ActionType.SHOWCARDS;
         this.cards = cards;
         this.suggester = suggester;
 

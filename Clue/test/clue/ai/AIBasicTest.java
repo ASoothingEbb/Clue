@@ -5,7 +5,6 @@
  */
 package clue.ai;
 
-import clue.player.AIPlayer;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

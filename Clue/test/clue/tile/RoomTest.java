@@ -5,6 +5,7 @@
  */
 package clue.tile;
 
+import clue.NoSuchRoomException;
 import clue.card.RoomCard;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -56,7 +57,7 @@ public class RoomTest {
      * Test of getCard method, of class Room.
      */
     @Test
-    public void testGetCard() {
+    public void testGetCard() throws NoSuchRoomException {
         System.out.println("getCard");
         Room instance = null;
         RoomCard expResult = null;

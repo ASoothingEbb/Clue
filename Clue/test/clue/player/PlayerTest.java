@@ -169,18 +169,6 @@ public class PlayerTest {
         fail("The test case is a prototype.");
     }
 
-    /**
-     * Test of sendAction method, of class Player.
-     */
-    @Test
-    public void testSendAction() throws Exception {
-        System.out.println("sendAction");
-        Action action = null;
-        Player instance = null;
-        instance.sendAction(action);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
 
     /**
      * Test of setActiveSuggestionBlock method, of class Player.

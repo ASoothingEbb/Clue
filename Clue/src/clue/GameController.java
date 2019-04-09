@@ -22,9 +22,11 @@ import clue.action.ThrowAgainAction;
 import clue.action.UnknownActionException;
 import clue.card.AvoidSuggestionIntrigue;
 import clue.card.Card;
+import clue.card.ExtraTurnIntrigue;
 import clue.card.IntrigueCard;
 import clue.card.PersonCard;
 import clue.card.RoomCard;
+import clue.card.ThrowAgainIntrigue;
 import clue.card.WeaponCard;
 import clue.player.Player;
 import clue.tile.SpecialTile;
@@ -37,7 +39,7 @@ import java.util.Random;
 import java.util.concurrent.SynchronousQueue;
 
 /**
- * Keeps track of an instance of a Clue game state.
+ * Performs internal game logic for a Clue game instance
  *
  * @author slb35
  */
@@ -60,7 +62,6 @@ public final class GameController {
     private List<Action> actionLog;
     private Queue<Action> actions;
     private int turns = 0;
-    private int turnPointer = player.getId();
 
     /**
      * Creates a new GameController.
@@ -78,7 +79,8 @@ public final class GameController {
     }
 
     /**
-     * Takes an Action from a Player and adds it to the queue of Actions.
+     * Performs an Action on the GameState. The action must wait for other
+     * actions to finish before executing to ensure synchronous turns.
      *
      * @param action the Action to be performed
      * @throws UnknownActionException Action type could not be resolved
@@ -115,14 +117,14 @@ public final class GameController {
                     state.endGame();
                     endGame();
                 } else {
-                    performAction(new EndTurnAction());
+                    performAction(new EndTurnAction(state.getCurrentPlayer()));
                 }
-                actions.offer(action);
+                actionLog.add(turns, action);
                 break;
             case AVOIDSUGGESTIONCARD:
                 action.getPlayer().setActiveSuggestionBlock(true);//player will not be checked in next turns suggestion check
                 //TODO: notify player they have a suggestion block
-                returnCard((IntrigueCard) action.getPlayer().removeCard(((AvoidSuggestionAction) action).card));
+                returnCard(((AvoidSuggestionAction) action).card);
                 break;
             case ENDTURN:
                 state.nextTurn(state.nextPlayer());
@@ -137,12 +139,12 @@ public final class GameController {
 
                     j = state.getNextPointer(j);
                 }
-                turnPointer = player.getId();
                 moveActionLog();
                 turns++;
-                performAction(new StartTurnAction(player));
+                performAction(new StartTurnAction(state.getCurrentPlayer()));
                 break;
             case EXTRATURN:
+                returnCard((IntrigueCard) action.card);
                 performAction(new StartTurnAction(action.getPlayer()));
                 break;
             case MOVE:
@@ -150,24 +152,7 @@ public final class GameController {
                     Tile loc = ((MoveAction) action).getTile();
                     player.setPosition(loc);
                     if (loc.special) {
-                        IntrigueCard card = ((SpecialTile) loc).getIntrigue(player);
-                        switch (card.cardType) {
-                            case AVOIDSUGGESTION:
-                                performAction(new AvoidSuggestionAction(player, (AvoidSuggestionIntrigue) card));
-                                break;
-                            case EXTRATURN:
-                                //TODOplayer
-                                performAction(new ExtraTurnAction(player));
-                                break;
-                            case TELEPORT:
-                                //TODO
-                                performAction(new TeleportAction(player));
-                                break;
-                            case THROWAGAIN:
-                                //TODO
-                                performAction(new ThrowAgainAction(player));
-                                break;
-                        }
+                        getSpecial(loc);
                     }
                 }
                 break;
@@ -175,12 +160,12 @@ public final class GameController {
                 if (state.getAction().actionType == ActionType.SHOWCARDS) {
                     //TODO
                 }
-                actions.offer(action);
                 break;
             case SHOWCARDS:
                 if (state.getAction().actionType == ActionType.SUGGEST) {
                     //TODO
                 }
+                actionLog.add(turns, action);
                 break;
             case START:
                 state = new GameState(players);
@@ -194,7 +179,9 @@ public final class GameController {
                 if (action.result && state.getAction().actionType == ActionType.STARTTURN | state.getAction().actionType == ActionType.MOVE) {
                     performAction(new ShowCardsAction(((SuggestAction) action).show, ((SuggestAction) action).player, ((SuggestAction) action).foundCards));
                 }
-                actions.offer(action);
+                actionLog.add(turns, action);
+                break;
+            case TELEPORT:
                 break;
             case THROWAGAIN:
                 //TODO: tell gui to roll again
@@ -205,8 +192,7 @@ public final class GameController {
         }
         //update game state
         state.setAction(action);
-        state.notifyAllObservers();
-        actionLog.add(action);
+        state.notifyAllPlayers();
     }
 
     /**
@@ -248,16 +234,16 @@ public final class GameController {
     }
 
     /**
-     * Moves the current player
+     * Moves the current player in a sequence of moves.
      *
      * @param tiles tiles to move to
      * @throws UnknownActionException
      * @throws InterruptedException
-     * @throws clue.GameController.MovementException
+     * @throws clue.GameController.MovementException the movements were invalid
      */
     public void move(Queue<Tile> tiles) throws UnknownActionException, InterruptedException, MovementException {
         if (tiles.size() <= player.getMoves()) {
-            performAction(new MoveAction(tiles, player));
+            performAction(new MoveAction(player, tiles));
         } else {
             throw new MovementException();
         }
@@ -270,15 +256,17 @@ public final class GameController {
      * @param room the room card to be suggested
      * @param weapon the weapon card to be suggested
      * @param player the suggesting Player
-     * @return new SuggestAction
+     * @throws clue.action.UnknownActionException
+     * @throws java.lang.InterruptedException
      */
     public void suggest(PersonCard person, RoomCard room, WeaponCard weapon, Player player) throws UnknownActionException, InterruptedException {
         performAction(new SuggestAction(person, room, weapon, player, state));
     }
 
     /**
+     * Shows a card to a suggesting player
      *
-     * @param card
+     * @param card the card to be shown
      * @throws UnknownActionException
      * @throws InterruptedException
      */
@@ -287,10 +275,12 @@ public final class GameController {
     }
 
     /**
+     * makes an accusation. The player is immediately removed from the
+     * GameState's active player list.
      *
-     * @param person
-     * @param room
-     * @param weapon
+     * @param person the character to accuse
+     * @param room the crime scene to accuse
+     * @param weapon the murder weapon to accuse
      * @throws UnknownActionException
      * @throws InterruptedException
      */
@@ -299,31 +289,74 @@ public final class GameController {
     }
 
     /**
+     * Gets a new intrigue card from the GameController's deck.
      *
-     * @return
+     * @return a random intrigue card
      */
     public IntrigueCard drawCard() {
         int nextCard = random.nextInt(cards.size());
         return cards.remove(nextCard);
     }
 
+    /**
+     * gets a log of all actions that have happened since the previous player
+     * turn and updates the player's pointer
+     */
     private void moveActionLog() {
         //TODO
-        Action action = new StartTurnAction(player);
-        while (!actions.isEmpty() && action.player.getId() == player.getId()) {
-            action = actions.poll();
+        int pointer = player.getLogPointer();
+        while (pointer != turns) {
+            actions.offer(actionLog.get(pointer));
+            pointer++;
         }
+        player.setLogPointer(pointer);
     }
 
+    /**
+     * gets the current list of actions that the player should be notified about
+     *
+     * @return action sublist
+     */
     public Queue<Action> getActions() {
         return actions;
     }
 
     /**
+     * Puts an intrigue card back in the game's deck.
      *
-     * @param card
+     * @param card the card to be returned to the deck.
      */
     private void returnCard(IntrigueCard card) {
         cards.add(card);
+    }
+
+    /**
+     * Resolves special tile functionality
+     *
+     * @param loc special tile
+     * @throws UnknownActionException
+     * @throws InterruptedException
+     */
+    private void getSpecial(Tile loc) throws UnknownActionException, InterruptedException {
+        IntrigueCard card = ((SpecialTile) loc).getIntrigue(player);
+        switch (card.cardType) {
+            case AVOIDSUGGESTION:
+                performAction(new AvoidSuggestionAction(player, (AvoidSuggestionIntrigue) card));
+                break;
+            case EXTRATURN:
+                //TODOplayer
+                performAction(new ExtraTurnAction(player, (ExtraTurnIntrigue) card));
+                break;
+            case TELEPORT:
+                //TODO
+                //Prompt GUI to choose tile
+                //Construct action from result
+                //performAction(new TeleportAction(player));
+                break;
+            case THROWAGAIN:
+                //TODO
+                performAction(new ThrowAgainAction(player, (ThrowAgainIntrigue) card));
+                break;
+        }
     }
 }

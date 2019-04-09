@@ -5,6 +5,7 @@
  */
 package clue;
 
+import clue.tile.Door;
 import clue.card.RoomCard;
 import clue.tile.Room;
 import clue.tile.SpecialTile;

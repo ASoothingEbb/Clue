@@ -5,20 +5,12 @@
  */
 package clue.tile;
 
-import clue.action.Action;
-import clue.action.ActionType;
-import clue.action.AvoidSuggestionAction;
-import clue.action.ExtraTurnAction;
-import clue.action.TeleportAction;
-import clue.action.ThrowAgainAction;
-import clue.player.AIPlayer;
 import clue.player.Player;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -50,7 +42,7 @@ public class SpecialTileTest {
      */
     @Test
     public void testGetSpecial() throws Exception {
-        Player p = new AIPlayer(1);
+        Player p = new Player(1);
         //TODO
         
     }

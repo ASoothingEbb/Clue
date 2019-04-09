@@ -16,16 +16,21 @@ import clue.player.Player;
  */
 public class AvoidSuggestionAction extends Action {
 
-    public ActionType actionType = ActionType.AVOIDSUGGESTIONCARD;
     public AvoidSuggestionIntrigue card;
 
     /**
      * Creates a new AvoidSuggestionAction
      *
      * @param player the Player to roll again
+     * @param card the AvoidSuggestionIntrigue associated with this action
      */
     public AvoidSuggestionAction(Player player, AvoidSuggestionIntrigue card) {
-        super(player);
-        this.card = card;
+        super(player,card);
+        this.actionType = ActionType.AVOIDSUGGESTIONCARD;
+    }
+
+    @Override
+    public void execute() {
+        player.removeCard(card);
     }
 }
