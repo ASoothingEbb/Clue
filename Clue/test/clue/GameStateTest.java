@@ -82,20 +82,20 @@ public class GameStateTest {
     @Test
     public void testUnregister() {
         System.out.println("unregister");
-        Observer observer = new Player(0);
-        instance.register(observer);
+        Player player = new Player(0);
+        instance.register(player);
         assertEquals(4, instance.playersNumber);//+1
-        instance.unregister(observer);
+        instance.unregister(player);
         assertEquals(3, instance.playersNumber);//-1
     }
 
     /**
-     * Test of notifyAllObservers method, of class GameState.
+     * Test of notifyAllPlayers method, of class GameState.
      */
     @Test
-    public void testNotifyAllObservers() {
+    public void testNotifyAllPlayers() {
         System.out.println("notifyAllObservers");
-        instance.notifyAllObservers();
+        instance.notifyAllPlayers();
     }
 
     /**

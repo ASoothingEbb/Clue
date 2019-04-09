@@ -8,7 +8,6 @@ package clue.player;
 import clue.GameController;
 import clue.action.Action;
 import clue.card.Card;
-import clue.Observer;
 import clue.action.AccuseAction;
 import clue.action.MoveAction;
 import clue.action.SuggestAction;
@@ -29,7 +28,7 @@ import java.util.logging.Logger;
  *
  * @author slb35
  */
-public class Player implements Observer {
+public class Player {
 
     private boolean active;
     private List<Card> cards;
@@ -53,7 +52,6 @@ public class Player implements Observer {
         intrigues = new ArrayList();
     }
 
-    @Override
     public void onUpdate() {
     }
 
@@ -180,11 +178,11 @@ public class Player implements Observer {
         return game;
     }
 
-    public int getLogPointer(){
+    public int getLogPointer() {
         return lastSeen;
     }
-    
-    public void setLogPointer(int pointer){
+
+    public void setLogPointer(int pointer) {
         lastSeen = pointer;
     }
     //    /**

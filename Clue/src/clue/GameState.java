@@ -14,7 +14,7 @@ import java.util.List;
  *
  * @author slb35
  */
-public class GameState implements Subject {
+public class GameState {
 
     /**
      * the number of players in the game.
@@ -61,11 +61,10 @@ public class GameState implements Subject {
     /**
      * Adds a Player to the list of Players.
      *
-     * @param observer The player to add
+     * @param player The player to add
      */
-    @Override
-    public void register(Observer observer) {
-        players.add((Player) observer);
+    public void register(Player player) {
+        players.add(player);
         playersNumber = players.size();
     }
 
@@ -74,22 +73,20 @@ public class GameState implements Subject {
      * removed from the list of players, but instead they are marked as
      * inactive.
      *
-     * @param observer The player to remove
+     * @param player The player to remove
      */
-    @Override
-    public void unregister(Observer observer) {
-        ((Player) observer).removeFromPlay();
+    public void unregister(Player player) {
+        player.removeFromPlay();
         playersNumber = players.size() - 1;
     }
 
     /**
      * Issues a game state update to all players in the game.
      */
-    @Override
-    public void notifyAllObservers() {
-        for (Player p : players) {
+    public void notifyAllPlayers() {
+        players.forEach((p) -> {
             p.onUpdate();
-        }
+        });
     }
 
     /**
@@ -99,8 +96,7 @@ public class GameState implements Subject {
         if (running) {
             do {
                 turn = getNextPointer(turn);
-            }
-            while (!currentPlayer.isActive());
+            } while (!currentPlayer.isActive());
             return players.get(turn).getId();
         } else {
             return currentPlayer.getId();
@@ -183,16 +179,16 @@ public class GameState implements Subject {
     public void setAction(Action action) {
         this.lastAction = action;
     }
-    
-    public Player getCurrentPlayer(){
+
+    public Player getCurrentPlayer() {
         return currentPlayer;
     }
-    
-    public Player getPreviousPlayer(){
+
+    public Player getPreviousPlayer() {
         return previousPlayer;
     }
-    
-    public List<Player> getPlayerList(){
+
+    public List<Player> getPlayerList() {
         return players;
     }
 }

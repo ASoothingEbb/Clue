@@ -192,7 +192,7 @@ public final class GameController {
         }
         //update game state
         state.setAction(action);
-        state.notifyAllObservers();
+        state.notifyAllPlayers();
     }
 
     /**
@@ -332,9 +332,10 @@ public final class GameController {
 
     /**
      * Resolves special tile functionality
+     *
      * @param loc special tile
      * @throws UnknownActionException
-     * @throws InterruptedException 
+     * @throws InterruptedException
      */
     private void getSpecial(Tile loc) throws UnknownActionException, InterruptedException {
         IntrigueCard card = ((SpecialTile) loc).getIntrigue(player);

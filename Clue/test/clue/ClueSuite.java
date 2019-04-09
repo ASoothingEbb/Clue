@@ -22,7 +22,7 @@ import org.junit.runners.Suite;
  * @author steve
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({PlayerSuite.class, SubjectTest.class, AiSuite.class, ActionSuite.class, CardSuite.class, ObserverTest.class, GameStateTest.class, ClueTest.class, GameControllerTest.class, TileSuite.class})
+@Suite.SuiteClasses({PlayerSuite.class, AiSuite.class, ActionSuite.class, CardSuite.class, GameStateTest.class, ClueTest.class, GameControllerTest.class, TileSuite.class})
 public class ClueSuite {
 
     @BeforeClass
