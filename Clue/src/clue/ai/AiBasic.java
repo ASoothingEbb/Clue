@@ -32,8 +32,9 @@ import java.util.logging.Logger;
 public class AiBasic extends AIPlayer{
     
     private int targetY;//Y value of the closest room tile.
-    private int targetX;////Y value of the closest room tile.
-    private List<Player> players;
+    private int targetX;////Y value of the closest room tile
+    private int x;
+    private int y;
     
     private GameController gameController;
     Random rand;
@@ -44,8 +45,6 @@ public class AiBasic extends AIPlayer{
         
         gameController = getGameController();
         rand = new Random();
-        
-        players = gameController.getPlayers();
     }
     
     @Override
@@ -85,7 +84,10 @@ public class AiBasic extends AIPlayer{
     /*This  method will set the 
     *
     */
-    public void findNewRoom(){
+    public void findNewPath(){//Finds path to closest room from players position.
+        
+        this.x = getPosition().getX();
+        this.y = getPosition().getY();
         
         List<Tile> path = BFS(tileMap);
         
@@ -99,7 +101,7 @@ public class AiBasic extends AIPlayer{
     *@param A map of all the tiles.
     *@return The path to the closest Room.
     */
-    private List<Tile> BFS(BoardMappings map){
+    private List<Tile> findNewRoom(BoardMappings map){//Finds closest room.
      
         //TODO
         List<Tile> path = new ArrayList<Tile>();

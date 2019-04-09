@@ -261,4 +261,12 @@ public class BoardMappings {
             }
         }
     }
+    
+    public int getBoardHeight(){
+        return boardHeight;
+    }
+    
+    public int getBoardWidth(){
+        return boardWidth;
+    }
 }

@@ -20,9 +20,9 @@ public class AIPlayer extends Player{
         super(id);
     }
     
-    public void findNewRoom(){
-        
-    }
+//    public void findNewRoom(){
+//        
+//    }
     
     
     
