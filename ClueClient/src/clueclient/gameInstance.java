@@ -5,6 +5,7 @@
  */
 package clueclient;
 
+import java.util.HashMap;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.geometry.HPos;
@@ -48,7 +49,11 @@ public class gameInstance {
     private int height;
     private int counter;
    
-    private Tile[][] board = new Tile[25][24];
+    private StackPane[][] board = new StackPane[25][24];
+    private String notes;
+    
+    private HashMap<Integer, Integer> spawnlocations = new HashMap<>();
+    private Player currentPlayer;
 
     private final Font avenirButtonLarge = Font.loadFont(getClass().getResourceAsStream("assets/fonts/Avenir-Book.ttf"), 30);
     private final Font avenirTitle = Font.loadFont(getClass().getResourceAsStream("assets/fonts/Avenir-Book.ttf"), 20);
@@ -69,20 +74,29 @@ public class gameInstance {
         // create base Tiles
         for (int y=0; y < 24; y++) {
             for (int x=0; x < 25; x++) {
+                StackPane tilePane = new StackPane();
                 Tile tile = new Tile(TILE_SIZE);
+                final int coordX = x;
+                final int coordY = y;
                 tile.setOnMouseClicked((MouseEvent e) -> {
+                    boolean moved = currentPlayer.move(coordX, coordY, board, currentPlayer);
                     System.out.println("HELLO "+counter);
                     counter++;
                 });
+                
+                tilePane.getChildren().add(tile);
                         
-                        
-                board[x][y] = tile;
-                boardPane.add(tile, y, x);
+                board[x][y] = tilePane;
+                boardPane.add(tilePane, y, x);
                 
             }
         }
         
         // TODO: spawn players
+        
+        Player player1 = new Player(0, 4, "PP");
+        board[5][0].getChildren().add(player1);
+        currentPlayer = player1;
         
         root.getChildren().add(boardPane);
         
@@ -102,6 +116,12 @@ public class gameInstance {
         notepad.setPrefRowCount(20);
         notepad.setPrefColumnCount(20);
         
+        // Test
+        MenuItem print = new MenuItem("Print", avenirTitle);
+        print.setOnMouseClicked(e -> {
+            System.out.println(notepad.getText());
+        });
+        
         // suggestion accusation history
         Label historyLabel = new Label("History");
         historyLabel.setTextFill(Color.WHITE);
@@ -113,7 +133,7 @@ public class gameInstance {
         historyPane.setPannable(false);
         historyPane.setContent(history);
         
-        leftPanelLayout.getChildren().addAll(notepadLabel, notepad, historyLabel, historyPane);
+        leftPanelLayout.getChildren().addAll(notepadLabel, notepad, print, historyLabel, historyPane);
         
         return leftPanelLayout;
     }
