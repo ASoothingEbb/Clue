@@ -38,6 +38,7 @@ public class Player {
     private int id;
     private boolean activeSuggestionBlock;
     private int lastSeen = 0;
+    private String notes;
 
     public GameController game;
 
@@ -46,6 +47,7 @@ public class Player {
      */
     public Player(int id) {
         this.id = id;
+        notes = "";
         active = true;
         activeSuggestionBlock = false;
         cards = new ArrayList();
@@ -184,6 +186,14 @@ public class Player {
 
     public void setLogPointer(int pointer) {
         lastSeen = pointer;
+    }
+    
+    public String getNotes(){
+        return notes;
+    }
+    
+    public void setNotes(String notes){
+        this.notes = notes;
     }
     //    /**
 //     * Executes a sequence of moves
