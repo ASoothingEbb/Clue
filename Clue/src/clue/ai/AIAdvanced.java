@@ -12,6 +12,7 @@ package clue.ai;
 
 import clue.BoardMappings;
 import clue.GameController;
+import clue.NoSuchRoomException;
 import clue.action.EndTurnAction;
 import clue.action.ShowCardAction;
 import clue.action.ShowCardsAction;
@@ -20,34 +21,35 @@ import clue.card.Card;
 import clue.card.PersonCard;
 import clue.card.RoomCard;
 import clue.card.WeaponCard;
-import clue.player.AIPlayer;
 import clue.player.Player;
 import clue.tile.Tile;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class AIAdvanced extends AIPlayer{
+public class AIAdvanced extends Player{
     
     private int id;
     private GameController gameController;
     private int targetY;//Y value of the closest room tile.
     private int targetX;////Y value of the closest room tile.
+    private int boardWidth;
+    private int boardHeight;
     private List<Player> players;
-    private List<List<Card>> cardLists;//List of each cards players have previously suggested
+    private ArrayList<ArrayList<Card>> cardLists;//List of each cards players have previously suggested
     private Random rand;
     
-    public AIAdvanced(int id){
+    //Width of the board, height of the board.
+    public AIAdvanced(int id, int width, int height){
         super(id);
         
+        this.boardWidth = width;
+        this.boardHeight = height;
         this.id = id;
         gameController = getGameController();
-        players = gameController.getPlayers();
-        
         rand = new Random();
     }
     
@@ -56,6 +58,7 @@ public class AIAdvanced extends AIPlayer{
     
         ///Check if any tile in the solution path is occupied & if player position changed. if not, keep same path. Else make a new Solution path.
         if(gameController.getLastAction() instanceof StartAction){
+            players = gameController.getPlayers();
             makeLists();///TODO
         }
         
@@ -71,7 +74,7 @@ public class AIAdvanced extends AIPlayer{
                     try {           
                         sendAction(Accuse(randPersonCard, randRoomCard, randWeaponCard));
                     } catch (InterruptedException ex) {
-                        Logger.getLogger(AiBasic.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(AIAdvanced.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
                 
@@ -84,14 +87,14 @@ public class AIAdvanced extends AIPlayer{
                 try {
                     sendAction(newAction);//Show Card.
                 } catch (InterruptedException ex) {
-                    Logger.getLogger(AiBasic.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(AIAdvanced.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
     }
     
-    public void findNewRoom(){
-        List<Tile> path = BFS(tileMap);
+    public void findNewRoom(BoardMappings tileMap) throws NoSuchRoomException{
+        List<Tile> path = BFS();
         
         targetX = path.get(path.size()-1).getX();//Values of the room tile(last tile).
         targetY = path.get(path.size()-1).getY();
@@ -102,9 +105,9 @@ public class AIAdvanced extends AIPlayer{
     *@param instance of BoardMappings
     *@return The path to the closest Room from the player's current position. 
     */
-    private List<Tile> BFS(BoardMappings map){
-        int height = map.getBoardHeight();
-        int width = map.getBoardWidth();   
+    public ArrayList<Tile> BFS(){
+        int height = boardHeight;
+        int width = boardWidth;   
         
         ArrayList<ArrayList<Tile>> pathList = new ArrayList<>();
         boolean foundRoom = false;
@@ -120,18 +123,27 @@ public class AIAdvanced extends AIPlayer{
         temp.add(getPosition());
         pathList.add(temp);
         
-        ArrayList<ArrayList<Tile>> toRemove = new ArrayList<ArrayList<Tile>>();
-        ArrayList<Tile> solutionPath = new ArrayList<Tile>();
+        ArrayList<ArrayList<Tile>> toRemove = new ArrayList<>();
+        ArrayList<Tile> solutionPath = new ArrayList<>();
+        ArrayList<Tile> path;
         
+        int i = 0;
         while(!foundRoom){
-        
-            for(ArrayList<Tile> path : pathList){
+            i = 0;
+            while(i < pathList.size()){
+                
+                path = pathList.get(i);
                 Tile tempTile = path.get(path.size() - 1);//last Tile of path.
                 
                 for(Tile adjacent : tempTile.getAdjacent()){
                     ArrayList<Tile> tempPath = path;
                     
-                    if(adjacent.isFull()){
+                    for(Tile t : tempPath){
+                        System.out.print(t.getX() + "," + t.getY() + " ");
+                    }
+                    System.out.println("");
+                    
+                    if(!adjacent.isFull()){
                         if(!visited[adjacent.getX()][adjacent.getY()]){//If not yet visited.
                             tempPath.add(adjacent);
                             visited[adjacent.getX()][adjacent.getY()] = true;//set as visited.
@@ -145,10 +157,10 @@ public class AIAdvanced extends AIPlayer{
                         toRemove.add(path);
                     }
                 }
-                
+                i++;
             }
-            for(ArrayList<Tile> path : toRemove){
-                pathList.remove(path);
+            for(ArrayList<Tile> pathToRemove : toRemove){
+                pathList.remove(pathToRemove);
             }
             toRemove = new ArrayList<ArrayList<Tile>>();
             
@@ -157,13 +169,17 @@ public class AIAdvanced extends AIPlayer{
     }
     
     /**
-     * Creates the list of lists for cards of every player(including itself)
+     * Creates the list of lists of cards of every player(including itself)
      */
-    private void makeLists(){
+    public void makeLists(){
         for(int i=0; i<players.size(); i++){
-            
-            
+            cardLists.add(new ArrayList<>());//create a list for every player.
+            cardLists.set(id-1, (ArrayList<Card>) getCards());      
             ///TODO
         }
+    }
+    
+    public ArrayList<ArrayList<Card>> getLists(){
+        return cardLists;
     }
 }

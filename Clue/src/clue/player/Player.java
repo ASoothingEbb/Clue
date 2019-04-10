@@ -230,5 +230,9 @@ public abstract class Player implements Observer {
     public GameController getGameController() {
         return game;
     }
+    
+    public List<Card> getCards(){
+        return cards;
+    }
 
 }

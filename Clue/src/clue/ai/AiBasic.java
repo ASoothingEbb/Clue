@@ -29,7 +29,7 @@ import java.util.logging.Logger;
  *
  * @author zemig
  */
-public class AiBasic extends AIPlayer{
+public class AiBasic extends Player{
     
     private int targetY;//Y value of the closest room tile.
     private int targetX;////Y value of the closest room tile
@@ -89,10 +89,11 @@ public class AiBasic extends AIPlayer{
         this.x = getPosition().getX();
         this.y = getPosition().getY();
         
-        List<Tile> path = BFS(tileMap);
         
-        targetX = path.get(path.size()-1).getX();//Values of the room tile(last tile).
-        targetY = path.get(path.size()-1).getY();
+//        List<Tile> path = BFS(tileMap);
+//        
+//        targetX = path.get(path.size()-1).getX();//Values of the room tile(last tile).
+//        targetY = path.get(path.size()-1).getY();
         
     }
    /**
