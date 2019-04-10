@@ -12,11 +12,8 @@ package clue.ai;
 
 import clue.BoardMappings;
 import clue.GameController;
-import clue.NoSuchRoomException;
-import clue.action.EndTurnAction;
-import clue.action.ShowCardAction;
-import clue.action.ShowCardsAction;
-import clue.action.StartAction;
+import clue.tile.NoSuchRoomException;
+import clue.action.*;
 import clue.card.Card;
 import clue.card.PersonCard;
 import clue.card.RoomCard;
@@ -25,6 +22,7 @@ import clue.player.Player;
 import clue.tile.Tile;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
@@ -71,11 +69,11 @@ public class AIAdvanced extends Player{
         if(gameController.getPlayer().getId() == getId()){//If I need to respond.
             if(gameController.getLastAction() instanceof EndTurnAction){//If my turn, last action was end turn.
                 if(this.getPosition().isRoom()){//If I'm in a room
-                    try {           
-                        sendAction(Accuse(randPersonCard, randRoomCard, randWeaponCard));
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(AIAdvanced.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                    //try {           
+                    //    sendAction(Accuse(randPersonCard, randRoomCard, randWeaponCard));
+                    //} catch (InterruptedException ex) {
+                    //    Logger.getLogger(AIAdvanced.class.getName()).log(Level.SEVERE, null, ex);
+                    //}
                 }
                 
             } else if (gameController.getLastAction() instanceof ShowCardsAction){//If I need to show a card 
@@ -84,11 +82,11 @@ public class AIAdvanced extends Player{
                 Card card = action.getCardList().get(0);
                 ShowCardAction newAction = new ShowCardAction(action.getSuggester(), card);//Shows one card to person who requested cards to be shown(suggested).
 
-                try {
-                    sendAction(newAction);//Show Card.
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(AIAdvanced.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                //try {
+                //    sendAction(newAction);//Show Card.
+                //} catch (InterruptedException ex) {
+                //    Logger.getLogger(AIAdvanced.class.getName()).log(Level.SEVERE, null, ex);
+                //}
             }
         }
     }
@@ -99,82 +97,77 @@ public class AIAdvanced extends Player{
         targetX = path.get(path.size()-1).getX();//Values of the room tile(last tile).
         targetY = path.get(path.size()-1).getY();
     }
+    
    /** 
-    * This method finds the closest Tile to the player that is a room.
+    * calculates the closest room from the players current location
     *    
-    *@param instance of BoardMappings
+    *
     *@return The path to the closest Room from the player's current position. 
     */
-    public ArrayList<Tile> BFS(){
-        int height = boardHeight;
-        int width = boardWidth;   
+    public LinkedList<Tile> BFS(){   
         
-        ArrayList<ArrayList<Tile>> pathList = new ArrayList<>();
-        boolean foundRoom = false;
+        LinkedList<LinkedList<Tile>> pathList = new LinkedList<>();
         
-        boolean visited[][] = new boolean[height][width];
+        boolean visited[][] = new boolean[boardHeight][boardWidth];
         
         for(boolean []a : visited){
             Arrays.fill(a,false);
         }
+        
+        LinkedList<Tile> solutionPath = new LinkedList<>();        
+        LinkedList<Tile> newPath = new LinkedList<>();
+        LinkedList<Tile> currentPath;
+        
+        newPath.add(getPosition());
+        pathList.add(newPath);
         visited[getPosition().getX()][getPosition().getY()] = true;
         
-        ArrayList<Tile> temp = new ArrayList<>();
-        temp.add(getPosition());
-        pathList.add(temp);
         
-        ArrayList<ArrayList<Tile>> toRemove = new ArrayList<>();
-        ArrayList<Tile> solutionPath = new ArrayList<>();
-        ArrayList<ArrayList<Tile>> newPath = new ArrayList<>();
-        ArrayList<Tile> path;
-        
-        int i = 0;
-        
-        int oldPathListSize = 0;
+        boolean foundRoom = false;        
         while(!foundRoom){
-            i = 0;
-            oldPathListSize = pathList.size();
-            System.out.println("Increase in distance");
-            while(i < oldPathListSize){
-                System.out.println("i: " + i + "oldPathistSize: "+ oldPathListSize);
-                path = pathList.get(i);
-                Tile tempTile = path.get(path.size() - 1);//last Tile of path.
-                
-                for(Tile adjacent : tempTile.getAdjacent()){
-                    ArrayList<Tile> tempPath = path;
-                    System.out.println("Num of paths: " + pathList.size());
-                    System.out.println("New path: ");
-                    for(Tile t : tempPath){
-                        System.out.print(t);
-                    }
-                    System.out.println("");
-                    
-                    if(!adjacent.isFull()){
-                        if(!visited[adjacent.getX()][adjacent.getY()]){//If not yet visited.
-                            tempPath.add(adjacent);
-                            visited[adjacent.getX()][adjacent.getY()] = true;//set as visited.
-                            System.out.println(adjacent.getX() + ", "+ adjacent.getY()+ ":" + visited[adjacent.getX()][adjacent.getY()]+ "Set  asdasdasdasdasdasdasdasdadasd ");
-                            if (adjacent.isRoom()){
-                                foundRoom = true;
-                                solutionPath = tempPath;
-                                break;
-                            }  
-                        }
-                        
-                        System.out.println("MEHAMMMAMMAMSMAMMM");
-                        pathList.add(tempPath);
-                        toRemove.add(path);
-                    }
-                }
-                 i++;
-            }
-            for(ArrayList<Tile> pathToRemove : toRemove){
-                pathList.remove(pathToRemove);
-                System.out.println("TRAPS ARE GAY");
-            }
-            toRemove = new ArrayList<ArrayList<Tile>>();
             
-           
+            if (pathList.isEmpty()){
+                //System.out.println("no valid path found");
+                return new LinkedList<>();
+            }
+            
+            currentPath = pathList.get(0);
+            //System.out.println("expanding a path to have one extra distance from source");
+            
+            for (Tile t : currentPath.getLast().getAdjacent()){//try to explore all the tiles adjacent to the last tile in the path
+            
+                if (t.isRoom()){//shortest path found
+                    currentPath.add(t);
+                    return currentPath;
+                }
+                
+                else if (t.isFull() || visited[t.getX()][t.getY()]){//if the tile is full or is allready visited, do not explore it
+                    //System.out.println("allready explored this tile");
+                    continue;
+                }
+                
+                newPath = new LinkedList<>();
+                for (Tile ti : currentPath){
+                    newPath.add(ti);
+                }
+                
+                newPath.add(t);//add new path to pathList (current path + newly found tile)
+                
+                //System.out.println("adding new path with distance: "+newPath.size());
+                pathList.add(newPath);
+                
+                //System.out.println("current paths:");
+                //for (LinkedList<Tile> storedPath : pathList){
+                //    System.out.println("path:");
+                //    for (Tile ti: storedPath){
+                //        System.out.println("   "+t.getX() +","+ t.getY());
+                //    }
+                //}
+                
+                visited[t.getX()][t.getY()] = true;//tile is now marked as visited    
+            }
+            pathList.remove(currentPath);
+  
         }
         return solutionPath;  
     }
