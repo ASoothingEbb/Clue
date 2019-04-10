@@ -160,12 +160,19 @@ public class Tile {
     @Override
     public String toString(){
         String res = "";
-        res+= getX()+","+getY()+": \n";
+        res+= "spec:"+isSpecial()+", room:"+isRoom()+", xy: "+getX()+","+getY()+": \n";
         
         for (Tile adjacent : getAdjacent()){
             res += "    "+adjacent.getX()+","+adjacent.getY()+"\n";
         }
         return res;
     }
-        
+    
+    /**
+     * gets the special flag from the tile
+     * @return true if the tile is special, false otherwise
+     */
+    public boolean isSpecial(){
+        return special;
+    }  
 }
