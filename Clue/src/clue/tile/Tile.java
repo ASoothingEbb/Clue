@@ -130,23 +130,40 @@ public class Tile {
         }
     }
     
+    /**
+     * gets the x coordinate of the tile, -1 if the tile is a room
+     * @return the x coordinate / -1 if room
+     */
     public int getX(){
         return x;
     }
+    
+    /**
+     * gets the y coordinate of the tile, returns the room id if the tile is a room
+     * @return the y coordinate / room id
+     */
     public int getY(){
         return y;
     }
+    /**
+     * gets the adjacent tiles
+     * @return the adjacent tiles
+     */
     public List<Tile> getAdjacent(){
         return adjacentTiles;
     }
     
+    /**
+     * converts a tile to string, returns x y of tile along with x y of all adjacent tiles 
+     * @return 
+     */
     @Override
     public String toString(){
         String res = "";
-        res+= getX()+","+getY()+": /n";
+        res+= getX()+","+getY()+": \n";
         
         for (Tile adjacent : getAdjacent()){
-            res += "    "+adjacent.getX()+","+adjacent.getY()+"/n";
+            res += "    "+adjacent.getX()+","+adjacent.getY()+"\n";
         }
         return res;
     }
