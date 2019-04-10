@@ -281,7 +281,7 @@ public final class BoardMappings {
      */
     public Tile[][] createTileMappings(ArrayList<ArrayList<String>> tiles, int roomCount) throws NoSuchRoomException {
         Tile[][] localMappings = new Tile[boardHeight][boardWidth];      
-        String cell = null;      
+        String cell;      
         for (int y = 0; y < boardHeight; y++){//create Tile objects in mappings, object may be tile,room,special or null depending on what the csv cell was
             for (int x = 0; x < boardWidth; x++){
                 
@@ -343,28 +343,28 @@ public final class BoardMappings {
                         //System.out.println(currentTile != null);
                         if (x>0){//there is a left tile
                             if (Pattern.matches(nonRoomTilePattern, tiles.get(y).get(x-1))){ //if tile to the left is also a standard tile
-                                currentTile.addAdjacent(localMappings[y][x-1]);
+                                currentTile.addAdjacentBoth(localMappings[y][x-1]);
                             }
                         }    
-                        if (x<boardWidth-1){//if there is a right tile
-                            if (Pattern.matches(nonRoomTilePattern, tiles.get(y).get(x+1))){ ///if tile to the right is also a standard tile
-                                currentTile.addAdjacent(localMappings[y][x+1]);
-                            }
-                        }
-                        if (y>0){//if there is a above tile
-                            if (Pattern.matches(nonRoomTilePattern, tiles.get(y-1).get(x))){ //if tile above is also a standard tile
-                                currentTile.addAdjacent(localMappings[y-1][x]);
-                            }
-                        }
+                        //if (x<boardWidth-1){//if there is a right tile
+                        //    if (Pattern.matches(nonRoomTilePattern, tiles.get(y).get(x+1))){ ///if tile to the right is also a standard tile
+                        //        currentTile.addAdjacent(localMappings[y][x+1]);
+                        //    }
+                        //}
+                        //if (y>0){//if there is a above tile
+                        //    if (Pattern.matches(nonRoomTilePattern, tiles.get(y-1).get(x))){ //if tile above is also a standard tile
+                        //        currentTile.addAdjacent(localMappings[y-1][x]);
+                        //    }
+                        //}
                         if (y<boardHeight-1){//if there is a tile below
                             if (Pattern.matches(nonRoomTilePattern, tiles.get(y+1).get(x))){ //if tile below is also a standard tile
-                                currentTile.addAdjacent(localMappings[y+1][x]);
+                                currentTile.addAdjacentBoth(localMappings[y+1][x]);
                             }
                         }    
                     }
                     else{
                         System.out.println((currentTile.getY() == -1 || currentTile.getX() == -1)+",,,,,,,,,,,"+currentTile.getX()+","+currentTile.getY());
-                        throw new NullPointerException("-git blame @mw434 FATAL ERROR");
+                        throw new NullPointerException("[BoardMappings.createTileMappings]@mw434 FATAL ERROR CODED WRONG");
                     
                     }
  
