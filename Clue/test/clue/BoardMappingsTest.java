@@ -174,7 +174,7 @@ public class BoardMappingsTest {
             assertTrue(out.get(3).get(2).equals(""));
             assertTrue(out.get(3).get(3).equals("0"));
             
-            assertTrue(out.get(4).get(0).equals("0*"));            
+            assertTrue(out.get(4).get(0).equals("I"));            
             assertTrue(out.get(4).get(1).equals("0"));
             assertTrue(out.get(4).get(2).equals("0"));
             assertTrue(out.get(4).get(3).equals("2"));
@@ -236,7 +236,13 @@ public class BoardMappingsTest {
    
                         }
                         else if (x == 1 && y == 2 || x == 2 && y == 2 || x == 3 && y == 2 || x == 3 && y == 4){//rooms should be at these locations
-
+                            if (y == 4){//room 2 at y ==4 for above
+                                assertEquals(2,boardMappings.getTile(x, y).getY());
+                            }
+                            else{//room 1 at all rest of room locations
+                                assertEquals(1,boardMappings.getTile(x, y).getY());
+                            }
+                            
                         }                                                
                         else{//non room / non empty tiles
                             assertTrue(boardMappings.getTile(x, y).getX() == x && boardMappings.getTile(x, y).getY() == y);
@@ -310,9 +316,111 @@ public class BoardMappingsTest {
                 BoardMappings boardMappings = new BoardMappings("testCsv/shortTiles.csv", "testCsv/shortDoors.csv",4,5);
 
                 ArrayList<ArrayList<String>> tiles = boardMappings.loadCsv2D("testCsv/shortTiles.csv");
-                boardMappings.createTileMappings(tiles, boardMappings.getRoomCount(tiles));
- 
-   
+                //boardMappings.createTileMappings(tiles, boardMappings.getRoomCount(tiles));
+                
+                
+                Tile t00 = boardMappings.getTile(0,0);
+                Tile t10 = boardMappings.getTile(1,0);
+                Tile t20 = boardMappings.getTile(2,0);
+                Tile t30 = boardMappings.getTile(3,0);
+                
+                Tile t01 = boardMappings.getTile(0,1);
+                Tile t11 = boardMappings.getTile(1,1);
+                Tile t21 = boardMappings.getTile(2,1);
+                Tile t31 = boardMappings.getTile(3,1);
+                
+                
+                Tile t02 = boardMappings.getTile(0,2);
+                Tile t12 = boardMappings.getTile(1,2);
+                Tile t22 = boardMappings.getTile(2,2);
+                Tile t32 = boardMappings.getTile(3,2);
+                
+                Tile t03 = boardMappings.getTile(0,3);
+                Tile t13 = boardMappings.getTile(1,3);
+                Tile t23 = boardMappings.getTile(2,3);
+                Tile t33 = boardMappings.getTile(3,3);
+                
+                Tile t04 = boardMappings.getTile(0,4);
+                Tile t14 = boardMappings.getTile(1,4);
+                Tile t24 = boardMappings.getTile(2,4);
+                Tile t34 = boardMappings.getTile(3,4);
+                
+                
+                //row 0
+                assertEquals(2,t00.getAdjacent().size());
+                assertTrue(t00.isAdjacent(t01));
+                assertTrue(t00.isAdjacent(t10));
+                
+                assertEquals(2,t10.getAdjacent().size());
+                assertTrue(t10.isAdjacent(t00));
+                assertTrue(t10.isAdjacent(t11));
+                
+                assertTrue(t20.getAdjacent().isEmpty());
+                assertTrue(t30.getAdjacent().size() == 1);
+                assertTrue(t30.isAdjacent(t31));
+                
+                
+                
+                //row 1
+                
+                assertEquals(3, t01.getAdjacent().size());
+                assertTrue(t01.isAdjacent(t00));
+                assertTrue(t01.isAdjacent(t11));
+                assertTrue(t01.isAdjacent(t02));
+                
+                
+                assertEquals(2, t11.getAdjacent().size());
+                assertTrue(t11.isAdjacent(t10));
+                assertTrue(t11.isAdjacent(t01));
+                
+                assertEquals(0, t21.getAdjacent().size());
+
+                assertEquals(1, t31.getAdjacent().size());
+                assertTrue(t31.isAdjacent(t30));
+                
+                
+                //row 2
+                
+                assertEquals(3, t02.getAdjacent().size());
+                assertTrue(t02.isAdjacent(t01));
+                assertTrue(t02.isAdjacent(t03));
+                assertTrue(t02.isAdjacent(t12));
+                
+                
+                assertTrue(t12.isRoom() && t22.isRoom() && t32.isRoom());//room 1
+                assertTrue(t12 == t22 && t12 == t32);//should all be the same Room tile
+                assertEquals(1, t12.getAdjacent().size());
+                assertTrue(t12.isAdjacent(t02));//should have a door leading to this tile
+                
+                //row 3
+                
+                
+                assertEquals(2, t03.getAdjacent().size());
+                
+                assertEquals(0,t13.getAdjacent().size());
+                
+                assertEquals(0,t23.getAdjacent().size());//empty tile
+                
+                assertEquals(0,t33.getAdjacent().size());//unreachable tile
+                
+                //row 4
+                
+                assertEquals(2, t04.getAdjacent().size());
+                assertTrue(t04.isAdjacent(t03));
+                assertTrue(t04.isAdjacent(t14));
+                
+                assertEquals(2, t14.getAdjacent().size());
+                assertTrue(t14.isAdjacent(t04));
+                assertTrue(t14.isAdjacent(t24));
+                
+                assertEquals(2, t24.getAdjacent().size());
+                assertTrue(t24.isAdjacent(t14));
+                assertTrue(t24.isAdjacent(t34));
+                
+                assertEquals(1, t34.getAdjacent().size());
+                assertTrue(t34.isRoom());
+                assertTrue(t34.isAdjacent(t24));
+                
 
             } catch (NoSuchRoomException | NoSuchTileException | MissingRoomDuringCreationException ex) {
                 System.out.println(ex);
