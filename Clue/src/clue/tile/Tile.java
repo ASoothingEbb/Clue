@@ -134,6 +134,18 @@ public class Tile {
      * gets the x coordinate of the tile, -1 if the tile is a room
      * @return the x coordinate / -1 if room
      */
+    @Override
+    public String toString(){
+        String res = "";
+        res+= "spec:"+isSpecial()+", room:"+isRoom() + ", xy:" + getX() + "," + getY()+ " \n";
+        
+        for(Tile adjacent : getAdjacent()){
+            res += "    "+adjacent.getX()+ ", "+adjacent.getY()+ " \n";
+        }
+        
+        return res;
+    }
+    
     public int getX(){
         return x;
     }
@@ -153,20 +165,7 @@ public class Tile {
         return adjacentTiles;
     }
     
-    /**
-     * converts a tile to string, returns x y of tile along with x y of all adjacent tiles 
-     * @return 
-     */
-    @Override
-    public String toString(){
-        String res = "";
-        res+= "spec:"+isSpecial()+", room:"+isRoom()+", xy: "+getX()+","+getY()+": \n";
-        
-        for (Tile adjacent : getAdjacent()){
-            res += "    "+adjacent.getX()+","+adjacent.getY()+"\n";
-        }
-        return res;
-    }
+
     
     /**
      * gets the special flag from the tile

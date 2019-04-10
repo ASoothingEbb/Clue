@@ -191,6 +191,30 @@ public final class GameController {
     public Player getPlayer() {
         return player;
     }
+    
+    /**
+     * Returns the player object with the given id.
+     *
+     * @param id of the player.
+     * @return Player with id id. null if invalid ID.
+     */
+    public Player getPlayer(int id){
+        for(int i = 0; i < players.size(); i++){
+            if (id == players.get(i).getId()){
+                return players.get(i);
+            }
+        }
+        return null;
+    }
+    
+     /**
+     * Returns the List of every Player in the game.
+     *
+     * @return List of all Players.
+     */
+    public List<Player> getPlayers(){
+        return players;
+    }
 
     /**
      * Terminates the game instance and declares a winner.

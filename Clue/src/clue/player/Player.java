@@ -179,6 +179,10 @@ public class Player {
     public GameController getGameController() {
         return game;
     }
+    
+    public List<Card> getCards(){
+        return cards;
+    }
 
     public int getLogPointer() {
         return lastSeen;

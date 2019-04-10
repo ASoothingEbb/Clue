@@ -421,5 +421,12 @@ public final class BoardMappings {
         
         room1.addAdjacentBoth(room2);
     
+    
+    public int getBoardHeight(){
+        return boardHeight;
+    }
+    
+    public int getBoardWidth(){
+        return boardWidth;
     }
 }
