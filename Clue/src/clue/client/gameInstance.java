@@ -5,6 +5,7 @@
  */
 package clue.client;
 
+import clue.GameController;
 import java.util.HashMap;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
@@ -54,6 +55,10 @@ public class gameInstance {
     
     private HashMap<Integer, Integer> spawnlocations = new HashMap<>();
     private Player currentPlayer;
+    private String remainingMoves;
+    private boolean rolled;
+    
+    private GameController gameInterface;
 
     private final Font avenirButtonLarge = Font.loadFont(getClass().getResourceAsStream("assets/fonts/Avenir-Book.ttf"), 30);
     private final Font avenirTitle = Font.loadFont(getClass().getResourceAsStream("assets/fonts/Avenir-Book.ttf"), 20);
@@ -80,19 +85,20 @@ public class gameInstance {
                 final int coordY = y;
                 tile.setOnMouseClicked((MouseEvent e) -> {
                     boolean moved = currentPlayer.move(coordX, coordY, board, currentPlayer);
-                    System.out.println("HELLO "+counter);
+                    System.out.println("HELLO " + counter);
                     counter++;
                 });
                 
                 tilePane.getChildren().add(tile);
                         
                 board[x][y] = tilePane;
-                boardPane.add(tilePane, y, x);
-                
+                boardPane.add(tilePane, y, x);   
             }
         }
         
         // TODO: spawn players
+        
+        rolled = false;
         
         Player player1 = new Player(0, 4, "PP");
         board[5][0].getChildren().add(player1);
@@ -108,9 +114,7 @@ public class gameInstance {
         leftPanelLayout.setPadding(new Insets(0, 10, 10, 10));
         
         // Notepad
-        Label notepadLabel = new Label("Notepad");
-        notepadLabel.setTextFill(Color.WHITE);
-        notepadLabel.setFont(avenirTitle);
+        Label notepadLabel = getLabel("Notepad", avenirTitle);
         
         TextArea notepad = new TextArea();
         notepad.setPrefRowCount(20);
@@ -123,10 +127,8 @@ public class gameInstance {
         });
         
         // suggestion accusation history
-        Label historyLabel = new Label("History");
-        historyLabel.setTextFill(Color.WHITE);
-        historyLabel.setFont(avenirTitle);
-        
+        Label historyLabel = getLabel("History", avenirTitle); 
+
         StackPane history = new StackPane();
         
         ScrollPane historyPane = new ScrollPane();
@@ -149,9 +151,7 @@ public class gameInstance {
     public GridPane createCardsDisplay() {
         GridPane cardsLayout = new GridPane();
         
-        Label playerCardsLabel = new Label("Cards");
-        playerCardsLabel.setTextFill(Color.WHITE);
-        playerCardsLabel.setFont(avenirTitle);
+        Label playerCardsLabel = getLabel("Cards", avenirTitle);
 
         Card weaponCard = new Card(new Image(getClass().getResourceAsStream("assets/card.png")), "weapon", 1);
         ImageView View1 = new ImageView(weaponCard.getImage());
@@ -171,10 +171,12 @@ public class gameInstance {
         return cardsLayout;
     }
     
-    private GridPane createPlayerControls() {
-        GridPane playerControlsLayout = new GridPane();
+    private VBox createPlayerControls() {        
+        VBox playerControlsLayout = new VBox();
         playerControlsLayout.setAlignment(Pos.CENTER);
         
+        Label remainingMovesLabel = getLabel("Roll Available", avenirTitle);
+
         MenuItem suggestionButton = new MenuItem("Suggestion", avenirButtonLarge);
         suggestionButton.setActiveColor(Color.ORANGE);
         suggestionButton.setInactiveColor(Color.DARKORANGE);
@@ -204,11 +206,18 @@ public class gameInstance {
         });
         
         MenuItem rollButton = new MenuItem("Roll", avenirButtonLarge);
-        rollButton.setOnMouseClicked(e -> {
-            System.out.println("Roll Dices");
-        });
         
-        Button rollDiceButton = new Button("Roll");
+        rollButton.setOnMouseClicked(e -> {
+            if (!rolled) {
+                // waiting for gamecontroller to be finalised.
+                // remainingMovesLabel.setText("Remaining Moves: " + gameInterface.roll());
+                remainingMovesLabel.setText("Remaining Moves: " + "Rolled");
+                rolled = true;
+            } else {
+                Prompt alreadyRolled = new Prompt("You cannot roll");
+                alreadyRolled.showAndWait();
+            }
+        });
         
         MenuItem endButton = new MenuItem("End Turn", avenirButtonLarge);
         endButton.setOnMouseClicked(e -> {
@@ -217,14 +226,7 @@ public class gameInstance {
         
         Button endTurnButton = new Button("End Turn");
         // Insets(top, right, bottom, left);
-        playerControlsLayout.add(suggestionButton, 0, 0, 2, 1);
-        GridPane.setHalignment(suggestionButton, HPos.CENTER);
-        playerControlsLayout.add(accusationButton, 0, 1, 2, 1);
-        GridPane.setHalignment(accusationButton, HPos.CENTER);
-        playerControlsLayout.add(rollButton, 0, 2);
-        GridPane.setMargin(rollButton, new Insets(0, 0, 10, 10));
-        playerControlsLayout.add(endButton, 1, 2);
-        GridPane.setMargin(endButton, new Insets(0, 10, 10, 10));
+        playerControlsLayout.getChildren().addAll(remainingMovesLabel, suggestionButton, accusationButton, rollButton, endButton);
         
         return playerControlsLayout;        
     }
@@ -250,7 +252,14 @@ public class gameInstance {
         
         return main;
     }
-    
+
+    private Label getLabel(String text, Font font) {
+        Label label = new Label(text);
+        label.setTextFill(Color.WHITE);
+        label.setFont(font);
+        return label;
+    }
+        
     public void startGame(int numberOfPlayers, boolean AIPlayers, int width, int height) {
         Stage gameStage = new Stage();
         

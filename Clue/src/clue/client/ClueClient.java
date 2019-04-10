@@ -91,8 +91,6 @@ public class ClueClient extends Application {
 
         Scene scene = new Scene(menuOptions, width, height);
         
-        Image bg = new Image(getClass().getResource("assets/cluedoMansion.jpg").toExternalForm());
-        
         //BackgroundImage background = new BackgroundImage(bg, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
         menuOptions.setBackground(blackFill);
         
