@@ -7,6 +7,7 @@ package clue.tile;
 
 import clue.card.RoomCard;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *Represents a room on the board. Each room should have an associated RoomCard.
@@ -48,6 +49,13 @@ public class Room extends Tile{
         loc[1] = y;
         locations.add(loc);
     }
+    
+    public List<int[]> getLocations(){
+        return locations;
+    }
+    
+    
+    
     /**
      * gets the room id of the room
      * @return the room id
