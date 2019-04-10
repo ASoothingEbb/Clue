@@ -16,6 +16,7 @@ import clue.player.Player;
 import clue.tile.Room;
 import clue.tile.Tile;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -74,7 +75,7 @@ public class AIAdvancedTest {
 //        fail("The test case is a prototype.");
 //    }
     
-    @Test
+    //@Test
     public void testMakeLists() throws InterruptedException, UnknownActionException{
         System.out.println("makeListTest");
         Player p1 = new AIAdvanced(1, 0, 0);
@@ -103,12 +104,12 @@ public class AIAdvancedTest {
     
     @Test
     public void testBFS(){
-        //Layout of map
+        //--Layout of map--
         // t1 t2 t3
         // t4    t6
         //       r1
         
-        ArrayList<Tile> testPath = new ArrayList<>();
+        LinkedList<Tile> predictedPath = new LinkedList<>();
         
         Tile t1 = new Tile(0, 0);
         Tile t2 = new Tile(1, 0);
@@ -123,15 +124,33 @@ public class AIAdvancedTest {
         t3.addAdjacentBoth(t6);
         t6.addAdjacentBoth(r1);
         
-        AIAdvanced testPlayer = new AIAdvanced(1, 3, 3);
+        assertTrue(t1.isAdjacent(t2));
+        assertTrue(t2.isAdjacent(t3));
+        assertTrue(t3.isAdjacent(t6));
+        assertTrue(t6.isAdjacent(r1));
         
-        testPlayer.setPosition(t1);
+        LinkedList<Tile> expectedPath = new LinkedList<>();
+        expectedPath.add(t1);
+        expectedPath.add(t2);
+        expectedPath.add(t3);
+        expectedPath.add(t6);
+        expectedPath.add(r1);
         
-        testPath = testPlayer.BFS();
         
-        for(Tile tile: testPath){
-            System.out.println(tile.getX()+ " " + tile.getY());
-        }
+        AIAdvanced p1 = new AIAdvanced(1, 3, 3);
+        
+        p1.setPosition(t1);
+        
+        LinkedList<Tile> solutionPath;
+        solutionPath = p1.BFS();
+        
+        //System.out.println("solution path");
+        //for(Tile tile: solutionPath){
+        //    System.out.println(tile.getX()+ " " + tile.getY());
+        //}
+        
+        assertEquals(1 ,((Room) p1.BFS().getLast()).getId());
+        assertEquals(expectedPath, solutionPath);
     }
     
 }
