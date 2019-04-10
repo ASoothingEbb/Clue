@@ -125,21 +125,27 @@ public class AIAdvanced extends Player{
         
         ArrayList<ArrayList<Tile>> toRemove = new ArrayList<>();
         ArrayList<Tile> solutionPath = new ArrayList<>();
+        ArrayList<ArrayList<Tile>> newPath = new ArrayList<>();
         ArrayList<Tile> path;
         
         int i = 0;
+        
+        int oldPathListSize = 0;
         while(!foundRoom){
             i = 0;
-            while(i < pathList.size()){
-                
+            oldPathListSize = pathList.size();
+            System.out.println("Increase in distance");
+            while(i < oldPathListSize){
+                System.out.println("i: " + i + "oldPathistSize: "+ oldPathListSize);
                 path = pathList.get(i);
                 Tile tempTile = path.get(path.size() - 1);//last Tile of path.
                 
                 for(Tile adjacent : tempTile.getAdjacent()){
                     ArrayList<Tile> tempPath = path;
-                    
+                    System.out.println("Num of paths: " + pathList.size());
+                    System.out.println("New path: ");
                     for(Tile t : tempPath){
-                        System.out.print(t.getX() + "," + t.getY() + " ");
+                        System.out.print(t);
                     }
                     System.out.println("");
                     
@@ -147,23 +153,28 @@ public class AIAdvanced extends Player{
                         if(!visited[adjacent.getX()][adjacent.getY()]){//If not yet visited.
                             tempPath.add(adjacent);
                             visited[adjacent.getX()][adjacent.getY()] = true;//set as visited.
+                            System.out.println(adjacent.getX() + ", "+ adjacent.getY()+ ":" + visited[adjacent.getX()][adjacent.getY()]+ "Set  asdasdasdasdasdasdasdasdadasd ");
                             if (adjacent.isRoom()){
                                 foundRoom = true;
                                 solutionPath = tempPath;
                                 break;
                             }  
                         }
+                        
+                        System.out.println("MEHAMMMAMMAMSMAMMM");
                         pathList.add(tempPath);
                         toRemove.add(path);
                     }
                 }
-                i++;
+                 i++;
             }
             for(ArrayList<Tile> pathToRemove : toRemove){
                 pathList.remove(pathToRemove);
+                System.out.println("TRAPS ARE GAY");
             }
             toRemove = new ArrayList<ArrayList<Tile>>();
             
+           
         }
         return solutionPath;  
     }

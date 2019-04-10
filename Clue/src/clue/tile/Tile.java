@@ -117,6 +117,18 @@ public class Tile {
         }
     }
     
+    @Override
+    public String toString(){
+        String res = "";
+        res+= "spec:"+isSpecial()+", room:"+isRoom() + ", xy:" + getX() + "," + getY()+ " \n";
+        
+        for(Tile adjacent : getAdjacent()){
+            res += "    "+adjacent.getX()+ ", "+adjacent.getY()+ " \n";
+        }
+        
+        return res;
+    }
+    
     public int getX(){
         return x;
     }
@@ -125,6 +137,10 @@ public class Tile {
     }
     public List<Tile> getAdjacent(){
         return adjacentTiles;
+    }
+    
+    public boolean isSpecial(){
+        return special;
     }
         
 }
