@@ -145,9 +145,6 @@ public class Player {
         return cards.contains(card);
     }
 
-    public List<Card> getCards() {
-        return cards;
-    }
 
     public List<IntrigueCard> getIntrigue() {
         return intrigues;
@@ -199,7 +196,7 @@ public class Player {
     public void setNotes(String notes){
         this.notes = notes;
     }
-    //    /**
+//    /**
 //     * Executes a sequence of moves
 //     *
 //     * @param tiles a queue of destination tiles
