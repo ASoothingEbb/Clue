@@ -40,6 +40,7 @@ import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -64,7 +65,9 @@ public class ClueClient extends Application {
     private String currentWindowMode;
     
     private HashMap<String, String> textureMap;
-
+    
+    private int numberOfPlayers;
+    
     // Fonts
     private final Font avenirLarge = Font.loadFont(getClass().getResourceAsStream("assets/fonts/Avenir-Book.ttf"), 30);
     private final Font avenirTitle = Font.loadFont(getClass().getResourceAsStream("assets/fonts/Avenir-Book.ttf"), 20);
@@ -119,6 +122,8 @@ public class ClueClient extends Application {
     }
     
     private void startGameScene(Stage stage) {
+        numberOfPlayers = 1;
+        
         BorderPane alignmentPane = new BorderPane();
         alignmentPane.setBackground(blackFill);
 
@@ -132,30 +137,60 @@ public class ClueClient extends Application {
         Label startGameTitle = getLabel("Create Game", avenirTitle);
         
         // Number of Players
-        final int numberOfPlayers = 6;
+
         
         Label numberOfPlayersLabel = getLabel("Number of Players", avenirNormal);
         
-        Slider playersNum = new Slider(1,numberOfPlayers,6);
+        HBox players = new HBox();
+        
+        MenuItem playersNumber = new MenuItem(String.valueOf(numberOfPlayers), avenirTitle);
+        
+        MenuItem minusPlayer = new MenuItem("-", avenirTitle);
+        minusPlayer.setOnMouseClicked(e -> {
+            if (numberOfPlayers > 1) {
+            updateNumberOfPlayers(false, playersNumber);
+            }
+        });
+        
+        MenuItem addPlayer = new MenuItem("+", avenirTitle);
+        addPlayer.setOnMouseClicked(e -> {
+            if (numberOfPlayers < 6) {
+            updateNumberOfPlayers(true, playersNumber);
+            }
+        });
+        
+        players.getChildren().addAll(minusPlayer, playersNumber, addPlayer);
+        
+        Slider playersNum = new Slider(1,6,6);
         
         playersNum.setMajorTickUnit(1);
         playersNum.setMinorTickCount(0);
         playersNum.setShowTickMarks(true);
         playersNum.setShowTickLabels(true);
         playersNum.setSnapToTicks(true);
-
+        
         // Number of AI Players
         Label aiPlayersLabel = getLabel("AI Players", avenirNormal);
 
-        CheckBox aiPlayers = new CheckBox();
+        Slider AINum = new Slider(0,6-numberOfPlayers,0);
         
+        AINum.setMajorTickUnit(1);
+        AINum.setMinorTickCount(0);
+        AINum.setShowTickLabels(true);
+        AINum.setShowTickMarks(true);
+        AINum.setSnapToTicks(true);
+  
+        playersNum.valueChangingProperty().addListener(e -> {
+            //TODO dynamically change AI Player values
+        });
+
         // Create Game Instance
         gameInstance game = new gameInstance();
         
         MenuItem startGameButton = new MenuItem("Start Game", avenirTitle);
         startGameButton.setOnMouseClicked(e -> {
             stage.hide();
-            game.startGame((int) playersNum.getValue(), aiPlayers.isSelected(), width, height);
+            game.startGame((int) playersNum.getValue(), true, width, height);
         });
 
         // Return to menu
@@ -168,13 +203,14 @@ public class ClueClient extends Application {
         startGameOptions.add(numberOfPlayersLabel, 0, 1);
         GridPane.setHalignment(numberOfPlayersLabel, HPos.CENTER);
         
-        startGameOptions.add(playersNum, 1, 1);
+        startGameOptions.add(players, 1, 1);
+        GridPane.setMargin(players, new Insets(0, 0, 0, 10));
         
         startGameOptions.add(aiPlayersLabel, 0, 2);
         GridPane.setHalignment(aiPlayersLabel, HPos.CENTER);
         
-        startGameOptions.add(aiPlayers, 1, 2);
-        GridPane.setHalignment(aiPlayers, HPos.CENTER);
+        startGameOptions.add(AINum, 1, 2);
+        GridPane.setHalignment(AINum, HPos.CENTER);
         
         startGameOptions.add(startGameButton, 0, 3, 2, 1);
         GridPane.setHalignment(startGameButton, HPos.CENTER);
@@ -185,6 +221,15 @@ public class ClueClient extends Application {
         Scene scene = new Scene(alignmentPane, width, height);
         prevScene = stage.getScene();
         stage.setScene(scene);
+    }
+    
+    private void updateNumberOfPlayers(boolean increase, MenuItem label) {
+        if (increase) {
+            numberOfPlayers++;
+        } else {
+            numberOfPlayers--;
+        }
+        label.setText(String.valueOf(numberOfPlayers));
     }
     
     private void howToPlayScene(Stage stage) {
