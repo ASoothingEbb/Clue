@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -58,7 +59,7 @@ public final class BoardMappings {
      *          -1 = no tile
      *          S = starting tile
      *          int n > 0 = room with id n
-     *          0* = intrigue tile
+     *          I = intrigue tile
      *
      *      door csv: each row represents one door
      *          index 0: the room id that the door leads to
@@ -222,11 +223,19 @@ public final class BoardMappings {
     public final Tile getTile(int x, int y) throws NoSuchRoomException, ArrayIndexOutOfBoundsException{
         if (x >= 0 && x < mappings[0].length && y >= 0 && y < mappings.length){//trying to get a non room tile when x >=0
             
+            for (Room room : rooms){//try to pair the x y coord with a room location
+                for (int[] loc : room.getLocations()){
+                    if ( x == loc[0] && y == loc[1]){
+                        return room;
+                    }          
+                }
+            }
+            
+            
             return mappings[y][x];
         }
-        else if ( x == -1 && y > 0){//trying to get a room tile
-            return getRoom(y);
-            
+        else if ( x == -1 && y > 0){//trying to get a room tile using room id
+            return getRoom(y);  
         }
         else{
             throw new ArrayIndexOutOfBoundsException("Tile.getTile was called with an illegal x,y: "+x+","+y);
@@ -289,9 +298,9 @@ public final class BoardMappings {
                     case "0":
                         localMappings[y][x] = new Tile(x,y);
                         break;
-                    case "0*":
+                    case "I":
                         localMappings[y][x] = new SpecialTile(x,y);
-                        tiles.get(y).set(x, "0");
+                        //tiles.get(y).set(x, "0");
                         break;
                     case "S":
                         localMappings[y][x] = new Tile(x,y);
@@ -306,9 +315,12 @@ public final class BoardMappings {
                             if (Integer.parseInt(cell) > roomCount){
                                 throw new NoSuchRoomException();
                             }
+                            else{
+                                getRoom(Integer.parseInt(cell)).addLocation(x,y);
+                            }
                         }
                         catch (NumberFormatException ex){
-                            throw new NumberFormatException("values in tiles csv must be -1,0,0*,S or a number that is less than the total room count, found: "+cell+"\n"+ex.toString());
+                            throw new NumberFormatException("values in tiles csv must be -1,0,I,S or a number that is less than the total room count, found: "+cell+"\n"+ex.toString());
                         }   break;
                 }
    
@@ -316,33 +328,36 @@ public final class BoardMappings {
         }
         
         Tile currentTile;
+        String nonRoomTilePattern = "S|0|I";
         for (int y = 0; y < boardHeight; y++){
             for (int x = 0; x < boardWidth; x++){
                 
-                currentTile = localMappings[y][x];
+                
+
                 //if (currentTile != null){
                     //System.out.println(currentTile.getX()+","+currentTile.getY()+","+x+","+y);
                 //}
-                if (tiles.get(y).get(x).equals("0")){//if current tile is a standard tile
+                if (Pattern.matches(nonRoomTilePattern, tiles.get(y).get(x))){//if current tile is a standard tile
+                    currentTile = localMappings[y][x];
                     if (currentTile.getY() != -1 || currentTile.getX() != -1){//should allways be non null
                         //System.out.println(currentTile != null);
                         if (x>0){//there is a left tile
-                            if (tiles.get(y).get(x-1).equals("0")){ //if tile to the left is also a standard tile
+                            if (Pattern.matches(nonRoomTilePattern, tiles.get(y).get(x-1))){ //if tile to the left is also a standard tile
                                 currentTile.addAdjacent(localMappings[y][x-1]);
                             }
                         }    
                         if (x<boardWidth-1){//if there is a right tile
-                            if (tiles.get(y).get(x+1).equals("0")){ ///if tile to the right is also a standard tile
+                            if (Pattern.matches(nonRoomTilePattern, tiles.get(y).get(x+1))){ ///if tile to the right is also a standard tile
                                 currentTile.addAdjacent(localMappings[y][x+1]);
                             }
                         }
                         if (y>0){//if there is a above tile
-                            if (tiles.get(y-1).get(x).equals("0")){ //if tile above is also a standard tile
+                            if (Pattern.matches(nonRoomTilePattern, tiles.get(y-1).get(x))){ //if tile above is also a standard tile
                                 currentTile.addAdjacent(localMappings[y-1][x]);
                             }
                         }
                         if (y<boardHeight-1){//if there is a tile below
-                            if (tiles.get(y+1).get(x).equals("0")){ //if tile below is also a standard tile
+                            if (Pattern.matches(nonRoomTilePattern, tiles.get(y+1).get(x))){ //if tile below is also a standard tile
                                 currentTile.addAdjacent(localMappings[y+1][x]);
                             }
                         }    
