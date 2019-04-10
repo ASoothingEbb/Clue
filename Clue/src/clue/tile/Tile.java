@@ -139,5 +139,16 @@ public class Tile {
     public List<Tile> getAdjacent(){
         return adjacentTiles;
     }
+    
+    @Override
+    public String toString(){
+        String res = "";
+        res+= getX()+","+getY()+": /n";
+        
+        for (Tile adjacent : getAdjacent()){
+            res += "    "+adjacent.getX()+","+adjacent.getY()+"/n";
+        }
+        return res;
+    }
         
 }
