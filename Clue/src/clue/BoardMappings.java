@@ -420,13 +420,5 @@ public final class BoardMappings {
         Room room2 = (Room)getTile(-1,r2);
         
         room1.addAdjacentBoth(room2);
-    
-    
-    public int getBoardHeight(){
-        return boardHeight;
-    }
-    
-    public int getBoardWidth(){
-        return boardWidth;
     }
 }
