@@ -94,14 +94,6 @@ public class Tile {
         this.occupied = occupied;
     }
     
-    /**
-     * gets the occupied state of the tile
-     * @return occupied the occupied state of the square
-     * 
-     */
-    public boolean setOccupied(){
-        return occupied;
-    }
 
     /**
      * Adds Tile to the list of adjacent tiles for the current tile, the tile being added will have this tile added to its adjacency list
