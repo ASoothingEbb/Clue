@@ -23,6 +23,8 @@ public class Tile {
     
     /**
      * Creates a new Tile.
+     * @param x the x coordinate of the tile
+     * @param y the y coordinate of the tile
      */
     public Tile(int x, int y) {
         special = false;
@@ -34,12 +36,28 @@ public class Tile {
     }
     
     /**
-     * Adds Tiles to the list of adjacent tiles
-     * @param adjacentTiles list of tiles to add
+     * Creates a new Tile that does not have valid x y coordinates
      */
-    public void setAdjacent(List<Tile> adjacentTiles){
-        this.adjacentTiles.addAll(adjacentTiles);
+    public Tile() {
+        special = false;
+        room = false;
+        adjacentTiles = new ArrayList<>();
+        this.x = -1;
+        this.y = -1;
+        occupied = true;//tile is not traverseable
     }
+    
+    
+    /**
+     * gets if the tile is a valid tile, non valid tiles are effectively null tiles
+     * @return false if the tile is part of the board, true if the tile is a empty placeholder tile
+     */
+    public boolean isPlaceholder(){
+        return x == -1 && y == -1;
+    }
+    
+    
+   
 
     /**
      * Gets whether or not a Tile is adjacent to this one.
@@ -112,14 +130,48 @@ public class Tile {
         }
     }
     
+    /**
+     * gets the x coordinate of the tile, -1 if the tile is a room
+     * @return the x coordinate / -1 if room
+     */
+    @Override
+    public String toString(){
+        String res = "";
+        res+= "spec:"+isSpecial()+", room:"+isRoom() + ", xy:" + getX() + "," + getY()+ " \n";
+        
+        for(Tile adjacent : getAdjacent()){
+            res += "    "+adjacent.getX()+ ", "+adjacent.getY()+ " \n";
+        }
+        
+        return res;
+    }
+    
     public int getX(){
         return x;
     }
+    
+    /**
+     * gets the y coordinate of the tile, returns the room id if the tile is a room
+     * @return the y coordinate / room id
+     */
     public int getY(){
         return y;
     }
+    /**
+     * gets the adjacent tiles
+     * @return the adjacent tiles
+     */
     public List<Tile> getAdjacent(){
         return adjacentTiles;
     }
-        
+    
+
+    
+    /**
+     * gets the special flag from the tile
+     * @return true if the tile is special, false otherwise
+     */
+    public boolean isSpecial(){
+        return special;
+    }  
 }

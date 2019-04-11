@@ -5,28 +5,8 @@
  */
 package clue;
 
-import clue.action.AccuseAction;
-import clue.action.Action;
-import clue.action.ActionType;
-import clue.action.AvoidSuggestionAction;
-import clue.action.EndTurnAction;
-import clue.action.ExtraTurnAction;
-import clue.action.MoveAction;
-import clue.action.ShowCardAction;
-import clue.action.ShowCardsAction;
-import clue.action.StartAction;
-import clue.action.StartTurnAction;
-import clue.action.SuggestAction;
-import clue.action.ThrowAgainAction;
-import clue.action.UnknownActionException;
-import clue.card.AvoidSuggestionIntrigue;
-import clue.card.Card;
-import clue.card.ExtraTurnIntrigue;
-import clue.card.IntrigueCard;
-import clue.card.PersonCard;
-import clue.card.RoomCard;
-import clue.card.ThrowAgainIntrigue;
-import clue.card.WeaponCard;
+import clue.action.*;
+import clue.card.*;
 import clue.player.Player;
 import clue.tile.SpecialTile;
 import clue.tile.Tile;
@@ -75,6 +55,7 @@ public final class GameController {
         this.players = players;
         random = new Random(Calendar.getInstance().getTimeInMillis());
         actionLog = new ArrayList();
+        state = new GameState(players);
         performAction(new StartAction());
     }
 
@@ -168,7 +149,6 @@ public final class GameController {
                 actionLog.add(turns, action);
                 break;
             case START:
-                state = new GameState(players);
                 break;
             case STARTTURN:
                 if (state.getAction().actionType == ActionType.ENDTURN || state.getAction().actionType == ActionType.EXTRATURN) {
@@ -211,6 +191,30 @@ public final class GameController {
      */
     public Player getPlayer() {
         return player;
+    }
+    
+    /**
+     * Returns the player object with the given id.
+     *
+     * @param id of the player.
+     * @return Player with id id. null if invalid ID.
+     */
+    public Player getPlayer(int id){
+        for(int i = 0; i < players.size(); i++){
+            if (id == players.get(i).getId()){
+                return players.get(i);
+            }
+        }
+        return null;
+    }
+    
+     /**
+     * Returns the List of every Player in the game.
+     *
+     * @return List of all Players.
+     */
+    public List<Player> getPlayers(){
+        return players;
     }
 
     /**

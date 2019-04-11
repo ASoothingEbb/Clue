@@ -39,38 +39,8 @@ public class TileTest {
     public void tearDown() {
     }
 
-    /**
-     * Test of isAdjacent method, of class Tile.
-     */
-    @Test
-    public void testIsAdjacent() {
-        System.out.println("isAdjacent");
-        Tile tileA = new Tile(0,0);
-        Tile tileB = new Tile(0,1);
-        Tile tileC = new Tile(1,0);
-        
-        ArrayList<Tile> adjacencyListForTileA = new ArrayList<>();
-        adjacencyListForTileA.add(tileB);
-        tileA.setAdjacent(adjacencyListForTileA);
-        
-        assertEquals(true, tileA.isAdjacent(tileB));
-        assertEquals(false, tileA.isAdjacent(tileC));
-        
-    }
 
-    /**
-     * Test of setAdjacent method, of class Tile.
-     */
-    @Test
-    public void testSetAdjacent() {
-        System.out.println("setAdjacent");
-        List<Tile> adjacentTiles = new ArrayList();
-        Tile instance = new Tile(0,0);
-        Tile tileA = new Tile(0,1);
-        adjacentTiles.add(tileA);
-        instance.setAdjacent(adjacentTiles);
-        assertEquals(true,instance.isAdjacent(tileA));
-    }
+
 
     /**
      * Test of isRoom method, of class Tile.
