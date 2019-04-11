@@ -107,6 +107,7 @@ public class Player {
      */
     public void setPosition(Tile t) {
         position = t;
+        t.setOccupied(true);
     }
 
     /**

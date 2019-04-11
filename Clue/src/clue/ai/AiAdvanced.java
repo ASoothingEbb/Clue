@@ -28,7 +28,7 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class AIAdvanced extends Player{
+public class AiAdvanced extends Player{
     
     private int id;
     private GameController gameController;
@@ -41,7 +41,7 @@ public class AIAdvanced extends Player{
     private Random rand;
     
     //Width of the board, height of the board.
-    public AIAdvanced(int id, int width, int height){
+    public AiAdvanced(int id, int width, int height){
         super(id);
         
         this.boardWidth = width;
@@ -108,7 +108,7 @@ public class AIAdvanced extends Player{
         
         LinkedList<LinkedList<Tile>> pathList = new LinkedList<>();
         
-        boolean visited[][] = new boolean[boardHeight][boardWidth];
+        boolean visited[][] = new boolean[boardWidth][boardHeight];
         
         for(boolean []a : visited){
             Arrays.fill(a,false);
@@ -135,12 +135,10 @@ public class AIAdvanced extends Player{
             //System.out.println("expanding a path to have one extra distance from source");
             
             for (Tile t : currentPath.getLast().getAdjacent()){//try to explore all the tiles adjacent to the last tile in the path
-            
                 if (t.isRoom()){//shortest path found
                     currentPath.add(t);
                     return currentPath;
                 }
-                
                 else if (t.isFull() || visited[t.getX()][t.getY()]){//if the tile is full or is allready visited, do not explore it
                     //System.out.println("allready explored this tile");
                     continue;
@@ -156,13 +154,13 @@ public class AIAdvanced extends Player{
                 //System.out.println("adding new path with distance: "+newPath.size());
                 pathList.add(newPath);
                 
-                //System.out.println("current paths:");
-                //for (LinkedList<Tile> storedPath : pathList){
-                //    System.out.println("path:");
-                //    for (Tile ti: storedPath){
-                //        System.out.println("   "+t.getX() +","+ t.getY());
-                //    }
-                //}
+                System.out.println("current paths:");
+                for (LinkedList<Tile> storedPath : pathList){
+                    System.out.println("path:");
+                    for (Tile ti: storedPath){
+                        System.out.println("   "+ti.getX() +","+ ti.getY());
+                    }
+                }
                 
                 visited[t.getX()][t.getY()] = true;//tile is now marked as visited    
             }

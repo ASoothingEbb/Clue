@@ -99,7 +99,7 @@ public class Tile {
      * @return occupied the occupied state of the square
      * 
      */
-    public boolean setOccupied(){
+    public boolean getOccupied(){
         return occupied;
     }
 
