@@ -68,7 +68,7 @@ public class RoomTest {
      */
     @Test
     public void testAddGetLocation() {
-        System.out.println("add/getLocation");
+        System.out.println("addLocation/getLocation");
         int x = 0;
         int y = 0;
         
