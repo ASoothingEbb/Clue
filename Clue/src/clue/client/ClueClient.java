@@ -142,8 +142,11 @@ public class ClueClient extends Application {
         Label numberOfPlayersLabel = getLabel("Number of Players", avenirNormal);
         
         HBox players = new HBox();
+        players.setAlignment(Pos.CENTER);
         
-        MenuItem playersNumber = new MenuItem(String.valueOf(numberOfPlayers), avenirTitle);
+        //MenuItem playersNumber = new MenuItem(String.valueOf(numberOfPlayers), avenirTitle);
+        
+        TextField playersNumber = getTextField(1, false);
         
         MenuItem minusPlayer = new MenuItem("-", avenirTitle);
         minusPlayer.setOnMouseClicked(e -> {
@@ -223,7 +226,7 @@ public class ClueClient extends Application {
         stage.setScene(scene);
     }
     
-    private void updateNumberOfPlayers(boolean increase, MenuItem label) {
+    private void updateNumberOfPlayers(boolean increase, TextField label) {
         if (increase) {
             numberOfPlayers++;
         } else {
