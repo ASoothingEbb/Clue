@@ -101,6 +101,10 @@ public class ClueClient extends Application {
         primaryStage.show();
     }
     
+    /**
+     * Creates the main scene and adds the nodes to the given VBox.
+     * @param menuOptions 
+     */
     private void addUIControls(VBox menuOptions) {
         // Game Title
         Font titleFont = Font.loadFont(getClass().getResourceAsStream("assets/fonts/ringbearer.ttf"), 80);
@@ -121,6 +125,11 @@ public class ClueClient extends Application {
          menuOptions.getChildren().addAll(gameTitle, createGameButton, howToPlayButton, settingsButton);
     }
     
+    /**
+     * Creates the game creation scene where the number of human and AI
+     * players specified, and can be started.
+     * @param stage 
+     */
     private void startGameScene(Stage stage) {
         numberOfPlayers = 1;
         
@@ -235,6 +244,12 @@ public class ClueClient extends Application {
         label.setText(String.valueOf(numberOfPlayers));
     }
     
+    /**
+     * Creates the HowToPlay scene. Before setting the stage to the HowToPlay
+     * scene, the prevScene has to be set to the currentScene which is used to
+     * return to home Scene.
+     * @param stage 
+     */
     private void howToPlayScene(Stage stage) {
         GridPane howToPlayLayout = new GridPane();
         howToPlayLayout.setAlignment(Pos.CENTER);
@@ -253,6 +268,10 @@ public class ClueClient extends Application {
         stage.setScene(scene);
     }
     
+    /**
+     * 
+     * @param stage 
+     */
     private void settingScene(Stage stage) {        
         BorderPane settingsLayout = new BorderPane();
         settingsLayout.setBackground(blackFill);
@@ -327,6 +346,11 @@ public class ClueClient extends Application {
         stage.setScene(scene);
     }
     
+    /**
+     * 
+     * @param layout
+     * @return 
+     */
     private GridPane creditsScene(GridPane layout) {      
         LinkedHashMap <String, String> credits = new LinkedHashMap<>();
         credits.put("Produced By", "Big Sage Productions");
@@ -359,6 +383,11 @@ public class ClueClient extends Application {
         return layout;
     }
     
+    /**
+     * 
+     * @param layout
+     * @return 
+     */
     private GridPane audioSettingsScene(GridPane layout) {
         Label masterLabel = getLabel("Master Volume", avenirTitle);
         
@@ -384,6 +413,11 @@ public class ClueClient extends Application {
         return layout;
     }
     
+    /**
+     * 
+     * @param layout
+     * @return 
+     */
     private GridPane textureSettingsScene(GridPane layout) {
         textureMap = new HashMap<>();
         
@@ -481,6 +515,13 @@ public class ClueClient extends Application {
         }
     }
     
+    /**
+     * Returns a TextField with specified settings, the column size and can the
+     * content be edited.
+     * @param columnCount
+     * @param editable
+     * @return 
+     */
     private TextField getTextField(int columnCount, boolean editable) {
         TextField filePath = new TextField();
         filePath.setPrefColumnCount(columnCount);
@@ -488,6 +529,12 @@ public class ClueClient extends Application {
         return filePath;        
     }
     
+    /**
+     * Returns a Label with the given text and font.
+     * @param text
+     * @param font
+     * @return 
+     */
     private Label getLabel(String text, Font font) {
         Label label = new Label(text);
         label.setTextFill(Color.WHITE);
