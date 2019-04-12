@@ -13,6 +13,7 @@ import clue.tile.NoSuchRoomException;
 import clue.tile.NoSuchTileException;
 import clue.tile.SpecialTile;
 import clue.tile.Tile;
+import clue.tile.TileOccupiedException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedList;
@@ -64,7 +65,7 @@ public final class GameController {
      * @throws clue.MissingRoomDuringCreationException
      * @throws clue.GameController.TooManyPlayersException
      */
-    public GameController(int human, int ai,String tilePath,String doorPath) throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, TooManyPlayersException {
+    public GameController(int human, int ai,String tilePath,String doorPath) throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, TooManyPlayersException, TileOccupiedException {
         //TODO
         this.bm = new BoardMappings(tilePath,doorPath,6,8);
         queue = new SynchronousQueue(true);
@@ -94,7 +95,7 @@ public final class GameController {
      * @throws InterruptedException Action was not performed at the correct
      * time.
      */
-    public void performAction(Action action) throws UnknownActionException, InterruptedException {
+    public void performAction(Action action) throws UnknownActionException, InterruptedException, TileOccupiedException {
         execute((Action) queue.poll());
         queue.offer(action);
     }
@@ -106,7 +107,7 @@ public final class GameController {
      * @throws UnknownActionException
      * @throws InterruptedException
      */
-    private void execute(Action action) throws UnknownActionException, InterruptedException {
+    private void execute(Action action) throws UnknownActionException, InterruptedException, TileOccupiedException {
         player = players.get(state.getPlayerTurn());
         action.execute();
         System.out.println(action.actionType + "executing");
@@ -188,6 +189,9 @@ public final class GameController {
                 actionLog.add(turns, action);
                 break;
             case TELEPORT:
+                if(!action.result){
+                    throw new TileOccupiedException();
+                }
                 break;
             case THROWAGAIN:
                 //TODO: tell gui to roll again
@@ -270,8 +274,9 @@ public final class GameController {
      * @throws UnknownActionException
      * @throws InterruptedException
      * @throws clue.GameController.MovementException the movements were invalid
+     * @throws clue.tile.TileOccupiedException
      */
-    public void move(Queue<Tile> tiles) throws UnknownActionException, InterruptedException, MovementException {
+    public void move(Queue<Tile> tiles) throws UnknownActionException, InterruptedException, MovementException, TileOccupiedException {
         if (tiles.size() <= player.getMoves()) {
             performAction(new MoveAction(player, tiles));
         } else {
@@ -279,7 +284,7 @@ public final class GameController {
         }
     }
     
-    public void move(Tile tile) throws UnknownActionException, InterruptedException, MovementException{
+    public void move(Tile tile) throws UnknownActionException, InterruptedException, MovementException, TileOccupiedException{
         Queue<Tile> list = new LinkedList();
         list.add(tile);
         performAction(new MoveAction(player, list));
@@ -295,7 +300,7 @@ public final class GameController {
      * @throws clue.action.UnknownActionException
      * @throws java.lang.InterruptedException
      */
-    public void suggest(PersonCard person, RoomCard room, WeaponCard weapon, Player player) throws UnknownActionException, InterruptedException {
+    public void suggest(PersonCard person, RoomCard room, WeaponCard weapon, Player player) throws UnknownActionException, InterruptedException, TileOccupiedException {
         performAction(new SuggestAction(person, room, weapon, player, state));
     }
 
@@ -306,7 +311,7 @@ public final class GameController {
      * @throws UnknownActionException
      * @throws InterruptedException
      */
-    public void showCard(Card card) throws UnknownActionException, InterruptedException {
+    public void showCard(Card card) throws UnknownActionException, InterruptedException, TileOccupiedException {
         performAction(new ShowCardAction(player, card));
     }
 
@@ -320,7 +325,7 @@ public final class GameController {
      * @throws UnknownActionException
      * @throws InterruptedException
      */
-    public void accuse(PersonCard person, RoomCard room, WeaponCard weapon) throws UnknownActionException, InterruptedException {
+    public void accuse(PersonCard person, RoomCard room, WeaponCard weapon) throws UnknownActionException, InterruptedException, TileOccupiedException {
         performAction(new AccuseAction(player, person, room, weapon, person == this.person && room == this.room && weapon == this.weapon));
     }
 
@@ -373,7 +378,7 @@ public final class GameController {
      * @throws UnknownActionException
      * @throws InterruptedException
      */
-    private void getSpecial(Tile loc) throws UnknownActionException, InterruptedException {
+    private void getSpecial(Tile loc) throws UnknownActionException, InterruptedException, TileOccupiedException {
         IntrigueCard card = ((SpecialTile) loc).getIntrigue(player);
         switch (card.cardType) {
             case AVOIDSUGGESTION:
