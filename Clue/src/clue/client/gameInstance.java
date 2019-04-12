@@ -6,13 +6,11 @@
 package clue.client;
 
 import clue.GameController;
+import java.io.File;
 import java.util.HashMap;
-import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -21,7 +19,6 @@ import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BackgroundImage;
@@ -31,7 +28,6 @@ import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -46,8 +42,6 @@ import javafx.stage.Stage;
 public class gameInstance {
     
     private static final int TILE_SIZE = 38;
-    private int width;
-    private int height;
     private int counter;
    
     private StackPane[][] board = new StackPane[25][24];
@@ -59,10 +53,14 @@ public class gameInstance {
     private boolean rolled;
     
     private GameController gameInterface;
-
-    private final Font avenirButtonLarge = Font.loadFont(getClass().getResourceAsStream("assets/fonts/Avenir-Book.ttf"), 30);
-    private final Font avenirTitle = Font.loadFont(getClass().getResourceAsStream("assets/fonts/Avenir-Book.ttf"), 20);
-    private final Font avenirText = Font.loadFont(getClass().getResourceAsStream("assets/fonts/Avenir-Book.ttf"), 15);
+    
+    private HashMap<String, String> characterImageMap = new HashMap<>();
+    private HashMap<String, String> WeaponImageMap = new HashMap<>();
+    private HashMap<String, String> RoomImageMap = new HashMap<>();
+            
+    private final Font avenirButtonLarge = Font.loadFont(getClass().getResourceAsStream("resources/fonts/Avenir-Book.ttf"), 30);
+    private final Font avenirTitle = Font.loadFont(getClass().getResourceAsStream("resources/fonts/Avenir-Book.ttf"), 20);
+    private final Font avenirText = Font.loadFont(getClass().getResourceAsStream("resources/fonts/Avenir-Book.ttf"), 15);
     private final Background blackFill = new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY));
     
     private StackPane createBoard() {
@@ -70,11 +68,12 @@ public class gameInstance {
         root.setPadding(new Insets(10, 0, 0, 0));
                 
         GridPane boardPane = new GridPane();
-                
-        Image boardImage = new Image(getClass().getResource("assets/boardImage.png").toExternalForm());
+        
+        //
+        //System.out.println(boardImage.exists());        
+        Image boardImage = new Image(getClass().getResourceAsStream("resources/boardImage.png"));
         
         boardPane.setBackground(new Background(new BackgroundImage(boardImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
-        boardPane.setPrefSize(width, height);
         
         // create base Tiles
         for (int y=0; y < 24; y++) {
@@ -259,8 +258,14 @@ public class gameInstance {
         label.setFont(font);
         return label;
     }
+    
+    private void initGraphics() {
+        //String configPath = getClass().getResource("assets/config.properties").toExternalForm();
+        ClassLoader classLoader = ClassLoader.getSystemClassLoader();
+        File configFile = new File(classLoader.getResource("clue/client/resources/config.properties").getFile());
+    }
         
-    public void startGame(int numberOfPlayers, boolean AIPlayers, int width, int height) {
+    public void startGame(int numberOfPlayers, int numberOfAIs) {
         Stage gameStage = new Stage();
         
         gameStage.initModality(Modality.APPLICATION_MODAL);
@@ -272,6 +277,8 @@ public class gameInstance {
         returnButton.setOnAction(e -> {
             gameStage.close();
         });
+        
+        //gameInteface = new GameController(numberOfPlayers, numberOfAIs, );
         
         Scene scene = new Scene(createUI());
         gameStage.setScene(scene);
