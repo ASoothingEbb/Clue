@@ -7,7 +7,11 @@ package clue.client;
 
 import clue.GameController;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Properties;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -54,9 +58,7 @@ public class gameInstance {
     
     private GameController gameInterface;
     
-    private HashMap<String, String> characterImageMap = new HashMap<>();
-    private HashMap<String, String> WeaponImageMap = new HashMap<>();
-    private HashMap<String, String> RoomImageMap = new HashMap<>();
+    private HashMap<String, String> ImagePathMap = new HashMap<>();
             
     private final Font avenirButtonLarge = Font.loadFont(getClass().getResourceAsStream("resources/fonts/Avenir-Book.ttf"), 30);
     private final Font avenirTitle = Font.loadFont(getClass().getResourceAsStream("resources/fonts/Avenir-Book.ttf"), 20);
@@ -69,11 +71,12 @@ public class gameInstance {
                 
         GridPane boardPane = new GridPane();
         
-        //
-        //System.out.println(boardImage.exists());        
-        Image boardImage = new Image(getClass().getResourceAsStream("resources/boardImage.png"));
-        
-        boardPane.setBackground(new Background(new BackgroundImage(boardImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
+        try {
+            Image boardImage = new Image(new FileInputStream(ImagePathMap.get("board")));
+            boardPane.setBackground(new Background(new BackgroundImage(boardImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
+        } catch(IOException ex) {
+            System.out.println("Failed to load board texture");
+        }
         
         // create base Tiles
         for (int y=0; y < 24; y++) {
@@ -152,7 +155,7 @@ public class gameInstance {
         
         Label playerCardsLabel = getLabel("Cards", avenirTitle);
 
-        Card weaponCard = new Card(new Image(getClass().getResourceAsStream("assets/card.png")), "weapon", 1);
+        Card weaponCard = new Card(new Image(getClass().getResourceAsStream(ImagePathMap.get("character1"))), "character", 1);
         ImageView View1 = new ImageView(weaponCard.getImage());
         ImageView View2 = new ImageView(weaponCard.getImage());
         ImageView View3 = new ImageView(weaponCard.getImage());
@@ -259,10 +262,45 @@ public class gameInstance {
         return label;
     }
     
+    private void initDefaultGraphics() {
+        ImagePathMap.put("board", "resources/board.png");
+        
+        ImagePathMap.put("character1", "resources/Character/MissScarlet.png");
+        ImagePathMap.put("character2", "resources/Character/ColonelMustard.png");
+        ImagePathMap.put("character3", "resources/Character/MrsWhite.png");
+        ImagePathMap.put("character4", "resources/Character/MrGreen.png");
+        ImagePathMap.put("character5", "resources/Character/MrsPeacock.png");
+        ImagePathMap.put("character6", "resources/Character/ProfessorPlum.png");
+        
+        ImagePathMap.put("weapon1","resources/Candlestick.png");
+        ImagePathMap.put("weapon2","resources/Dagger.png");
+        ImagePathMap.put("weapon3","resources/LeadPipe.png");
+        ImagePathMap.put("weapon4","resources/Revolver.png");
+        ImagePathMap.put("weapon5","resources/Rope.png");
+        ImagePathMap.put("weapon6","resources/Wrench.png");
+        
+        ImagePathMap.put("room1","resources/Ballroom.png");
+        ImagePathMap.put("room2","resources/BillardRoom.png");
+        ImagePathMap.put("room3","Conservatory.png");
+        ImagePathMap.put("room4","DiningRoom.png");
+        ImagePathMap.put("room5","Hall.png");
+        ImagePathMap.put("room6","Kitchen.png");
+        ImagePathMap.put("room7","Library.png");
+        ImagePathMap.put("room8","Lounge.png");
+        ImagePathMap.put("room9","Study.png");
+    }
+    
     private void initGraphics() {
         //String configPath = getClass().getResource("assets/config.properties").toExternalForm();
-        ClassLoader classLoader = ClassLoader.getSystemClassLoader();
-        File configFile = new File(classLoader.getResource("clue/client/resources/config.properties").getFile());
+        try (InputStream input = new FileInputStream("resources/config.properties")) {
+            Properties prop = new Properties();
+            
+            prop.load(input);
+            System.out.println("here");
+            input.close();
+        } catch (IOException ex) {
+            System.out.println("there");
+        }
     }
         
     public void startGame(int numberOfPlayers, int numberOfAIs) {
@@ -278,6 +316,8 @@ public class gameInstance {
             gameStage.close();
         });
         
+        initDefaultGraphics();
+        initGraphics();
         //gameInteface = new GameController(numberOfPlayers, numberOfAIs, );
         
         Scene scene = new Scene(createUI());
