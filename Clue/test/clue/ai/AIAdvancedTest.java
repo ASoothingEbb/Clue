@@ -6,6 +6,7 @@
 package clue.ai;
 
 import clue.GameController;
+import clue.MissingRoomDuringCreationException;
 import clue.action.UnknownActionException;
 import clue.card.Card;
 import clue.card.WeaponCard;
@@ -13,6 +14,8 @@ import clue.player.AIPlayer;
 import clue.ai.AIAdvanced;
 import clue.card.RoomCard;
 import clue.player.Player;
+import clue.tile.NoSuchRoomException;
+import clue.tile.NoSuchTileException;
 import clue.tile.Room;
 import clue.tile.Tile;
 import java.util.ArrayList;
@@ -53,6 +56,10 @@ public class AIAdvancedTest {
      * Test of onUpdate method, of class AIAdvanced.
      * @throws java.lang.InterruptedException
      * @throws clue.action.UnknownActionException
+     * @throws clue.tile.NoSuchRoomException
+     * @throws clue.tile.NoSuchTileException
+     * @throws clue.MissingRoomDuringCreationException
+     * @throws clue.GameController.TooManyPlayersException
      */
 //    @Test
 //    public void testOnUpdate() {
@@ -76,7 +83,7 @@ public class AIAdvancedTest {
 //    }
     
     //@Test
-    public void testMakeLists() throws InterruptedException, UnknownActionException{
+    public void testMakeLists() throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException{
         System.out.println("makeListTest");
         Player p1 = new AIAdvanced(1, 0, 0);
         Player p2 = new AIAdvanced(2, 0 ,0);
@@ -85,7 +92,7 @@ public class AIAdvancedTest {
         ArrayList<Player> players = new ArrayList<>();
         ArrayList<ArrayList<Card>> testList;
         
-        GameController game = new GameController(players);
+        GameController game = new GameController(1,1,"","");
         
         Card c1 = new WeaponCard(1);
         

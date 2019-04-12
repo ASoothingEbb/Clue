@@ -8,6 +8,7 @@ package clue.action;
 import clue.player.Player;
 import clue.card.TeleportIntrigue;
 import clue.tile.Tile;
+import clue.tile.TileOccupiedException;
 
 /**
  * Represents a Player being able to teleport to any tile of the board, cannot
@@ -27,7 +28,13 @@ public class TeleportAction extends Action {
 
     @Override
     public void execute() {
+        if(!t.isFull()){
         player.setPosition(t);
         player.removeCard(card);
+        result = true;
+        }
+        else{
+            result = false;
+        }
     }
 }
