@@ -45,13 +45,13 @@ public class AiAdvanced extends Player{
     private Random rand;
     
     //Width of the board, height of the board.
-    public AiAdvanced(int id, int width, int height){
-        super(id);
+    public AiAdvanced(int id, GameController gc ,int width, int height){
+        super(id, gc);
         
         this.boardWidth = width;
         this.boardHeight = height;
         this.id = id;
-        gameController = getGameController();
+        gameController = gc;
         rand = new Random();
     }
     
