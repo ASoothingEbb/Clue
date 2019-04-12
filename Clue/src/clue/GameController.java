@@ -187,12 +187,12 @@ public final class GameController {
                 roll();
                 break;
         }
-        if(nextAction != null){
-            performAction(nextAction);
-        }
         //update game state
         state.setAction(action);
         state.notifyAllPlayers();
+        if(nextAction != null){
+            performAction(nextAction);
+        }
     }
 
     /**
