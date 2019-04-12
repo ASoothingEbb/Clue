@@ -6,8 +6,11 @@
 package clue;
 
 import clue.action.*;
+import clue.ai.AiBasic;
 import clue.card.*;
 import clue.player.Player;
+import clue.tile.NoSuchRoomException;
+import clue.tile.NoSuchTileException;
 import clue.tile.SpecialTile;
 import clue.tile.Tile;
 import java.util.ArrayList;
@@ -27,8 +30,11 @@ public final class GameController {
 
     public class MovementException extends Exception {
     }
+    public class TooManyPlayersException extends Exception{
+    }
 
     private GameState state;
+    private BoardMappings bm;
     private List<IntrigueCard> cards;
     private PersonCard person;
     private RoomCard room;
@@ -46,12 +52,32 @@ public final class GameController {
     /**
      * Creates a new GameController.
      *
+     * @param human
+     * @param ai
+     * @param tilePath
+     * @param doorPath
      * @param players
      * @throws java.lang.InterruptedException
      * @throws clue.action.UnknownActionException
+     * @throws clue.tile.NoSuchRoomException
+     * @throws clue.tile.NoSuchTileException
+     * @throws clue.MissingRoomDuringCreationException
+     * @throws clue.GameController.TooManyPlayersException
      */
-    public GameController(List<Player> players) throws InterruptedException, UnknownActionException {
+    public GameController(int human, int ai,String tilePath,String doorPath) throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, TooManyPlayersException {
+        //TODO
+        this.bm = new BoardMappings(tilePath,doorPath,6,8);
         queue = new SynchronousQueue(true);
+        List<Player> players = new ArrayList();
+        for(int i = 0; i < human; i++){
+            players.add(new Player(i));
+        }
+        for(int i = human; i < human + ai; i++){
+            players.add(new AiBasic(i));
+        }
+        if(players.size() > 6){
+            throw new TooManyPlayersException();
+        }
         this.players = players;
         random = new Random(Calendar.getInstance().getTimeInMillis());
         actionLog = new ArrayList();
@@ -84,7 +110,7 @@ public final class GameController {
         player = players.get(state.getPlayerTurn());
         action.execute();
         System.out.println(action.actionType + "executing");
-        //Action specific logic
+        //Action specific lplayersogic
         switch (action.actionType) {
             default:
                 throw new UnknownActionException();

@@ -14,6 +14,8 @@ import clue.card.PersonCard;
 import clue.card.RoomCard;
 import clue.card.WeaponCard;
 import clue.player.Player;
+import clue.tile.NoSuchRoomException;
+import clue.tile.NoSuchTileException;
 import clue.tile.Tile;
 import java.util.ArrayList;
 import java.util.Queue;
@@ -35,10 +37,10 @@ public class GameControllerTest {
     }
     
     @BeforeClass
-    public static void setUpClass() throws InterruptedException, UnknownActionException {
+    public static void setUpClass() throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException {
                 ArrayList<Player> players = new ArrayList();
         players.add(new Player(0));
-        instance = new GameController(players);
+        instance = new GameController(1,1,"testCsv/tiles1.csv", "testCsv/doors1.csv");
     }
     
     @AfterClass
@@ -60,7 +62,7 @@ public class GameControllerTest {
     public void testPerformAction() throws Exception {
         System.out.println("performAction");
         Action action = null;
-        instance = new GameController(new ArrayList<Player>());
+        instance = new GameController(1,1,"testCsv/tiles1.csv", "testCsv/doors1.csv");
         instance.performAction(action);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");

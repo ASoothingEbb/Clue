@@ -6,10 +6,13 @@
 package clue.action;
 
 import clue.GameController;
+import clue.MissingRoomDuringCreationException;
 import clue.card.PersonCard;
 import clue.card.RoomCard;
 import clue.card.WeaponCard;
 import clue.player.Player;
+import clue.tile.NoSuchRoomException;
+import clue.tile.NoSuchTileException;
 import java.util.ArrayList;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -47,7 +50,7 @@ public class AccuseActionTest {
      * Test of execute method, of class AccuseAction.
      */
     @Test
-    public void testExecute() throws InterruptedException, UnknownActionException {
+    public void testExecute() throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException {
         System.out.println("execute");
         PersonCard person = new PersonCard(1);
         RoomCard room = new RoomCard(1);
@@ -55,7 +58,7 @@ public class AccuseActionTest {
         Player player = new Player(1);
         ArrayList<Player> players = new ArrayList();
         players.add(player);
-        GameController game = new GameController(players);
+        GameController game = new GameController(1,1,"testCsv/tiles1.csv", "testCsv/doors1.csv");
         AccuseAction instance = new AccuseAction(player, person, room, weapon, true);
         instance.execute();
         // TODO review the generated test code and remove the default call to fail.
