@@ -41,6 +41,7 @@ public class SuggestAction extends Action {
         this.cards = new Card[]{person, room, weapon};
         this.state = state;
         this.foundCards = new ArrayList();
+        player.setMoves(0);
     }
 
     /**
