@@ -27,14 +27,16 @@ public class GameStateTest {
     ArrayList<Player> players;
 
     public GameStateTest() {
-        Player player0 = new Player(0);
-        Player player1 = new Player(1);
-        Player player2 = new Player(2);
-        players = new ArrayList();
-        players.add(player0);
-        players.add(player1);
-        players.add(player2);
-        instance = new GameState(players);
+        //Player player0 = new Player(0);
+        //Player player1 = new Player(1);
+        //Player player2 = new Player(2);
+        //players = new ArrayList();
+        //players.add(player0);
+        //players.add(player1);
+        //players.add(player2);
+        //instance = new GameState(players);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 
     @BeforeClass
@@ -60,20 +62,23 @@ public class GameStateTest {
     public void testRegister() {
         System.out.println("register");
         
-        Player player0 = new Player(0);
-        Player player1 = new Player(1);
-        ArrayList<Player> playerList = new ArrayList();
+        //Player player0 = new Player(0);
+        //Player player1 = new Player(1);
+        //ArrayList<Player> playerList = new ArrayList();
         
-        playerList.add(player0);
-        playerList.add(player1);
+        //playerList.add(player0);
+        //playerList.add(player1);
         
-        GameState testGame = new GameState(playerList);
+        //GameState testGame = new GameState(playerList);
         
-        Player testPlayer = new Player(2);
+        //Player testPlayer = new Player(2);
         
-        testGame.register(testPlayer);
-        int expNum = 3 ;//Since we are only adding one AIPlayer(original size + 1).
-        assertEquals(expNum, testGame.playersNumber);
+        //testGame.register(testPlayer);
+        //int expNum = 3 ;//Since we are only adding one AIPlayer(original size + 1).
+        //assertEquals(expNum, testGame.playersNumber);
+        
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 
     /**
@@ -82,11 +87,14 @@ public class GameStateTest {
     @Test
     public void testUnregister() {
         System.out.println("unregister");
-        Player player = new Player(0);
-        instance.register(player);
-        assertEquals(4, instance.playersNumber);//+1
-        instance.unregister(player);
-        assertEquals(3, instance.playersNumber);//-1
+        //Player player = new Player(0);
+        //instance.register(player);
+        //assertEquals(4, instance.playersNumber);//+1
+        //instance.unregister(player);
+        //assertEquals(3, instance.playersNumber);//-1
+                // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -96,6 +104,8 @@ public class GameStateTest {
     public void testNotifyAllPlayers() {
         System.out.println("notifyAllObservers");
         instance.notifyAllPlayers();
+                // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 
     /**
@@ -103,13 +113,16 @@ public class GameStateTest {
      */
     @Test
     public void testNextTurn() {
-        System.out.println("nextTurn");
-        ArrayList<Player> players = new ArrayList();
-        players.add(new Player(0));
-        instance = new GameState(players);
-        int expResult = 0;
-        int result = instance.nextPlayer();
-        assertEquals(expResult, result);
+        //System.out.println("nextTurn");
+        //ArrayList<Player> players = new ArrayList();
+        //players.add(new Player(0));
+        //instance = new GameState(players);
+        //int expResult = 0;
+        //int result = instance.nextPlayer();
+        //assertEquals(expResult, result);
+                // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -118,12 +131,15 @@ public class GameStateTest {
     @Test
     public void testGetPlayerTurn() {
         System.out.println("getPlayerTurn");
-        ArrayList<Player> players = new ArrayList();
-        players.add(new Player(0));
-        instance = new GameState(players);
-        int expResult = 0;
-        int result = instance.getPlayerTurn();
-        assertEquals(expResult, result);
+        //ArrayList<Player> players = new ArrayList();
+        //players.add(new Player(0));
+        //instance = new GameState(players);
+        //int expResult = 0;
+        //int result = instance.getPlayerTurn();
+        //assertEquals(expResult, result);
+                // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -136,6 +152,8 @@ public class GameStateTest {
         instance.nextTurn(player);
         // TODO review the generated test code and remove the default call to fail.
         assertEquals(0, instance.getPlayerTurn());
+                // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 
     /**
@@ -144,18 +162,19 @@ public class GameStateTest {
     @Test
     public void testPreviousPlayer() {
         System.out.println("previousPlayer");
-        instance.register(new Player(1));
-        instance.previousPlayer();
+        //instance.register(new Player(1));
+        //instance.previousPlayer();
         
-        assertEquals(players.get(0), instance.getCurrentPlayer());
+        //assertEquals(players.get(0), instance.getCurrentPlayer());
         
-        instance.nextTurn(1);
-        instance.nextTurn(2);//Skipping two turns.
+        //instance.nextTurn(1);
+        //instance.nextTurn(2);//Skipping two turns.
         
-        instance.previousPlayer();
+        //instance.previousPlayer();
         
-        assertEquals(players.get(1), instance.getPreviousPlayer());//Checking if second turn player's previous player is player 1
-       
+        //assertEquals(players.get(1), instance.getPreviousPlayer());//Checking if second turn player's previous player is player 1
+               // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 
     /**
@@ -163,12 +182,14 @@ public class GameStateTest {
      */
     @Test
     public void testGetAction() {
-        System.out.println("getAction");
-        Action action = new EndTurnAction(new Player(0));
-        instance.setAction(action);
-        Action expResult = action;
-        Action result = instance.getAction();
-        assertEquals(expResult, result);
+        //System.out.println("getAction");
+        //Action action = new EndTurnAction(new Player(0));
+        //instance.setAction(action);
+        //Action expResult = action;
+        //Action result = instance.getAction();
+        //assertEquals(expResult, result);
+                // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 
     /**
@@ -177,9 +198,11 @@ public class GameStateTest {
     @Test
     public void testIsRunning() {
         System.out.println("isRunning");
-        boolean expResult = true;
-        boolean result = instance.isRunning();
-        assertEquals(expResult, result);
+        //boolean expResult = true;
+        //boolean result = instance.isRunning();
+        //assertEquals(expResult, result);
+                // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 
     /**
@@ -188,9 +211,11 @@ public class GameStateTest {
     @Test
     public void testSetAction() {
         System.out.println("setAction");
-        Action action = new StartAction();
-        instance.setAction(action);
-        assertEquals(action, instance.getAction());
+        //Action action = new StartAction();
+        //instance.setAction(action);
+        //assertEquals(action, instance.getAction());
+                // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 
     /**
@@ -199,16 +224,18 @@ public class GameStateTest {
     @Test
     public void testNextPlayer() {
         System.out.println("nextPlayer");
-        ArrayList<Player> players = new ArrayList();
-        players.add(new Player(0));
-        players.add(new Player(1));
-        GameState instance = new GameState(players);
-        instance.nextTurn(0);
+        //ArrayList<Player> players = new ArrayList();
+        //players.add(new Player(0));
+        //players.add(new Player(1));
+        //GameState instance = new GameState(players);
+        //instance.nextTurn(0);
          
-        int expResult = 1;
-        int result = instance.nextPlayer();
+        //int expResult = 1;
+        //int result = instance.nextPlayer();
        
-        assertEquals(expResult, result);
+        //assertEquals(expResult, result);
+                // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 
     /**
@@ -217,23 +244,26 @@ public class GameStateTest {
     @Test
     public void testGetNextPointer() {
         System.out.println("getNextPointer");
-        ArrayList<Player> players = new ArrayList();
-        players.add(new Player(0));
-        players.add(new Player(1));
-        players.get(1).removeFromPlay();
-        players.add(new Player(2));
-        int i = 0;
-        int expResult = 1;
-        int result = instance.getNextPointer(i);
-        assertEquals(expResult, result);
-        expResult = 2;
-        result = instance.getNextPointer(result);
-        assertEquals(expResult,result);
+        //ArrayList<Player> players = new ArrayList();
+        //players.add(new Player(0));
+        //players.add(new Player(1));
+        //players.get(1).removeFromPlay();
+        //players.add(new Player(2));
+        //int i = 0;
+        //int expResult = 1;
+        //int result = instance.getNextPointer(i);
+        //assertEquals(expResult, result);
+        //expResult = 2;
+        //result = instance.getNextPointer(result);
+        //assertEquals(expResult,result);
         
-        int test = instance.getNextPointer(instance.getPlayerList().size()-1);//nextPointer(size of playerList)
+        //int test = instance.getNextPointer(instance.getPlayerList().size()-1);//nextPointer(size of playerList)
         
         //should look back ariund to first player(0)
-        assertEquals(0, test);
+        //assertEquals(0, test);
+                // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -242,16 +272,19 @@ public class GameStateTest {
     @Test
     public void testGetPlayer() {
         System.out.println("getPlayer");
-        int id = 0;
+        //int id = 0;
        
-        ArrayList<Player> players = new ArrayList();
-        players.add(new Player(0));
-        players.add(new Player(1));
-        GameState instance = new GameState(players);
+        //ArrayList<Player> players = new ArrayList();
+        //players.add(new Player(0));
+        //players.add(new Player(1));
+        //GameState instance = new GameState(players);
    
-        Player expResult = players.get(0);
-        Player result = instance.getPlayer(id);
-        assertEquals(expResult, result);
+        //Player expResult = players.get(0);
+        //Player result = instance.getPlayer(id);
+        //assertEquals(expResult, result);
+        
+                // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
        
     }
 
@@ -260,10 +293,12 @@ public class GameStateTest {
      */
     @Test
     public void testEndGame() {
-        System.out.println("endGame");
-        boolean expResult = false;
-        instance.endGame();
-        boolean result = instance.isRunning();
-        assertEquals(expResult, result);
+        //System.out.println("endGame");
+        //boolean expResult = false;
+        //instance.endGame();
+        //boolean result = instance.isRunning();
+        //assertEquals(expResult, result);
+                // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
 }
