@@ -71,9 +71,9 @@ public class ClueClient extends Application {
     private int numberOfAIs;
     
     // Fonts
-    private final Font avenirLarge = Font.loadFont(getClass().getResourceAsStream("assets/fonts/Avenir-Book.ttf"), 30);
-    private final Font avenirTitle = Font.loadFont(getClass().getResourceAsStream("assets/fonts/Avenir-Book.ttf"), 20);
-    private final Font avenirNormal = Font.loadFont(getClass().getResourceAsStream("assets/fonts/Avenir-Book.ttf"), 12);   
+    private final Font avenirLarge = Font.loadFont(getClass().getResourceAsStream("resources/fonts/Avenir-Book.ttf"), 30);
+    private final Font avenirTitle = Font.loadFont(getClass().getResourceAsStream("resources/fonts/Avenir-Book.ttf"), 20);
+    private final Font avenirNormal = Font.loadFont(getClass().getResourceAsStream("resources/fonts/Avenir-Book.ttf"), 12);   
     
     // BackgroundFill
     private Background blackFill = new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY));
@@ -109,7 +109,7 @@ public class ClueClient extends Application {
      */
     private void addUIControls(VBox menuOptions) {
         // Game Title
-        Font titleFont = Font.loadFont(getClass().getResourceAsStream("assets/fonts/ringbearer.ttf"), 80);
+        Font titleFont = Font.loadFont(getClass().getResourceAsStream("resources/fonts/ringbearer.ttf"), 80);
         Label gameTitle = new Label("cluE");
         gameTitle.setFont(titleFont);
         gameTitle.setTextFill(Color.WHITE);
