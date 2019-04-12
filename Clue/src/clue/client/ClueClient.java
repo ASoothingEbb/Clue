@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.ResourceBundle;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -67,6 +68,7 @@ public class ClueClient extends Application {
     private HashMap<String, String> textureMap;
     
     private int numberOfPlayers;
+    private int numberOfAIs;
     
     // Fonts
     private final Font avenirLarge = Font.loadFont(getClass().getResourceAsStream("assets/fonts/Avenir-Book.ttf"), 30);
@@ -153,9 +155,10 @@ public class ClueClient extends Application {
         HBox players = new HBox();
         players.setAlignment(Pos.CENTER);
         
-        //MenuItem playersNumber = new MenuItem(String.valueOf(numberOfPlayers), avenirTitle);
+        MenuItem playersNumber = new MenuItem(String.valueOf(numberOfPlayers), avenirTitle);
+        playersNumber.setActiveColor(Color.GREY);
         
-        TextField playersNumber = getTextField(1, false);
+        //TextField playersNumber = getTextField(1, false);
         
         MenuItem minusPlayer = new MenuItem("-", avenirTitle);
         minusPlayer.setOnMouseClicked(e -> {
@@ -173,36 +176,37 @@ public class ClueClient extends Application {
         
         players.getChildren().addAll(minusPlayer, playersNumber, addPlayer);
         
-        Slider playersNum = new Slider(1,6,6);
+        Label aiPlayersLabel = getLabel("Number of AIs", avenirNormal);
         
-        playersNum.setMajorTickUnit(1);
-        playersNum.setMinorTickCount(0);
-        playersNum.setShowTickMarks(true);
-        playersNum.setShowTickLabels(true);
-        playersNum.setSnapToTicks(true);
+        HBox AIs = new HBox();
+        AIs.setAlignment(Pos.CENTER);
         
-        // Number of AI Players
-        Label aiPlayersLabel = getLabel("AI Players", avenirNormal);
-
-        Slider AINum = new Slider(0,6-numberOfPlayers,0);
+        MenuItem AIsNumber = new MenuItem("0", avenirTitle);
+        AIsNumber.setActiveColor(Color.GREY);
         
-        AINum.setMajorTickUnit(1);
-        AINum.setMinorTickCount(0);
-        AINum.setShowTickLabels(true);
-        AINum.setShowTickMarks(true);
-        AINum.setSnapToTicks(true);
-  
-        playersNum.valueChangingProperty().addListener(e -> {
-            //TODO dynamically change AI Player values
+        MenuItem minusAI = new MenuItem("-", avenirTitle);
+        minusAI.setOnMouseClicked(e -> {
+            if (numberOfAIs > 0) {
+                updateNumberOfAIs(false, AIsNumber);
+            }
         });
-
+        
+        MenuItem addAI = new MenuItem("+", avenirTitle);
+        addAI.setOnMouseClicked(e -> {
+            if (numberOfAIs < (6 - numberOfPlayers)) {
+                updateNumberOfAIs(true, AIsNumber);
+            }
+        });
+        
+        AIs.getChildren().addAll(minusAI, AIsNumber, addAI);
+        
         // Create Game Instance
         gameInstance game = new gameInstance();
         
         MenuItem startGameButton = new MenuItem("Start Game", avenirTitle);
         startGameButton.setOnMouseClicked(e -> {
             stage.hide();
-            game.startGame((int) playersNum.getValue(), true, width, height);
+            game.startGame(numberOfPlayers, numberOfAIs);
         });
 
         // Return to menu
@@ -221,8 +225,8 @@ public class ClueClient extends Application {
         startGameOptions.add(aiPlayersLabel, 0, 2);
         GridPane.setHalignment(aiPlayersLabel, HPos.CENTER);
         
-        startGameOptions.add(AINum, 1, 2);
-        GridPane.setHalignment(AINum, HPos.CENTER);
+        startGameOptions.add(AIs, 1, 2);
+        GridPane.setMargin(AIs, new Insets(0, 0, 0, 10));
         
         startGameOptions.add(startGameButton, 0, 3, 2, 1);
         GridPane.setHalignment(startGameButton, HPos.CENTER);
@@ -235,7 +239,16 @@ public class ClueClient extends Application {
         stage.setScene(scene);
     }
     
-    private void updateNumberOfPlayers(boolean increase, TextField label) {
+    private void updateNumberOfAIs(boolean increase, MenuItem label) {
+        if (increase) {
+            numberOfAIs++;
+        } else {
+            numberOfAIs--;
+        }
+        label.setText(String.valueOf(numberOfAIs));
+    }
+    
+    private void updateNumberOfPlayers(boolean increase, MenuItem label) {
         if (increase) {
             numberOfPlayers++;
         } else {
