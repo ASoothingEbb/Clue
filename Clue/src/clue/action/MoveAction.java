@@ -42,6 +42,7 @@ public class MoveAction extends Action {
      */
     @Override
     public void execute() {
+        //Number of moves is validated in GameController.Move()
         Tile t;
         while (!tiles.isEmpty()) {
             t = tiles.poll();
@@ -51,9 +52,11 @@ public class MoveAction extends Action {
             } else if (t.isRoom()) {
                 last = t;
                 result = tiles.isEmpty();
+                player.setMoves(0);
                 break;
             } else {
                 last = t;
+                player.setMoves(player.getMoves()-1);
             }
         }
     }
