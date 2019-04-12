@@ -71,10 +71,10 @@ public final class GameController {
         queue = new SynchronousQueue(true);
         List<Player> players = new ArrayList();
         for(int i = 0; i < human; i++){
-            players.add(new Player(i));
+            players.add(new Player(i, this));
         }
         for(int i = human; i < human + ai; i++){
-            players.add(new AiBasic(i));
+            players.add(new AiBasic(i, this));
         }
         if(players.size() > 6){
             throw new TooManyPlayersException();
