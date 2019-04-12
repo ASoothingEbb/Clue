@@ -6,22 +6,11 @@
 package clue.player;
 
 import clue.GameController;
-import clue.action.Action;
 import clue.card.Card;
-import clue.action.AccuseAction;
-import clue.action.MoveAction;
-import clue.action.SuggestAction;
-import clue.action.UnknownActionException;
 import clue.card.IntrigueCard;
-import clue.card.PersonCard;
-import clue.card.RoomCard;
 import clue.tile.Tile;
-import clue.card.WeaponCard;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Represents a player in the game.
