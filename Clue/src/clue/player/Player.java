@@ -34,7 +34,8 @@ public class Player {
     /**
      * Creates a new player.
      */
-    public Player(int id) {
+    public Player(int id, GameController gc) {
+        this.game = gc;
         this.id = id;
         notes = "";
         active = true;
@@ -96,6 +97,7 @@ public class Player {
      */
     public void setPosition(Tile t) {
         position = t;
+        t.setOccupied(true);
     }
 
     /**
