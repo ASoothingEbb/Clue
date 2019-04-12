@@ -9,12 +9,11 @@ import clue.GameController;
 import clue.action.UnknownActionException;
 import clue.card.Card;
 import clue.card.WeaponCard;
-import clue.player.AIPlayer;
-import clue.ai.AiAdvanced;
 import clue.card.RoomCard;
 import clue.player.Player;
 import clue.tile.Room;
 import clue.tile.Tile;
+import clue.ai.AiAdvanced;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import org.junit.After;
@@ -92,7 +91,6 @@ public class AIAdvancedTest {
         //game.getPlayer(1).addCard(c1);
         
        // p1.makeLists();
-        
        // testList = p2.getLists();
         
         //System.out.println(testList);
