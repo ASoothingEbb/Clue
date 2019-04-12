@@ -19,6 +19,7 @@ import clue.card.RoomCard;
 import clue.card.WeaponCard;
 import clue.player.Player;
 import clue.tile.Tile;
+import clue.tile.TileOccupiedException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -40,10 +41,10 @@ public class AiBasic extends Player{
     Random rand;
     
     
-    public AiBasic(int id) {
-        super(id);
+    public AiBasic(int id, GameController gc) {
+        super(id, gc);
         
-        gameController = getGameController();
+        gameController = gc;
         rand = new Random();
     }
     
@@ -61,7 +62,7 @@ public class AiBasic extends Player{
                 if(this.getPosition().isRoom()){//If I'm in a room
                     try {           
                         game.accuse(randPersonCard, randRoomCard, randWeaponCard);
-                    } catch (InterruptedException | UnknownActionException ex) {
+                    } catch (InterruptedException | UnknownActionException | TileOccupiedException ex) {
                         Logger.getLogger(AiBasic.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
@@ -73,45 +74,10 @@ public class AiBasic extends Player{
 
                 try {
                     gameController.showCard(card);//Show Card.
-                }catch (UnknownActionException | InterruptedException ex) {
+                }catch (UnknownActionException | InterruptedException | TileOccupiedException ex) {
                     Logger.getLogger(AiBasic.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
-    }
-    
-    /*This  method will set the 
-    *
-    */
-    public void findNewPath(){//Finds path to closest room from players position.
-        
-        this.x = getPosition().getX();
-        this.y = getPosition().getY();
-        
-        
-//        List<Tile> path = BFS(tileMap);
-//        
-//        targetX = path.get(path.size()-1).getX();//Values of the room tile(last tile).
-//        targetY = path.get(path.size()-1).getY();
-        
-    }
-   /**
-    * This method finds the closest Tile to the player that is a room.
-    *    
-    *@param A map of all the tiles.
-    *@return The path to the closest Room.
-    */
-    private List<Tile> findNewRoom(BoardMappings map){//Finds closest room.
-     
-        //TODO
-        List<Tile> path = new ArrayList<Tile>();
-        
-        return path;
-    }
-    
-    
-    
-    
-    
-    
+    } 
 }
