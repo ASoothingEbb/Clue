@@ -6,9 +6,14 @@
 package clue.player;
 
 import clue.GameController;
+import clue.MissingRoomDuringCreationException;
 import clue.action.Action;
+import clue.action.UnknownActionException;
 import clue.card.Card;
+import clue.tile.NoSuchRoomException;
+import clue.tile.NoSuchTileException;
 import clue.tile.Tile;
+import clue.tile.TileOccupiedException;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -24,10 +29,16 @@ public class PlayerTest {
     
     public PlayerTest() {
     }
+    private static GameController gc;
+
+
     
     @BeforeClass
-    public static void setUpClass() {
+    public static void setUpClass() throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException, TileOccupiedException {
+
+        gc = new GameController(1,1,"testCsv/tiles1.csv", "testCsv/doors1.csv");
     }
+
     
     @AfterClass
     public static void tearDownClass() {
@@ -47,7 +58,7 @@ public class PlayerTest {
     @Test
     public void testOnUpdate() {
         System.out.println("onUpdate");
-        Player instance = new PlayerImpl();
+        Player instance = new PlayerImpl(0, gc);
         instance.onUpdate();
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
@@ -59,7 +70,7 @@ public class PlayerTest {
     @Test
     public void testGetId() {
         System.out.println("getId");
-        Player instance = new PlayerImpl();
+        Player instance = new PlayerImpl(0, gc);
         int expResult = 0;
         int result = instance.getId();
         assertEquals(expResult, result);
@@ -73,7 +84,7 @@ public class PlayerTest {
     @Test
     public void testIsActive() {
         System.out.println("isActive");
-        Player instance = new PlayerImpl();
+        Player instance = new PlayerImpl(0, gc);
         boolean expResult = false;
         boolean result = instance.isActive();
         assertEquals(expResult, result);
@@ -87,7 +98,7 @@ public class PlayerTest {
     @Test
     public void testRemoveFromPlay() {
         System.out.println("removeFromPlay");
-        Player instance = new PlayerImpl();
+        Player instance = new PlayerImpl(0, gc);
         instance.removeFromPlay();
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
@@ -99,7 +110,7 @@ public class PlayerTest {
     @Test
     public void testGetPosition() {
         System.out.println("getPosition");
-        Player instance = new PlayerImpl();
+        Player instance = new PlayerImpl(0, gc);
         Tile expResult = null;
         Tile result = instance.getPosition();
         assertEquals(expResult, result);
@@ -114,7 +125,7 @@ public class PlayerTest {
     public void testSetPosition() {
         System.out.println("setPosition");
         Tile t = null;
-        Player instance = new PlayerImpl();
+        Player instance = new PlayerImpl(0, gc);
         instance.setPosition(t);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
@@ -122,8 +133,8 @@ public class PlayerTest {
 
     public class PlayerImpl extends Player {
 
-        public PlayerImpl() {
-            super(0);
+        public PlayerImpl(int id, GameController gc) {
+            super(id, gc);
         }
         
     }
@@ -135,7 +146,7 @@ public class PlayerTest {
     public void testAddCard() {
         System.out.println("addCard");
         Card card = null;
-        Player instance = new PlayerImpl();
+        Player instance = new PlayerImpl(0, gc);
         instance.addCard(card);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
@@ -148,7 +159,7 @@ public class PlayerTest {
     public void testRemoveCard() {
         System.out.println("removeCard");
         Card card = null;
-        Player instance = new PlayerImpl();
+        Player instance = new PlayerImpl(0, gc);
         instance.removeCard(card);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
@@ -161,7 +172,7 @@ public class PlayerTest {
     public void testHasCard() {
         System.out.println("hasCard");
         Card card = null;
-        Player instance = new PlayerImpl();
+        Player instance = new PlayerImpl(0, gc);
         boolean expResult = false;
         boolean result = instance.hasCard(card);
         assertEquals(expResult, result);

@@ -25,13 +25,19 @@ import static org.junit.Assert.*;
 public class AIBasicTest {
     GameController dummyGame;
     
-    public AIBasicTest() throws InterruptedException, UnknownActionException, TileOccupiedException, MissingRoomDuringCreationException, NoSuchRoomException, NoSuchTileException, GameController.TooManyPlayersException {
-        dummyGame = new GameController(0, 6, "", "");
+    private static GameController gc;
+    public AIBasicTest() {
     }
     
+
+
+    
     @BeforeClass
-    public static void setUpClass() {
+    public static void setUpClass() throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException, TileOccupiedException {
+
+        gc = new GameController(1,1,"testCsv/tiles1.csv", "testCsv/doors1.csv");
     }
+
     
     @AfterClass
     public static void tearDownClass() {
@@ -51,13 +57,13 @@ public class AIBasicTest {
     @Test
     public void testOnUpdate() {
         System.out.println("onUpdate");
-        AiBasic instance = new AiBasic(1, dummyGame);
+        AiBasic instance = new AiBasic(0, gc);
         instance.onUpdate();
     }
     
     @Test
     public void testConstructor(){
-        AiBasic aItest = new AiBasic(1, dummyGame);
+        AiBasic aItest = new AiBasic(1, gc);
         int expInt = 1;
         int id = aItest.getId();
         assertEquals(id, expInt);
