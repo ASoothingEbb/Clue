@@ -9,6 +9,7 @@ import clue.action.UnknownActionException;
 import clue.player.Player;
 import clue.tile.NoSuchRoomException;
 import clue.tile.NoSuchTileException;
+import clue.tile.TileOccupiedException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class Clue {
      * @throws clue.MissingRoomDuringCreationException
      * @throws clue.GameController.TooManyPlayersException
      */
-    public static void main(String[] args) throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException {
+    public static void main(String[] args) throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException, TileOccupiedException {
         Player player = new Player(1);
         List<Player> players = new ArrayList();
         // TODO code application logic here
