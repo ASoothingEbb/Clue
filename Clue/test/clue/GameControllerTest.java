@@ -55,18 +55,6 @@ public class GameControllerTest {
     public void tearDown() {
     }
 
-    /**
-     * Test of performAction method, of class GameController.
-     */
-    @Test
-    public void testPerformAction() throws Exception {
-        System.out.println("performAction");
-        Action action = null;
-        instance = new GameController(1,1,"testCsv/tiles1.csv", "testCsv/doors1.csv");
-        instance.performAction(action);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
 
     /**
      * Test of suggest method, of class GameController.
