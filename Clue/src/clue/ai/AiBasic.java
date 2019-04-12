@@ -41,10 +41,10 @@ public class AiBasic extends Player{
     Random rand;
     
     
-    public AiBasic(int id) {
-        super(id);
+    public AiBasic(int id, GameController gc) {
+        super(id, gc);
         
-        gameController = getGameController();
+        gameController = gc;
         rand = new Random();
     }
     
@@ -62,7 +62,7 @@ public class AiBasic extends Player{
                 if(this.getPosition().isRoom()){//If I'm in a room
                     try {           
                         game.accuse(randPersonCard, randRoomCard, randWeaponCard);
-                    } catch (InterruptedException | UnknownActionException ex) {
+                    } catch (InterruptedException | UnknownActionException | TileOccupiedException ex) {
                         Logger.getLogger(AiBasic.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (TileOccupiedException ex) {
                         Logger.getLogger(AiBasic.class.getName()).log(Level.SEVERE, null, ex);
@@ -76,7 +76,7 @@ public class AiBasic extends Player{
 
                 try {
                     gameController.showCard(card);//Show Card.
-                }catch (UnknownActionException | InterruptedException ex) {
+                }catch (UnknownActionException | InterruptedException | TileOccupiedException ex) {
                     Logger.getLogger(AiBasic.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (TileOccupiedException ex) {
                     Logger.getLogger(AiBasic.class.getName()).log(Level.SEVERE, null, ex);
