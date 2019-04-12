@@ -19,6 +19,7 @@ import clue.card.RoomCard;
 import clue.card.WeaponCard;
 import clue.player.Player;
 import clue.tile.Tile;
+import clue.tile.TileOccupiedException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -63,6 +64,8 @@ public class AiBasic extends Player{
                         game.accuse(randPersonCard, randRoomCard, randWeaponCard);
                     } catch (InterruptedException | UnknownActionException ex) {
                         Logger.getLogger(AiBasic.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (TileOccupiedException ex) {
+                        Logger.getLogger(AiBasic.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
                 
@@ -74,6 +77,8 @@ public class AiBasic extends Player{
                 try {
                     gameController.showCard(card);//Show Card.
                 }catch (UnknownActionException | InterruptedException ex) {
+                    Logger.getLogger(AiBasic.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (TileOccupiedException ex) {
                     Logger.getLogger(AiBasic.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }

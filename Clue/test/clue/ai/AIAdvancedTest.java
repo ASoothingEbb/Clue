@@ -17,6 +17,7 @@ import clue.tile.NoSuchTileException;
 import clue.tile.Room;
 import clue.tile.Tile;
 import clue.ai.AiAdvanced;
+import clue.tile.TileOccupiedException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import org.junit.After;
@@ -82,7 +83,7 @@ public class AIAdvancedTest {
 //    }
     
     //@Test
-    public void testMakeLists() throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException{
+    public void testMakeLists() throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException, TileOccupiedException{
         System.out.println("makeListTest");
         Player p1 = new AiAdvanced(1, 0, 0);
         Player p2 = new AiAdvanced(2, 0 ,0);
@@ -91,7 +92,7 @@ public class AIAdvancedTest {
         ArrayList<Player> players = new ArrayList<>();
         ArrayList<ArrayList<Card>> testList;
         
-        GameController game = new GameController(1,1,"","");
+        GameController game = new GameController(0,1,"","");
         
         Card c1 = new WeaponCard(1);
         
@@ -304,14 +305,14 @@ public class AIAdvancedTest {
     }
     
     @Test
-    public void testGameControllerRef() throws InterruptedException, UnknownActionException{
+    public void testGameControllerRef() throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException, TileOccupiedException{
         AiAdvanced p1 = new AiAdvanced(1, 1, 1);
         AiAdvanced p2 = new AiAdvanced(2, 1, 1);
         
         ArrayList players = new ArrayList<>();
         players.add(p1);
         players.add(p2);
-        GameController game = new GameController(players);
+        GameController game = new GameController(0, 2, "", "");
         
 //        System.out.println(game.getPlayers());
 //        System.out.println(p1.getGameController().getPlayers());
