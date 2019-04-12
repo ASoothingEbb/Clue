@@ -32,8 +32,9 @@ import static org.junit.Assert.*;
  * @author zemig
  */
 public class AIAdvancedTest {
-    
-    public AIAdvancedTest() {
+    GameController dummyGame;
+    public AIAdvancedTest() throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException, TileOccupiedException {
+        dummyGame = new GameController(0, 6, "", "");
     }
     
     @BeforeClass
@@ -85,9 +86,9 @@ public class AIAdvancedTest {
     //@Test
     public void testMakeLists() throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException, TileOccupiedException{
         System.out.println("makeListTest");
-        Player p1 = new AiAdvanced(1, 0, 0);
-        Player p2 = new AiAdvanced(2, 0 ,0);
-        Player p3 = new AiAdvanced(3, 0, 0);
+        Player p1 = new AiAdvanced(1, dummyGame, 0, 0);
+        Player p2 = new AiAdvanced(2, dummyGame, 0 ,0);
+        Player p3 = new AiAdvanced(3, dummyGame, 0, 0);
         
         ArrayList<Player> players = new ArrayList<>();
         ArrayList<ArrayList<Card>> testList;
@@ -143,7 +144,7 @@ public class AIAdvancedTest {
         expectedPath.add(r1);
         
         
-        AiAdvanced p1 = new AiAdvanced(1, 3, 3);
+        AiAdvanced p1 = new AiAdvanced(1, dummyGame, 3, 3);
         
         p1.setPosition(t1);
         
@@ -188,7 +189,7 @@ public class AIAdvancedTest {
         
         
         
-        AiAdvanced testPlayer = new AiAdvanced(1, 4, 2);
+        AiAdvanced testPlayer = new AiAdvanced(1, dummyGame, 4, 2);
         testPlayer.setPosition(t1);
         
         LinkedList<Tile> resultPath = testPlayer.BFS();
@@ -225,10 +226,10 @@ public class AIAdvancedTest {
         t7.addAdjacentBoth(t6);
         t6.addAdjacentBoth(t5);
         
-        AiAdvanced testPlayer = new AiAdvanced(1, 4, 2);
+        AiAdvanced testPlayer = new AiAdvanced(1, dummyGame, 4, 2);
         testPlayer.setPosition(t1);
         
-        AiAdvanced obstacle1 = new AiAdvanced(2, 4, 2);
+        AiAdvanced obstacle1 = new AiAdvanced(2, dummyGame, 4, 2);
         
         obstacle1.setPosition(t2);
          
@@ -259,10 +260,10 @@ public class AIAdvancedTest {
         t2.addAdjacentBoth(t3);
         t3.addAdjacentBoth(r4);
         
-        AiAdvanced p1 = new AiAdvanced(1, 4, 1);
+        AiAdvanced p1 = new AiAdvanced(1, dummyGame, 4, 1);
         p1.setPosition(t1);
         
-        AiAdvanced p2 = new AiAdvanced(2, 4, 1);
+        AiAdvanced p2 = new AiAdvanced(2, dummyGame, 4, 1);
         p2.setPosition(t3);
         
         LinkedList<Tile> resultPath = p1.BFS();
@@ -296,7 +297,7 @@ public class AIAdvancedTest {
         expectedPath.add(t5);
         expectedPath.add(r6);
         
-        AiAdvanced p1 = new AiAdvanced(1, 4, 3);
+        AiAdvanced p1 = new AiAdvanced(1, dummyGame, 4, 3);
         p1.setPosition(t1);
         
         LinkedList<Tile> resultPath = p1.BFS();
@@ -306,13 +307,16 @@ public class AIAdvancedTest {
     
     @Test
     public void testGameControllerRef() throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException, TileOccupiedException{
-        AiAdvanced p1 = new AiAdvanced(1, 1, 1);
-        AiAdvanced p2 = new AiAdvanced(2, 1, 1);
+   
+        GameController game = new GameController(0, 2, "", "");
+        
+        
+        AiAdvanced p1 = new AiAdvanced(1, game, 0, 0);
+        AiAdvanced p2 = new AiAdvanced(2, game, 0, 0);
         
         ArrayList players = new ArrayList<>();
         players.add(p1);
         players.add(p2);
-        GameController game = new GameController(0, 2, "", "");
         
 //        System.out.println(game.getPlayers());
 //        System.out.println(p1.getGameController().getPlayers());

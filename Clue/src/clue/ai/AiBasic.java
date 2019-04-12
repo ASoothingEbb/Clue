@@ -64,8 +64,6 @@ public class AiBasic extends Player{
                         game.accuse(randPersonCard, randRoomCard, randWeaponCard);
                     } catch (InterruptedException | UnknownActionException | TileOccupiedException ex) {
                         Logger.getLogger(AiBasic.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (TileOccupiedException ex) {
-                        Logger.getLogger(AiBasic.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
                 
@@ -77,8 +75,6 @@ public class AiBasic extends Player{
                 try {
                     gameController.showCard(card);//Show Card.
                 }catch (UnknownActionException | InterruptedException | TileOccupiedException ex) {
-                    Logger.getLogger(AiBasic.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (TileOccupiedException ex) {
                     Logger.getLogger(AiBasic.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
