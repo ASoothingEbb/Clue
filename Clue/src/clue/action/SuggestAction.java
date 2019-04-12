@@ -72,4 +72,14 @@ public class SuggestAction extends Action {
         result = found;
     }
 
+    @Override
+    public String toString() {
+        String cards = "";
+        for(Card c : this.cards){
+            cards += c.cardType+ ":" + c.getid() + " ";
+        }
+        return super.toString() + cards;
+    }
+
+    
 }
