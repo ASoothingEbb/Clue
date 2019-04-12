@@ -30,8 +30,6 @@ public class Clue {
      * @throws clue.GameController.TooManyPlayersException
      */
     public static void main(String[] args) throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException, TileOccupiedException {
-        Player player = new Player(1);
-        List<Player> players = new ArrayList();
         // TODO code application logic here
         GameController game = new GameController(1,1,"testCsv/tiles1.csv", "testCsv/doors1.csv");
     }
