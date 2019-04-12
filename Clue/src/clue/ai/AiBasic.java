@@ -40,10 +40,10 @@ public class AiBasic extends Player{
     Random rand;
     
     
-    public AiBasic(int id) {
-        super(id);
+    public AiBasic(int id, GameController gc) {
+        super(id, gc);
         
-        gameController = getGameController();
+        gameController = gc;
         rand = new Random();
     }
     
