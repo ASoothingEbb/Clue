@@ -17,6 +17,7 @@ import clue.tile.NoSuchTileException;
 import clue.tile.Room;
 import clue.tile.Tile;
 import clue.ai.AiAdvanced;
+import clue.tile.TileOccupiedException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import org.junit.After;
@@ -31,13 +32,17 @@ import static org.junit.Assert.*;
  * @author zemig
  */
 public class AIAdvancedTest {
-    
+    private static GameController gc;
     public AIAdvancedTest() {
     }
+
     
     @BeforeClass
-    public static void setUpClass() {
+    public static void setUpClass() throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException, TileOccupiedException {
+
+        gc = new GameController(1,1,"testCsv/tiles1.csv", "testCsv/doors1.csv");
     }
+
     
     @AfterClass
     public static void tearDownClass() {
@@ -84,18 +89,17 @@ public class AIAdvancedTest {
     //@Test
     public void testMakeLists() throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException{
         System.out.println("makeListTest");
-        Player p1 = new AiAdvanced(1, 0, 0);
-        Player p2 = new AiAdvanced(2, 0 ,0);
-        Player p3 = new AiAdvanced(3, 0, 0);
+        Player p1 = new AiAdvanced(1, gc, 0, 0);
+        Player p2 = new AiAdvanced(2, gc, 0 ,0);
+        Player p3 = new AiAdvanced(3, gc, 0, 0);
         
         ArrayList<Player> players = new ArrayList<>();
         ArrayList<ArrayList<Card>> testList;
         
-        GameController game = new GameController(1,1,"","");
         
         Card c1 = new WeaponCard(1);
         
-        //game.getPlayer(1).addCard(c1);
+        //gc.getPlayer(1).addCard(c1);
         
        // p1.makeLists();
        // testList = p2.getLists();
@@ -142,7 +146,7 @@ public class AIAdvancedTest {
         expectedPath.add(r1);
         
         
-        AiAdvanced p1 = new AiAdvanced(1, 3, 3);
+        AiAdvanced p1 = new AiAdvanced(1, gc, 3, 3);
         
         p1.setPosition(t1);
         
@@ -187,7 +191,7 @@ public class AIAdvancedTest {
         
         
         
-        AiAdvanced testPlayer = new AiAdvanced(1, 4, 2);
+        AiAdvanced testPlayer = new AiAdvanced(1, gc, 4, 2);
         testPlayer.setPosition(t1);
         
         LinkedList<Tile> resultPath = testPlayer.BFS();
@@ -224,10 +228,10 @@ public class AIAdvancedTest {
         t7.addAdjacentBoth(t6);
         t6.addAdjacentBoth(t5);
         
-        AiAdvanced testPlayer = new AiAdvanced(1, 4, 2);
+        AiAdvanced testPlayer = new AiAdvanced(1, gc, 4, 2);
         testPlayer.setPosition(t1);
         
-        AiAdvanced obstacle1 = new AiAdvanced(2, 4, 2);
+        AiAdvanced obstacle1 = new AiAdvanced(2, gc, 4, 2);
         
         obstacle1.setPosition(t2);
          
@@ -258,10 +262,10 @@ public class AIAdvancedTest {
         t2.addAdjacentBoth(t3);
         t3.addAdjacentBoth(r4);
         
-        AiAdvanced p1 = new AiAdvanced(1, 4, 1);
+        AiAdvanced p1 = new AiAdvanced(1, gc, 4, 1);
         p1.setPosition(t1);
         
-        AiAdvanced p2 = new AiAdvanced(2, 4, 1);
+        AiAdvanced p2 = new AiAdvanced(2, gc, 4, 1);
         p2.setPosition(t3);
         
         LinkedList<Tile> resultPath = p1.BFS();
@@ -295,7 +299,7 @@ public class AIAdvancedTest {
         expectedPath.add(t5);
         expectedPath.add(r6);
         
-        AiAdvanced p1 = new AiAdvanced(1, 4, 3);
+        AiAdvanced p1 = new AiAdvanced(1, gc, 4, 3);
         p1.setPosition(t1);
         
         LinkedList<Tile> resultPath = p1.BFS();
@@ -305,16 +309,15 @@ public class AIAdvancedTest {
     
     @Test
     public void testGameControllerRef() throws InterruptedException, UnknownActionException{
-        AiAdvanced p1 = new AiAdvanced(1, 1, 1);
-        AiAdvanced p2 = new AiAdvanced(2, 1, 1);
+        AiAdvanced p1 = new AiAdvanced(1, gc, 1, 1);
+        AiAdvanced p2 = new AiAdvanced(2, gc, 1, 1);
         
         ArrayList players = new ArrayList<>();
         players.add(p1);
         players.add(p2);
-        GameController game = new GameController(players);
         
-//        System.out.println(game.getPlayers());
+//        System.out.println(gc.getPlayers());
 //        System.out.println(p1.getGameController().getPlayers());
-//        assertEquals(game.getPlayers(), p1.getGameController().getPlayers());
+//        assertEquals(gc.getPlayers(), p1.getGameController().getPlayers());
     }
 }

@@ -5,6 +5,12 @@
  */
 package clue.ai;
 
+import clue.GameController;
+import clue.MissingRoomDuringCreationException;
+import clue.action.UnknownActionException;
+import clue.tile.NoSuchRoomException;
+import clue.tile.NoSuchTileException;
+import clue.tile.TileOccupiedException;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -17,11 +23,16 @@ import org.junit.runners.Suite;
  * @author steve
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({clue.ai.AIBasicTest.class, clue.ai.AiLevelTest.class})
+@Suite.SuiteClasses({clue.ai.AIBasicTest.class, clue.ai.AIAdvancedTest.class})
 public class AiSuite {
+   private static GameController gc;
 
+
+    
     @BeforeClass
-    public static void setUpClass() throws Exception {
+    public static void setUpClass() throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException, TileOccupiedException {
+
+        gc = new GameController(1,1,"testCsv/tiles1.csv", "testCsv/doors1.csv");
     }
 
     @AfterClass
