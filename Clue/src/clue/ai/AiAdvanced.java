@@ -20,11 +20,13 @@ import clue.card.RoomCard;
 import clue.card.WeaponCard;
 import clue.player.Player;
 import clue.tile.Tile;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -36,7 +38,9 @@ public class AiAdvanced extends Player{
     private int targetX;////Y value of the closest room tile.
     private int boardWidth;
     private int boardHeight;
+    private Tile previousPosition;
     private List<Player> players;
+    private LinkedList<Tile> pathToRoom;
     private ArrayList<ArrayList<Card>> cardLists;//List of each cards players have previously suggested
     private Random rand;
     
@@ -53,11 +57,16 @@ public class AiAdvanced extends Player{
     
     @Override
     public void onUpdate(){
-    
         ///Check if any tile in the solution path is occupied & if player position changed. if not, keep same path. Else make a new Solution path.
         if(gameController.getLastAction() instanceof StartAction){
             players = gameController.getPlayers();
             makeLists();///TODO
+        }
+        
+        for(Tile t : pathToRoom){
+            if(t.isFull() || previousPosition != getPosition()){
+                pathToRoom = BFS();
+            }
         }
         
         //Generating Random Cards (ids).
@@ -74,6 +83,8 @@ public class AiAdvanced extends Player{
                     //} catch (InterruptedException ex) {
                     //    Logger.getLogger(AIAdvanced.class.getName()).log(Level.SEVERE, null, ex);
                     //}
+                } else {
+                    moveToRoom();
                 }
                 
             } else if (gameController.getLastAction() instanceof ShowCardsAction){//If I need to show a card 
@@ -91,38 +102,27 @@ public class AiAdvanced extends Player{
         }
     }
     
-    public void findNewRoom(BoardMappings tileMap) throws NoSuchRoomException{
-        List<Tile> path = BFS();
-        
-        targetX = path.get(path.size()-1).getX();//Values of the room tile(last tile).
-        targetY = path.get(path.size()-1).getY();
-    }
-    
    /** 
-    * calculates the closest room from the players current location
-    *    
-    *
+    * Returns the path to the closest room from the players current location
     *@return The path to the closest Room from the player's current position. 
     */
     public LinkedList<Tile> BFS(){   
-        
-        LinkedList<LinkedList<Tile>> pathList = new LinkedList<>();
         
         boolean visited[][] = new boolean[boardWidth][boardHeight];
         
         for(boolean []a : visited){
             Arrays.fill(a,false);
         }
+        visited[getPosition().getX()][getPosition().getY()] = true;
         
+        LinkedList<LinkedList<Tile>> pathList = new LinkedList<>();
         LinkedList<Tile> solutionPath = new LinkedList<>();        
         LinkedList<Tile> newPath = new LinkedList<>();
         LinkedList<Tile> currentPath;
         
         newPath.add(getPosition());
         pathList.add(newPath);
-        visited[getPosition().getX()][getPosition().getY()] = true;
-        
-        
+
         boolean foundRoom = false;        
         while(!foundRoom){
             
@@ -139,8 +139,7 @@ public class AiAdvanced extends Player{
                     currentPath.add(t);
                     return currentPath;
                 }
-                else if (t.isFull() || visited[t.getX()][t.getY()]){//if the tile is full or is allready visited, do not explore it
-                    //System.out.println("allready explored this tile");
+                else if (t.isFull() || visited[t.getX()][t.getY()]){//if the tile is full or is already visited, do not explore it
                     continue;
                 }
                 
@@ -151,22 +150,23 @@ public class AiAdvanced extends Player{
                 
                 newPath.add(t);//add new path to pathList (current path + newly found tile)
                 
-                //System.out.println("adding new path with distance: "+newPath.size());
                 pathList.add(newPath);
                 
-                System.out.println("current paths:");
-                for (LinkedList<Tile> storedPath : pathList){
-                    System.out.println("path:");
-                    for (Tile ti: storedPath){
-                        System.out.println("   "+ti.getX() +","+ ti.getY());
-                    }
-                }
-                
+//                System.out.println("current paths:");
+//                for (LinkedList<Tile> storedPath : pathList){
+//                    System.out.println("path:");
+//                    for (Tile ti: storedPath){
+//                        System.out.println("   "+ti.getX() +","+ ti.getY());
+//                    }
+//                }
+           
                 visited[t.getX()][t.getY()] = true;//tile is now marked as visited    
             }
             pathList.remove(currentPath);
   
         }
+        previousPosition = getPosition();
+        pathToRoom = solutionPath;
         return solutionPath;  
     }
     
@@ -181,7 +181,19 @@ public class AiAdvanced extends Player{
         }
     }
     
+    /**
+     * Sends an action to the game controller that will move the player one move in the path towards the room.
+     */
+    public void moveToRoom(){
+//        MoveAction move = new MoveAction(pathToRoom.removeFirst());
+//        sendAction(move);
+    }
+    
     public ArrayList<ArrayList<Card>> getLists(){
         return cardLists;
+    }
+    
+    public LinkedList<Tile> getPathToRoom(){
+        return pathToRoom;
     }
 }

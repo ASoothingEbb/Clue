@@ -103,7 +103,7 @@ public class AIAdvancedTest {
     }
     
     @Test
-    public void testBFS(){//Trying to find a room.
+    public void testBFS() throws InterruptedException{//Trying to find a room.
         //--Layout of map--
         // t1 t2 t3
         // t4    t6
@@ -154,7 +154,7 @@ public class AIAdvancedTest {
     }
     
     @Test
-    public void testBFS2(){//Testing it on a board with no room.
+    public void testBFS2() throws InterruptedException{//Testing it on a board with no room.
         
         //Board Layout
         //t1 t2 t3 t4 
@@ -193,7 +193,7 @@ public class AIAdvancedTest {
     
     
     @Test
-    public void testBFS3(){//testing bfs with players as obstacles w/valid route
+    public void testBFS3() throws InterruptedException{//testing bfs with players as obstacles w/valid route
         
         //Board Layout
         //t1 t2 t3 t4
@@ -241,7 +241,7 @@ public class AIAdvancedTest {
     }
     
     @Test
-    public void testBFS4(){//testing bfs with players as obstacles W/O Valid route
+    public void testBFS4() throws InterruptedException{//testing bfs with players as obstacles W/O Valid route
         //Board Layout
         //t1 t2 t3 r4
         Tile t1 = new Tile(0, 0);
@@ -264,7 +264,7 @@ public class AIAdvancedTest {
         assertTrue(resultPath.isEmpty());
     }
     @Test
-    public void testBFS5(){//testing bfs with multiple rooms
+    public void testBFS5() throws InterruptedException{//testing bfs with multiple rooms
         
         //Board Layout 
         //t1 t2 t3 r4
@@ -295,9 +295,21 @@ public class AIAdvancedTest {
         
         LinkedList<Tile> resultPath = p1.BFS();
         
-        assertEquals(expectedPath, resultPath);
+        assertEquals(expectedPath, resultPath);  
+    }
+    
+    @Test
+    public void testGameControllerRef() throws InterruptedException, UnknownActionException{
+        AiAdvanced p1 = new AiAdvanced(1, 1, 1);
+        AiAdvanced p2 = new AiAdvanced(2, 1, 1);
         
+        ArrayList players = new ArrayList<>();
+        players.add(p1);
+        players.add(p2);
+        GameController game = new GameController(players);
         
-        
+//        System.out.println(game.getPlayers());
+//        System.out.println(p1.getGameController().getPlayers());
+//        assertEquals(game.getPlayers(), p1.getGameController().getPlayers());
     }
 }
