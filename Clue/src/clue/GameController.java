@@ -131,6 +131,7 @@ public final class GameController {
                 returnCard(((AvoidSuggestionAction) action).card);
                 break;
             case ENDTURN:
+                player.setMoves(0);
                 state.nextTurn(state.nextPlayer());
 
                 int j = player.getId();
@@ -152,7 +153,7 @@ public final class GameController {
                 nextAction = new StartTurnAction(action.getPlayer());
                 break;
             case MOVE:
-                if (action.result && (state.getAction().actionType == ActionType.STARTTURN || state.getAction().actionType == ActionType.THROWAGAIN)) {
+                if (action.result && (state.getAction().actionType == ActionType.STARTTURN || state.getAction().actionType == ActionType.THROWAGAIN || state.getAction().actionType == ActionType.MOVE)) {
                     Tile loc = ((MoveAction) action).getTile();
                     player.getPosition().setOccupied(false);
                     player.setPosition(loc);
@@ -175,6 +176,7 @@ public final class GameController {
                 break;
             case START:
                 nextAction = new StartTurnAction(player);
+                //TODO GIVE PLAYERS CARDS
                 break;
             case STARTTURN:
                 if (state.getAction().actionType == ActionType.ENDTURN || state.getAction().actionType == ActionType.EXTRATURN) {
@@ -258,6 +260,13 @@ public final class GameController {
         } else {
 
         }
+    }
+    
+    /**
+     * Ends the turn of the current player
+     */
+    public void endTurn() throws UnknownActionException, InterruptedException, MovementException, TileOccupiedException{
+        performAction(new EndTurnAction(player));
     }
 
     /**
