@@ -116,6 +116,7 @@ public final class BoardMappings {
         mappings = createTileMappings(tiles, roomCount);
 
         List<Door> doorLocations = loadCsvDoors(doorLocationsPath);
+        //System.out.println(this);
         addDoorsToTileAdjacencies(doorLocations);
         
 
@@ -315,14 +316,22 @@ public final class BoardMappings {
      * @throws NoSuchRoomException 
      */
     public Tile[][] createTileMappings(ArrayList<ArrayList<String>> tiles, int roomCount) throws NoSuchRoomException {
+        //for (ArrayList<String> row: tiles){
+        
+        //    System.out.println(row +" : "+ row.size());
+        //}
+        
+        
+        
+        
+        
         Tile[][] localMappings = new Tile[boardHeight][boardWidth];      
         String cell;      
         for (int y = 0; y < boardHeight; y++){//create Tile objects in mappings, object may be tile,room,special or null depending on what the csv cell was
             for (int x = 0; x < boardWidth; x++){
                 
-                
+
                 cell = tiles.get(y).get(x);
-                //System.out.println(""+x+","+y+": "+cell);
                 switch (cell) {
                     case "":
                         localMappings[y][x] = new Tile(-1,-1);
@@ -483,5 +492,18 @@ public final class BoardMappings {
         Room room2 = (Room)getTile(-1,r2);
         
         room1.addAdjacentBoth(room2);
+    }
+    
+    @Override
+    public String toString(){
+        String res = "";
+        for (int y = 0; y < boardHeight; y++){
+            for (int x = 0; x < boardWidth; x++){
+                res+= mappings[y][x].getY()+" ";
+            }
+            res+= "\n";
+        }
+        return res;
+    
     }
 }
