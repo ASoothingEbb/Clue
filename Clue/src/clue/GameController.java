@@ -31,7 +31,8 @@ public final class GameController {
 
     public class MovementException extends Exception {
     }
-    public class TooManyPlayersException extends Exception{
+
+    public class TooManyPlayersException extends Exception {
     }
 
     private GameState state;
@@ -44,7 +45,6 @@ public final class GameController {
     private Player winner;
     private Player player;
     private final boolean working = false;
-    private final SynchronousQueue queue;
     private final Random random;
     private List<Action> actionLog;
     private Queue<Action> actions;
@@ -65,18 +65,17 @@ public final class GameController {
      * @throws clue.MissingRoomDuringCreationException
      * @throws clue.GameController.TooManyPlayersException
      */
-    public GameController(int human, int ai,String tilePath,String doorPath) throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, TooManyPlayersException, TileOccupiedException {
+    public GameController(int human, int ai, String tilePath, String doorPath) throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, TooManyPlayersException, TileOccupiedException {
         //TODO
-        this.bm = new BoardMappings(tilePath,doorPath,6,8);
-        queue = new SynchronousQueue(true);
+        this.bm = new BoardMappings(tilePath, doorPath, 6, 8);
         List<Player> players = new ArrayList();
-        for(int i = 0; i < human; i++){
-            players.add(new Player(i));
+        for (int i = 0; i < human; i++) {
+            players.add(new Player(i, this));
         }
-        for(int i = human; i < human + ai; i++){
-            players.add(new AiBasic(i));
+        for (int i = human; i < human + ai; i++) {
+            players.add(new AiBasic(i, this));
         }
-        if(players.size() > 6){
+        if (players.size() > 6) {
             throw new TooManyPlayersException();
         }
         this.players = players;
@@ -86,19 +85,7 @@ public final class GameController {
         performAction(new StartAction());
     }
 
-    /**
-     * Performs an Action on the GameState. The action must wait for other
-     * actions to finish before executing to ensure synchronous turns.
-     *
-     * @param action the Action to be performed
-     * @throws UnknownActionException Action type could not be resolved
-     * @throws InterruptedException Action was not performed at the correct
-     * time.
-     */
-    public void performAction(Action action) throws UnknownActionException, InterruptedException, TileOccupiedException {
-        execute((Action) queue.poll());
-        queue.offer(action);
-    }
+
 
     /**
      * Executes an action from the queue. Waits for the current action to
@@ -107,7 +94,8 @@ public final class GameController {
      * @throws UnknownActionException
      * @throws InterruptedException
      */
-    private void execute(Action action) throws UnknownActionException, InterruptedException, TileOccupiedException {
+    private void performAction(Action action) throws UnknownActionException, InterruptedException, TileOccupiedException {
+        Action nextAction = null;
         player = players.get(state.getPlayerTurn());
         action.execute();
         System.out.println(action.actionType + "executing");
@@ -125,7 +113,7 @@ public final class GameController {
                     state.endGame();
                     endGame();
                 } else {
-                    performAction(new EndTurnAction(state.getCurrentPlayer()));
+                    nextAction = new EndTurnAction(state.getCurrentPlayer());
                 }
                 actionLog.add(turns, action);
                 break;
@@ -149,11 +137,11 @@ public final class GameController {
                 }
                 moveActionLog();
                 turns++;
-                performAction(new StartTurnAction(state.getCurrentPlayer()));
+                nextAction = new StartTurnAction(state.getCurrentPlayer());
                 break;
             case EXTRATURN:
                 returnCard((IntrigueCard) action.card);
-                performAction(new StartTurnAction(action.getPlayer()));
+                nextAction = new StartTurnAction(action.getPlayer());
                 break;
             case MOVE:
                 if (action.result && (state.getAction().actionType == ActionType.STARTTURN || state.getAction().actionType == ActionType.THROWAGAIN)) {
@@ -184,12 +172,12 @@ public final class GameController {
                 break;
             case SUGGEST:
                 if (action.result && state.getAction().actionType == ActionType.STARTTURN | state.getAction().actionType == ActionType.MOVE) {
-                    performAction(new ShowCardsAction(((SuggestAction) action).show, ((SuggestAction) action).player, ((SuggestAction) action).foundCards));
+                    nextAction = new ShowCardsAction(((SuggestAction) action).show, ((SuggestAction) action).player, ((SuggestAction) action).foundCards);
                 }
                 actionLog.add(turns, action);
                 break;
             case TELEPORT:
-                if(!action.result){
+                if (!action.result) {
                     throw new TileOccupiedException();
                 }
                 break;
@@ -198,11 +186,13 @@ public final class GameController {
                 //TODO: allow players to roll again
                 roll();
                 break;
-
         }
         //update game state
         state.setAction(action);
         state.notifyAllPlayers();
+        if(nextAction != null){
+            performAction(nextAction);
+        }
     }
 
     /**
@@ -222,28 +212,28 @@ public final class GameController {
     public Player getPlayer() {
         return player;
     }
-    
+
     /**
      * Returns the player object with the given id.
      *
      * @param id of the player.
      * @return Player with id id. null if invalid ID.
      */
-    public Player getPlayer(int id){
-        for(int i = 0; i < players.size(); i++){
-            if (id == players.get(i).getId()){
+    public Player getPlayer(int id) {
+        for (int i = 0; i < players.size(); i++) {
+            if (id == players.get(i).getId()) {
                 return players.get(i);
             }
         }
         return null;
     }
-    
-     /**
+
+    /**
      * Returns the List of every Player in the game.
      *
      * @return List of all Players.
      */
-    public List<Player> getPlayers(){
+    public List<Player> getPlayers() {
         return players;
     }
 
@@ -283,8 +273,8 @@ public final class GameController {
             throw new MovementException();
         }
     }
-    
-    public void move(Tile tile) throws UnknownActionException, InterruptedException, MovementException, TileOccupiedException{
+
+    public void move(Tile tile) throws UnknownActionException, InterruptedException, MovementException, TileOccupiedException {
         Queue<Tile> list = new LinkedList();
         list.add(tile);
         performAction(new MoveAction(player, list));

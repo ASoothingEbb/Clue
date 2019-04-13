@@ -28,13 +28,12 @@ public class MoveAction extends Action {
      * @param t destination Tile
      * @param player Player to move
      */
-    public MoveAction(Player player,Queue<Tile> t) {
+    public MoveAction(Player player, Queue<Tile> t) {
         super(player);
         this.actionType = ActionType.MOVE;
         this.s = player.getPosition();
         this.tiles = t;
     }
-
 
     /**
      * Executes the MoveAction. result stores whether or not Tile t is a valid
@@ -43,7 +42,7 @@ public class MoveAction extends Action {
     @Override
     public void execute() {
         //Number of moves is validated in GameController.Move()
-        Tile t;
+        Tile t = null;
         while (!tiles.isEmpty()) {
             t = tiles.poll();
             if (!s.isAdjacent(t)) {
@@ -56,7 +55,14 @@ public class MoveAction extends Action {
                 break;
             } else {
                 last = t;
-                player.setMoves(player.getMoves()-1);
+                player.setMoves(player.getMoves() - 1);
+            }
+        }
+        if (player.getMoves() == 0) {
+            if (t.isFull()) {
+                result = false;
+            } else {
+                result = false;
             }
         }
     }

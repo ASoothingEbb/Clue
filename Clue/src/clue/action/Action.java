@@ -56,4 +56,10 @@ public abstract class Action {
      */
     public void execute() {
     }
+
+    @Override
+    public String toString() {
+        return actionType + ","+ player + "," +  result;
+    }
+    
 }

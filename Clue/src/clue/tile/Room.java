@@ -7,10 +7,9 @@ package clue.tile;
 
 import clue.card.RoomCard;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
- *Represents a room on the board. Each room should have an associated RoomCard.
+ * Represents a room on the board. Each room should have an associated RoomCard.
  * @author slb35
  */
 public class Room extends Tile{
@@ -39,7 +38,7 @@ public class Room extends Tile{
     }
     
     /**
-     * adds a x y location to the room location
+     * Adds a x y location to the room location
      * @param x the x coordinate of the location to be added
      * @param y the y coordinate of the location to be added
      */
@@ -50,14 +49,18 @@ public class Room extends Tile{
         locations.add(loc);
     }
     
-    public List<int[]> getLocations(){
+    /**
+     * Returns the physical locations (x,y coordinates) of the room
+     * @return 
+     */
+    public ArrayList<int[]> getLocations(){
         return locations;
     }
     
     
     
     /**
-     * gets the room id of the room
+     * Gets the room id of the room
      * @return the room id
      */
     public int getId(){
@@ -67,16 +70,21 @@ public class Room extends Tile{
 
     
     /**
-     * sets the RoomCard of the Room
-     * @param card the RoomCard to set
+     * Placeholder method from legacy version, currently still here so it is not re implemented without notice to mw434
+     * 
      */
-    public void setCard(RoomCard card){
-        System.err.println("[Room.setCard] //DO NOT IMPLEMENT, IF YOU MUST SPEAK TO MW434");        
+    final public void setCard(RoomCard card){
+        System.err.println("[Room.setCard] //DO NOT IMPLEMENT, IF YOU MUST SPEAK TO MW434"); 
     }
     
+    /**
+     * Gets the RoomCard associated with this room
+     * @return the RoomCard associated with this room
+     * @throws NoSuchRoomException thrown when room has no associated card
+     */
     public RoomCard getCard() throws NoSuchRoomException{
         if (getY() == -1){
-            throw new NoSuchRoomException("room does not contain a valid roomCard");
+            throw new NoSuchRoomException("room was not created correctly, does not contain a valid roomCard");
         }
         return card;
     }

@@ -17,6 +17,7 @@ import clue.player.Player;
 import clue.tile.NoSuchRoomException;
 import clue.tile.NoSuchTileException;
 import clue.tile.Tile;
+import clue.tile.TileOccupiedException;
 import java.util.ArrayList;
 import java.util.Queue;
 import org.junit.After;
@@ -37,9 +38,8 @@ public class GameControllerTest {
     }
     
     @BeforeClass
-    public static void setUpClass() throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException {
-                ArrayList<Player> players = new ArrayList();
-        players.add(new Player(0));
+    public static void setUpClass() throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException, TileOccupiedException {
+
         instance = new GameController(1,1,"testCsv/tiles1.csv", "testCsv/doors1.csv");
     }
     
@@ -55,24 +55,12 @@ public class GameControllerTest {
     public void tearDown() {
     }
 
-    /**
-     * Test of performAction method, of class GameController.
-     */
-    @Test
-    public void testPerformAction() throws Exception {
-        System.out.println("performAction");
-        Action action = null;
-        instance = new GameController(1,1,"testCsv/tiles1.csv", "testCsv/doors1.csv");
-        instance.performAction(action);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
 
     /**
      * Test of suggest method, of class GameController.
      */
     @Test
-    public void testSuggest() throws InterruptedException, UnknownActionException {
+    public void testSuggest() throws InterruptedException, UnknownActionException, TileOccupiedException {
         System.out.println("suggest");
         PersonCard person = null;
         RoomCard room = null;
@@ -98,9 +86,7 @@ public class GameControllerTest {
     @Test
     public void testGetPlayer() {
         System.out.println("getPlayer");
-        Player expResult = new Player(0);
-        Player result = instance.getPlayer();
-        assertEquals(expResult, result);
+
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
