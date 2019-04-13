@@ -69,10 +69,10 @@ public final class GameController {
         this.bm = new BoardMappings(tilePath, doorPath, 6, 8);
         List<Player> players = new ArrayList();
         for (int i = 0; i < human; i++) {
-            players.add(new Player(i + 1, this));
+            players.add(new Player(i, this));
         }
         for (int i = human; i < human + ai; i++) {
-            players.add(new AiBasic(i + 1, this));
+            players.add(new AiBasic(i, this));
         }
         if (players.size() > 6) {
             throw new TooManyPlayersException();
