@@ -94,7 +94,7 @@ public final class GameController {
      * @throws UnknownActionException
      * @throws InterruptedException
      */
-    private void performAction(Action action) throws UnknownActionException, InterruptedException, TileOccupiedException {
+    public void performAction(Action action) throws UnknownActionException, InterruptedException, TileOccupiedException {
         Action nextAction = null;
         player = players.get(state.getPlayerTurn());
         action.execute();
