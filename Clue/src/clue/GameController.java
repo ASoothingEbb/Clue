@@ -85,7 +85,7 @@ public final class GameController {
         LinkedList<Tile> startingTiles = bm.getStartingTiles();
         for (Player p : players){
             if (p.isActive()){
-
+                startingTiles.peek().setOccupied(true);
                 p.setPosition(startingTiles.poll());
             }
         } 
@@ -106,7 +106,7 @@ public final class GameController {
         Action nextAction = null;
         player = players.get(state.getPlayerTurn());
         action.execute();
-        System.out.println(action.actionType + "executing");
+        System.out.println(action.actionType + " executing");
         //Action specific lplayersogic
         switch (action.actionType) {
             default:
@@ -154,7 +154,9 @@ public final class GameController {
             case MOVE:
                 if (action.result && (state.getAction().actionType == ActionType.STARTTURN || state.getAction().actionType == ActionType.THROWAGAIN)) {
                     Tile loc = ((MoveAction) action).getTile();
+                    player.getPosition().setOccupied(false);
                     player.setPosition(loc);
+                    loc.setOccupied(true);
                     if (loc.special) {
                         getSpecial(loc);
                     }
@@ -188,6 +190,8 @@ public final class GameController {
                 if (!action.result) {
                     throw new TileOccupiedException();
                 }
+                
+                //TODO update occupied status of tiles
                 break;
             case THROWAGAIN:
                 //TODO: tell gui to roll again
