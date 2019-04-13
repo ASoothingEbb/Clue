@@ -18,7 +18,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -45,11 +47,33 @@ public final class BoardMappings {
     
     }
     Tile[][] mappings;
-    List<Tile> startingTiles;
+    PriorityQueue<StartingTile> startingTiles;
     Room[] rooms;
     int boardWidth;
     int boardHeight;
     
+    class StartingTile implements Comparable<StartingTile>{
+
+        public Tile t;
+        public int i;
+        StartingTile(Tile t, int i){
+            this.t = t;
+            this.i = i;
+        }
+
+        @Override
+        public int compareTo(StartingTile t) {
+            if (this.i > t.i){
+                return 1;
+            }
+            else if (this.i < t.i){
+                return -1;
+            }    
+            else {
+                return 0;
+            }    
+        }
+    }
 
     /**
      * BoardMappings will create the board (the Tiles and there adjacencies) from csv files and provide mappings from (int x, y) coordinates to tiles/rooms.
@@ -57,7 +81,7 @@ public final class BoardMappings {
      *      tile csv: each cell in the csv represents one tile at the same location
      *          0 = basic tile
      *          -1 = no tile
-     *          S = starting tile
+     *          S = starting tile (optionally it can be followed by a number > 0)
      *          int n > 0 = room with id n
      *          I = intrigue tile
      *
@@ -78,7 +102,7 @@ public final class BoardMappings {
     public BoardMappings(String tileRoomLayoutPath, String doorLocationsPath, int w, int h) throws NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException{
 
         
-        startingTiles = new ArrayList<>();
+        startingTiles = new PriorityQueue<>();
         
         ArrayList<ArrayList<String>> tiles = loadCsv2D(tileRoomLayoutPath);
         int roomCount = getRoomCount(tiles);
@@ -304,24 +328,46 @@ public final class BoardMappings {
                         break;
                     case "S":
                         localMappings[y][x] = new Tile(x,y);
-                        startingTiles.add(localMappings[y][x]);
+                        startingTiles.add( new StartingTile(localMappings[y][x],100));
                         break;
                     default:
 
-                        cell = cell.replaceAll("[^0-9]+", "");
-                        localMappings[y][x] = null;
-
-                        try{
-                            if (Integer.parseInt(cell) > roomCount){
-                                throw new NoSuchRoomException();
+                        if (cell.startsWith("S")){
+                        
+                            cell = cell.substring(1);
+                            
+                            try{
+                                int startingId = Integer.parseInt(cell);
+                                if (startingId < 0 || startingId > 99){
+                                    throw new NumberFormatException("values in tiles csv must be -1,0,I,Sn (where n is a number between 0 and 99), or a number that is less than the total room count, found: "+cell+"\n");
+                            
+                                }
+                                localMappings[y][x] = new Tile(x,y);
+                                startingTiles.add(new StartingTile(localMappings[y][x], startingId));
                             }
-                            else{
-                                getRoom(Integer.parseInt(cell)).addLocation(x,y);
+                            catch (NumberFormatException ex){
+                                throw new NumberFormatException("values in tiles csv must be -1,0,I,Sn (where n is a number between 0 and 99), or a number that is less than the total room count, found: "+cell+"\n");
+                            
                             }
                         }
-                        catch (NumberFormatException ex){
-                            throw new NumberFormatException("values in tiles csv must be -1,0,I,S or a number that is less than the total room count, found: "+cell+"\n"+ex.toString());
-                        }   break;
+                        else{
+                            cell = cell.replaceAll("[^0-9]+", "");
+                            localMappings[y][x] = new Tile(-1,-1);
+
+                            try{
+                                if (Integer.parseInt(cell) > roomCount){
+                                    throw new NoSuchRoomException();
+                                }
+                                else{
+                                    getRoom(Integer.parseInt(cell)).addLocation(x,y);
+                                }
+                            }
+                            catch (NumberFormatException ex){
+                                throw new NumberFormatException("values in tiles csv must be -1,0,I,Sn (where n is a number between 0 and 99), or a number that is less than the total room count, found: "+cell+"\n");
+                            }
+                            //break;
+                        }
+
                 }
    
             }
@@ -403,10 +449,14 @@ public final class BoardMappings {
     }
      /**
       * gets the starting locations of the board
-      * @return List<Tile> the list of starting tiles on the board
+      * @return the list of starting tiles on the board
       */
-    public List<Tile> getStartingTiles(){
-        return startingTiles;
+    public LinkedList<Tile> getStartingTiles(){
+        LinkedList result = new LinkedList<>();
+        while (!startingTiles.isEmpty()){
+            result.add(startingTiles.poll().t);
+        }
+        return result;
     }  
     
     /**
