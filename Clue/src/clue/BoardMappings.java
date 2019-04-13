@@ -375,7 +375,7 @@ public final class BoardMappings {
         }
         
         Tile currentTile;
-        String nonRoomTilePattern = "S|0|I";
+        String nonRoomTilePattern = "S|0|I|S[0-9]";
         for (int y = 0; y < boardHeight; y++){
             for (int x = 0; x < boardWidth; x++){
                 
