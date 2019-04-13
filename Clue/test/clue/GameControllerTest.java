@@ -69,7 +69,8 @@ public class GameControllerTest {
         Player p2 = gc.getPlayer(2);
         
         assertTrue(gc.getLastAction() instanceof StartAction);
-        assertTrue(gc.getPlayer() == p1);
+        
+        assertEquals(p1.getId(),gc.getPlayer().getId());
         System.out.println(p1.getPosition().getX() +","+ p1.getPosition().getY());
         System.out.println(p2.getPosition().getX() +","+ p2.getPosition().getY());
         
@@ -95,7 +96,7 @@ public class GameControllerTest {
         
         
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        //fail("The test case is a prototype.");
     }
 
     /**
