@@ -5,6 +5,13 @@
  */
 package clue.client;
 
+import clue.GameController;
+import clue.GameController.TooManyPlayersException;
+import clue.MissingRoomDuringCreationException;
+import clue.action.UnknownActionException;
+import clue.tile.NoSuchRoomException;
+import clue.tile.NoSuchTileException;
+import clue.tile.TileOccupiedException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -220,7 +227,13 @@ public class ClueClient extends Application {
         MenuItem startGameButton = new MenuItem("Start Game", avenirTitle);
         startGameButton.setOnMouseClicked(e -> {
             stage.hide();
-            game.startGame(numberOfPlayers, numberOfAIs);
+            try {
+                GameController gameController = new GameController(numberOfPlayers, numberOfAIs, "testCsv/tiles1withIds.csv", "testCsv/doors1.csv");
+                game.startGame(gameController);
+            } catch(TooManyPlayersException | MissingRoomDuringCreationException | UnknownActionException | NoSuchRoomException | NoSuchTileException | TileOccupiedException | InterruptedException ex) {
+                
+            }
+            
         });
 
         // Return to menu
