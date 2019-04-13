@@ -20,7 +20,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Random;
-import java.util.concurrent.SynchronousQueue;
 
 /**
  * Performs internal game logic for a Clue game instance
@@ -36,7 +35,7 @@ public final class GameController {
     }
 
     private GameState state;
-    private BoardMappings bm;
+    private final BoardMappings bm;
     private List<IntrigueCard> cards;
     private PersonCard person;
     private RoomCard room;
@@ -57,23 +56,23 @@ public final class GameController {
      * @param ai
      * @param tilePath
      * @param doorPath
-     * @param players
      * @throws java.lang.InterruptedException
      * @throws clue.action.UnknownActionException
      * @throws clue.tile.NoSuchRoomException
      * @throws clue.tile.NoSuchTileException
      * @throws clue.MissingRoomDuringCreationException
      * @throws clue.GameController.TooManyPlayersException
+     * @throws clue.tile.TileOccupiedException
      */
     public GameController(int human, int ai, String tilePath, String doorPath) throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, TooManyPlayersException, TileOccupiedException {
         //TODO
         this.bm = new BoardMappings(tilePath, doorPath, 6, 8);
         List<Player> players = new ArrayList();
         for (int i = 0; i < human; i++) {
-            players.add(new Player(i, this));
+            players.add(new Player(i + 1, this));
         }
         for (int i = human; i < human + ai; i++) {
-            players.add(new AiBasic(i, this));
+            players.add(new AiBasic(i + 1, this));
         }
         if (players.size() > 6) {
             throw new TooManyPlayersException();
@@ -82,10 +81,12 @@ public final class GameController {
         random = new Random(Calendar.getInstance().getTimeInMillis());
         actionLog = new ArrayList();
         state = new GameState(players);
-        performAction(new StartAction());
+        if (human + ai > 0) {
+            performAction(new StartAction());
+        } else {
+            endGame();
+        }
     }
-
-
 
     /**
      * Executes an action from the queue. Waits for the current action to
@@ -190,7 +191,7 @@ public final class GameController {
         //update game state
         state.setAction(action);
         state.notifyAllPlayers();
-        if(nextAction != null){
+        if (nextAction != null) {
             performAction(nextAction);
         }
     }
@@ -314,6 +315,7 @@ public final class GameController {
      * @param weapon the murder weapon to accuse
      * @throws UnknownActionException
      * @throws InterruptedException
+     * @throws clue.tile.TileOccupiedException
      */
     public void accuse(PersonCard person, RoomCard room, WeaponCard weapon) throws UnknownActionException, InterruptedException, TileOccupiedException {
         performAction(new AccuseAction(player, person, room, weapon, person == this.person && room == this.room && weapon == this.weapon));
