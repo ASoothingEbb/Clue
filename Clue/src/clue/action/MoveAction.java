@@ -42,10 +42,12 @@ public class MoveAction extends Action {
     @Override
     public void execute() {
         //Number of moves is validated in GameController.Move()
+        result = true;
         Tile t = null;
         while (!tiles.isEmpty()) {
             t = tiles.poll();
             if (!s.isAdjacent(t)) {
+                //System.out.println("not adjacent");
                 result = false;
                 break;
             } else if (t.isRoom()) {
@@ -53,17 +55,18 @@ public class MoveAction extends Action {
                 result = tiles.isEmpty();
                 player.setMoves(0);
                 break;
+            }
+            else if (t.isFull()){
+                //System.out.println("tile is full");
+                result = false;
+                break;
             } else {
                 last = t;
                 player.setMoves(player.getMoves() - 1);
             }
         }
-        if (player.getMoves() == 0) {
-            if (t.isFull()) {
-                result = false;
-            } else {
-                result = false;
-            }
+        if (player.getMoves() < 0) {
+            result = false;
         }
     }
 
