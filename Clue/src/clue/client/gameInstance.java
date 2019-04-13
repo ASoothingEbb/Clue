@@ -13,6 +13,7 @@ import clue.action.UnknownActionException;
 import clue.card.CardType;
 import clue.tile.NoSuchRoomException;
 import clue.tile.NoSuchTileException;
+import clue.tile.Room;
 import clue.tile.TileOccupiedException;
 import java.io.File;
 import java.io.FileInputStream;
@@ -63,6 +64,7 @@ public class gameInstance {
     private HashMap<Integer, Integer> spawnlocations = new HashMap<>();
     private Player currentPlayer;
     private String remainingMoves;
+    private int currentRoom;
     private boolean rolled;
     
     private GameController gameInterface;
@@ -143,6 +145,7 @@ public class gameInstance {
         StackPane history = new StackPane();
         
         ScrollPane historyPane = new ScrollPane();
+        historyPane.setBackground(new Background(new BackgroundFill(Color.GREY, CornerRadii.EMPTY, Insets.EMPTY)));
         historyPane.setPannable(false);
         historyPane.setContent(history);
         
@@ -163,10 +166,9 @@ public class gameInstance {
         GridPane cardsLayout = new GridPane();
         
         Label playerCardsLabel = getLabel("Cards", avenirTitle);
-        
         int x = 0;
         int y = 0;
-        System.out.println(gameInterface.getPlayer().getCards());
+        //System.out.println(gameInterface.getPlayer().getCards());
         for (clue.card.Card card: gameInterface.getPlayer().getCards()) {
             Image cardImage = null;
             try {
@@ -214,13 +216,10 @@ public class gameInstance {
         suggestionButton.setInactiveColor(Color.DARKORANGE);
         suggestionButton.setActive(false); //refresh Colour
         suggestionButton.setOnMouseClicked(e -> {
-            createCardsWindow("Suggetsion", Color.ORANGE);
-        });
-        
-        Button suggestButton = new Button("Suggestion");
-        suggestButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        suggestButton.setOnAction(e -> {
-            createCardsWindow("Suggestion", Color.ORANGE);
+            if (gameInterface.getPlayer().getPosition().isRoom()) {
+                currentRoom = ((Room) gameInterface.getPlayer().getPosition()).getId();
+                createCardsWindow("Suggetsion", Color.ORANGE);
+            }
         });
         
         MenuItem accusationButton = new MenuItem("Accusation", avenirLarge);
@@ -230,13 +229,7 @@ public class gameInstance {
         accusationButton.setOnMouseClicked(e -> {
             createCardsWindow("Accusation", Color.RED);
         });
-        
-        Button accuseButton = new Button("Accusation");
-        accuseButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        accuseButton.setOnAction(e -> {
-            createCardsWindow("Accusation", Color.RED);
-        });
-        
+
         MenuItem rollButton = new MenuItem("Roll", avenirLarge);
         
         rollButton.setOnMouseClicked(e -> {
@@ -265,7 +258,7 @@ public class gameInstance {
     
     private void createCardsWindow(String title, Color color) {
         selectCards cardsWindow = new selectCards();
-        cardsWindow.show(title, color);
+        cardsWindow.show(title, color, currentRoom, ImagePathMap);
     }
     
     private BorderPane createUI() {
