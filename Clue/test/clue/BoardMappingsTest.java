@@ -98,11 +98,11 @@ public class BoardMappingsTest {
             boardMappings = new BoardMappings("testCsv/tiles1.csv", "testCsv/doors1.csv",6,8);
          
             //"testCsv/tiles1.csv", "testCsv/doors1.csv" files contains a board with 2 rooms and 2 doorways,
-            //doorway one goes from coord 3,1 to room 1
-            //doorway two goes from coord 4,4 to room 2
+            //doorway one goes from coord 3,1 to room 0
+            //doorway two goes from coord 4,4 to room 1
 
-            Room r1 = boardMappings.getRoom(1);
-            Room r2 = boardMappings.getRoom(2);
+            Room r1 = boardMappings.getRoom(0);
+            Room r2 = boardMappings.getRoom(1);
 
 
 
@@ -128,8 +128,8 @@ public class BoardMappingsTest {
         try {
             boardMappings = new BoardMappings("testCsv/tiles1.csv", "testCsv/doors1.csv",6,8);
             
-            Room r1 = boardMappings.getRoom(1);
-            Room r2 = boardMappings.getRoom(2);
+            Room r1 = boardMappings.getRoom(0);
+            Room r2 = boardMappings.getRoom(1);
 
             
             assertFalse(r1.isAdjacent(r2));
@@ -158,7 +158,7 @@ public class BoardMappingsTest {
             
             assertEquals(9, rooms.length);
             for (int i = 0 ; i < 9; i++){
-                assertTrue(rooms[i].getId() == i+1);
+                assertTrue(rooms[i].getId() == i);
             }
             
             
@@ -225,11 +225,11 @@ public class BoardMappingsTest {
             
             assertEquals(loadedDoors.size(), 2);
             
-            assertEquals(1,loadedDoors.get(0).getRoomY());
+            assertEquals(0,loadedDoors.get(0).getRoomY());
             assertEquals(2,loadedDoors.get(0).getTileY());
             assertEquals(0,loadedDoors.get(0).getTileX());
                 
-            assertEquals(2,loadedDoors.get(1).getRoomY());
+            assertEquals(1,loadedDoors.get(1).getRoomY());
             assertEquals(4,loadedDoors.get(1).getTileY());
             assertEquals(2,loadedDoors.get(1).getTileX());
                     
@@ -261,11 +261,11 @@ public class BoardMappingsTest {
    
                         }
                         else if (x == 1 && y == 2 || x == 2 && y == 2 || x == 3 && y == 2 || x == 3 && y == 4){//rooms should be at these locations
-                            if (y == 4){//room 2 at y ==4 for above
-                                assertEquals(2,boardMappings.getTile(x, y).getY());
-                            }
-                            else{//room 1 at all rest of room locations
+                            if (y == 4){//room 1 at y ==4 for above
                                 assertEquals(1,boardMappings.getTile(x, y).getY());
+                            }
+                            else{//room 0 at all rest of room locations
+                                assertEquals(0,boardMappings.getTile(x, y).getY());
                             }
                             
                         }                                                
@@ -292,8 +292,8 @@ public class BoardMappingsTest {
 
                 ArrayList<Room> rooms = new ArrayList<>();
                 
+                rooms.add(boardMappings.getRoom(0));
                 rooms.add(boardMappings.getRoom(1));
-                rooms.add(boardMappings.getRoom(2));
       
 
             } catch (NoSuchRoomException | NoSuchTileException | MissingRoomDuringCreationException ex) {
@@ -412,7 +412,7 @@ public class BoardMappingsTest {
                 assertTrue(t02.isAdjacent(t12));
                 
                 
-                assertTrue(t12.isRoom() && t22.isRoom() && t32.isRoom());//room 1
+                assertTrue(t12.isRoom() && t22.isRoom() && t32.isRoom());//room 0
                 assertTrue(t12 == t22 && t12 == t32);//should all be the same Room tile
                 assertEquals(1, t12.getAdjacent().size());
                 assertTrue(t12.isAdjacent(t02));//should have a door leading to this tile
