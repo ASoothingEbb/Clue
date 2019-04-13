@@ -83,6 +83,14 @@ public final class GameController {
         actionLog = new ArrayList();
         state = new GameState(players);
         performAction(new StartAction());
+        
+        LinkedList<Tile> startingTiles = bm.getStartingTiles();
+        for (Player p : players){
+            if (p.isActive()){
+                
+                p.setPosition(startingTiles.poll());
+            }
+        }         
     }
 
 
