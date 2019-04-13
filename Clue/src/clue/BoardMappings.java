@@ -183,6 +183,15 @@ public final class BoardMappings {
     }
     
     /**
+     * Gets the number of rooms
+     * @return the number of rooms
+     */
+    public int getNumberOfRooms(){
+        return rooms.length;
+    }
+    
+    
+    /**
      * 
      * @param tiles the string cell values loaded from the tiles csv
      * @return the max room id in the tiles 2d list
