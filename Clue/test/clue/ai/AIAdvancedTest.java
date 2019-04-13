@@ -113,6 +113,7 @@ public class AIAdvancedTest {
     
     @Test
     public void testBFS() throws InterruptedException{//Trying to find a room.
+        System.out.println("BFS basic (one valid path to room)");
         //--Layout of map--
         // t1 t2 t3
         // t4    t6
@@ -164,7 +165,7 @@ public class AIAdvancedTest {
     
     @Test
     public void testBFS2() throws InterruptedException{//Testing it on a board with no room.
-        
+        System.out.println("BFS basic (no room)");
         //Board Layout
         //t1 t2 t3 t4 
         //t5 t6 t7 t8
@@ -203,7 +204,7 @@ public class AIAdvancedTest {
     
     @Test
     public void testBFS3() throws InterruptedException{//testing bfs with players as obstacles w/valid route
-        
+        System.out.println("BFS basic (with room, with valid path, with players)");
         //Board Layout
         //t1 t2 t3 t4
         //t5 t6 t7 r8
@@ -251,6 +252,7 @@ public class AIAdvancedTest {
     
     @Test
     public void testBFS4() throws InterruptedException{//testing bfs with players as obstacles W/O Valid route
+        System.out.println("BFS basic (with room, with players)");
         //Board Layout
         //t1 t2 t3 r4
         Tile t1 = new Tile(0, 0);
@@ -274,7 +276,7 @@ public class AIAdvancedTest {
     }
     @Test
     public void testBFS5() throws InterruptedException{//testing bfs with multiple rooms
-        
+        System.out.println("BFS basic (many rooms)");
         //Board Layout 
         //t1 t2 t3 r4
         //t5
@@ -305,19 +307,5 @@ public class AIAdvancedTest {
         LinkedList<Tile> resultPath = p1.BFS();
         
         assertEquals(expectedPath, resultPath);  
-    }
-    
-    @Test
-    public void testGameControllerRef() throws InterruptedException, UnknownActionException{
-        AiAdvanced p1 = new AiAdvanced(1, gc, 1, 1);
-        AiAdvanced p2 = new AiAdvanced(2, gc, 1, 1);
-        
-        ArrayList players = new ArrayList<>();
-        players.add(p1);
-        players.add(p2);
-        
-//        System.out.println(gc.getPlayers());
-//        System.out.println(p1.getGameController().getPlayers());
-//        assertEquals(gc.getPlayers(), p1.getGameController().getPlayers());
     }
 }
