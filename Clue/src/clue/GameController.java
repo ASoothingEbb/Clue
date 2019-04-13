@@ -174,6 +174,7 @@ public final class GameController {
                 actionLog.add(turns, action);
                 break;
             case START:
+                nextAction = new StartTurnAction(player);
                 break;
             case STARTTURN:
                 if (state.getAction().actionType == ActionType.ENDTURN || state.getAction().actionType == ActionType.EXTRATURN) {
