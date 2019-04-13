@@ -5,14 +5,9 @@
  */
 package clue.client;
 
-import clue.GameController;
-import clue.MissingRoomDuringCreationException;
-import clue.action.UnknownActionException;
-import clue.tile.NoSuchRoomException;
-import clue.tile.NoSuchTileException;
-import clue.tile.TileOccupiedException;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -77,9 +72,9 @@ public class ClueClient extends Application {
     private int numberOfAIs;
     
     // Fonts
-    private final Font avenirLarge = Font.loadFont(getClass().getResourceAsStream("resources/fonts/Avenir-Book.ttf"), 30);
-    private final Font avenirTitle = Font.loadFont(getClass().getResourceAsStream("resources/fonts/Avenir-Book.ttf"), 20);
-    private final Font avenirNormal = Font.loadFont(getClass().getResourceAsStream("resources/fonts/Avenir-Book.ttf"), 12);   
+    private Font avenirLarge;
+    private Font avenirTitle;
+    private Font avenirNormal;
     
     // BackgroundFill
     private Background blackFill = new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY));
@@ -115,10 +110,23 @@ public class ClueClient extends Application {
      */
     private void addUIControls(VBox menuOptions) {
         // Game Title
-        Font titleFont = Font.loadFont(getClass().getResourceAsStream("resources/fonts/ringbearer.ttf"), 80);
+        Font titleFont = new Font(80);
+        avenirLarge = new Font(30);
+        avenirTitle = new Font(20);
+        avenirNormal = new Font(12);
+        try {
+            titleFont = Font.loadFont(new FileInputStream(new File("./resources/fonts/ringbearer.ttf")), 80);
+            avenirLarge = Font.loadFont(new FileInputStream(new File("./resources/fonts/Avenir-Book.ttf")), 30);
+            avenirTitle = Font.loadFont(new FileInputStream(new File("./resources/fonts/Avenir-Book.ttf")), 20);
+            avenirNormal = Font.loadFont(new FileInputStream(new File("./resources/fonts/Avenir-Book.ttf")), 12);
+        } catch(FileNotFoundException e) {
+            
+        }
+        
         Label gameTitle = new Label("cluE");
         gameTitle.setFont(titleFont);
         gameTitle.setTextFill(Color.WHITE);
+        menuOptions.getChildren().add(gameTitle);
         
         // Test new Button design
         MenuItem createGameButton = new MenuItem("Play", avenirTitle);
@@ -130,7 +138,7 @@ public class ClueClient extends Application {
         MenuItem settingsButton = new MenuItem("Settings", avenirTitle);
         settingsButton.setOnMouseClicked(e -> settingScene(stage));
 
-         menuOptions.getChildren().addAll(gameTitle, createGameButton, howToPlayButton, settingsButton);
+         menuOptions.getChildren().addAll(createGameButton, howToPlayButton, settingsButton);
     }
     
     /**
@@ -212,12 +220,7 @@ public class ClueClient extends Application {
         MenuItem startGameButton = new MenuItem("Start Game", avenirTitle);
         startGameButton.setOnMouseClicked(e -> {
             stage.hide();
-            try {
-                GameController gameController = new GameController(numberOfPlayers, numberOfAIs, "testCsv/tiles1.csv", "testCsv/doors1.csv");
-                game.startGame(numberOfPlayers, numberOfAIs, gameController);
-            } catch(InterruptedException | UnknownActionException | NoSuchRoomException | NoSuchTileException | MissingRoomDuringCreationException | GameController.TooManyPlayersException | TileOccupiedException ex) {
-                
-            }
+            game.startGame(numberOfPlayers, numberOfAIs);
         });
 
         // Return to menu
