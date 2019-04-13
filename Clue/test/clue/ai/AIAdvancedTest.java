@@ -113,6 +113,7 @@ public class AIAdvancedTest {
     
     @Test
     public void testBFS() throws InterruptedException{//Trying to find a room.
+        System.out.println("BFS trying to find a room");
         //--Layout of map--
         // t1 t2 t3
         // t4    t6
@@ -164,7 +165,7 @@ public class AIAdvancedTest {
     
     @Test
     public void testBFS2() throws InterruptedException{//Testing it on a board with no room.
-        
+        System.out.println("test");
         //Board Layout
         //t1 t2 t3 t4 
         //t5 t6 t7 t8

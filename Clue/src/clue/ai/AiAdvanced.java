@@ -41,10 +41,21 @@ public class AiAdvanced extends Player{
     private Tile previousPosition;
     private List<Player> players;
     private LinkedList<Tile> pathToRoom;
-    private ArrayList<ArrayList<Card>> cardLists;//List of each cards players have previously suggested
     private Random rand;
     
-    //Width of the board, height of the board.
+    //AI Logic
+    private ArrayList<ArrayList<Card>> cardLists;//List of each cards players have previously suggested
+    private List<Card> shownCards;
+    
+    
+    /** 
+    * Constructor for AiAdvanced.
+    * @param id of the Player.
+    * @param gc GameController object.
+    * @param width of the game board.
+    * @param height of the game board.
+    */
+    
     public AiAdvanced(int id, GameController gc ,int width, int height){
         super(id, gc);
         
@@ -53,18 +64,23 @@ public class AiAdvanced extends Player{
         this.id = id;
         gameController = gc;
         rand = new Random();
+        shownCards = new ArrayList<>();
     }
     
+    /** 
+    * This method is run after every action that was sent to the GameController.
+    * @return the path to the closest room from the players current location
+    */
     @Override
     public void onUpdate(){
-        ///Check if any tile in the solution path is occupied & if player position changed. if not, keep same path. Else make a new Solution path.
-        if(gameController.getLastAction() instanceof StartAction){
+        
+        if(gameController.getLastAction() instanceof StartAction){//If the game has just started.
             players = gameController.getPlayers();
             makeLists();///TODO
         }
         
         for(Tile t : pathToRoom){
-            if(t.isFull() || previousPosition != getPosition()){
+            if(t.isFull() || previousPosition != getPosition()){//If the Player has moved since last turn, or if anay of the tiles in the path have changed(occupied).
                 pathToRoom = BFS();
             }
         }
@@ -74,15 +90,14 @@ public class AiAdvanced extends Player{
         RoomCard randRoomCard = new RoomCard(rand.nextInt(6) + 1);
         WeaponCard randWeaponCard = new WeaponCard(rand.nextInt(9)+ 1);
         
-        
         if(gameController.getPlayer().getId() == getId()){//If I need to respond.
             if(gameController.getLastAction() instanceof EndTurnAction){//If my turn, last action was end turn.
                 if(this.getPosition().isRoom()){//If I'm in a room
-                    //try {           
-                    //    sendAction(Accuse(randPersonCard, randRoomCard, randWeaponCard));
-                    //} catch (InterruptedException ex) {
-                    //    Logger.getLogger(AIAdvanced.class.getName()).log(Level.SEVERE, null, ex);
-                    //}
+//                    try {           
+//                        sendAction(Accuse(randPersonCard, randRoomCard, randWeaponCard));
+//                    } catch (InterruptedException ex) {
+//                        Logger.getLogger(AIAdvanced.class.getName()).log(Level.SEVERE, null, ex);
+//                    }
                 } else {
                     moveToRoom();
                 }
@@ -92,6 +107,7 @@ public class AiAdvanced extends Player{
                 ShowCardsAction action = (ShowCardsAction) gameController.getLastAction();
                 Card card = action.getCardList().get(0);
                 ShowCardAction newAction = new ShowCardAction(action.getSuggester(), card);//Shows one card to person who requested cards to be shown(suggested).
+                shownCards.add(card);
 
                 //try {
                 //    sendAction(newAction);//Show Card.
