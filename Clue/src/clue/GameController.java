@@ -81,18 +81,19 @@ public final class GameController {
         random = new Random(Calendar.getInstance().getTimeInMillis());
         actionLog = new ArrayList();
         state = new GameState(players);
-        if (human + ai > 0) {
-        LinkedList<Tile> startingTiles = bm.getStartingTiles();
-        for (Player p : players){
-            if (p.isActive()){
-                
-                p.setPosition(startingTiles.poll());
+        if (human + ai >= 2) {
+            LinkedList<Tile> startingTiles = bm.getStartingTiles();
+            for (Player p : players) {
+                if (p.isActive()) {
+
+                    p.setPosition(startingTiles.poll());
+                }
             }
-        } 
             performAction(new StartAction());
         } else {
+            state.endGame();
             endGame();
-        }        
+        }
     }
 
     /**
