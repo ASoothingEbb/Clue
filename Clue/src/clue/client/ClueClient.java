@@ -228,10 +228,11 @@ public class ClueClient extends Application {
         startGameButton.setOnMouseClicked(e -> {
             stage.hide();
             try {
-                GameController gameController = new GameController(numberOfPlayers, numberOfAIs, "testCsv/tiles1withIds.csv", "testCsv/doors1.csv");
+                GameController gameController = new GameController(numberOfPlayers, numberOfAIs, "resources/archersAvenueTiles.csv", "resources/archersAvenueDoors.csv");
                 game.startGame(gameController);
             } catch(TooManyPlayersException | MissingRoomDuringCreationException | UnknownActionException | NoSuchRoomException | NoSuchTileException | TileOccupiedException | InterruptedException ex) {
-                
+                System.out.println("Ice Cream Machine BROKE");
+                ex.printStackTrace();
             }
             
         });
