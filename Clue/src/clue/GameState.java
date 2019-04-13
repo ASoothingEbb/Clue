@@ -52,8 +52,8 @@ public class GameState {
      */
     public GameState(List<Player> players) {
         this.players = players;
-        previousPlayer = players.get(1);
-        currentPlayer = players.get(1);
+        previousPlayer = players.get(0);
+        currentPlayer = players.get(0);
         running = true;
         playersNumber = players.size();
     }
@@ -119,7 +119,7 @@ public class GameState {
      */
     public void nextTurn(int player) {
         previousPlayer = currentPlayer;
-        currentPlayer = players.get(player);
+        currentPlayer = players.get(player-1);
         turn = currentPlayer.getId();
     }
 
@@ -149,7 +149,7 @@ public class GameState {
     }
 
     public Player getPlayer(int id) {
-        return players.get(id);
+        return players.get(id-1);
     }
 
     /**
