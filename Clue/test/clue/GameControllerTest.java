@@ -6,6 +6,7 @@
 package clue;
 
 import clue.action.Action;
+import clue.action.MoveAction;
 import clue.action.StartAction;
 import clue.action.UnknownActionException;
 import clue.card.Card;
@@ -65,19 +66,37 @@ public class GameControllerTest {
         gc = new GameController(2,0,"testCsv/tiles1WithIds.csv", "testCsv/doors1.csv");
         
         
+        Player p0 = gc.getPlayer(0);
         Player p1 = gc.getPlayer(1);
-        Player p2 = gc.getPlayer(2);
         
         assertTrue(gc.getLastAction() instanceof StartAction);
-        assertTrue(gc.getPlayer() == p1);
-        System.out.println(p1.getPosition().getX() +","+ p1.getPosition().getY());
-        System.out.println(p2.getPosition().getX() +","+ p2.getPosition().getY());
         
-        assertTrue(p1.getPosition().getX() == 5 && p1.getPosition().getY() == 6);
-        assertTrue(p2.getPosition().getX() == 1 && p2.getPosition().getY() == 7);
+        assertEquals(p0.getId(),gc.getPlayer().getId());
+        
+        assertTrue(p0.getPosition().getX() == 5 && p0.getPosition().getY() == 6);
+        assertTrue(p1.getPosition().getX() == 1 && p1.getPosition().getY() == 7);
         int r = gc.roll();
         
+        List<Tile> adjacent = p0.getPosition().getAdjacent();
+        Tile oldTile = p0.getPosition();
         
+        assertTrue(oldTile.isFull());//p1 starting tile should be full
+        Tile target = null;
+        System.out.println(oldTile);
+        for (Tile t : adjacent){
+            if (t.getX() == 4 && t.getY() == 6){
+                target = t;
+            }
+        }
+        assertTrue(target != null);//tile x == 4 and y ==6 not found
+        gc.move(target);
+        
+        
+        assertEquals(4, p0.getPosition().getX());//check if player was moved
+        assertEquals(6, p0.getPosition().getY());
+        
+        assertFalse(oldTile.isFull());//p0 starting tile should no longer be full
+        assertTrue(gc.getLastAction() instanceof MoveAction);
         //gc.performAction(action);
         
         
@@ -95,7 +114,7 @@ public class GameControllerTest {
         
         
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        //fail("The test case is a prototype.");
     }
 
     /**
