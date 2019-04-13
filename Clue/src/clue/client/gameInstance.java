@@ -6,6 +6,13 @@
 package clue.client;
 
 import clue.GameController;
+import clue.GameController.TooManyPlayersException;
+import clue.MissingRoomDuringCreationException;
+import clue.action.Action;
+import clue.action.UnknownActionException;
+import clue.tile.NoSuchRoomException;
+import clue.tile.NoSuchTileException;
+import clue.tile.TileOccupiedException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -213,7 +220,7 @@ public class gameInstance {
             if (!rolled) {
                 // waiting for gamecontroller to be finalised.
                 // remainingMovesLabel.setText("Remaining Moves: " + gameInterface.roll());
-                remainingMovesLabel.setText("Remaining Moves: " + "Rolled");
+                remainingMovesLabel.setText("Remaining Moves: " + gameInterface.roll());
                 rolled = true;
             } else {
                 Prompt alreadyRolled = new Prompt("You cannot roll");
@@ -253,6 +260,29 @@ public class gameInstance {
         main.setRight(rightPanel);
         
         return main;
+    }
+    
+    public void actionResponse(Action action) {
+        switch (action.actionType) {
+            case SHOWCARDS:
+                
+                break;
+            case MOVE:
+                
+                break;
+            case AVOIDSUGGESTIONCARD:
+                
+                break;
+            case THROWAGAIN:
+                
+                break;
+            case STARTTURN:
+                
+                break;
+            case ACCUSATION:
+                
+                break;
+        }
     }
 
     private Label getLabel(String text, Font font) {
@@ -303,7 +333,7 @@ public class gameInstance {
         }
     }
         
-    public void startGame(int numberOfPlayers, int numberOfAIs) {
+    public void startGame(int numberOfPlayers, int numberOfAIs, GameController gameController) {
         Stage gameStage = new Stage();
         
         gameStage.initModality(Modality.APPLICATION_MODAL);
@@ -316,9 +346,10 @@ public class gameInstance {
             gameStage.close();
         });
         
+        gameInterface = gameController;
+        
         initDefaultGraphics();
         initGraphics();
-        //gameInteface = new GameController(numberOfPlayers, numberOfAIs, );
         
         Scene scene = new Scene(createUI());
         gameStage.setScene(scene);
