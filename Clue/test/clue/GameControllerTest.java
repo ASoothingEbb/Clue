@@ -317,6 +317,31 @@ public class GameControllerTest {
         
     }     
         
+    
+    @Test
+    public void testHandOutCards() throws Exception{
+        System.out.println("handOutCards");
+        
+        gc = new GameController(1,1,"testCsv/tiles1WithIds.csv", "testCsv/doors1.csv");
+        
+        
+        ArrayList<Card> cards = new ArrayList<>();
+        
+        for (Player p : gc.getPlayers()){
+        
+            for (Card c : p.getCards()){
+                assertFalse(cards.contains(c));
+                cards.add(c);
+            }
+        }
+        assertEquals(18,cards.size());
+                
+                
+                
+               
+    
+    
+    }
 
     /**
      * Test of showCard method, of class GameController.
@@ -405,6 +430,13 @@ public class GameControllerTest {
         //System.out.println("move");
         fail("The test case is a prototype.");
 
+    }
+    
+    @Test
+    public void testArchersAvenue() throws Exception{
+    
+    
+    
     }
     
 }
