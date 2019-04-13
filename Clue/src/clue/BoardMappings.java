@@ -34,7 +34,7 @@ public final class BoardMappings {
     public static void main(String[] args){//TODO:              delete me final submission
         System.out.println("[BoardMappings.main (temp, delete main later)] running example1 (BoardMappings.main)");
         try {
-            BoardMappings boardMappings = new BoardMappings("tiles.csv", "doors.csv",6,8);
+            BoardMappings boardMappings = new BoardMappings("testCsv/tiles1.csv", "testCsv/doors1.csv",6,8);
         } catch (NoSuchRoomException ex) {
             System.out.println("oof");
             Logger.getLogger(BoardMappings.class.getName()).log(Level.SEVERE, null, ex);
@@ -230,10 +230,11 @@ public final class BoardMappings {
      */
     public Room getRoom(int roomId) throws NoSuchRoomException{
 
-        if (roomId <= rooms.length && roomId > 0){
-            return rooms[roomId-1];//room with id n is stored at index n-1
+        //"trying to get roomid: "+roomId);
+        if (roomId < rooms.length && roomId >= 0){
+            return rooms[roomId];
         }
-        throw new NoSuchRoomException();
+        throw new NoSuchRoomException("roomId");
 
     }
     /**
@@ -258,7 +259,7 @@ public final class BoardMappings {
             
             return mappings[y][x];
         }
-        else if ( x == -1 && y > 0){//trying to get a room tile using room id
+        else if ( x == -1 && y >= 0){//trying to get a room tile using room id
             return getRoom(y);  
         }
         else{
@@ -277,7 +278,7 @@ public final class BoardMappings {
         
         Door door;
         for (ArrayList<String> row : csvData){
-            door = new Door(Integer.parseInt(row.get(0).replaceAll("[^0-9]+", "")), Integer.parseInt(row.get(1).replaceAll("[^0-9]+", "")), Integer.parseInt(row.get(2).replaceAll("[^0-9]+", "")));
+            door = new Door(Integer.parseInt(row.get(0).replaceAll("[^0-9]+", ""))-1, Integer.parseInt(row.get(1).replaceAll("[^0-9]+", "")), Integer.parseInt(row.get(2).replaceAll("[^0-9]+", "")));
             doors.add(door);
         }
         return doors;
@@ -291,7 +292,7 @@ public final class BoardMappings {
     public Room[] loadRooms(int roomCount) {
         Room [] loadedRooms = new Room[roomCount];
         for (int i = 0; i < roomCount; i++){
-            loadedRooms[i] = new Room(new RoomCard(i+1));//room n is stored at index n-1
+            loadedRooms[i] = new Room(new RoomCard(i));
         }
         return loadedRooms;
     }
@@ -359,7 +360,7 @@ public final class BoardMappings {
                                     throw new NoSuchRoomException();
                                 }
                                 else{
-                                    getRoom(Integer.parseInt(cell)).addLocation(x,y);
+                                    getRoom(Integer.parseInt(cell)-1).addLocation(x,y);
                                 }
                             }
                             catch (NumberFormatException ex){
@@ -409,7 +410,7 @@ public final class BoardMappings {
                         }    
                     }
                     else{
-                        System.out.println((currentTile.getY() == -1 || currentTile.getX() == -1)+",,,,,,,,,,,"+currentTile.getX()+","+currentTile.getY());
+                        //(currentTile.getY() == -1 || currentTile.getX() == -1)+",,,,,,,,,,,"+currentTile.getX()+","+currentTile.getY());
                         throw new NullPointerException("[BoardMappings.createTileMappings]@mw434 FATAL ERROR CODED WRONG");
                     
                     }
@@ -433,8 +434,9 @@ public final class BoardMappings {
             
             try {
                 room = getTile(-1, door.getRoomY());
+                //System.out.println("R"+room);
                 outside = getTile(door.getTileX(), door.getTileY());
-                
+                //System.out.println("O"+outside);
                 room.addAdjacentBoth(outside);
             } catch (NoSuchRoomException ex) {
                 throw ex;
@@ -442,8 +444,8 @@ public final class BoardMappings {
             catch (NullPointerException ex){
                 throw new NoSuchTileException("door csv file contains an illegal door, the outside tile index (1,2) must be the x y coordinates of a base tile or special tile");
             }
-            catch (ArrayIndexOutOfBoundsException ec){
-                throw new NoSuchTileException("attempted to create door outside of tile grid at: "+door.getTileX()+","+ door.getTileY());
+            catch (ArrayIndexOutOfBoundsException ex){
+                throw new NoSuchTileException(ex.toString());
             }
         }
     }
