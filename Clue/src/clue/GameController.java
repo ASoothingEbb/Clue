@@ -82,10 +82,17 @@ public final class GameController {
         actionLog = new ArrayList();
         state = new GameState(players);
         if (human + ai > 0) {
+        LinkedList<Tile> startingTiles = bm.getStartingTiles();
+        for (Player p : players){
+            if (p.isActive()){
+                
+                p.setPosition(startingTiles.poll());
+            }
+        } 
             performAction(new StartAction());
         } else {
             endGame();
-        }
+        }        
     }
 
     /**
@@ -95,7 +102,7 @@ public final class GameController {
      * @throws UnknownActionException
      * @throws InterruptedException
      */
-    private void performAction(Action action) throws UnknownActionException, InterruptedException, TileOccupiedException {
+    public void performAction(Action action) throws UnknownActionException, InterruptedException, TileOccupiedException {
         Action nextAction = null;
         player = players.get(state.getPlayerTurn());
         action.execute();

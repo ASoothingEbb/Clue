@@ -11,6 +11,7 @@ import clue.tile.Door;
 import clue.tile.Room;
 import clue.tile.Tile;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -47,8 +48,8 @@ public class BoardMappingsTest {
     }
 
     @Test
-    public void testCorrectStartingLocations() {
-        System.out.println("testCorrectStartingLocations");
+    public void testCorrectStartingLocationsNoIds() {
+        System.out.println("testCorrectStartingLocationsNoIds");
         try {
             BoardMappings boardMappings = new BoardMappings("testCsv/tiles1.csv", "testCsv/doors1.csv",6,8);
   
@@ -64,6 +65,30 @@ public class BoardMappingsTest {
         }  
         
     }
+    
+    @Test
+    public void testCorrectStartingLocationsWithIds() {
+        System.out.println("testCorrectStartingLocationsWithIds");
+        try {
+            BoardMappings boardMappings = new BoardMappings("testCsv/tiles1WithIds.csv", "testCsv/doors1.csv",6,8);
+  
+            //"testCsv/tiles1.csv" contains two starting locations at 5,6 and 1,7
+            LinkedList<Tile> startingLocations = boardMappings.getStartingTiles();
+        
+            assertTrue(startingLocations.poll() == boardMappings.getTile(5,6));
+            assertTrue(startingLocations.poll() == boardMappings.getTile(1,7));
+            assertTrue(startingLocations.poll() == boardMappings.getTile(5,0));
+            
+        } catch (NoSuchRoomException | NoSuchTileException | MissingRoomDuringCreationException ex) {
+            System.out.println(ex);
+            fail(); 
+        }  
+        
+    }
+    
+    
+    
+    
     
     @Test
     public void testAddDoorsToTileAdjacencies(){
