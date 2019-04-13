@@ -183,11 +183,11 @@ public final class BoardMappings {
     }
     
     /**
-     * Gets the number of rooms
-     * @return the number of rooms
+     * Gets all of the rooms
+     * @return the rooms
      */
-    public int getNumberOfRooms(){
-        return rooms.length;
+    public Room[] getRooms(){
+        return rooms;
     }
     
     
