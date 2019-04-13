@@ -77,7 +77,7 @@ public class GameState {
      */
     public void unregister(Player player) {
         player.removeFromPlay();
-        playersNumber = players.size() - 1;
+        playersNumber = players.size();
     }
 
     /**
@@ -119,7 +119,7 @@ public class GameState {
      */
     public void nextTurn(int player) {
         previousPlayer = currentPlayer;
-        currentPlayer = players.get(player-1);
+        currentPlayer = players.get(player);
         turn = currentPlayer.getId();
     }
 
@@ -149,7 +149,7 @@ public class GameState {
     }
 
     public Player getPlayer(int id) {
-        return players.get(id-1);
+        return players.get(id);
     }
 
     /**
