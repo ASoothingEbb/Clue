@@ -105,6 +105,7 @@ public final class BoardMappings {
         
         ArrayList<ArrayList<String>> tiles = loadCsv2D(tileRoomLayoutPath);
         calculateBoardWidthHeight(tiles);//sets the values of boardWidth and boardHeight
+        paddWithEmpty(tiles);//pads the 2d string representation of the tile csv
         int roomCount = getRoomCount(tiles);
         
         //System.out.println(boardWidth+","+boardHeight);
@@ -149,7 +150,7 @@ public final class BoardMappings {
      * @param tiles the 2d representation of the tiles csv
      * 
      */
-    public void calculateBoardWidthHeight(ArrayList<ArrayList<String>>tiles){
+    private void calculateBoardWidthHeight(ArrayList<ArrayList<String>> tiles){
         
         int maxWidth = -1;
         int lastRowWithValue = -1;
@@ -181,6 +182,21 @@ public final class BoardMappings {
         boardHeight = lastRowWithValue+1;
     
     }
+    
+    /**
+     * Pads the 2d representation of the tile csv with empty tile representation
+     * @param tiles the 2d representation of the tiles csv
+     */
+    private void paddWithEmpty(ArrayList<ArrayList<String>> tiles){
+        for (int i = 0; i < tiles.size(); i++){
+            ArrayList<String> row = tiles.get(i);
+            while (row.size() < boardWidth){
+                row.add("-1");
+            }
+        } 
+    }
+        
+        
     
     
     /**
@@ -319,14 +335,28 @@ public final class BoardMappings {
      * @param path the path of the csv file
      * @return list of Door objects 
      */
-    public ArrayList<Door> loadCsvDoors(String path) {
+    public ArrayList<Door> loadCsvDoors(String path) throws NoSuchTileException, NoSuchRoomException {
         ArrayList<Door> doors = new ArrayList<>();
         ArrayList<ArrayList<String>> csvData = loadCsv2D(path);
-        
         Door door;
         for (ArrayList<String> row : csvData){
-            door = new Door(Integer.parseInt(row.get(0).replaceAll("[^0-9]+", ""))-1, Integer.parseInt(row.get(1).replaceAll("[^0-9]+", "")), Integer.parseInt(row.get(2).replaceAll("[^0-9]+", "")));
-            doors.add(door);
+            if (row.get(0).equals("")){
+                continue;
+            }
+            try{
+                if (Integer.parseInt(row.get(0).replaceAll("[^0-9]+", ""))-1 < getRooms().length){
+                    door = new Door(Integer.parseInt(row.get(0).replaceAll("[^0-9]+", ""))-1, Integer.parseInt(row.get(1).replaceAll("[^0-9]+", "")), Integer.parseInt(row.get(2).replaceAll("[^0-9]+", "")));
+                    doors.add(door);
+                }
+                else{
+                    throw new NoSuchRoomException("Attempted to create door to invalid room with csv value: "+Integer.parseInt(row.get(0).replaceAll("[^0-9]+", "")));
+                }
+                
+            }
+            catch (NumberFormatException ex){
+                throw new NoSuchTileException("Attempted to create door (from door csv) with: roomid = "+row.get(0) + "tile.x = "+row.get(1)+" tile.y = "+row.get(2));
+            }
+            
         }
         return doors;
     }
