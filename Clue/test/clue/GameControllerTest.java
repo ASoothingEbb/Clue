@@ -59,7 +59,7 @@ public class GameControllerTest {
     public void tearDown() {
     }
 
-    //@Test
+    @Test
     public void testSetsFirstPlayerTurn() throws Exception{
         System.out.println("setsFirstPlayerTurn");
         
@@ -73,7 +73,7 @@ public class GameControllerTest {
         assertEquals(p0.getId(),gc.getPlayer().getId());
     }
     
-    //@Test
+    @Test
     public void testPlayersAtCorrectStartingLocations() throws Exception{
         System.out.println("playersAtCorrectStartingLocations");
         
@@ -94,7 +94,7 @@ public class GameControllerTest {
     /**
      * Test of performAction method, of class GameController.
      */
-    //@Test
+    @Test
     public void testPerformAction() throws Exception {
         System.out.println("performAction");
        
@@ -108,7 +108,7 @@ public class GameControllerTest {
     /**
      * Test of suggest method, of class GameController.
      */
-    //@Test
+    @Test
     public void testSuggest() throws InterruptedException, UnknownActionException, TileOccupiedException {
         System.out.println("suggest");
         fail("The test case is a prototype.");
@@ -117,7 +117,7 @@ public class GameControllerTest {
     /**        instance = new GameController(new ArrayList<Player>());
      * Test of getLastAction method, of class GameController.
      */
-    //@Test
+    @Test
     public void testGetLastAction() {
         System.out.println("getLastAction");
         fail("The test case is a prototype.");
@@ -127,7 +127,7 @@ public class GameControllerTest {
     /**
      * Test of getPlayer method, of class GameController.
      */
-    //@Test
+    @Test
     public void testGetPlayer() {
         System.out.println("getPlayer");
         fail("The test case is a prototype.");
@@ -137,7 +137,7 @@ public class GameControllerTest {
     /**
      * Test of roll method, of class GameController.
      */
-    //@Test
+    @Test
     public void testRoll() throws Exception{
         System.out.println("roll");
         gc = new GameController(2,0,"testCsv/tiles1WithIds.csv", "testCsv/doors1.csv");
@@ -154,7 +154,7 @@ public class GameControllerTest {
     /**
      * Test of move method, of class GameController.
      */
-    //@Test
+    @Test
     public void testMove() throws Exception {
         System.out.println("move");
         
@@ -198,7 +198,7 @@ public class GameControllerTest {
     
     
     
-    //@Test
+    @Test
     public void testMoveEndMove2Players() throws Exception{
     System.out.println("moveEndMove2Players");
     
@@ -263,7 +263,7 @@ public class GameControllerTest {
 
     }
     
-    //@Test
+    @Test
     public void testMoveTwiceOneTurn() throws Exception{
         System.out.println("moveTwiceOneTurn");
         
@@ -318,7 +318,7 @@ public class GameControllerTest {
     }     
         
     
-    //@Test
+    @Test
     public void testHandOutCards() throws Exception{
         System.out.println("handOutCards");
         
@@ -334,19 +334,18 @@ public class GameControllerTest {
                 cards.add(c);
             }
         }
-        assertEquals(18,cards.size());
+        assertEquals(11,cards.size());//numberOfPersons + numberOfRooms + numberOfWeapons - 3 (for murder cards)
                 
-                
-                
-               
-    
-    
+        for (Card murderCard : gc.getMurderCards()){//check that no players have the murder cards
+            assertFalse(cards.contains(murderCard));
+        }
+
     }
 
     /**
      * Test of showCard method, of class GameController.
      */
-    //@Test
+    @Test
     public void testShowCard() throws Exception {
         System.out.println("showCard");
         fail("The test case is a prototype.");
@@ -355,7 +354,7 @@ public class GameControllerTest {
     /**
      * Test of accuse method, of class GameController.
      */
-    //@Test
+    @Test
     public void testAccuse() throws Exception {
         //System.out.println("accuse");
         fail("The test case is a prototype.");
@@ -365,7 +364,7 @@ public class GameControllerTest {
     /**
      * Test of drawCard method, of class GameController.
      */
-    //@Test
+    @Test
     public void testDrawCard() {
         //System.out.println("drawCard");
         fail("The test case is a prototype.");
@@ -375,7 +374,7 @@ public class GameControllerTest {
     /**
      * Test of getActions method, of class GameController.
      */
-    //@Test
+    @Test
     public void testGetActions() {
         //System.out.println("getActions");
         fail("The test case is a prototype.");
@@ -385,7 +384,7 @@ public class GameControllerTest {
     /**
      * Test of getPlayer method, of class GameController.
      */
-    //@Test
+    @Test
     public void testGetPlayer_0args() {
         //System.out.println("getPlayer");
         fail("The test case is a prototype.");
@@ -395,7 +394,7 @@ public class GameControllerTest {
     /**
      * Test of getPlayer method, of class GameController.
      */
-    //@Test
+    @Test
     public void testGetPlayer_int() {
         //System.out.println("getPlayer");
         fail("The test case is a prototype.");
@@ -405,7 +404,7 @@ public class GameControllerTest {
     /**
      * Test of getPlayers method, of class GameController.
      */
-    //@Test
+    @Test
     public void testGetPlayers() {
         //System.out.println("getPlayers");
         fail("The test case is a prototype.");
@@ -415,7 +414,7 @@ public class GameControllerTest {
     /**
      * Test of move method, of class GameController.
      */
-    //@Test
+    @Test
     public void testMove_Queue() throws Exception {
         //System.out.println("move");
         fail("The test case is a prototype.");
@@ -425,7 +424,7 @@ public class GameControllerTest {
     /**
      * Test of move method, of class GameController.
      */
-    //@Test
+    @Test
     public void testMove_Tile() throws Exception {
         //System.out.println("move");
         fail("The test case is a prototype.");
