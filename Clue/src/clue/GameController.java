@@ -38,9 +38,9 @@ public final class GameController {
     private GameState state;
     private final BoardMappings bm;
     private List<IntrigueCard> cards;
-    private PersonCard person;
-    private RoomCard room;
-    private WeaponCard weapon;
+    private PersonCard murderPerson;
+    private RoomCard murderRoom;
+    private WeaponCard murderWeapon;
     private List<Player> players;
     private Player winner;
     private Player player;
@@ -56,7 +56,7 @@ public final class GameController {
      * @param human
      * @param ai
      * @param tilePath
-     * @param boardHeight
+     * @param doorPath
      * @throws java.lang.InterruptedException
      * @throws clue.action.UnknownActionException
      * @throws clue.tile.NoSuchRoomException
@@ -288,36 +288,58 @@ public final class GameController {
     }
 
     /**
-     * Distributes the cards between the active players in the game
+     * Distributes the cards between the active players in the game and sets the murder cards
      */
     private void handOutCards(){
         int numberOfWeapons = 6;
         int numberOfPersons = 6;
                 
         ArrayList<Card> cards = new ArrayList<>();
+        Random rand = new Random();
+        int randInt = -1;
               
         Room[] rooms = bm.getRooms();
+        randInt = rand.nextInt(rooms.length);
         try {
             for (int i = 0; i < rooms.length; i++){
-                cards.add(rooms[i].getCard());
+                if (i == randInt){
+                    murderRoom = rooms[i].getCard();
+                }
+                else{
+                    cards.add(rooms[i].getCard());
+                }
+                
             }
         }
         catch ( NoSuchRoomException ex){
             System.out.println(ex);
         }
         
-                
+        randInt = rand.nextInt(numberOfWeapons);       
         for (int i = 0; i < numberOfWeapons; i++){
-            cards.add(new WeaponCard(i));
+            if (i == randInt){
+                murderWeapon = new WeaponCard(i);
+            }
+            else{
+                cards.add(new WeaponCard(i));
+            }
+            
         }
+        randInt = rand.nextInt(numberOfWeapons);   
+        
         for (int i = 0; i < numberOfPersons; i++){
-            cards.add(new PersonCard(i));
+            
+            if (i == randInt){
+                murderPerson = new PersonCard(i);
+            }
+            else{
+                cards.add(new PersonCard(i));
+            }
+            
         }
                 
-        Random rand = new Random();
-        int randInt = -1;
+        
         int playerIndex = 0;
-
         while (!cards.isEmpty()){
             if (playerIndex >= players.size()){
                 playerIndex = 0;
@@ -357,9 +379,9 @@ public final class GameController {
     /**
      * Creates a new SuggestAction for a player
      *
-     * @param person the person card to be suggested
-     * @param room the room card to be suggested
-     * @param weapon the weapon card to be suggested
+     * @param person the murderPerson card to be suggested
+     * @param room the murderRoom card to be suggested
+     * @param weapon the murderWeapon card to be suggested
      * @param player the suggesting Player
      * @throws clue.action.UnknownActionException
      * @throws java.lang.InterruptedException
@@ -386,13 +408,13 @@ public final class GameController {
      *
      * @param person the character to accuse
      * @param room the crime scene to accuse
-     * @param weapon the murder weapon to accuse
+     * @param weapon the murder murderWeapon to accuse
      * @throws UnknownActionException
      * @throws InterruptedException
      * @throws clue.tile.TileOccupiedException
      */
     public void accuse(PersonCard person, RoomCard room, WeaponCard weapon) throws UnknownActionException, InterruptedException, TileOccupiedException {
-        performAction(new AccuseAction(player, person, room, weapon, person == this.person && room == this.room && weapon == this.weapon));
+        performAction(new AccuseAction(player, person, room, weapon, person == this.murderPerson && room == this.murderRoom && weapon == this.murderWeapon));
     }
 
     /**
@@ -465,5 +487,13 @@ public final class GameController {
                 performAction(new ThrowAgainAction(player, (ThrowAgainIntrigue) card));
                 break;
         }
+    }
+    
+    public ArrayList<Card> getMurderCards(){
+        ArrayList<Card> result = new ArrayList<>();
+        result.add(murderPerson);
+        result.add(murderRoom);
+        result.add(murderWeapon);
+       return result;
     }
 }
