@@ -368,22 +368,26 @@ public final class GameController {
      * @throws clue.GameController.MovementException the movements were invalid
      * @throws clue.tile.TileOccupiedException
      */
-    public boolean move(Queue<Tile> tiles) throws UnknownActionException, InterruptedException, MovementException, TileOccupiedException {
-        if (tiles.size() <= player.getMoves()) {
-            MoveAction moveAction = new MoveAction(player, tiles);
-            performAction(moveAction);
-            return moveAction.result;
-        } else {
-            throw new MovementException();
-        }
-    }
-
     public boolean move(Tile tile) throws UnknownActionException, InterruptedException, MovementException, TileOccupiedException {
-        Queue<Tile> list = new LinkedList();
-        list.add(tile);
-        MoveAction moveAction = new MoveAction(player, list);
+        MoveAction moveAction = new MoveAction(player, tile, bm.getBoardWidth(), bm.getBoardHeight());
         performAction(moveAction);
         return moveAction.result;
+        
+    }
+        /**
+     * Try to move current player to tile at x,y
+     * @param x
+     * @param y
+     * @return true if move was successful, false otherwise
+     * @throws NoSuchRoomException
+     * @throws UnknownActionException
+     * @throws InterruptedException
+     * @throws clue.GameController.MovementException
+     * @throws TileOccupiedException 
+     */
+    public boolean move(int x, int y) throws NoSuchRoomException, UnknownActionException, InterruptedException, MovementException, TileOccupiedException{
+        return move(getTile(x,y));
+    
     }
 
     /**
@@ -520,20 +524,5 @@ public final class GameController {
         return bm.getTile(x,y);
     
     }
-    
-    /**
-     * Trys to move current player to tile at x,y
-     * @param x
-     * @param y
-     * @return true if move was successful, false otherwise
-     * @throws NoSuchRoomException
-     * @throws UnknownActionException
-     * @throws InterruptedException
-     * @throws clue.GameController.MovementException
-     * @throws TileOccupiedException 
-     */
-    public boolean move(int x, int y) throws NoSuchRoomException, UnknownActionException, InterruptedException, MovementException, TileOccupiedException{
-        return move(getTile(x,y));
-    
-    }
+   
 }
