@@ -189,8 +189,14 @@ public final class GameController {
                 }
                 break;
             case SUGGEST:
-                if (action.result && state.getAction().actionType == ActionType.STARTTURN | state.getAction().actionType == ActionType.MOVE) {
-                    nextAction = new ShowCardsAction(((SuggestAction) action).show, ((SuggestAction) action).player, ((SuggestAction) action).foundCards);
+                if (state.getAction().actionType == ActionType.STARTTURN | state.getAction().actionType == ActionType.MOVE) {
+                    if (action.result){
+                        nextAction = new ShowCardsAction(((SuggestAction) action).show, ((SuggestAction) action).player, ((SuggestAction) action).foundCards);
+                    }
+                    else{
+                        //TODO
+                        //tell GUI that no one had one of those cards
+                    }
                 }
                 actionLog.add(turns, action);
                 break;
@@ -466,7 +472,6 @@ public final class GameController {
         IntrigueCard card = ((SpecialTile) loc).getIntrigue(player);
         switch (card.cardType) {
             case AVOIDSUGGESTION:
-                performAction(new AvoidSuggestionAction(player, (AvoidSuggestionIntrigue) card));
                 break;
             case EXTRATURN:
                 //TODOplayer
@@ -485,6 +490,10 @@ public final class GameController {
         }
     }
     
+    /**
+     * Gets the 3 murder cards
+     * @return the 3 murder cards
+     */
     public ArrayList<Card> getMurderCards(){
         ArrayList<Card> result = new ArrayList<>();
         result.add(murderPerson);
