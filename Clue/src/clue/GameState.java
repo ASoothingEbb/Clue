@@ -105,7 +105,7 @@ public class GameState {
 
     public int getNextPointer(int i) {
         if (i + 1 == players.size()) {
-            i = 1;
+            i = 0;
         } else {
             i++;
         }
