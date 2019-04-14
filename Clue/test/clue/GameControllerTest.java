@@ -7,21 +7,26 @@ package clue;
 
 import clue.GameController.MovementException;
 import clue.action.Action;
+import clue.action.ActionType;
 import clue.action.MoveAction;
 import clue.action.StartAction;
 import clue.action.StartTurnAction;
 import clue.action.UnknownActionException;
 import clue.card.Card;
+import clue.card.CardTest;
 import clue.card.IntrigueCard;
 import clue.card.PersonCard;
 import clue.card.RoomCard;
 import clue.card.WeaponCard;
+import clue.player.AIPlayer;
 import clue.player.Player;
 import clue.tile.NoSuchRoomException;
 import clue.tile.NoSuchTileException;
 import clue.tile.Tile;
 import clue.tile.TileOccupiedException;
+import java.util.AbstractQueue;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import org.junit.After;
@@ -118,10 +123,11 @@ public class GameControllerTest {
      * Test of getLastAction method, of class GameController.
      */
     @Test
-    public void testGetLastAction() {
+    public void testGetLastAction() throws UnknownActionException, InterruptedException, TileOccupiedException {
         System.out.println("getLastAction");
-        fail("The test case is a prototype.");
-
+        Card card = new CardImpl();
+        gc.showCard(card);
+        assertEquals(ActionType.SHOWCARD,gc.getLastAction().actionType);
     }
 
     /**
@@ -130,8 +136,7 @@ public class GameControllerTest {
     @Test
     public void testGetPlayer() {
         System.out.println("getPlayer");
-        fail("The test case is a prototype.");
-
+        gc.getPlayer();
     }
 
     /**
@@ -352,9 +357,9 @@ public class GameControllerTest {
      */
     @Test
     public void testGetActions() {
-        //System.out.println("getActions");
+        System.out.println("getActions");
+        gc.getActions();
         fail("The test case is a prototype.");
-
     }
 
     /**
@@ -382,9 +387,14 @@ public class GameControllerTest {
      */
     @Test
     public void testGetPlayers() {
-        //System.out.println("getPlayers");
-        fail("The test case is a prototype.");
- 
+        System.out.println("getPlayers");
+        List<Player> expResult = new ArrayList();
+        expResult.add(new Player(0,gc));
+        expResult.add(new AIPlayer(1,gc));
+        List<Player> result = gc.getPlayers();
+        for(Player p: expResult){
+            assertTrue(gc.getPlayer(p.getId()).isActive());
+        }
     }
 
     /**
@@ -392,9 +402,16 @@ public class GameControllerTest {
      */
     @Test
     public void testMove_Queue() throws Exception {
-        //System.out.println("move");
-        fail("The test case is a prototype.");
-
+        System.out.println("move");
+        Queue<Tile> tiles = new LinkedList();
+        Tile tile = new Tile(0,0);
+        Tile tile2 = new Tile(0,1);
+        tile.addAdjacent(tile2);
+        gc.getPlayer().setPosition(tile);
+        gc.getPlayer().setMoves(1);
+        tiles.add(tile2);
+        gc.move(tiles);
+        assertEquals(tile2,gc.getPlayer().getPosition());
     }
 
     /**
@@ -402,9 +419,32 @@ public class GameControllerTest {
      */
     @Test
     public void testMove_Tile() throws Exception {
-        //System.out.println("move");
-        fail("The test case is a prototype.");
+        System.out.println("move");
+        Tile tile = new Tile(0,0);
+        Tile tile2 = new Tile(0,1);
+        tile.addAdjacent(tile2);
+        gc.getPlayer().setPosition(tile);
+        gc.getPlayer().setMoves(1);
+        gc.move(tile2);
+        assertEquals(tile2,gc.getPlayer().getPosition());
+    }
 
+    /**
+     * Test of endTurn method, of class GameController.
+     */
+    @Test
+    public void testEndTurn() throws Exception {
+        System.out.println("endTurn");
+        Player expResult = gc.getPlayer();
+        gc.endTurn();
+        assertNotEquals(expResult, gc.getPlayer());
     }
     
+    public class CardImpl extends Card{
+        
+        public CardImpl() {
+            super(0);
+        }
+        
+    }
 }
