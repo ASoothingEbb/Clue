@@ -56,8 +56,6 @@ public final class GameController {
      * @param human
      * @param ai
      * @param tilePath
-     * @param doorPath
-     * @param boardWidth
      * @param boardHeight
      * @throws java.lang.InterruptedException
      * @throws clue.action.UnknownActionException
@@ -67,9 +65,9 @@ public final class GameController {
      * @throws clue.GameController.TooManyPlayersException thrown when player count exceeds 6 or the number of starting locations
      * @throws clue.tile.TileOccupiedException
      */
-    public GameController(int human, int ai, String tilePath, String doorPath, int boardWidth, int boardHeight) throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, TooManyPlayersException, TileOccupiedException {
+    public GameController(int human, int ai, String tilePath, String doorPath) throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, TooManyPlayersException, TileOccupiedException {
         //TODO
-        this.bm = new BoardMappings(tilePath, doorPath, boardWidth, boardHeight);
+        this.bm = new BoardMappings(tilePath, doorPath);
         LinkedList<Tile> startingTiles = bm.getStartingTiles();
         List<Player> players = new ArrayList();
         for (int i = 0; i < human; i++) {
