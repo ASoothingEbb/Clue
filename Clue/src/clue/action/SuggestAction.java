@@ -54,20 +54,32 @@ public class SuggestAction extends Action {
         int j = player.getId();
         boolean found = false;
         for (int i = 0; i < state.playersNumber; i++) {
-            check = state.getPlayer(j);
-            if (j != player.getId() && check.getActiveSuggestionBlock() == false) {
-                for (Card c : cards) {
-                    if (check.hasCard(c)) {
-                        show = state.getPlayer(j);
-                        foundCards.add(c);
-                        found = true;
+            if (!found){
+                check = state.getPlayer(j);
+                if (j != player.getId()) {
+                    if (check.getActiveSuggestionBlock() == false){
+                        for (Card c : cards) {
+                            if (check.hasCard(c)) {
+                                show = state.getPlayer(j);
+                                foundCards.add(c);
+                                found = true;
+                            }
+                        }
+                    }
+                    else{
+
+                        for (Card c : cards) {
+                            if (check.hasCard(c)) {
+                               //TODO
+                               //notify player with id j that thier avoid suggestion prevented them from revleaing card c
+                            }
+                        }
+
                     }
                 }
-                if(found){
-                    break;
-                }
+                j = state.getNextPointer(j);
             }
-            j = state.getNextPointer(j);
+            
         }
         result = found;
     }

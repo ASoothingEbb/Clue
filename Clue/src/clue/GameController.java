@@ -191,8 +191,14 @@ public final class GameController {
                 }
                 break;
             case SUGGEST:
-                if (action.result && state.getAction().actionType == ActionType.STARTTURN | state.getAction().actionType == ActionType.MOVE) {
-                    nextAction = new ShowCardsAction(((SuggestAction) action).show, ((SuggestAction) action).player, ((SuggestAction) action).foundCards);
+                if (state.getAction().actionType == ActionType.STARTTURN | state.getAction().actionType == ActionType.MOVE) {
+                    if (action.result){
+                        nextAction = new ShowCardsAction(((SuggestAction) action).show, ((SuggestAction) action).player, ((SuggestAction) action).foundCards);
+                    }
+                    else{
+                        //TODO
+                        //tell GUI that no one had one of those cards
+                    }
                 }
                 actionLog.add(turns, action);
                 break;
@@ -362,18 +368,22 @@ public final class GameController {
      * @throws clue.GameController.MovementException the movements were invalid
      * @throws clue.tile.TileOccupiedException
      */
-    public void move(Queue<Tile> tiles) throws UnknownActionException, InterruptedException, MovementException, TileOccupiedException {
+    public boolean move(Queue<Tile> tiles) throws UnknownActionException, InterruptedException, MovementException, TileOccupiedException {
         if (tiles.size() <= player.getMoves()) {
-            performAction(new MoveAction(player, tiles));
+            MoveAction moveAction = new MoveAction(player, tiles);
+            performAction(moveAction);
+            return moveAction.result;
         } else {
             throw new MovementException();
         }
     }
 
-    public void move(Tile tile) throws UnknownActionException, InterruptedException, MovementException, TileOccupiedException {
+    public boolean move(Tile tile) throws UnknownActionException, InterruptedException, MovementException, TileOccupiedException {
         Queue<Tile> list = new LinkedList();
         list.add(tile);
-        performAction(new MoveAction(player, list));
+        MoveAction moveAction = new MoveAction(player, list);
+        performAction(moveAction);
+        return moveAction.result;
     }
 
     /**
@@ -470,7 +480,6 @@ public final class GameController {
         IntrigueCard card = ((SpecialTile) loc).getIntrigue(player);
         switch (card.cardType) {
             case AVOIDSUGGESTION:
-                performAction(new AvoidSuggestionAction(player, (AvoidSuggestionIntrigue) card));
                 break;
             case EXTRATURN:
                 //TODOplayer
@@ -489,11 +498,42 @@ public final class GameController {
         }
     }
     
+    /**
+     * Gets the 3 murder cards
+     * @return the 3 murder cards
+     */
     public ArrayList<Card> getMurderCards(){
         ArrayList<Card> result = new ArrayList<>();
         result.add(murderPerson);
         result.add(murderRoom);
         result.add(murderWeapon);
        return result;
+    }
+    
+    /**
+     * Gets the tile given x,y coordinates
+     * @param x the x coordinate
+     * @param y the y coordinate
+     * @return the tile at x y
+     */
+    public Tile getTile(int x, int y) throws NoSuchRoomException{
+        return bm.getTile(x,y);
+    
+    }
+    
+    /**
+     * Trys to move current player to tile at x,y
+     * @param x
+     * @param y
+     * @return true if move was successful, false otherwise
+     * @throws NoSuchRoomException
+     * @throws UnknownActionException
+     * @throws InterruptedException
+     * @throws clue.GameController.MovementException
+     * @throws TileOccupiedException 
+     */
+    public boolean move(int x, int y) throws NoSuchRoomException, UnknownActionException, InterruptedException, MovementException, TileOccupiedException{
+        return move(getTile(x,y));
+    
     }
 }
