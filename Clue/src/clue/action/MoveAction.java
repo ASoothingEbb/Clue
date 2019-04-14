@@ -27,7 +27,7 @@ public class MoveAction extends Action {
     /**
      * Creates a new MoveAction
      *
-     * @param s source Tile
+     * 
      * @param t destination Tile
      * @param boardWidth
      * @param boardHeight
@@ -48,7 +48,13 @@ public class MoveAction extends Action {
      */
     @Override
     public void execute() {
-        result = BFS();
+        if (t.isFull()){
+            result = false;
+        }
+        else{
+            result = BFS();  
+        }    
+        
     }
 
     /**
@@ -85,6 +91,7 @@ public class MoveAction extends Action {
             
             currentPath = pathList.get(0);
             //System.out.println("expanding a path to have one extra distance from source");
+            //System.out.println(currentPath.size());
             
             for (Tile currentTile : currentPath.getLast().getAdjacent()){//try to explore all the tiles adjacent to the last tile in the path
                 if (currentTile == t){//shortest path found to target
