@@ -34,7 +34,7 @@ public final class BoardMappings {
     public static void main(String[] args){//TODO:              delete me final submission
         System.out.println("[BoardMappings.main (temp, delete main later)] running example1 (BoardMappings.main)");
         try {
-            BoardMappings boardMappings = new BoardMappings("testCsv/tiles1.csv", "testCsv/doors1.csv",6,8);
+            BoardMappings boardMappings = new BoardMappings("testCsv/tiles1.csv", "testCsv/doors1.csv");
         } catch (NoSuchRoomException ex) {
             System.out.println("oof");
             Logger.getLogger(BoardMappings.class.getName()).log(Level.SEVERE, null, ex);
@@ -94,22 +94,18 @@ public final class BoardMappings {
      * 
      * @param tileRoomLayoutPath
      * @param doorLocationsPath
-     * @param w board width
-     * @param h board height
      * @throws NoSuchRoomException
      * @throws NoSuchTileException 
      * @throws clue.MissingRoomDuringCreationException 
      */
-    public BoardMappings(String tileRoomLayoutPath, String doorLocationsPath, int w, int h) throws NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException{
+    public BoardMappings(String tileRoomLayoutPath, String doorLocationsPath) throws NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException{
 
         startTiles = new LinkedList<>();
         startingTilesPQ = new PriorityQueue<>();
         
         ArrayList<ArrayList<String>> tiles = loadCsv2D(tileRoomLayoutPath);
+        calculateBoardWidthHeight(tiles);//sets the values of boardWidth and boardHeight
         int roomCount = getRoomCount(tiles);
-        
-        boardWidth = w;//24
-        boardHeight = h;//25
         
         //System.out.println(boardWidth+","+boardHeight);
         rooms = loadRooms(roomCount);
@@ -147,6 +143,46 @@ public final class BoardMappings {
         //    System.out.println();
         //}  
     }    
+    
+    /**
+     * Calculates the width and the height of the board from the loaded csv tile data
+     * @param tiles the 2d representation of the tiles csv
+     * 
+     */
+    public void calculateBoardWidthHeight(ArrayList<ArrayList<String>>tiles){
+        
+        int maxWidth = -1;
+        int lastRowWithValue = -1;
+        
+        int rowWidth = 0;
+        for (int i = 0; i < tiles.size(); i++){
+            ArrayList<String> row = tiles.get(i);
+            rowWidth = row.size();
+            for (int j = row.size() - 1; j >= 0; j--){
+                //reduce the width of the row by the number of empty cells after the first non empty cell
+                if (row.get(j).equals("")){
+                    rowWidth--;
+                }
+                else{//stop reducing count, non empty cell found
+                    lastRowWithValue = i;//value was found so update last row with value indicator
+                    break;
+                }
+            }
+            if (maxWidth < rowWidth){
+                maxWidth = rowWidth;
+            }    
+        
+        }
+
+        
+        
+        
+        boardWidth = maxWidth;
+        boardHeight = lastRowWithValue+1;
+    
+    }
+    
+    
     /**
      * loads the data from the csv file for the tiles maintaining the 2d structure of the csv
      * @param path the path of the csv file
