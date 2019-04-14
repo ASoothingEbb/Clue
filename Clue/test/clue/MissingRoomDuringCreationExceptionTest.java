@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package clue.action;
+package clue;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -16,9 +16,9 @@ import static org.junit.Assert.*;
  *
  * @author steve
  */
-public class ExtraTurnActionTest {
+public class MissingRoomDuringCreationExceptionTest {
     
-    public ExtraTurnActionTest() {
+    public MissingRoomDuringCreationExceptionTest() {
     }
     
     @BeforeClass
@@ -36,18 +36,5 @@ public class ExtraTurnActionTest {
     @After
     public void tearDown() {
     }
-
-    /**
-     * Test of execute method, of class ExtraTurnAction.
-     */
-    @Test
-    public void testExecute() {
-        System.out.println("execute");
-        ExtraTurnAction instance = null;
-        instance.execute();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
     
 }

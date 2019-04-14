@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package clue.action;
+package clue.client;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -16,9 +16,9 @@ import static org.junit.Assert.*;
  *
  * @author steve
  */
-public class SuggestActionTest {
+public class RoomTest {
     
-    public SuggestActionTest() {
+    public RoomTest() {
     }
     
     @BeforeClass
@@ -37,34 +37,28 @@ public class SuggestActionTest {
     public void tearDown() {
     }
 
+    /**
+     * Test of enterRoom method, of class Room.
+     */
     @Test
-    public void testSomeMethod() {
+    public void testEnterRoom() {
+        System.out.println("enterRoom");
+        Player player = null;
+        Room instance = null;
+        instance.enterRoom(player);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
     /**
-     * Test of execute method, of class SuggestAction.
+     * Test of leaveRoom method, of class Room.
      */
     @Test
-    public void testExecute() {
-        System.out.println("execute");
-        SuggestAction instance = null;
-        instance.execute();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of toString method, of class SuggestAction.
-     */
-    @Test
-    public void testToString() {
-        System.out.println("toString");
-        SuggestAction instance = null;
-        String expResult = "";
-        String result = instance.toString();
-        assertEquals(expResult, result);
+    public void testLeaveRoom() {
+        System.out.println("leaveRoom");
+        Player player = null;
+        Room instance = null;
+        instance.leaveRoom(player);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }

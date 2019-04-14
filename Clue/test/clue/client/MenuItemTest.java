@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package clue.action;
+package clue.client;
 
+import javafx.scene.paint.Color;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -16,9 +17,9 @@ import static org.junit.Assert.*;
  *
  * @author steve
  */
-public class SuggestActionTest {
+public class MenuItemTest {
     
-    public SuggestActionTest() {
+    public MenuItemTest() {
     }
     
     @BeforeClass
@@ -37,34 +38,41 @@ public class SuggestActionTest {
     public void tearDown() {
     }
 
+    /**
+     * Test of setActive method, of class MenuItem.
+     */
     @Test
-    public void testSomeMethod() {
+    public void testSetActive() {
+        System.out.println("setActive");
+        boolean active = false;
+        MenuItem instance = null;
+        instance.setActive(active);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
     /**
-     * Test of execute method, of class SuggestAction.
+     * Test of setActiveColor method, of class MenuItem.
      */
     @Test
-    public void testExecute() {
-        System.out.println("execute");
-        SuggestAction instance = null;
-        instance.execute();
+    public void testSetActiveColor() {
+        System.out.println("setActiveColor");
+        Color color = null;
+        MenuItem instance = null;
+        instance.setActiveColor(color);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
     /**
-     * Test of toString method, of class SuggestAction.
+     * Test of setInactiveColor method, of class MenuItem.
      */
     @Test
-    public void testToString() {
-        System.out.println("toString");
-        SuggestAction instance = null;
-        String expResult = "";
-        String result = instance.toString();
-        assertEquals(expResult, result);
+    public void testSetInactiveColor() {
+        System.out.println("setInactiveColor");
+        Color color = null;
+        MenuItem instance = null;
+        instance.setInactiveColor(color);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }

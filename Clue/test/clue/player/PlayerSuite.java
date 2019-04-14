@@ -17,7 +17,7 @@ import org.junit.runners.Suite;
  * @author steve
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({clue.player.HostPlayerTest.class, clue.player.NetworkPlayerTest.class, clue.player.AIPlayerTest.class, clue.player.PlayerTest.class})
+@Suite.SuiteClasses({AIPlayerTest.class, PlayerTest.class})
 public class PlayerSuite {
 
     @BeforeClass

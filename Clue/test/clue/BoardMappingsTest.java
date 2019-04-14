@@ -452,6 +452,32 @@ public class BoardMappingsTest {
                 fail(); 
             }
         }
+
+    /**
+     * Test of main method, of class BoardMappings.
+     */
+    @Test
+    public void testMain() {
+        System.out.println("main");
+        String[] args = null;
+        BoardMappings.main(args);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getStartingTiles method, of class BoardMappings.
+     */
+    @Test
+    public void testGetStartingTiles() {
+        System.out.println("getStartingTiles");
+        BoardMappings instance = null;
+        LinkedList<Tile> expResult = null;
+        LinkedList<Tile> result = instance.getStartingTiles();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
         
   
 }

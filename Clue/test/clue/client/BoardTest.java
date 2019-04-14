@@ -3,62 +3,62 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package clue.card;
+package clue.client;
 
 import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  *
  * @author steve
  */
-public class CardTypeTest {
+public class BoardTest {
     
-    public CardTypeTest() {
+    public BoardTest() {
     }
-
+    
     @BeforeClass
-    public static void setUpClass() throws Exception {
+    public static void setUpClass() {
     }
-
+    
     @AfterClass
-    public static void tearDownClass() throws Exception {
+    public static void tearDownClass() {
     }
-
+    
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
     }
-
+    
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
     }
 
     /**
-     * Test of values method, of class CardType.
+     * Test of values method, of class Board.
      */
     @Test
     public void testValues() {
         System.out.println("values");
-        CardType[] expResult = null;
-        CardType[] result = CardType.values();
+        Board[] expResult = null;
+        Board[] result = Board.values();
         assertArrayEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
     /**
-     * Test of valueOf method, of class CardType.
+     * Test of valueOf method, of class Board.
      */
     @Test
     public void testValueOf() {
         System.out.println("valueOf");
-        String arg0 = "";
-        CardType expResult = null;
-        CardType result = CardType.valueOf(arg0);
+        String name = "";
+        Board expResult = null;
+        Board result = Board.valueOf(name);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");

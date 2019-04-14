@@ -8,6 +8,7 @@ package clue;
 import clue.ai.AiSuite;
 import clue.action.ActionSuite;
 import clue.card.CardSuite;
+import clue.client.ClientSuite;
 import clue.player.PlayerSuite;
 import clue.tile.TileSuite;
 import org.junit.After;
@@ -22,7 +23,7 @@ import org.junit.runners.Suite;
  * @author steve
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({PlayerSuite.class, AiSuite.class, ActionSuite.class, CardSuite.class, GameStateTest.class, ClueTest.class, GameControllerTest.class, TileSuite.class})
+@Suite.SuiteClasses({PlayerSuite.class, AiSuite.class, ActionSuite.class, CardSuite.class, GameStateTest.class, MissingRoomDuringCreationExceptionTest.class, ClueTest.class, GameControllerTest.class, BoardMappingsTest.class, TileSuite.class, ClientSuite.class})
 public class ClueSuite {
 
     @BeforeClass

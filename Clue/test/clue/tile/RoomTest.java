@@ -114,5 +114,46 @@ public class RoomTest {
         Room r3 = new Room(new RoomCard(7));
         assertEquals(7, r3.getId());
     }
+
+    /**
+     * Test of addLocation method, of class Room.
+     */
+    @Test
+    public void testAddLocation() {
+        System.out.println("addLocation");
+        int x = 0;
+        int y = 0;
+        Room instance = new Room();
+        instance.addLocation(x, y);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getLocations method, of class Room.
+     */
+    @Test
+    public void testGetLocations() {
+        System.out.println("getLocations");
+        Room instance = new Room();
+        ArrayList expResult = null;
+        ArrayList result = instance.getLocations();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of setCard method, of class Room.
+     */
+    @Test
+    public void testSetCard() {
+        System.out.println("setCard");
+        RoomCard card = null;
+        Room instance = new Room();
+        instance.setCard(card);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
     
 }

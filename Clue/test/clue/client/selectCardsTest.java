@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package clue.action;
+package clue.client;
 
+import java.util.HashMap;
+import javafx.scene.paint.Color;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -16,9 +18,9 @@ import static org.junit.Assert.*;
  *
  * @author steve
  */
-public class AvoidSuggestionActionTest {
+public class selectCardsTest {
     
-    public AvoidSuggestionActionTest() {
+    public selectCardsTest() {
     }
     
     @BeforeClass
@@ -37,20 +39,18 @@ public class AvoidSuggestionActionTest {
     public void tearDown() {
     }
 
-    @Test
-    public void testSomeMethod() {
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
     /**
-     * Test of execute method, of class AvoidSuggestionAction.
+     * Test of show method, of class selectCards.
      */
     @Test
-    public void testExecute() {
-        System.out.println("execute");
-        AvoidSuggestionAction instance = null;
-        instance.execute();
+    public void testShow() {
+        System.out.println("show");
+        String name = "";
+        Color color = null;
+        int room = 0;
+        HashMap<String, String> ImagPathMap = null;
+        selectCards instance = new selectCards();
+        instance.show(name, color, room, ImagPathMap);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }

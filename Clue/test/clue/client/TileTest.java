@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package clue.action;
+package clue.client;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -16,9 +16,9 @@ import static org.junit.Assert.*;
  *
  * @author steve
  */
-public class SuggestActionTest {
+public class TileTest {
     
-    public SuggestActionTest() {
+    public TileTest() {
     }
     
     @BeforeClass
@@ -37,34 +37,28 @@ public class SuggestActionTest {
     public void tearDown() {
     }
 
+    /**
+     * Test of setPlayer method, of class Tile.
+     */
     @Test
-    public void testSomeMethod() {
+    public void testSetPlayer() {
+        System.out.println("setPlayer");
+        Player player = null;
+        Tile instance = null;
+        instance.setPlayer(player);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
     /**
-     * Test of execute method, of class SuggestAction.
+     * Test of removePlayer method, of class Tile.
      */
     @Test
-    public void testExecute() {
-        System.out.println("execute");
-        SuggestAction instance = null;
-        instance.execute();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of toString method, of class SuggestAction.
-     */
-    @Test
-    public void testToString() {
-        System.out.println("toString");
-        SuggestAction instance = null;
-        String expResult = "";
-        String result = instance.toString();
-        assertEquals(expResult, result);
+    public void testRemovePlayer() {
+        System.out.println("removePlayer");
+        Player player = null;
+        Tile instance = null;
+        instance.removePlayer(player);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }

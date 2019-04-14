@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package clue.action;
+package clue.client;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -16,9 +16,9 @@ import static org.junit.Assert.*;
  *
  * @author steve
  */
-public class AvoidSuggestionActionTest {
+public class SpecialCardTest {
     
-    public AvoidSuggestionActionTest() {
+    public SpecialCardTest() {
     }
     
     @BeforeClass
@@ -39,18 +39,6 @@ public class AvoidSuggestionActionTest {
 
     @Test
     public void testSomeMethod() {
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of execute method, of class AvoidSuggestionAction.
-     */
-    @Test
-    public void testExecute() {
-        System.out.println("execute");
-        AvoidSuggestionAction instance = null;
-        instance.execute();
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
