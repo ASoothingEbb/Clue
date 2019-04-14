@@ -55,11 +55,12 @@ public abstract class Action {
      * result.
      */
     public void execute() {
+        result = true;
     }
 
     @Override
     public String toString() {
-        return actionType + ","+ player + "," +  result;
+        return actionType + ","+ player.getId() + "," +  result;
     }
     
 }
