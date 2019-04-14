@@ -480,12 +480,16 @@ public class ClueClient extends Application {
         
         layout.add(board, 0, 0);
         GridPane.setMargin(board, new Insets(0, 10, 0, 0));
-        layout.add(boardFilePath, 1, 0);
-        layout.add(selectBoardFile, 2, 0);
+        layout.add(boardFilePath, 1, 0, 3, 1);
+        layout.add(selectBoardFile, 4, 0);
         GridPane.setMargin(selectBoardFile, new Insets(0, 0, 0, 10));
 
         for (int i=1; i < 7; i++) {
             Label character = getLabel("Character " + i, avenirTitle);
+            TextField characterName = getTextField(10, true);
+            characterName.setPromptText("Name");
+            
+            Label characterFile = getLabel("File", avenirTitle);
             TextField characterFilePath = getTextField(40, false);
             
             final String propertiesCharacter = "Character"+i+"Texture";
@@ -496,16 +500,22 @@ public class ClueClient extends Application {
                 characterFilePath.setText(characterTexture.getAbsolutePath());
                 textureMap.put(propertiesCharacter,characterTexture.getAbsolutePath());
             });
-            
             layout.add(character, 0, i);
             GridPane.setMargin(character, new Insets(0, 10, 0, 0));
-            layout.add(characterFilePath, 1, i);
-            layout.add(selectCharacterFile, 2, i);
+            layout.add(characterName, 1, i);
+            layout.add(characterFile, 2, i);
+            GridPane.setMargin(characterFile, new Insets(0, 10, 0, 10));
+            layout.add(characterFilePath, 3, i);
+            layout.add(selectCharacterFile, 4, i);
             GridPane.setMargin(selectCharacterFile, new Insets(0, 0, 0, 10));
         }
         
         for (int i=1; i < 7; i++) {
             Label weapon = getLabel("Weapon " + i, avenirTitle);
+            TextField weaponName = getTextField(10, true);
+            weaponName.setPromptText("Name");
+            
+            Label weaponFile = getLabel("File", avenirTitle);
             TextField weaponFilePath = getTextField(40, false);
             
             final String propertiesWeapon = "Weapon"+i+"Texture";
@@ -518,15 +528,18 @@ public class ClueClient extends Application {
             
             layout.add(weapon, 0, i + 6);
             GridPane.setMargin(weapon, new Insets(0, 10, 0, 0));
-            layout.add(weaponFilePath, 1, i + 6);
-            layout.add(selectWeaponFile, 2, i + 6);
+            layout.add(weaponName, 1, i + 6);
+            layout.add(weaponFile, 2, i + 6);
+            GridPane.setMargin(weaponFile, new Insets(0, 10, 0, 10));
+            layout.add(weaponFilePath, 3, i + 6);
+            layout.add(selectWeaponFile, 4, i + 6);
             GridPane.setMargin(selectWeaponFile, new Insets(0, 0, 0, 10));
         }
         
         MenuItem applyChanges = new MenuItem("Apply", avenirTitle);
         applyChanges.setOnMouseClicked(e -> saveProperties());
         
-        layout.add(applyChanges, 2, 14);
+        layout.add(applyChanges, 4, 14);
         GridPane.setMargin(applyChanges, new Insets(0, 0, 0, 15));
         
         return layout;
