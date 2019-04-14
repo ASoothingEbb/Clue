@@ -322,6 +322,30 @@ public class GameControllerTest {
         
     }     
         
+    
+    @Test
+    public void testHandOutCards() throws Exception{
+        System.out.println("handOutCards");
+        
+        gc = new GameController(1,1,"testCsv/tiles1WithIds.csv", "testCsv/doors1.csv");
+        
+        
+        ArrayList<Card> cards = new ArrayList<>();
+        
+        for (Player p : gc.getPlayers()){
+        
+            for (Card c : p.getCards()){
+                assertFalse(cards.contains(c));
+                cards.add(c);
+            }
+        }
+        assertEquals(11,cards.size());//numberOfPersons + numberOfRooms + numberOfWeapons - 3 (for murder cards)
+                
+        for (Card murderCard : gc.getMurderCards()){//check that no players have the murder cards
+            assertFalse(cards.contains(murderCard));
+        }
+
+    }
 
     /**
      * Test of showCard method, of class GameController.

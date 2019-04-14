@@ -15,8 +15,10 @@ import clue.tile.TileOccupiedException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -84,7 +86,8 @@ public class ClueClient extends Application {
     private Font avenirNormal;
     
     // BackgroundFill
-    private Background blackFill = new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY));
+    private final Background blackFill = new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY));
+    private final Background greenFill = new Background(new BackgroundFill(Color.rgb(7, 80, 2), CornerRadii.EMPTY, Insets.EMPTY));
     
     @Override
     public void start(Stage primaryStage) {
@@ -105,7 +108,7 @@ public class ClueClient extends Application {
         Scene scene = new Scene(menuOptions, width, height);
         
         //BackgroundImage background = new BackgroundImage(bg, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
-        menuOptions.setBackground(blackFill);
+        menuOptions.setBackground(greenFill);
         
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -125,7 +128,7 @@ public class ClueClient extends Application {
             titleFont = Font.loadFont(new FileInputStream(new File("./resources/fonts/ringbearer.ttf")), 80);
             avenirLarge = Font.loadFont(new FileInputStream(new File("./resources/fonts/Avenir-Book.ttf")), 30);
             avenirTitle = Font.loadFont(new FileInputStream(new File("./resources/fonts/Avenir-Book.ttf")), 20);
-            avenirNormal = Font.loadFont(new FileInputStream(new File("./resources/fonts/Avenir-Book.ttf")), 12);
+            avenirNormal = Font.loadFont(new FileInputStream(new File("./resources/fonts/Avenir-Book.ttf")), 15);
         } catch(FileNotFoundException e) {
             
         }
@@ -157,11 +160,11 @@ public class ClueClient extends Application {
         numberOfPlayers = 1;
         
         BorderPane alignmentPane = new BorderPane();
-        alignmentPane.setBackground(blackFill);
+        alignmentPane.setBackground(greenFill);
 
         GridPane startGameOptions = new GridPane();
         startGameOptions.setAlignment(Pos.CENTER);
-        startGameOptions.setBackground(blackFill);
+        startGameOptions.setBackground(greenFill);
         
         alignmentPane.setCenter(startGameOptions);
         
@@ -294,7 +297,7 @@ public class ClueClient extends Application {
     private void howToPlayScene(Stage stage) {
         GridPane howToPlayLayout = new GridPane();
         howToPlayLayout.setAlignment(Pos.CENTER);
-        howToPlayLayout.setBackground(blackFill);
+        howToPlayLayout.setBackground(greenFill);
         
         Label howToPlayTitle = getLabel("How To Play", avenirTitle);
         
@@ -315,20 +318,23 @@ public class ClueClient extends Application {
      */
     private void settingScene(Stage stage) {        
         BorderPane settingsLayout = new BorderPane();
-        settingsLayout.setBackground(blackFill);
+        settingsLayout.setBackground(greenFill);
         
         BorderPane leftLayout = new BorderPane();
         
         VBox settingsOptions = new VBox();
         
         GridPane textureSettings = new GridPane();
-        textureSettings.setBackground(new Background(new BackgroundFill(Color.rgb(50, 50, 50), CornerRadii.EMPTY, Insets.EMPTY)));
+        textureSettings.setBackground(greenFill);
+        //textureSettings.setBackground(new Background(new BackgroundFill(Color.rgb(7, 80, 2), CornerRadii.EMPTY, Insets.EMPTY)));
         textureSettings.setPadding(new Insets(20,30,20,30));
         GridPane audioSettings = new GridPane();
-        audioSettings.setBackground(new Background(new BackgroundFill(Color.rgb(50, 50, 50), CornerRadii.EMPTY, Insets.EMPTY)));
+        audioSettings.setBackground(greenFill);
+        //audioSettings.setBackground(new Background(new BackgroundFill(Color.rgb(50, 50, 50), CornerRadii.EMPTY, Insets.EMPTY)));
         audioSettings.setPadding(new Insets(20,30,20,30));
         GridPane creditsPane = new GridPane();
-        creditsPane.setBackground(new Background(new BackgroundFill(Color.rgb(50, 50, 50), CornerRadii.EMPTY, Insets.EMPTY)));
+        creditsPane.setBackground(greenFill);
+        //creditsPane.setBackground(new Background(new BackgroundFill(Color.rgb(50, 50, 50), CornerRadii.EMPTY, Insets.EMPTY)));
         creditsPane.setPadding(new Insets(20,30,20,30));
         
         
@@ -480,78 +486,99 @@ public class ClueClient extends Application {
         
         layout.add(board, 0, 0);
         GridPane.setMargin(board, new Insets(0, 10, 0, 0));
-        layout.add(boardFilePath, 1, 0);
-        layout.add(selectBoardFile, 2, 0);
+        layout.add(boardFilePath, 1, 0, 3, 1);
+        layout.add(selectBoardFile, 4, 0);
         GridPane.setMargin(selectBoardFile, new Insets(0, 0, 0, 10));
 
         for (int i=1; i < 7; i++) {
             Label character = getLabel("Character " + i, avenirTitle);
+            TextField characterName = getTextField(10, true);
+            characterName.setPromptText("Name");
+            
+            Label characterFile = getLabel("File", avenirTitle);
             TextField characterFilePath = getTextField(40, false);
             
-            final String propertiesCharacter = "Character"+i+"Texture";
+            final String propertiesCharacterName = "Character"+(i-1)+"Name";
+            final String propertiesCharacter = "Character"+(i-1)+"Texture";
             
             MenuItem selectCharacterFile = new MenuItem("Choose", avenirTitle);
             selectCharacterFile.setOnMouseClicked(e -> {
                 File characterTexture = fileChooser.showOpenDialog(stage);
                 characterFilePath.setText(characterTexture.getAbsolutePath());
                 textureMap.put(propertiesCharacter,characterTexture.getAbsolutePath());
+                textureMap.put(propertiesCharacterName, characterName.getText());
             });
-            
             layout.add(character, 0, i);
             GridPane.setMargin(character, new Insets(0, 10, 0, 0));
-            layout.add(characterFilePath, 1, i);
-            layout.add(selectCharacterFile, 2, i);
+            layout.add(characterName, 1, i);
+            layout.add(characterFile, 2, i);
+            GridPane.setMargin(characterFile, new Insets(0, 10, 0, 10));
+            layout.add(characterFilePath, 3, i);
+            layout.add(selectCharacterFile, 4, i);
             GridPane.setMargin(selectCharacterFile, new Insets(0, 0, 0, 10));
         }
         
         for (int i=1; i < 7; i++) {
             Label weapon = getLabel("Weapon " + i, avenirTitle);
+            TextField weaponName = getTextField(10, true);
+            weaponName.setPromptText("Name");
+            
+            Label weaponFile = getLabel("File", avenirTitle);
             TextField weaponFilePath = getTextField(40, false);
             
-            final String propertiesWeapon = "Weapon"+i+"Texture";
+            final String propertiesWeapon = "Weapon"+(i-1)+"Texture";
+            final String propertiesWeaponName = "Weapon"+(i-1)+"Name";
+            
             MenuItem selectWeaponFile = new MenuItem("Choose", avenirTitle);
             selectWeaponFile.setOnMouseClicked(e -> {
                 File weaponTexture = fileChooser.showOpenDialog(stage);
                 weaponFilePath.setText(weaponTexture.getAbsolutePath());
                 textureMap.put(propertiesWeapon,weaponTexture.getAbsolutePath());
+                textureMap.put(propertiesWeaponName, weaponName.getText());
             });
             
             layout.add(weapon, 0, i + 6);
             GridPane.setMargin(weapon, new Insets(0, 10, 0, 0));
-            layout.add(weaponFilePath, 1, i + 6);
-            layout.add(selectWeaponFile, 2, i + 6);
+            layout.add(weaponName, 1, i + 6);
+            layout.add(weaponFile, 2, i + 6);
+            GridPane.setMargin(weaponFile, new Insets(0, 10, 0, 10));
+            layout.add(weaponFilePath, 3, i + 6);
+            layout.add(selectWeaponFile, 4, i + 6);
             GridPane.setMargin(selectWeaponFile, new Insets(0, 0, 0, 10));
         }
         
+        Label savedStatus = new Label("changes not saved");
+        savedStatus.setTextFill(Color.LIGHTGREY);
+        savedStatus.setFont(avenirNormal);
         MenuItem applyChanges = new MenuItem("Apply", avenirTitle);
-        applyChanges.setOnMouseClicked(e -> saveProperties());
+        applyChanges.setOnMouseClicked(e -> {
+            layout.add(savedStatus, 3, 14);
+            if (saveProperties()) {
+                savedStatus.setText("changes Saved");
+            } else {
+                savedStatus.setText("Unable to save changes");
+            }
+        });
         
-        layout.add(applyChanges, 2, 14);
+        GridPane.setHalignment(savedStatus, HPos.RIGHT);
+        layout.add(applyChanges, 4, 14);
         GridPane.setMargin(applyChanges, new Insets(0, 0, 0, 15));
         
         return layout;
     }
     
-    // TODO: NullPointerException - can't load properties file
     private boolean saveProperties() {
-        try {
-            InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream("assets/config.properties");
-            String path = getClass().getResource("assets/config.properties").toString();
-            File file = new File("assets/config.properties");
-            try (FileInputStream fileInput = new FileInputStream(path)) {
-                Properties properties = new Properties();
-                properties.load(stream);
-                
-                textureMap.entrySet().forEach((entry) -> {
-                    properties.put(entry.getKey(), entry.getValue());
-                });
-                
-                Prompt confirmPrompt = new Prompt("Changes Saved");
-                confirmPrompt.showAndWait();
-                return true;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        try (OutputStream output = new FileOutputStream("./resources/config.properties")) {
+            Properties prop = new Properties();
+            
+            textureMap.entrySet().forEach((entry) -> {
+                prop.setProperty(entry.getKey(), entry.getValue());
+            });
+            
+            prop.store(output, null);
+            System.out.println(prop);
+            return true;
+        } catch(IOException io) {
             return false;
         }
     }

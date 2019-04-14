@@ -27,7 +27,7 @@ public class MenuItem extends Label {
         setFont(font);
         
         activeColor = Color.WHITE;
-        inactiveColor = Color.GREY;
+        inactiveColor = Color.LIGHTGREY;
         
         setActive(false);
         
@@ -46,9 +46,13 @@ public class MenuItem extends Label {
     
     public void setActiveColor(Color color) {
         this.activeColor = color;
+        //refresh colour state
+        setActive(false);
     }
     
     public void setInactiveColor(Color color) {
         this.inactiveColor = color;
+        //refresh colour state
+        setActive(false);
     }
 }
