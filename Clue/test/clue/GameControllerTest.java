@@ -44,7 +44,7 @@ public class GameControllerTest {
     @BeforeClass
     public static void setUpClass() throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException, TileOccupiedException {
 
-        gc = new GameController(1,1,"testCsv/tiles1.csv", "testCsv/doors1.csv",6,8);
+        gc = new GameController(1,1,"testCsv/tiles1.csv", "testCsv/doors1.csv");
     }
     
     @AfterClass
@@ -63,7 +63,7 @@ public class GameControllerTest {
     public void testSetsFirstPlayerTurn() throws Exception{
         System.out.println("setsFirstPlayerTurn");
         
-        gc = new GameController(2,0,"testCsv/tiles1WithIds.csv", "testCsv/doors1.csv",6,8);
+        gc = new GameController(2,0,"testCsv/tiles1WithIds.csv", "testCsv/doors1.csv");
         
         Player p0 = gc.getPlayer(0);
         Player p1 = gc.getPlayer(1);
@@ -77,7 +77,7 @@ public class GameControllerTest {
     public void testPlayersAtCorrectStartingLocations() throws Exception{
         System.out.println("playersAtCorrectStartingLocations");
         
-        gc = new GameController(2,0,"testCsv/tiles1WithIds.csv", "testCsv/doors1.csv",6,8);
+        gc = new GameController(2,0,"testCsv/tiles1WithIds.csv", "testCsv/doors1.csv");
         
         Player p0 = gc.getPlayer(0);
         Player p1 = gc.getPlayer(1);
@@ -140,7 +140,7 @@ public class GameControllerTest {
     //@Test
     public void testRoll() throws Exception{
         System.out.println("roll");
-        gc = new GameController(2,0,"testCsv/tiles1WithIds.csv", "testCsv/doors1.csv",6,8);
+        gc = new GameController(2,0,"testCsv/tiles1WithIds.csv", "testCsv/doors1.csv");
         Player p0 = gc.getPlayer();
         int r = 0;
         for (int i = 0; i < 500; i++){
@@ -158,7 +158,7 @@ public class GameControllerTest {
     public void testMove() throws Exception {
         System.out.println("move");
         
-        gc = new GameController(2,0,"testCsv/tiles1WithIds.csv", "testCsv/doors1.csv",6,8);
+        gc = new GameController(2,0,"testCsv/tiles1WithIds.csv", "testCsv/doors1.csv");
         
         Player p0 = gc.getPlayer(0);
         Player p1 = gc.getPlayer(1);
@@ -203,7 +203,7 @@ public class GameControllerTest {
     System.out.println("moveEndMove2Players");
     
             
-        gc = new GameController(2,0,"testCsv/tiles1WithIds.csv", "testCsv/doors1.csv",6,8);
+        gc = new GameController(2,0,"testCsv/tiles1WithIds.csv", "testCsv/doors1.csv");
         
         Player p0 = gc.getPlayer(0);
         Player p1 = gc.getPlayer(1);
@@ -267,7 +267,7 @@ public class GameControllerTest {
     public void testMoveTwiceOneTurn() throws Exception{
         System.out.println("moveTwiceOneTurn");
         
-        gc = new GameController(2,0,"testCsv/tiles1WithIds.csv", "testCsv/doors1.csv",6,8);
+        gc = new GameController(2,0,"testCsv/tiles1WithIds.csv", "testCsv/doors1.csv");
         
         Player p0 = gc.getPlayer(0);
         Player p1 = gc.getPlayer(1);
@@ -322,7 +322,7 @@ public class GameControllerTest {
     public void testHandOutCards() throws Exception{
         System.out.println("handOutCards");
         
-        gc = new GameController(1,1,"testCsv/tiles1WithIds.csv", "testCsv/doors1.csv",6,8);
+        gc = new GameController(1,1,"testCsv/tiles1WithIds.csv", "testCsv/doors1.csv");
         
         
         ArrayList<Card> cards = new ArrayList<>();
@@ -432,12 +432,6 @@ public class GameControllerTest {
 
     }
     
-    @Test
-    public void testArchersAvenue() throws Exception{
-        System.out.println("archersAvenue");
-        gc = new GameController(1,1,"resources/archersAvenueTiles.csv", "resources/archersAvenueDoors.csv",24,25);
-        System.out.println("archersAvenue end");
     
-    }
     
 }
