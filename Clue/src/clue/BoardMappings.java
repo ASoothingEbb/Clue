@@ -47,7 +47,8 @@ public final class BoardMappings {
     
     }
     Tile[][] mappings;
-    PriorityQueue<StartingTile> startingTiles;
+    PriorityQueue<StartingTile> startingTilesPQ;
+    LinkedList<Tile> startTiles;
     Room[] rooms;
     int boardWidth;
     int boardHeight;
@@ -101,8 +102,8 @@ public final class BoardMappings {
      */
     public BoardMappings(String tileRoomLayoutPath, String doorLocationsPath, int w, int h) throws NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException{
 
-        
-        startingTiles = new PriorityQueue<>();
+        startTiles = new LinkedList<>();
+        startingTilesPQ = new PriorityQueue<>();
         
         ArrayList<ArrayList<String>> tiles = loadCsv2D(tileRoomLayoutPath);
         int roomCount = getRoomCount(tiles);
@@ -115,6 +116,7 @@ public final class BoardMappings {
         mappings = createTileMappings(tiles, roomCount);
 
         List<Door> doorLocations = loadCsvDoors(doorLocationsPath);
+        //System.out.println(this);
         addDoorsToTileAdjacencies(doorLocations);
         
 
@@ -181,6 +183,15 @@ public final class BoardMappings {
         }
         return csvData;
     }
+    
+    /**
+     * Gets all of the rooms
+     * @return the rooms
+     */
+    public Room[] getRooms(){
+        return rooms;
+    }
+    
     
     /**
      * 
@@ -305,14 +316,22 @@ public final class BoardMappings {
      * @throws NoSuchRoomException 
      */
     public Tile[][] createTileMappings(ArrayList<ArrayList<String>> tiles, int roomCount) throws NoSuchRoomException {
+        //for (ArrayList<String> row: tiles){
+        
+        //    System.out.println(row +" : "+ row.size());
+        //}
+        
+        
+        
+        
+        
         Tile[][] localMappings = new Tile[boardHeight][boardWidth];      
         String cell;      
         for (int y = 0; y < boardHeight; y++){//create Tile objects in mappings, object may be tile,room,special or null depending on what the csv cell was
             for (int x = 0; x < boardWidth; x++){
                 
-                
+
                 cell = tiles.get(y).get(x);
-                //System.out.println(""+x+","+y+": "+cell);
                 switch (cell) {
                     case "":
                         localMappings[y][x] = new Tile(-1,-1);
@@ -329,7 +348,7 @@ public final class BoardMappings {
                         break;
                     case "S":
                         localMappings[y][x] = new Tile(x,y);
-                        startingTiles.add( new StartingTile(localMappings[y][x],100));
+                        startingTilesPQ.add( new StartingTile(localMappings[y][x],100));
                         break;
                     default:
 
@@ -344,7 +363,7 @@ public final class BoardMappings {
                             
                                 }
                                 localMappings[y][x] = new Tile(x,y);
-                                startingTiles.add(new StartingTile(localMappings[y][x], startingId));
+                                startingTilesPQ.add(new StartingTile(localMappings[y][x], startingId));
                             }
                             catch (NumberFormatException ex){
                                 throw new NumberFormatException("values in tiles csv must be -1,0,I,Sn (where n is a number between 0 and 99), or a number that is less than the total room count, found: "+cell+"\n");
@@ -454,11 +473,12 @@ public final class BoardMappings {
       * @return the list of starting tiles on the board
       */
     public LinkedList<Tile> getStartingTiles(){
-        LinkedList result = new LinkedList<>();
-        while (!startingTiles.isEmpty()){
-            result.add(startingTiles.poll().t);
+        if (startTiles.isEmpty()){
+            while (!startingTilesPQ.isEmpty()){
+                startTiles.add(startingTilesPQ.poll().t);
+            }
         }
-        return result;
+        return startTiles;
     }  
     
     /**
@@ -472,5 +492,18 @@ public final class BoardMappings {
         Room room2 = (Room)getTile(-1,r2);
         
         room1.addAdjacentBoth(room2);
+    }
+    
+    @Override
+    public String toString(){
+        String res = "";
+        for (int y = 0; y < boardHeight; y++){
+            for (int x = 0; x < boardWidth; x++){
+                res+= mappings[y][x].getY()+" ";
+            }
+            res+= "\n";
+        }
+        return res;
+    
     }
 }

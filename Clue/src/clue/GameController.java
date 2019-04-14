@@ -13,6 +13,7 @@ import clue.tile.NoSuchRoomException;
 import clue.tile.NoSuchTileException;
 import clue.tile.SpecialTile;
 import clue.tile.Tile;
+import clue.tile.Room;
 import clue.tile.TileOccupiedException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -56,17 +57,20 @@ public final class GameController {
      * @param ai
      * @param tilePath
      * @param doorPath
+     * @param boardWidth
+     * @param boardHeight
      * @throws java.lang.InterruptedException
      * @throws clue.action.UnknownActionException
      * @throws clue.tile.NoSuchRoomException
      * @throws clue.tile.NoSuchTileException
      * @throws clue.MissingRoomDuringCreationException
-     * @throws clue.GameController.TooManyPlayersException
+     * @throws clue.GameController.TooManyPlayersException thrown when player count exceeds 6 or the number of starting locations
      * @throws clue.tile.TileOccupiedException
      */
-    public GameController(int human, int ai, String tilePath, String doorPath) throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, TooManyPlayersException, TileOccupiedException {
+    public GameController(int human, int ai, String tilePath, String doorPath, int boardWidth, int boardHeight) throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, TooManyPlayersException, TileOccupiedException {
         //TODO
-        this.bm = new BoardMappings(tilePath, doorPath, 6, 8);
+        this.bm = new BoardMappings(tilePath, doorPath, boardWidth, boardHeight);
+        LinkedList<Tile> startingTiles = bm.getStartingTiles();
         List<Player> players = new ArrayList();
         for (int i = 0; i < human; i++) {
             players.add(new Player(i, this));
@@ -74,7 +78,7 @@ public final class GameController {
         for (int i = human; i < human + ai; i++) {
             players.add(new AiBasic(i, this));
         }
-        if (players.size() > 6) {
+        if (players.size() > 6 || players.size() > startingTiles.size()) {
             throw new TooManyPlayersException();
         }
         this.players = players;
@@ -82,10 +86,9 @@ public final class GameController {
         actionLog = new ArrayList();
         state = new GameState(players);
         if (human + ai >= 2) {
-            LinkedList<Tile> startingTiles = bm.getStartingTiles();
             for (Player p : players) {
                 if (p.isActive()) {
-
+                    //System.out.println(p+" :"+startingTiles.peek());
                     p.setPosition(startingTiles.poll());
                 }
             }
@@ -177,7 +180,10 @@ public final class GameController {
                 break;
             case START:
                 nextAction = new StartTurnAction(player);
-                //TODO GIVE PLAYERS CARDS
+                
+                //GIVE PLAYERS CARDS
+                handOutCards();
+
                 break;
             case STARTTURN:
                 if (state.getAction().actionType == ActionType.ENDTURN || state.getAction().actionType == ActionType.EXTRATURN) {
@@ -280,6 +286,50 @@ public final class GameController {
         return player.getMoves();
     }
 
+    /**
+     * Distributes the cards between the active players in the game
+     */
+    private void handOutCards(){
+        int numberOfWeapons = 6;
+        int numberOfPersons = 6;
+                
+        ArrayList<Card> cards = new ArrayList<>();
+              
+        Room[] rooms = bm.getRooms();
+        try {
+            for (int i = 0; i < rooms.length; i++){
+                cards.add(rooms[i].getCard());
+            }
+        }
+        catch ( NoSuchRoomException ex){
+            System.out.println(ex);
+        }
+        
+                
+        for (int i = 0; i < numberOfWeapons; i++){
+            cards.add(new WeaponCard(i));
+        }
+        for (int i = 0; i < numberOfPersons; i++){
+            cards.add(new PersonCard(i));
+        }
+                
+        Random rand = new Random();
+        int randInt = -1;
+        int playerIndex = 0;
+
+        while (!cards.isEmpty()){
+            if (playerIndex >= players.size()){
+                playerIndex = 0;
+            }
+            else if (players.get(playerIndex).isActive()){//only give cards to active players
+                randInt = rand.nextInt(cards.size());//select random index
+                players.get(playerIndex).addCard(cards.get(randInt));//give card from cards list at the random index
+                cards.remove(randInt);//remove the already given card from cards list
+                playerIndex++;
+            }
+        }
+    }
+    
     /**
      * Moves the current player in a sequence of moves.
      *
