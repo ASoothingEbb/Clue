@@ -46,12 +46,12 @@ public final class BoardMappings {
         }
     
     }
-    Tile[][] mappings;
-    PriorityQueue<StartingTile> startingTilesPQ;
-    LinkedList<Tile> startTiles;
-    Room[] rooms;
-    int boardWidth;
-    int boardHeight;
+    private Tile[][] mappings;
+    private PriorityQueue<StartingTile> startingTilesPQ;
+    private LinkedList<Tile> startTiles;
+    private Room[] rooms;
+    private int boardWidth;
+    private int boardHeight;
     
     class StartingTile implements Comparable<StartingTile>{
 
@@ -150,7 +150,7 @@ public final class BoardMappings {
      * @param tiles the 2d representation of the tiles csv
      * 
      */
-    private void calculateBoardWidthHeight(ArrayList<ArrayList<String>> tiles){
+    public void calculateBoardWidthHeight(ArrayList<ArrayList<String>> tiles){
         
         int maxWidth = -1;
         int lastRowWithValue = -1;
@@ -187,7 +187,7 @@ public final class BoardMappings {
      * Pads the 2d representation of the tile csv with empty tile representation
      * @param tiles the 2d representation of the tiles csv
      */
-    private void paddWithEmpty(ArrayList<ArrayList<String>> tiles){
+    public void paddWithEmpty(ArrayList<ArrayList<String>> tiles){
         for (int i = 0; i < tiles.size(); i++){
             ArrayList<String> row = tiles.get(i);
             while (row.size() < boardWidth){
@@ -571,5 +571,13 @@ public final class BoardMappings {
         }
         return res;
     
+    }
+    
+    public int getBoardWidth(){
+        return boardWidth;
+    }
+    
+    public int getBoardHeight(){
+        return boardHeight;
     }
 }
