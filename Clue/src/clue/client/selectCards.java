@@ -5,6 +5,7 @@
  */
 package clue.client;
 
+import java.util.HashMap;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -74,9 +75,6 @@ public class selectCards {
             } else if (weapon.getValue().toString().contains("Select")) {
                 Prompt selectCard = new Prompt("Select the murder weapon");
                 selectCard.showAndWait();
-            } else if (room.getValue().toString().contains("Select")) {
-                Prompt selectCard = new Prompt("Select the murder room");
-                selectCard.showAndWait();
             } else {
                 System.out.println(actionType);
                 System.out.println("Character: " + character.getValue());
@@ -107,7 +105,7 @@ public class selectCards {
         return cards;
     }
     
-    public void show(String name, Color color) {
+    public void show(String name, Color color, int room, HashMap<String,String> ImagPathMap) {
         stage = new Stage();
         
         this.actionType = name;

@@ -10,11 +10,14 @@ import clue.GameController.TooManyPlayersException;
 import clue.MissingRoomDuringCreationException;
 import clue.action.Action;
 import clue.action.UnknownActionException;
+import clue.card.CardType;
 import clue.tile.NoSuchRoomException;
 import clue.tile.NoSuchTileException;
+import clue.tile.Room;
 import clue.tile.TileOccupiedException;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -61,15 +64,16 @@ public class gameInstance {
     private HashMap<Integer, Integer> spawnlocations = new HashMap<>();
     private Player currentPlayer;
     private String remainingMoves;
+    private int currentRoom;
     private boolean rolled;
     
     private GameController gameInterface;
     
     private HashMap<String, String> ImagePathMap = new HashMap<>();
             
-    private final Font avenirButtonLarge = Font.loadFont(getClass().getResourceAsStream("resources/fonts/Avenir-Book.ttf"), 30);
-    private final Font avenirTitle = Font.loadFont(getClass().getResourceAsStream("resources/fonts/Avenir-Book.ttf"), 20);
-    private final Font avenirText = Font.loadFont(getClass().getResourceAsStream("resources/fonts/Avenir-Book.ttf"), 15);
+    private Font avenirLarge;
+    private Font avenirTitle;
+    private Font avenirText;
     private final Background blackFill = new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY));
     
     private StackPane createBoard() {
@@ -141,6 +145,7 @@ public class gameInstance {
         StackPane history = new StackPane();
         
         ScrollPane historyPane = new ScrollPane();
+        historyPane.setBackground(new Background(new BackgroundFill(Color.GREY, CornerRadii.EMPTY, Insets.EMPTY)));
         historyPane.setPannable(false);
         historyPane.setContent(history);
         
@@ -161,19 +166,39 @@ public class gameInstance {
         GridPane cardsLayout = new GridPane();
         
         Label playerCardsLabel = getLabel("Cards", avenirTitle);
+        int x = 0;
+        int y = 0;
+        //System.out.println(gameInterface.getPlayer().getCards());
+        for (clue.card.Card card: gameInterface.getPlayer().getCards()) {
+            Image cardImage = null;
+            try {
+                switch (card.cardType) {
+                    case PERSON:
+                        cardImage = new Image(new FileInputStream(new File("./resources/character/character"+card.getid())));
+                        break;
+                    case WEAPON:
+                        cardImage = new Image(new FileInputStream(new File("./resources/character/weapon"+card.getid())));
+                        break;
+                    case ROOM:
+                        cardImage = new Image(new FileInputStream(new File("./resources/character/room"+card.getid())));
+                        break;
+                    default:
+                        cardImage = new Image(new FileInputStream(new File("./resources/character/character1")));
+                        break;
+                }
+            } catch(FileNotFoundException ex) {
+                
+            }
+            System.out.println(cardImage);
 
-        Card weaponCard = new Card(new Image(getClass().getResourceAsStream(ImagePathMap.get("character1"))), "character", 1);
-        ImageView View1 = new ImageView(weaponCard.getImage());
-        ImageView View2 = new ImageView(weaponCard.getImage());
-        ImageView View3 = new ImageView(weaponCard.getImage());
-        
-        // Insets(top, right, bottom, left);
-        cardsLayout.add(View1, 0, 1);
-        GridPane.setMargin(View1, new Insets(0,10,10,0));
-        cardsLayout.add(View2, 1, 1);
-        GridPane.setMargin(View2, new Insets(0,10,10,0));
-        cardsLayout.add(View3, 0, 2);
-        GridPane.setMargin(View3, new Insets(0,10,10,0));
+            ImageView view = new ImageView(cardImage);
+            cardsLayout.add(view, y, x);
+            GridPane.setMargin(view, new Insets(0, 10, 10, 0));
+            y ^= 1;
+            if (y == 1) {
+                x++;
+            }
+        }
         cardsLayout.add(playerCardsLabel, 0, 0, 2, 1);
         GridPane.setHalignment(playerCardsLabel,HPos.CENTER);
         
@@ -186,35 +211,26 @@ public class gameInstance {
         
         Label remainingMovesLabel = getLabel("Roll Available", avenirTitle);
 
-        MenuItem suggestionButton = new MenuItem("Suggestion", avenirButtonLarge);
+        MenuItem suggestionButton = new MenuItem("Suggestion", avenirLarge);
         suggestionButton.setActiveColor(Color.ORANGE);
         suggestionButton.setInactiveColor(Color.DARKORANGE);
         suggestionButton.setActive(false); //refresh Colour
         suggestionButton.setOnMouseClicked(e -> {
-            createCardsWindow("Suggetsion", Color.ORANGE);
+            if (gameInterface.getPlayer().getPosition().isRoom()) {
+                currentRoom = ((Room) gameInterface.getPlayer().getPosition()).getId();
+                createCardsWindow("Suggetsion", Color.ORANGE);
+            }
         });
         
-        Button suggestButton = new Button("Suggestion");
-        suggestButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        suggestButton.setOnAction(e -> {
-            createCardsWindow("Suggestion", Color.ORANGE);
-        });
-        
-        MenuItem accusationButton = new MenuItem("Accusation", avenirButtonLarge);
+        MenuItem accusationButton = new MenuItem("Accusation", avenirLarge);
         accusationButton.setActiveColor(Color.RED);
         accusationButton.setInactiveColor(Color.DARKRED);
         accusationButton.setActive(false);
         accusationButton.setOnMouseClicked(e -> {
             createCardsWindow("Accusation", Color.RED);
         });
-        
-        Button accuseButton = new Button("Accusation");
-        accuseButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        accuseButton.setOnAction(e -> {
-            createCardsWindow("Accusation", Color.RED);
-        });
-        
-        MenuItem rollButton = new MenuItem("Roll", avenirButtonLarge);
+
+        MenuItem rollButton = new MenuItem("Roll", avenirLarge);
         
         rollButton.setOnMouseClicked(e -> {
             if (!rolled) {
@@ -228,7 +244,7 @@ public class gameInstance {
             }
         });
         
-        MenuItem endButton = new MenuItem("End Turn", avenirButtonLarge);
+        MenuItem endButton = new MenuItem("End Turn", avenirLarge);
         endButton.setOnMouseClicked(e -> {
             System.out.println("End Turn");
         });
@@ -242,7 +258,7 @@ public class gameInstance {
     
     private void createCardsWindow(String title, Color color) {
         selectCards cardsWindow = new selectCards();
-        cardsWindow.show(title, color);
+        cardsWindow.show(title, color, currentRoom, ImagePathMap);
     }
     
     private BorderPane createUI() {
@@ -293,31 +309,44 @@ public class gameInstance {
     }
     
     private void initDefaultGraphics() {
-        ImagePathMap.put("board", "resources/board.png");
+        ImagePathMap.put("board", "./resources/board.png");
         
-        ImagePathMap.put("character1", "resources/Character/MissScarlet.png");
-        ImagePathMap.put("character2", "resources/Character/ColonelMustard.png");
-        ImagePathMap.put("character3", "resources/Character/MrsWhite.png");
-        ImagePathMap.put("character4", "resources/Character/MrGreen.png");
-        ImagePathMap.put("character5", "resources/Character/MrsPeacock.png");
-        ImagePathMap.put("character6", "resources/Character/ProfessorPlum.png");
+        ImagePathMap.put("character1", "./resources/Character/MissScarlet.png");
+        ImagePathMap.put("character2", "./resources/Character/ColonelMustard.png");
+        ImagePathMap.put("character3", "./resources/Character/MrsWhite.png");
+        ImagePathMap.put("character4", "./resources/Character/MrGreen.png");
+        ImagePathMap.put("character5", "./resources/Character/MrsPeacock.png");
+        ImagePathMap.put("character6", "./resources/Character/ProfessorPlum.png");
         
-        ImagePathMap.put("weapon1","resources/Candlestick.png");
-        ImagePathMap.put("weapon2","resources/Dagger.png");
-        ImagePathMap.put("weapon3","resources/LeadPipe.png");
-        ImagePathMap.put("weapon4","resources/Revolver.png");
-        ImagePathMap.put("weapon5","resources/Rope.png");
-        ImagePathMap.put("weapon6","resources/Wrench.png");
+        ImagePathMap.put("weapon1","./resources/Candlestick.png");
+        ImagePathMap.put("weapon2","./resources/Dagger.png");
+        ImagePathMap.put("weapon3","./resources/LeadPipe.png");
+        ImagePathMap.put("weapon4","./resources/Revolver.png");
+        ImagePathMap.put("weapon5","./resources/Rope.png");
+        ImagePathMap.put("weapon6","./resources/Wrench.png");
         
-        ImagePathMap.put("room1","resources/Ballroom.png");
-        ImagePathMap.put("room2","resources/BillardRoom.png");
-        ImagePathMap.put("room3","Conservatory.png");
-        ImagePathMap.put("room4","DiningRoom.png");
-        ImagePathMap.put("room5","Hall.png");
-        ImagePathMap.put("room6","Kitchen.png");
-        ImagePathMap.put("room7","Library.png");
-        ImagePathMap.put("room8","Lounge.png");
-        ImagePathMap.put("room9","Study.png");
+        ImagePathMap.put("room1","./resources/Ballroom.png");
+        ImagePathMap.put("room2","./resources/BillardRoom.png");
+        ImagePathMap.put("room3","./resources/Conservatory.png");
+        ImagePathMap.put("room4","./resources/DiningRoom.png");
+        ImagePathMap.put("room5","./resources/Hall.png");
+        ImagePathMap.put("room6","./resources/Kitchen.png");
+        ImagePathMap.put("room7","./resources/Library.png");
+        ImagePathMap.put("room8","./resources/Lounge.png");
+        ImagePathMap.put("room9","./resources/Study.png");
+    }
+    
+    private void initFonts() {
+        avenirLarge = new Font(30);
+        avenirTitle = new Font(20);
+        avenirText = new Font(15);
+        try {
+            avenirLarge = Font.loadFont(new FileInputStream(new File("./resources/fonts/Avenir-Book.ttf")), 30);
+            avenirTitle = Font.loadFont(new FileInputStream(new File("./resources/fonts/Avenir-Book.ttf")), 20);
+            avenirText = Font.loadFont(new FileInputStream(new File("./resources/fonts/Avenir-Book.ttf")), 15);
+        } catch(FileNotFoundException e) {
+            
+        }
     }
     
     private void initGraphics() {
@@ -333,7 +362,7 @@ public class gameInstance {
         }
     }
         
-    public void startGame(int numberOfPlayers, int numberOfAIs, GameController gameController) {
+    public void startGame(GameController gameController) {
         Stage gameStage = new Stage();
         
         gameStage.initModality(Modality.APPLICATION_MODAL);
@@ -348,6 +377,7 @@ public class gameInstance {
         
         gameInterface = gameController;
         
+        initFonts();
         initDefaultGraphics();
         initGraphics();
         

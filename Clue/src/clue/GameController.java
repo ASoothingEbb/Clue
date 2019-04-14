@@ -109,7 +109,7 @@ public final class GameController {
         Action nextAction = null;
         player = players.get(state.getPlayerTurn());
         action.execute();
-        System.out.println(action.actionType + "executing");
+        System.out.println(action.actionType + " executing");
         //Action specific lplayersogic
         switch (action.actionType) {
             default:
@@ -134,6 +134,7 @@ public final class GameController {
                 returnCard(((AvoidSuggestionAction) action).card);
                 break;
             case ENDTURN:
+                player.setMoves(0);
                 state.nextTurn(state.nextPlayer());
 
                 int j = player.getId();
@@ -155,9 +156,11 @@ public final class GameController {
                 nextAction = new StartTurnAction(action.getPlayer());
                 break;
             case MOVE:
-                if (action.result && (state.getAction().actionType == ActionType.STARTTURN || state.getAction().actionType == ActionType.THROWAGAIN)) {
+                if (action.result && (state.getAction().actionType == ActionType.STARTTURN || state.getAction().actionType == ActionType.THROWAGAIN || state.getAction().actionType == ActionType.MOVE)) {
                     Tile loc = ((MoveAction) action).getTile();
+                    player.getPosition().setOccupied(false);
                     player.setPosition(loc);
+                    loc.setOccupied(true);
                     if (loc.special) {
                         getSpecial(loc);
                     }
@@ -175,6 +178,8 @@ public final class GameController {
                 actionLog.add(turns, action);
                 break;
             case START:
+                nextAction = new StartTurnAction(player);
+                //TODO GIVE PLAYERS CARDS
                 break;
             case STARTTURN:
                 if (state.getAction().actionType == ActionType.ENDTURN || state.getAction().actionType == ActionType.EXTRATURN) {
@@ -191,6 +196,8 @@ public final class GameController {
                 if (!action.result) {
                     throw new TileOccupiedException();
                 }
+                
+                //TODO update occupied status of tiles
                 break;
             case THROWAGAIN:
                 //TODO: tell gui to roll again
@@ -257,6 +264,13 @@ public final class GameController {
         } else {
 
         }
+    }
+    
+    /**
+     * Ends the turn of the current player
+     */
+    public void endTurn() throws UnknownActionException, InterruptedException, MovementException, TileOccupiedException{
+        performAction(new EndTurnAction(player));
     }
 
     /**
