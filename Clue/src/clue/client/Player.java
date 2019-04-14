@@ -27,12 +27,10 @@ public class Player extends Label {
         this.character = character;
     }
     
-    public boolean move(int x, int y, StackPane[][] board, Player player) {
+    public void move(int x, int y, StackPane[][] board, Player player) {
         board[positionX][positionY].getChildren().remove(player);
         board[x][y].getChildren().add(player);
         positionX = x;
         positionY = y;
-        
-        return true;
     }
 }
