@@ -8,6 +8,7 @@ package clue.client;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 
 /**
  *
@@ -20,6 +21,7 @@ public class Player extends Label {
     
     public Player(int positionX, int positionY, String character) {
         setText(character);
+        setTextFill(Color.WHITE);
         this.positionX = positionX;
         this.positionY = positionY;
         this.character = character;
