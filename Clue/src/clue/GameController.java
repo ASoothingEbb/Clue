@@ -101,8 +101,10 @@ public final class GameController {
      * Executes an action from the queue. Waits for the current action to
      * complete before executing.
      *
+     * @param action
      * @throws UnknownActionException
      * @throws InterruptedException
+     * @throws clue.tile.TileOccupiedException
      */
     public void performAction(Action action) throws UnknownActionException, InterruptedException, TileOccupiedException {
         Action nextAction = null;
@@ -261,6 +263,7 @@ public final class GameController {
      * Terminates the game instance and declares a winner.
      */
     private void endGame() {
+        //TODO notify GUI
         if (winner == null) {
         } else {
 
@@ -371,6 +374,7 @@ public final class GameController {
      * @param card the card to be shown
      * @throws UnknownActionException
      * @throws InterruptedException
+     * @throws clue.tile.TileOccupiedException
      */
     public void showCard(Card card) throws UnknownActionException, InterruptedException, TileOccupiedException {
         performAction(new ShowCardAction(player, card));
