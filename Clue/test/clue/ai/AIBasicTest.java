@@ -23,6 +23,7 @@ import static org.junit.Assert.*;
  * @author zemig
  */
 public class AIBasicTest {
+    GameController dummyGame;
     
     private static GameController gc;
     public AIBasicTest() {
