@@ -33,9 +33,25 @@ public class Player {
 
     /**
      * Creates a new player.
+     * @param id
+     * @param gc
      */
     public Player(int id, GameController gc) {
         this.game = gc;
+        this.id = id;
+        notes = "";
+        active = true;
+        activeSuggestionBlock = false;
+        cards = new ArrayList();
+        intrigues = new ArrayList();
+    }
+
+    /**
+     * Creates a new Player
+     * @deprecated for test use only - please instantiate a GameController
+     * @param id 
+     */
+    public Player(int id){
         this.id = id;
         notes = "";
         active = true;
