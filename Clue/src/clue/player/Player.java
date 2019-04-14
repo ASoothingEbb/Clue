@@ -7,6 +7,7 @@ package clue.player;
 
 import clue.GameController;
 import clue.card.Card;
+import clue.card.CardType;
 import clue.card.IntrigueCard;
 import clue.tile.Tile;
 import java.util.ArrayList;
@@ -112,6 +113,9 @@ public class Player {
     public IntrigueCard addIntrigue() {
         IntrigueCard card = (IntrigueCard) game.drawCard();
         intrigues.add(card);
+        if (card.getCardType() == CardType.AVOIDSUGGESTION){
+            setActiveSuggestionBlock(true);
+        }
         return card;
     }
 
