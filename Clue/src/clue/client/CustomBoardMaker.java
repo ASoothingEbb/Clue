@@ -6,9 +6,11 @@
 package clue.client;
 
 import static com.sun.java.accessibility.util.AWTEventMonitor.addMouseListener;
+import static com.sun.java.accessibility.util.AWTEventMonitor.addMouseMotionListener;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Paint;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseListener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -47,6 +49,7 @@ public class CustomBoardMaker extends Application{
     int width;
     int height;
     boolean mouseDown;
+    boolean mouseDownDrag;
     LabelStringPair[][] board;
     TileType lastSelected;
     Stage mainStage;
@@ -83,6 +86,8 @@ public class CustomBoardMaker extends Application{
         gridPane = new GridPane();
         pallete = new VBox();
         lastSelected = TileType.WALKABLE;
+        
+       
         
         width = 1000;
         height = 980;
@@ -135,8 +140,15 @@ public class CustomBoardMaker extends Application{
                     }
                 };
                 
-                
                 l.setOnMouseClicked(mouseHandler);
+                
+                l.setOnMouseEntered(e -> {
+                    try {
+                        dragPaint(l);
+                    } catch (CreationException ex) {
+                    }
+                });
+                
                 l.setStyle("-fx-border-color: black; -fx-background-color: lightgray;");
                 board[u][i] = new LabelStringPair(l, "0", i, u);
                 pane.setConstraints(l, i , u);
@@ -148,8 +160,13 @@ public class CustomBoardMaker extends Application{
      * This method changes the appearance of a label depending on the current "brush" that is being used.
      * @param l A Label object
      */
+    
+    public void dragPaint(Label l) throws CreationException{
+        if(mouseDownDrag)
+            paintTile(l);
+    }
     public void paintTile(Label l) throws CreationException{
-        int x= -1;
+        int x = -1;
         int y = -1;
         
         for(int i =0; i<board.length; i++){
@@ -354,6 +371,8 @@ public class CustomBoardMaker extends Application{
     public void createCSV() throws CreationException{
         int currentRoomInt = 1;
         int startTileCounter= 0;
+        
+        ungrabRooms();
         for(int y=0; y < board.length; y++){
             for(int x=0; x< board[0].length; x++){
                 if(board[y][x].s.equals("S")){
@@ -389,8 +408,6 @@ public class CustomBoardMaker extends Application{
     }
     
     public void grabRooms(int x, int y, int roomId){
-        String roomIdString = Integer.toString(roomId);
-        
         
         if(x<board[0].length-1){//If thereis a RIGHT tile
             if ("r".equals(board[y][x+1].s)){
@@ -428,6 +445,22 @@ public class CustomBoardMaker extends Application{
         alert.setHeaderText(null);
         
         alert.showAndWait();
+    }
+    
+    public void ungrabRooms(){
+        for(int y=0; y < board.length; y++){
+            for(int x=0; x< board[0].length; x++){
+                
+                if(!board[y][x].s.equals("0")){
+                    try{
+                        Integer.parseInt(board[y][x].s);
+                        board[y][x].s = "r";
+                    } catch(NumberFormatException e){
+
+                    }        
+                } 
+            }
+        }
     }
     
     public class LabelStringPair{
