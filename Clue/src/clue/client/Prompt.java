@@ -5,6 +5,9 @@
  */
 package clue.client;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Dialog;
@@ -25,23 +28,27 @@ import javafx.stage.StageStyle;
 public class Prompt extends Dialog {
     
     private final DialogPane dialogPane;
+    private Font avenirLarge;
+    private Font avenirMedium;
     
     public Prompt(String text) {
         initStyle(StageStyle.UNDECORATED);
         dialogPane = getDialogPane();
         dialogPane.setBackground(new Background(new BackgroundFill(Color.rgb(160, 160, 160), CornerRadii.EMPTY, Insets.EMPTY)));
         
+        initFonts();
+        
         VBox layout = new VBox();
         
         Label title = new Label("Error:");
         title.setTextFill(Color.WHITE);
-        title.setFont(Font.loadFont(getClass().getResourceAsStream("assets/fonts/Avenir-Book.ttf"),20));
+        title.setFont(avenirLarge);
         
         Label message = new Label(text);
         message.setTextFill(Color.WHITE);
-        message.setFont(Font.loadFont(getClass().getResourceAsStream("assets/fonts/Avenir-Book.ttf"), 15));
+        message.setFont(avenirMedium);
         
-        MenuItem okButton = new MenuItem("OK", Font.loadFont(getClass().getResourceAsStream("assets/fonts/Avenir-Book.ttf"),20));
+        MenuItem okButton = new MenuItem("OK", avenirLarge);
         okButton.setOnMouseClicked(e -> {
             setResult(true);
             close();
@@ -51,5 +58,17 @@ public class Prompt extends Dialog {
         layout.setAlignment(Pos.CENTER);
         
         dialogPane.setContent(layout);
+    }
+    
+    private void initFonts() {
+        avenirLarge = new Font(20);
+        avenirMedium = new Font(15);
+        try {
+            avenirLarge = Font.loadFont(new FileInputStream(new File("./resources/fonts/Avenir-Book.ttf")), 20);
+            avenirMedium = Font.loadFont(new FileInputStream(new File("./resources/fonts/Avenir-Book.ttf")), 15);
+            
+        } catch(FileNotFoundException ex) {
+            
+        }
     }
 }
