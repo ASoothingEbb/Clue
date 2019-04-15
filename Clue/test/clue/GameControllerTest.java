@@ -427,14 +427,14 @@ public class GameControllerTest {
     @Test
     public void testMove_Queue() throws Exception {
         System.out.println("move");
-        Queue<Tile> tiles = new LinkedList();
+        //Queue<Tile> tiles = new LinkedList();
         Tile tile = new Tile(0,0);
         Tile tile2 = new Tile(0,1);
         tile.addAdjacent(tile2);
         gc.getPlayer().setPosition(tile);
         gc.getPlayer().setMoves(1);
-        tiles.add(tile2);
-        gc.move(tiles);
+        //tiles.add(tile2);
+        gc.move(tile2);
         assertEquals(tile2,gc.getPlayer().getPosition());
     }
 

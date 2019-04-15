@@ -43,7 +43,7 @@ public class TileTest {
     @Test
     public void testSetPlayer() {
         System.out.println("setPlayer");
-        Player player = null;
+        PlayerSprite player = null;
         Tile instance = null;
         instance.setPlayer(player);
         // TODO review the generated test code and remove the default call to fail.
@@ -56,7 +56,7 @@ public class TileTest {
     @Test
     public void testRemovePlayer() {
         System.out.println("removePlayer");
-        Player player = null;
+        PlayerSprite player = null;
         Tile instance = null;
         instance.removePlayer(player);
         // TODO review the generated test code and remove the default call to fail.

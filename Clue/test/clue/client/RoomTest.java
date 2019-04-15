@@ -43,7 +43,7 @@ public class RoomTest {
     @Test
     public void testEnterRoom() {
         System.out.println("enterRoom");
-        Player player = null;
+        PlayerSprite player = null;
         Room instance = null;
         instance.enterRoom(player);
         // TODO review the generated test code and remove the default call to fail.
@@ -56,7 +56,7 @@ public class RoomTest {
     @Test
     public void testLeaveRoom() {
         System.out.println("leaveRoom");
-        Player player = null;
+        PlayerSprite player = null;
         Room instance = null;
         instance.leaveRoom(player);
         // TODO review the generated test code and remove the default call to fail.

@@ -44,14 +44,14 @@ public class PlayerTest {
     @Test
     public void testMove() {
         System.out.println("move");
-        int x = 0;
-        int y = 0;
-        StackPane[][] board = null;
-        Player player = null;
-        Player instance = null;
-        boolean expResult = false;
-        boolean result = instance.move(x, y, board, player);
-        assertEquals(expResult, result);
+        //int x = 0;
+        //int y = 0;
+        //StackPane[][] board = null;
+        //Player player = null;
+        //Player instance = null;
+        //boolean expResult = false;
+        //instance.move(x, y, board, player);
+        //assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }

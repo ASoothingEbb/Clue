@@ -17,7 +17,7 @@ import javafx.scene.shape.StrokeType;
  */
 public class Tile extends Rectangle {
     
-    private Player player;
+    private PlayerSprite player;
     
     public Tile(int size) {
         setWidth(size);
@@ -30,11 +30,11 @@ public class Tile extends Rectangle {
         setFill(Color.rgb(200, 200, 200, 0.0));   
     }
     
-    public void setPlayer(Player player) {
+    public void setPlayer(PlayerSprite player) {
         this.player = player;
     }
     
-    public void removePlayer(Player player) {
+    public void removePlayer(PlayerSprite player) {
         this.player = null;
     }
 }
