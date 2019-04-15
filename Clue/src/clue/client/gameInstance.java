@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.animation.FadeTransition;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -54,6 +55,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 /**
  *
@@ -74,6 +76,11 @@ public class gameInstance {
     private boolean rolled;
     
     private GameController gameInterface;
+    private Stage gameStage;
+    private Scene uiScene;
+    private Scene curtainScene;
+   
+    private FadeTransition uiToCurtain;
     
     private HashMap<String, String> ImagePathMap = new HashMap<>();
     private HashMap<String, String> CardNameMap = new HashMap<>();
@@ -264,7 +271,7 @@ public class gameInstance {
 
         MenuItem rollButton = new MenuItem("Roll", avenirLarge);
         
-        rollButton.setOnMouseClicked(e -> {
+        rollButton.setOnMouseClicked(e -> {      
             if (!rolled) {
                 // waiting for gamecontroller to be finalised.
                 // remainingMovesLabel.setText("Remaining Moves: " + gameInterface.roll());
@@ -279,7 +286,7 @@ public class gameInstance {
         
         MenuItem endButton = new MenuItem("End Turn", avenirLarge);
         endButton.setOnMouseClicked(e -> {
-            System.out.println("End Turn");
+            switchToCurtain();
         });
         
         Button endTurnButton = new Button("End Turn");
@@ -295,6 +302,7 @@ public class gameInstance {
     }
     
     private BorderPane createUI() {
+        curtainScene =  new Scene(createCurtain());
         BorderPane main = new BorderPane();
         main.setBackground(greenFill);
         
@@ -307,6 +315,13 @@ public class gameInstance {
         rightPanel.setBottom(createPlayerControls());
         
         main.setRight(rightPanel);
+        
+        
+        //Fade Transition
+        uiToCurtain = new FadeTransition(Duration.millis(2500), main);
+        uiToCurtain.setNode(main);
+        uiToCurtain.setFromValue(0);
+        uiToCurtain.setToValue(1);
         
         return main;
     }
@@ -422,7 +437,7 @@ public class gameInstance {
     }
         
     public void startGame(GameController gameController) {
-        Stage gameStage = new Stage();
+        gameStage = new Stage();
         
         gameStage.initModality(Modality.APPLICATION_MODAL);
         gameStage.setTitle("Clue");
@@ -441,8 +456,34 @@ public class gameInstance {
         initDefaultNames();
         initGraphics();
         
-        Scene scene = new Scene(createUI());
-        gameStage.setScene(scene);
+        uiScene = new Scene(createUI(), Color.BLACK);
+        gameStage.setScene(uiScene);
         gameStage.show();
     }
+    
+    public VBox createCurtain(){
+        VBox curtain = new VBox();
+        
+        curtain.setAlignment(Pos.CENTER);
+        curtain.setBackground(blackFill);
+        
+        curtain.setMinSize(1736, 960);
+        Button fadeSwitch = new Button("Unfade");
+        fadeSwitch.setOnAction(e -> switchToUi());
+        
+        curtain.getChildren().add(fadeSwitch);
+        return curtain;
+    }
+    
+    public void switchToCurtain(){
+        gameStage.setScene(curtainScene);
+        System.out.println(gameStage.getWidth() + "" + gameStage.getHeight());
+    }
+    
+    public void switchToUi(){
+        uiToCurtain.play();
+        gameStage.setScene(uiScene);
+        System.out.println(gameStage.getWidth() + "" + gameStage.getHeight());
+    }
+
 }
