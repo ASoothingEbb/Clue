@@ -5,6 +5,12 @@
  */
 package clue.client;
 
+import clue.GameController;
+import clue.action.UnknownActionException;
+import clue.card.PersonCard;
+import clue.card.RoomCard;
+import clue.card.WeaponCard;
+import clue.tile.TileOccupiedException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -48,6 +54,7 @@ public class selectCards {
     private HashMap<String, String> ImagePathMap;
     private HashMap<String, String> CardNameMap;
     private int currentRoom;
+    private GameController gameInterface;
     
     private final Background greenFill = new Background(new BackgroundFill(Color.rgb(7, 80, 2), CornerRadii.EMPTY, Insets.EMPTY));
     
@@ -76,7 +83,7 @@ public class selectCards {
         
         ComboBox characterOptions = new ComboBox();
         characterOptions.getItems().addAll(characters);
-        characterOptions.setValue("Select Character");
+        characterOptions.setValue(CardNameMap.get("character0"));
         characterOptions.getSelectionModel().selectedItemProperty().addListener((Observable, oldValue, newValue) -> {
             characterView.setImage(getImage(newValue.toString()));
         });
@@ -91,7 +98,7 @@ public class selectCards {
         
         ComboBox weaponOptions = new ComboBox();
         weaponOptions.getItems().addAll(weapons);
-        weaponOptions.setValue("Select Weapon");
+        weaponOptions.setValue(CardNameMap.get("weapon0"));
         weaponOptions.getSelectionModel().selectedItemProperty().addListener((Observable, oldValue, newValue) -> {
             weaponView.setImage(getImage(newValue.toString()));
         });
@@ -119,10 +126,20 @@ public class selectCards {
                 Prompt selectCard = new Prompt("Select the murder weapon");
                 selectCard.showAndWait();
             } else {
-                System.out.println(actionType);
-                System.out.println("Character: " + characterOptions.getValue());
-                System.out.println("Weapon: " + weaponOptions.getValue());
-                System.out.println("Room: " + roomOptions.getValue());
+                String personKey = getKey(CardNameMap, characterOptions.getValue().toString());
+                PersonCard personCard = new PersonCard(Integer.valueOf(personKey.substring(personKey.length() - 1)));
+                String weaponKey = getKey(CardNameMap, characterOptions.getValue().toString());
+                WeaponCard weaponCard = new WeaponCard(Integer.valueOf(weaponKey.substring(weaponKey.length() - 1)));
+                RoomCard roomCard = new RoomCard(currentRoom);
+                try {
+                    if (actionType.equals("Suggestion")) {
+                        gameInterface.suggest(personCard, roomCard, weaponCard, gameInterface.getPlayer());
+                    } else if (actionType.equals("Accusation")) {
+                        gameInterface.accuse(personCard, roomCard, weaponCard);
+                    }
+                } catch (UnknownActionException | InterruptedException | TileOccupiedException ex) {
+                    Logger.getLogger(selectCards.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 stage.close();
             }
         });
@@ -179,9 +196,10 @@ public class selectCards {
         
     }
     
-    public void show(String name, Color color, int room, HashMap<String,String> ImagePathMap, HashMap<String, String> CardNameMap) {
+    public void show(String name, Color color, int room, HashMap<String,String> ImagePathMap, HashMap<String, String> CardNameMap, GameController gameController) {
         stage = new Stage();
         
+        this.gameInterface = gameController;
         this.actionType = name;
         this.color = color;
         this.ImagePathMap = ImagePathMap;
