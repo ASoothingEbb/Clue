@@ -29,6 +29,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -63,18 +64,20 @@ public class gameInstance {
     
     private HashMap<Integer, Integer> spawnlocations = new HashMap<>();
     private Player currentPlayer;
-    private String remainingMoves;
+    private int remainingMoves;
     private int currentRoom;
     private boolean rolled;
     
     private GameController gameInterface;
     
     private HashMap<String, String> ImagePathMap = new HashMap<>();
+    private HashMap<String, String> CardNameMap = new HashMap<>();
             
     private Font avenirLarge;
     private Font avenirTitle;
     private Font avenirText;
     private final Background blackFill = new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY));
+    private final Background greenFill = new Background(new BackgroundFill(Color.rgb(7, 80, 2), CornerRadii.EMPTY, Insets.EMPTY));
     
     private StackPane createBoard() {
         StackPane root = new StackPane();
@@ -97,7 +100,22 @@ public class gameInstance {
                 final int coordX = x;
                 final int coordY = y;
                 tile.setOnMouseClicked((MouseEvent e) -> {
-                    boolean moved = currentPlayer.move(coordX, coordY, board, currentPlayer);
+                    if (remainingMoves > 0) {
+                        try {
+                            if (gameInterface.move(coordX, coordY)) {
+                                currentPlayer.move(coordX, coordY, board, currentPlayer);
+                            } else {
+                                //Prompt invalidMove = new Prompt("Invalid Move");
+                                //invalidMove.show();
+                                System.out.println("cant move");
+                            }
+                        } catch(NoSuchRoomException | UnknownActionException | InterruptedException | GameController.MovementException | TileOccupiedException ex) {
+                            
+                        }
+                    } else {
+                        Prompt invalidMove = new Prompt("No more moves remaining");
+                        invalidMove.show();
+                    }
                     System.out.println("HELLO " + counter);
                     counter++;
                 });
@@ -164,9 +182,8 @@ public class gameInstance {
     
     public GridPane createCardsDisplay() {
         GridPane cardsLayout = new GridPane();
-        
         Label playerCardsLabel = getLabel("Cards", avenirTitle);
-        int x = 0;
+        int x = 1;
         int y = 0;
         //System.out.println(gameInterface.getPlayer().getCards());
         for (clue.card.Card card: gameInterface.getPlayer().getCards()) {
@@ -174,32 +191,33 @@ public class gameInstance {
             try {
                 switch (card.cardType) {
                     case PERSON:
-                        cardImage = new Image(new FileInputStream(new File("./resources/character/character"+card.getid())));
+                        cardImage = new Image(new FileInputStream(new File(ImagePathMap.get("character"+card.getid()))));
                         break;
                     case WEAPON:
-                        cardImage = new Image(new FileInputStream(new File("./resources/character/weapon"+card.getid())));
+                        cardImage = new Image(new FileInputStream(new File(ImagePathMap.get("weapon"+card.getid()))));
                         break;
                     case ROOM:
-                        cardImage = new Image(new FileInputStream(new File("./resources/character/room"+card.getid())));
+                        cardImage = new Image(new FileInputStream(new File(ImagePathMap.get("room"+card.getid()))));
                         break;
                     default:
-                        cardImage = new Image(new FileInputStream(new File("./resources/character/character1")));
+                        cardImage = new Image(new FileInputStream(new File(ImagePathMap.get("character1"))));
                         break;
                 }
             } catch(FileNotFoundException ex) {
-                
+                System.out.println("Not Found");
             }
-            System.out.println(cardImage);
 
             ImageView view = new ImageView(cardImage);
             cardsLayout.add(view, y, x);
             GridPane.setMargin(view, new Insets(0, 10, 10, 0));
-            y ^= 1;
-            if (y == 1) {
+            if (y == 2) {
                 x++;
+                y = 0;
+            } else {
+                y++;
             }
         }
-        cardsLayout.add(playerCardsLabel, 0, 0, 2, 1);
+        cardsLayout.add(playerCardsLabel, 0, 0, 3, 1);
         GridPane.setHalignment(playerCardsLabel,HPos.CENTER);
         
         return cardsLayout;
@@ -208,6 +226,7 @@ public class gameInstance {
     private VBox createPlayerControls() {        
         VBox playerControlsLayout = new VBox();
         playerControlsLayout.setAlignment(Pos.CENTER);
+        playerControlsLayout.setPadding(new Insets(0, 0, 5, 0));
         
         Label remainingMovesLabel = getLabel("Roll Available", avenirTitle);
 
@@ -216,8 +235,10 @@ public class gameInstance {
         suggestionButton.setInactiveColor(Color.DARKORANGE);
         suggestionButton.setActive(false); //refresh Colour
         suggestionButton.setOnMouseClicked(e -> {
-            if (gameInterface.getPlayer().getPosition().isRoom()) {
-                currentRoom = ((Room) gameInterface.getPlayer().getPosition()).getId();
+            //gameInterface.getPlayer().getPosition().isRoom()
+            if (true) {
+                //currentRoom = ((Room) gameInterface.getPlayer().getPosition()).getId();
+                currentRoom = 1;
                 createCardsWindow("Suggetsion", Color.ORANGE);
             }
         });
@@ -236,7 +257,8 @@ public class gameInstance {
             if (!rolled) {
                 // waiting for gamecontroller to be finalised.
                 // remainingMovesLabel.setText("Remaining Moves: " + gameInterface.roll());
-                remainingMovesLabel.setText("Remaining Moves: " + gameInterface.roll());
+                remainingMoves = gameInterface.roll();
+                remainingMovesLabel.setText("Remaining Moves: " + remainingMoves);
                 rolled = true;
             } else {
                 Prompt alreadyRolled = new Prompt("You cannot roll");
@@ -258,12 +280,12 @@ public class gameInstance {
     
     private void createCardsWindow(String title, Color color) {
         selectCards cardsWindow = new selectCards();
-        cardsWindow.show(title, color, currentRoom, ImagePathMap);
+        cardsWindow.show(title, color, currentRoom, ImagePathMap, CardNameMap);
     }
     
     private BorderPane createUI() {
         BorderPane main = new BorderPane();
-        main.setBackground(blackFill);
+        main.setBackground(greenFill);
         
         main.setLeft(createLeftPanel());
         
@@ -311,29 +333,55 @@ public class gameInstance {
     private void initDefaultGraphics() {
         ImagePathMap.put("board", "./resources/board.png");
         
-        ImagePathMap.put("character1", "./resources/Character/MissScarlet.png");
-        ImagePathMap.put("character2", "./resources/Character/ColonelMustard.png");
-        ImagePathMap.put("character3", "./resources/Character/MrsWhite.png");
-        ImagePathMap.put("character4", "./resources/Character/MrGreen.png");
-        ImagePathMap.put("character5", "./resources/Character/MrsPeacock.png");
-        ImagePathMap.put("character6", "./resources/Character/ProfessorPlum.png");
+        ImagePathMap.put("character0", "./resources/Character/MissScarlet.png");
+        ImagePathMap.put("character1", "./resources/Character/ColonelMustard.png");
+        ImagePathMap.put("character2", "./resources/Character/MrsWhite.png");
+        ImagePathMap.put("character3", "./resources/Character/MrGreen.png");
+        ImagePathMap.put("character4", "./resources/Character/MrsPeacock.png");
+        ImagePathMap.put("character5", "./resources/Character/ProfessorPlum.png");
         
-        ImagePathMap.put("weapon1","./resources/Candlestick.png");
-        ImagePathMap.put("weapon2","./resources/Dagger.png");
-        ImagePathMap.put("weapon3","./resources/LeadPipe.png");
-        ImagePathMap.put("weapon4","./resources/Revolver.png");
-        ImagePathMap.put("weapon5","./resources/Rope.png");
-        ImagePathMap.put("weapon6","./resources/Wrench.png");
+        ImagePathMap.put("weapon0","./resources/Weapon/Candlestick.png");
+        ImagePathMap.put("weapon1","./resources/Weapon/Dagger.png");
+        ImagePathMap.put("weapon2","./resources/Weapon/LeadPipe.png");
+        ImagePathMap.put("weapon3","./resources/Weapon/Revolver.png");
+        ImagePathMap.put("weapon4","./resources/Weapon/Rope.png");
+        ImagePathMap.put("weapon5","./resources/Weapon/Wrench.png");
         
-        ImagePathMap.put("room1","./resources/Ballroom.png");
-        ImagePathMap.put("room2","./resources/BillardRoom.png");
-        ImagePathMap.put("room3","./resources/Conservatory.png");
-        ImagePathMap.put("room4","./resources/DiningRoom.png");
-        ImagePathMap.put("room5","./resources/Hall.png");
-        ImagePathMap.put("room6","./resources/Kitchen.png");
-        ImagePathMap.put("room7","./resources/Library.png");
-        ImagePathMap.put("room8","./resources/Lounge.png");
-        ImagePathMap.put("room9","./resources/Study.png");
+        ImagePathMap.put("room0","./resources/Room/Ballroom.png");
+        ImagePathMap.put("room1","./resources/Room/BillardRoom.png");
+        ImagePathMap.put("room2","./resources/Room/Conservatory.png");
+        ImagePathMap.put("room3","./resources/Room/DiningRoom.png");
+        ImagePathMap.put("room4","./resources/Room/Hall.png");
+        ImagePathMap.put("room5","./resources/Room/Kitchen.png");
+        ImagePathMap.put("room6","./resources/Room/Library.png");
+        ImagePathMap.put("room7","./resources/Room/Lounge.png");
+        ImagePathMap.put("room8","./resources/Room/Study.png");
+    }
+    
+    private void initDefaultNames() {
+        CardNameMap.put("character0", "Miss Scarlet");
+        CardNameMap.put("character1", "Colonel Mustard");
+        CardNameMap.put("character2", "Mrs White");
+        CardNameMap.put("character3", "Mr Green");
+        CardNameMap.put("character4", "Mrs Peacock");
+        CardNameMap.put("character5", "Professor Plum");
+        
+        CardNameMap.put("weapon0", "Candlestick");
+        CardNameMap.put("weapon1", "Dagger");
+        CardNameMap.put("weapon2", "Lead Pipe");
+        CardNameMap.put("weapon3", "Revolver");
+        CardNameMap.put("weapon4", "Rope");
+        CardNameMap.put("weapon5", "Wrench");
+        
+        CardNameMap.put("room0", "Ballroom");
+        CardNameMap.put("room1", "Billard Room");
+        CardNameMap.put("room2", "Conservatory");
+        CardNameMap.put("room3", "Dining Room");
+        CardNameMap.put("room4", "Hall");
+        CardNameMap.put("room5", "Kitchen");
+        CardNameMap.put("room6", "Library");
+        CardNameMap.put("room7", "Lounge");
+        CardNameMap.put("room8", "Study");
     }
     
     private void initFonts() {
@@ -379,6 +427,7 @@ public class gameInstance {
         
         initFonts();
         initDefaultGraphics();
+        initDefaultNames();
         initGraphics();
         
         Scene scene = new Scene(createUI());
