@@ -67,7 +67,9 @@ public class MoveAction extends Action {
     }
     
     private boolean BFS(){   
-        System.out.println("BFS");
+        System.out.println("BFS...");
+        System.out.println("s: "+s);
+        System.out.println("t: "+s);
         boolean visited[][] = new boolean[boardWidth][boardHeight];
         
         for(boolean []a : visited){
@@ -96,6 +98,7 @@ public class MoveAction extends Action {
             for (Tile currentTile : currentPath.getLast().getAdjacent()){//try to explore all the tiles adjacent to the last tile in the path
                 if (currentTile == t){//shortest path found to target
                     currentPath.add(currentTile);
+                    System.out.println("found target :"+ player.getMoves() + " " + currentPath.size());
                     return currentPath.size() < player.getMoves();
                 }
                 else if (currentTile.isFull() || visited[currentTile.getX()][currentTile.getY()]){//if the tile is full or is already visited, do not explore it
