@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -69,12 +71,12 @@ public class gameInstance {
     
     private HashMap<Integer, Integer> spawnlocations = new HashMap<>();
     private PlayerSprite currentPlayer;
-    private int remainingMoves;
+    private IntegerProperty remainingMoves;
     private int currentRoom;
     private boolean rolled;
     
     private GameController gameInterface;
-    
+
     private HashMap<String, String> ImagePathMap = new HashMap<>();
     private HashMap<String, String> CardNameMap = new HashMap<>();
             
@@ -112,6 +114,7 @@ public class gameInstance {
                     try {
                         System.out.println(coordX + " " + coordY);
                         System.out.println(gameInterface.move(coordX, coordY));
+                        remainingMoves.set(remainingMoves.get() - 1);
                     } catch (NoSuchRoomException | UnknownActionException | InterruptedException | GameController.MovementException | TileOccupiedException ex) {
                         Logger.getLogger(gameInstance.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -147,8 +150,6 @@ public class gameInstance {
             currentPlayer = playerSprite;
             board[y][x].getChildren().add(playerSprite);
         });
-        
-        
     }
     
     private VBox createLeftPanel() {
@@ -159,8 +160,12 @@ public class gameInstance {
         Label notepadLabel = getLabel("Notepad", avenirTitle);
         
         TextArea notepad = new TextArea();
-        notepad.setPrefRowCount(20);
+        notepad.setPrefRowCount(25);
         notepad.setPrefColumnCount(20);
+        
+        notepad.textProperty().addListener((observable, oldValue, newValue) -> {
+            notes = newValue;
+        });
         
         // Test
         MenuItem print = new MenuItem("Print", avenirTitle);
@@ -176,6 +181,7 @@ public class gameInstance {
         ScrollPane historyPane = new ScrollPane();
         historyPane.setBackground(new Background(new BackgroundFill(Color.GREY, CornerRadii.EMPTY, Insets.EMPTY)));
         historyPane.setPannable(false);
+        historyPane.setPrefHeight(400);
         historyPane.setContent(history);
         
         leftPanelLayout.getChildren().addAll(notepadLabel, notepad, print, historyLabel, historyPane);
@@ -187,7 +193,6 @@ public class gameInstance {
         // TODO String processing
         // waiting for definite format from backend
         Label historyItem = new Label();
-        
         return historyItem;
     }
     
@@ -250,7 +255,7 @@ public class gameInstance {
             if (true) {
                 //currentRoom = ((Room) gameInterface.getPlayer().getPosition()).getId();
                 currentRoom = 1;
-                createCardsWindow("Suggetsion", Color.ORANGE);
+                createCardsWindow("Suggestion", Color.ORANGE);
             }
         });
         
@@ -268,8 +273,11 @@ public class gameInstance {
             if (!rolled) {
                 // waiting for gamecontroller to be finalised.
                 // remainingMovesLabel.setText("Remaining Moves: " + gameInterface.roll());
-                remainingMoves = gameInterface.roll();
-                remainingMovesLabel.setText("Remaining Moves: " + remainingMoves);
+                int roll = gameInterface.roll();
+                remainingMoves = new SimpleIntegerProperty();
+                remainingMoves.set(roll);
+                remainingMovesLabel.setText("Remaining Moves: " + remainingMoves.get());
+                remainingMoves.addListener((observable, oldValue, newValue) -> remainingMovesLabel.setText("Remaining Moves: " + newValue));
                 rolled = true;
             } else {
                 Prompt alreadyRolled = new Prompt("You cannot roll");
@@ -280,10 +288,9 @@ public class gameInstance {
         MenuItem endButton = new MenuItem("End Turn", avenirLarge);
         endButton.setOnMouseClicked(e -> {
             System.out.println("End Turn");
+            gameInterface.getPlayer().setNotes(notes);
         });
         
-        Button endTurnButton = new Button("End Turn");
-        // Insets(top, right, bottom, left);
         playerControlsLayout.getChildren().addAll(remainingMovesLabel, suggestionButton, accusationButton, rollButton, endButton);
         
         return playerControlsLayout;        
@@ -291,7 +298,7 @@ public class gameInstance {
     
     private void createCardsWindow(String title, Color color) {
         selectCards cardsWindow = new selectCards();
-        cardsWindow.show(title, color, currentRoom, ImagePathMap, CardNameMap);
+        cardsWindow.show(title, color, currentRoom, ImagePathMap, CardNameMap, gameInterface);
     }
     
     private BorderPane createUI() {
