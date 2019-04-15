@@ -178,7 +178,7 @@ public final class GameController {
                     }
                 }
                 else{
-                    System.out.println("move was not checked");
+                    System.out.println("move was not checked" + action.actionType);
                 }
                 
                 System.out.println("playerId: "+player.getId()+", move attempt result: "+action.result);
@@ -541,22 +541,6 @@ public final class GameController {
     
     }
     
-    /**
-     * Trys to move current player to tile at x,y
-     * @param x
-     * @param y
-     * @return true if move was successful, false otherwise
-     * @throws NoSuchRoomException
-     * @throws UnknownActionException
-     * @throws InterruptedException
-     * @throws clue.GameController.MovementException
-     * @throws TileOccupiedException 
-     */
-    public boolean move(int x, int y) throws NoSuchRoomException, UnknownActionException, InterruptedException, MovementException, TileOccupiedException{
-        return move(getTile(x,y));
-    
-    }
-    
     public int getBoardWidth() {
         return bm.getBoardWidth();
     }
@@ -564,5 +548,4 @@ public final class GameController {
     public int getBoardHeight() {
         return bm.getBoardHeight();
     }
-   
 }
