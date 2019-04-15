@@ -110,6 +110,7 @@ public class gameInstance {
                 final int coordY = y;
                 tile.setOnMouseClicked((MouseEvent e) -> {
                     try {
+                        System.out.println(coordX + " " + coordY);
                         System.out.println(gameInterface.move(coordX, coordY));
                     } catch (NoSuchRoomException | UnknownActionException | InterruptedException | GameController.MovementException | TileOccupiedException ex) {
                         Logger.getLogger(gameInstance.class.getName()).log(Level.SEVERE, null, ex);
@@ -121,7 +122,7 @@ public class gameInstance {
                 
                 tilePane.getChildren().add(tile);
                 board[y][x] = tilePane;
-                boardPane.add(tilePane, x, y);   
+                boardPane.add(tilePane, x, y);
             }
         }
         
@@ -139,9 +140,10 @@ public class gameInstance {
         List<Player> players = gameInterface.getPlayers();
         Collections.reverse(players);
         players.forEach((player) -> {
+            System.out.println(player.getId());
             int x = player.getPosition().getX();
             int y = player.getPosition().getY();
-            PlayerSprite playerSprite = new PlayerSprite(x, y, "PP");
+            PlayerSprite playerSprite = new PlayerSprite(x, y, "PP"+player.getId());
             currentPlayer = playerSprite;
             board[y][x].getChildren().add(playerSprite);
         });
