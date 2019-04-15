@@ -63,7 +63,6 @@ public class gameInstance {
     private StackPane[][] board;
     private String notes;
     
-    private HashMap<Integer, Integer> spawnlocations = new HashMap<>();
     private PlayerSprite currentPlayer;
     private IntegerProperty remainingMoves;
     private int currentRoom;
@@ -154,9 +153,11 @@ public class gameInstance {
         Label notepadLabel = getLabel("Notepad", avenirTitle);
         
         TextArea notepad = new TextArea();
-        notepad.setPrefRowCount(25);
+        notepad.setPrefRowCount(20);
         notepad.setPrefColumnCount(20);
-        
+        notepad.setWrapText(true);
+        notepad.setFont(avenirText);
+        notepad.setStyle("-fx-control-inner-background: #fff2ab;");
         notepad.textProperty().addListener((observable, oldValue, newValue) -> {
             notes = newValue;
         });
