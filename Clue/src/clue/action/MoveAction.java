@@ -67,7 +67,7 @@ public class MoveAction extends Action {
     }
     
     private boolean BFS(){   
-        
+        System.out.println("BFS");
         boolean visited[][] = new boolean[boardWidth][boardHeight];
         
         for(boolean []a : visited){
@@ -85,7 +85,7 @@ public class MoveAction extends Action {
         while(true){
             
             if (pathList.isEmpty()){
-                //System.out.println("no valid path found");
+                System.out.println("no valid path found");
                 return false;
             }
             
