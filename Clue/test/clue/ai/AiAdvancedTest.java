@@ -53,8 +53,6 @@ public class AiAdvancedTest {
     @Test
     public void testOnUpdate() {
         System.out.println("onUpdate");
-        AiAdvanced instance = null;
-        instance.onUpdate();
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
@@ -65,8 +63,6 @@ public class AiAdvancedTest {
     @Test
     public void testMakeLists() {
         System.out.println("makeLists");
-        AiAdvanced instance = null;
-        instance.makeLists();
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
@@ -77,8 +73,6 @@ public class AiAdvancedTest {
     @Test
     public void testMoveToRoom() {
         System.out.println("moveToRoom");
-        AiAdvanced instance = null;
-        instance.moveToRoom();
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
@@ -89,10 +83,6 @@ public class AiAdvancedTest {
     @Test
     public void testGetLists() {
         System.out.println("getLists");
-        AiAdvanced instance = null;
-        ArrayList<ArrayList<Card>> expResult = null;
-        ArrayList<ArrayList<Card>> result = instance.getLists();
-        assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
@@ -103,10 +93,6 @@ public class AiAdvancedTest {
     @Test
     public void testGetPathToRoom() {
         System.out.println("getPathToRoom");
-        AiAdvanced instance = null;
-        LinkedList<Tile> expResult = null;
-        LinkedList<Tile> result = instance.getPathToRoom();
-        assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
