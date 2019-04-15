@@ -294,6 +294,10 @@ public final class GameController {
     
     /**
      * Ends the turn of the current player
+     * @throws clue.action.UnknownActionException
+     * @throws java.lang.InterruptedException
+     * @throws clue.GameController.MovementException
+     * @throws clue.tile.TileOccupiedException
      */
     public void endTurn() throws UnknownActionException, InterruptedException, MovementException, TileOccupiedException{
         performAction(new EndTurnAction(player));
@@ -378,7 +382,8 @@ public final class GameController {
     /**
      * Moves the current player in a sequence of moves.
      *
-     * @param tiles tiles to move to
+     * @param tile tile to move to
+     * @return 
      * @throws UnknownActionException
      * @throws InterruptedException
      * @throws clue.GameController.MovementException the movements were invalid
@@ -415,6 +420,7 @@ public final class GameController {
      * @param player the suggesting Player
      * @throws clue.action.UnknownActionException
      * @throws java.lang.InterruptedException
+     * @throws clue.tile.TileOccupiedException
      */
     public void suggest(PersonCard person, RoomCard room, WeaponCard weapon, Player player) throws UnknownActionException, InterruptedException, TileOccupiedException {
         performAction(new SuggestAction(person, room, weapon, player, state));
@@ -535,6 +541,7 @@ public final class GameController {
      * @param x the x coordinate
      * @param y the y coordinate
      * @return the tile at x y
+     * @throws clue.tile.NoSuchRoomException
      */
     public Tile getTile(int x, int y) throws NoSuchRoomException{
         return bm.getTile(x,y);
