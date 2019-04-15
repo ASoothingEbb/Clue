@@ -11,6 +11,7 @@ import clue.MissingRoomDuringCreationException;
 import clue.action.Action;
 import clue.action.UnknownActionException;
 import clue.card.CardType;
+import clue.player.Player;
 import clue.tile.NoSuchRoomException;
 import clue.tile.NoSuchTileException;
 import clue.tile.Room;
@@ -20,8 +21,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -59,11 +64,11 @@ public class gameInstance {
     private static final int TILE_SIZE = 38;
     private int counter;
    
-    private StackPane[][] board = new StackPane[25][24];
+    private StackPane[][] board;
     private String notes;
     
     private HashMap<Integer, Integer> spawnlocations = new HashMap<>();
-    private Player currentPlayer;
+    private PlayerSprite currentPlayer;
     private int remainingMoves;
     private int currentRoom;
     private boolean rolled;
@@ -92,55 +97,59 @@ public class gameInstance {
             System.out.println("Failed to load board texture");
         }
         
+        int boardHeight = gameInterface.getBoardHeight();
+        int boardWidth = gameInterface.getBoardWidth();
+        board = new StackPane[boardHeight][boardWidth];
+        
         // create base Tiles
-        for (int y=0; y < 24; y++) {
-            for (int x=0; x < 25; x++) {
+        for (int y=0; y < boardHeight; y++) {
+            for (int x=0; x < boardWidth; x++) {
                 StackPane tilePane = new StackPane();
                 Tile tile = new Tile(TILE_SIZE);
                 final int coordX = x;
                 final int coordY = y;
                 tile.setOnMouseClicked((MouseEvent e) -> {
-                    if (remainingMoves > 0) {
-                        try {
-                            if (gameInterface.move(coordX, coordY)) {
-                                currentPlayer.move(coordX, coordY, board, currentPlayer);
-                            } else {
-                                //Prompt invalidMove = new Prompt("Invalid Move");
-                                //invalidMove.show();
-                                System.out.println("cant move");
-                            }
-                        } catch(NoSuchRoomException | UnknownActionException | InterruptedException | GameController.MovementException | TileOccupiedException ex) {
-                            
-                        }
-                    } else {
-                        Prompt invalidMove = new Prompt("No more moves remaining");
-                        invalidMove.show();
+                    try {
+                        System.out.println(gameInterface.move(coordX, coordY));
+                    } catch (NoSuchRoomException | UnknownActionException | InterruptedException | GameController.MovementException | TileOccupiedException ex) {
+                        Logger.getLogger(gameInstance.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                    currentPlayer.move(coordX, coordY, board, currentPlayer);
                     System.out.println("HELLO " + counter);
                     counter++;
                 });
                 
                 tilePane.getChildren().add(tile);
-                        
-                board[x][y] = tilePane;
-                boardPane.add(tilePane, y, x);   
+                board[y][x] = tilePane;
+                boardPane.add(tilePane, x, y);   
             }
         }
         
         // TODO: spawn players
+        spawnPlayers(board);
         
         rolled = false;
-        
-        Player player1 = new Player(0, 4, "PP");
-        board[5][0].getChildren().add(player1);
-        currentPlayer = player1;
         
         root.getChildren().add(boardPane);
         
         return root;
     }
+
+    private void spawnPlayers(StackPane[][] board) {
+        List<Player> players = gameInterface.getPlayers();
+        Collections.reverse(players);
+        players.forEach((player) -> {
+            int x = player.getPosition().getX();
+            int y = player.getPosition().getY();
+            PlayerSprite playerSprite = new PlayerSprite(x, y, "PP");
+            currentPlayer = playerSprite;
+            board[y][x].getChildren().add(playerSprite);
+        });
+        
+        
+    }
     
-    public VBox createLeftPanel() {
+    private VBox createLeftPanel() {
         VBox leftPanelLayout = new VBox();
         leftPanelLayout.setPadding(new Insets(0, 10, 10, 10));
         
@@ -180,7 +189,7 @@ public class gameInstance {
         return historyItem;
     }
     
-    public GridPane createCardsDisplay() {
+    private GridPane createCardsDisplay() {
         GridPane cardsLayout = new GridPane();
         Label playerCardsLabel = getLabel("Cards", avenirTitle);
         int x = 1;
