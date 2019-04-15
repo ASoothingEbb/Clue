@@ -6,15 +6,10 @@
 package clue.client;
 
 import clue.GameController;
-import clue.GameController.TooManyPlayersException;
-import clue.MissingRoomDuringCreationException;
 import clue.action.Action;
 import clue.action.UnknownActionException;
-import clue.card.CardType;
 import clue.player.Player;
 import clue.tile.NoSuchRoomException;
-import clue.tile.NoSuchTileException;
-import clue.tile.Room;
 import clue.tile.TileOccupiedException;
 import java.io.File;
 import java.io.FileInputStream;
@@ -36,7 +31,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
