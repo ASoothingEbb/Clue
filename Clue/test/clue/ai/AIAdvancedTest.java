@@ -6,18 +6,10 @@
 package clue.ai;
 
 import clue.GameController;
-import clue.MissingRoomDuringCreationException;
-import clue.action.UnknownActionException;
 import clue.card.Card;
-import clue.card.WeaponCard;
 import clue.card.RoomCard;
-import clue.player.Player;
-import clue.tile.NoSuchRoomException;
-import clue.tile.NoSuchTileException;
 import clue.tile.Room;
 import clue.tile.Tile;
-import clue.ai.AiAdvanced;
-import clue.tile.TileOccupiedException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import org.junit.After;
@@ -29,20 +21,19 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author zemig
+ * @author steve
  */
-public class AIAdvancedTest {
+public class AiAdvancedTest {
+    
     private static GameController gc;
-    public AIAdvancedTest() {
+    public AiAdvancedTest() {
     }
-
     
     @BeforeClass
-    public static void setUpClass() throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException, TileOccupiedException {
-
+    public static void setUpClass() throws Exception {
         gc = new GameController(1,1,"testCsv/tiles1.csv", "testCsv/doors1.csv");
+    
     }
-
     
     @AfterClass
     public static void tearDownClass() {
@@ -57,60 +48,73 @@ public class AIAdvancedTest {
     }
 
     /**
-     * Test of onUpdate method, of class AIAdvanced.
-     * @throws java.lang.InterruptedException
-     * @throws clue.action.UnknownActionException
-     * @throws clue.tile.NoSuchRoomException
-     * @throws clue.tile.NoSuchTileException
-     * @throws clue.MissingRoomDuringCreationException
-     * @throws clue.GameController.TooManyPlayersException
+     * Test of onUpdate method, of class AiAdvanced.
      */
-//    @Test
-//    public void testOnUpdate() {
-//        System.out.println("onUpdate");
-//        AIAdvanced instance = null;
-//        instance.onUpdate();
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of findNewRoom method, of class AIAdvanced.
-//     */
-//    @Test
-//    public void testFindNewRoom() {
-//        System.out.println("findNewRoom");
-//        AIAdvanced instance = null;
-//        instance.findNewRoom();
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-    
-    //@Test
-    public void testMakeLists() throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException{
-        System.out.println("makeListTest");
-        Player p1 = new AiAdvanced(1, gc, 0, 0);
-        Player p2 = new AiAdvanced(2, gc, 0 ,0);
-        Player p3 = new AiAdvanced(3, gc, 0, 0);
-        
-        ArrayList<Player> players = new ArrayList<>();
-        ArrayList<ArrayList<Card>> testList;
-        
-        
-        Card c1 = new WeaponCard(1);
-        
-        //gc.getPlayer(1).addCard(c1);
-        
-       // p1.makeLists();
-       // testList = p2.getLists();
-        
-        //System.out.println(testList);
-        
-        
-        
-        
+    @Test
+    public void testOnUpdate() {
+        System.out.println("onUpdate");
+        AiAdvanced instance = null;
+        instance.onUpdate();
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of makeLists method, of class AiAdvanced.
+     */
+    @Test
+    public void testMakeLists() {
+        System.out.println("makeLists");
+        AiAdvanced instance = null;
+        instance.makeLists();
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of moveToRoom method, of class AiAdvanced.
+     */
+    @Test
+    public void testMoveToRoom() {
+        System.out.println("moveToRoom");
+        AiAdvanced instance = null;
+        instance.moveToRoom();
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getLists method, of class AiAdvanced.
+     */
+    @Test
+    public void testGetLists() {
+        System.out.println("getLists");
+        AiAdvanced instance = null;
+        ArrayList<ArrayList<Card>> expResult = null;
+        ArrayList<ArrayList<Card>> result = instance.getLists();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getPathToRoom method, of class AiAdvanced.
+     */
+    @Test
+    public void testGetPathToRoom() {
+        System.out.println("getPathToRoom");
+        AiAdvanced instance = null;
+        LinkedList<Tile> expResult = null;
+        LinkedList<Tile> result = instance.getPathToRoom();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
     
+    
+    /**
+     * Test of BFS method, of class AiAdvanced.
+     */
     @Test
     public void testBFS() throws InterruptedException{//Trying to find a room.
         System.out.println("BFS (one valid path to room)");
@@ -161,8 +165,13 @@ public class AIAdvancedTest {
         
         assertEquals(1 ,((Room) p1.BFS().getLast()).getId());
         assertEquals(expectedPath, solutionPath);
+        
     }
     
+
+    /**
+     * Test of makeLists method, of class AiAdvanced.
+     */
     @Test
     public void testBFS2() throws InterruptedException{//Testing it on a board with no room.
         System.out.println("BFS (no room)");
@@ -198,10 +207,13 @@ public class AIAdvancedTest {
         LinkedList<Tile> resultPath = testPlayer.BFS();
         
         assertTrue(resultPath.isEmpty());
-        
-    }
+    }    
     
     
+
+    /**
+     * Test of moveToRoom method, of class AiAdvanced.
+     */
     @Test
     public void testBFS3() throws InterruptedException{//testing bfs with players as obstacles w/valid route
         System.out.println("BFS (with room, with valid path, with players)");
@@ -247,9 +259,13 @@ public class AIAdvancedTest {
         LinkedList<Tile> resultPath = testPlayer.BFS();
         
         assertEquals(resultPath, expectedPath);
-        
-    }
+    }   
+
     
+
+    /**
+     * Test of getLists method, of class AiAdvanced.
+     */
     @Test
     public void testBFS4() throws InterruptedException{//testing bfs with players as obstacles W/O Valid route
         System.out.println("BFS (with room, with players)");
@@ -274,6 +290,11 @@ public class AIAdvancedTest {
         
         assertTrue(resultPath.isEmpty());
     }
+
+
+    /**
+     * Test of getPathToRoom method, of class AiAdvanced.
+     */
     @Test
     public void testBFS5() throws InterruptedException{//testing bfs with multiple rooms
         System.out.println("BFS (many rooms)");
@@ -307,5 +328,8 @@ public class AIAdvancedTest {
         LinkedList<Tile> resultPath = p1.BFS();
         
         assertEquals(expectedPath, resultPath);  
+        
     }
+
+    
 }

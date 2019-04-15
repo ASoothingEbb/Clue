@@ -5,12 +5,6 @@
  */
 package clue.ai;
 
-import clue.GameController;
-import clue.MissingRoomDuringCreationException;
-import clue.action.UnknownActionException;
-import clue.tile.NoSuchRoomException;
-import clue.tile.NoSuchTileException;
-import clue.tile.TileOccupiedException;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -20,23 +14,16 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author zemig
+ * @author steve
  */
-public class AIBasicTest {
+public class AiBasicTest {
     
-    private static GameController gc;
-    public AIBasicTest() {
+    public AiBasicTest() {
     }
-    
-
-
     
     @BeforeClass
-    public static void setUpClass() throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException, TileOccupiedException {
-
-        gc = new GameController(1,1,"testCsv/tiles1.csv", "testCsv/doors1.csv");
+    public static void setUpClass() {
     }
-
     
     @AfterClass
     public static void tearDownClass() {
@@ -56,16 +43,10 @@ public class AIBasicTest {
     @Test
     public void testOnUpdate() {
         System.out.println("onUpdate");
-        AiBasic instance = new AiBasic(0, gc);
+        AiBasic instance = null;
         instance.onUpdate();
-    }
-    
-    @Test
-    public void testConstructor(){
-        AiBasic aItest = new AiBasic(1, gc);
-        int expInt = 1;
-        int id = aItest.getId();
-        assertEquals(id, expInt);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
     
 }
