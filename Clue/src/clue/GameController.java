@@ -154,10 +154,11 @@ public final class GameController {
                 break;
             case EXTRATURN:
                 returnCard((IntrigueCard) action.card);
+                //does it also need to be physicalled removed from the player?
                 nextAction = new StartTurnAction(action.getPlayer());
                 break;
             case MOVE:
-                if (action.result && (state.getAction().actionType == ActionType.STARTTURN || state.getAction().actionType == ActionType.THROWAGAIN || state.getAction().actionType == ActionType.MOVE)) {
+                if (action.result && (state.getAction().actionType == ActionType.STARTTURN || state.getAction().actionType == ActionType.MOVE)) {
                     Tile loc = ((MoveAction) action).getTile();
                     player.getPosition().setOccupied(false);
                     player.setPosition(loc);
@@ -166,6 +167,21 @@ public final class GameController {
                         getSpecial(loc);
                     }
                 }
+                else if (state.getAction().actionType == ActionType.THROWAGAIN){
+                    action = new MoveAgainAction((MoveAction)action);
+                    Tile loc = ((MoveAgainAction) action).getTile();
+                    player.getPosition().setOccupied(false);
+                    player.setPosition(loc);
+                    loc.setOccupied(true);
+                    if (loc.special) {
+                        getSpecial(loc);
+                    }
+                }
+                else{
+                    System.out.println("move was not checked");
+                }
+                
+                System.out.println("playerId: "+player.getId()+", move attempt result: "+action.result);
                 break;
             case SHOWCARD:
                 if (state.getAction().actionType == ActionType.SHOWCARDS) {
