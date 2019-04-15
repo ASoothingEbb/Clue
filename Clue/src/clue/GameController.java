@@ -536,4 +536,12 @@ public final class GameController {
         return move(getTile(x,y));
     
     }
+    
+    public int getBoardWidth() {
+        return bm.getBoardWidth();
+    }
+    
+    public int getBoardHeight() {
+        return bm.getBoardHeight();
+    }
 }
