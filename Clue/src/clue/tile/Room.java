@@ -25,6 +25,7 @@ public class Room extends Tile{
         this.card = card;
         room = true;
         locations = new ArrayList<>();
+        nonOccupiedLocations = new ArrayList<>();
     }
     /**
      * Creates a new Room
