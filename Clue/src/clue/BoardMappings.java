@@ -503,6 +503,11 @@ public final class BoardMappings {
                 }   
             }
         }
+        
+        for (Room room : rooms){
+            room.removeDoorLocationsFromDrawingLocations();
+        
+        }
         return localMappings;
     }
 
