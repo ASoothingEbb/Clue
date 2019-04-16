@@ -17,22 +17,22 @@ import static org.junit.Assert.*;
  * @author steve
  */
 public class ActionTypeTest {
-    
+
     public ActionTypeTest() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() {
     }
-    
+
     @After
     public void tearDown() {
     }
@@ -43,11 +43,9 @@ public class ActionTypeTest {
     @Test
     public void testValues() {
         System.out.println("values");
-        ActionType[] expResult = null;
+        ActionType[] expResult = {ActionType.DEFAULT, ActionType.ACCUSATION, ActionType.AVOIDSUGGESTIONCARD, ActionType.ENDTURN, ActionType.EXTRATURN, ActionType.MOVE, ActionType.MOVEAGAIN, ActionType.SHOWCARD, ActionType.SHOWCARDS, ActionType.START, ActionType.STARTTURN, ActionType.SUGGEST, ActionType.TELEPORT, ActionType.THROWAGAIN};
         ActionType[] result = ActionType.values();
         assertArrayEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -56,12 +54,10 @@ public class ActionTypeTest {
     @Test
     public void testValueOf() {
         System.out.println("valueOf");
-        String name = "";
-        ActionType expResult = null;
+        String name = "DEFAULT";
+        ActionType expResult = ActionType.DEFAULT;
         ActionType result = ActionType.valueOf(name);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
-    
+
 }
