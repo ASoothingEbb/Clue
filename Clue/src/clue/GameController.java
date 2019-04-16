@@ -122,12 +122,16 @@ public final class GameController {
     public void performAction(Action action) throws UnknownActionException, InterruptedException, TileOccupiedException {
         Action nextAction = null;
         if (player != null){
-            System.out.println("player turn before: "+player.getId());
+            System.out.println("[GameController.performAction] player turn before: "+player.getId());
+        }
+        
+        for (Player p : players){
+            System.out.println("[GameController.performAction] player order: "+p.getId());
         }
         player = players.get(state.getPlayerTurn());
-        System.out.println("player turn after: "+player.getId());
+        System.out.println("[GameController.performAction] player turn after: "+player.getId());
         action.execute();
-        System.out.println(action.actionType + " executing");
+        System.out.println("[GameController.performAction] "+action.actionType + " executing");
         //Action specific lplayersogic
         switch (action.actionType) {
             default:
@@ -159,15 +163,14 @@ public final class GameController {
                 state.nextTurn(state.nextPlayer());
 
                 int j = player.getId();
-
-                for (int i = 0; i < state.playersNumber; i++) {
-
-                    if (j != player.getId()) {
+                
+                for (Player p : players){
+                    if (p.isActive() && p.getId() !=j){
                         state.getPlayer(j).setActiveSuggestionBlock(false);//remove any suggestion blocks players may have 
-                    }
-
-                    j = state.getNextPointer(j);
+                        
+                    }    
                 }
+                
                 moveActionLog();
                 turns++;
                 nextAction = new StartTurnAction(state.getCurrentPlayer());
@@ -219,9 +222,9 @@ public final class GameController {
             case STARTTURN:
                 System.out.println("CASE STARTTURN "+player.getId() + " FROM: "+state.getAction().actionType);
                 if (state.getAction().actionType == ActionType.ENDTURN || state.getAction().actionType == ActionType.EXTRATURN || state.getAction().actionType == ActionType.START) {
-                    System.out.println("b"+player.getId());
+                    //System.out.println("b"+player.getId());
                     state.nextTurn(player.getId());
-                    System.out.println("a"+player.getId());
+                    //System.out.println("a"+player.getId());
                 }
                 break;
             case SUGGEST:
@@ -457,7 +460,7 @@ public final class GameController {
      * @throws clue.tile.TileOccupiedException
      */
     public boolean suggest(PersonCard person, RoomCard room, WeaponCard weapon, Player player) throws UnknownActionException, InterruptedException, TileOccupiedException {
-        SuggestAction suggestAction = new SuggestAction(person, room, weapon, player, state);
+        SuggestAction suggestAction = new SuggestAction(person, room, weapon, player, players);
         performAction(suggestAction);
         return suggestAction.result;
     }
