@@ -116,8 +116,9 @@ public class MoveAction extends Action {
             
             for (Tile currentTile : currentPath.getLast().getAdjacent()){//try to explore all the tiles adjacent to the last tile in the path
                 if (currentTile == t){//shortest path found to target
-                    //currentPath.add(currentTile);
-                    cost = currentPath.size()+1;
+                    currentPath.add(currentTile);
+                    currentPath.remove(s);
+                    cost = currentPath.size();
                     //System.out.println("found target, player has enough moves :"+ (cost < player.getMoves()));
                     
                     return cost < player.getMoves();
