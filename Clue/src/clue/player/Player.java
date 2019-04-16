@@ -9,6 +9,7 @@ import clue.GameController;
 import clue.card.Card;
 import clue.card.CardType;
 import clue.card.IntrigueCard;
+import clue.tile.Room;
 import clue.tile.Tile;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,7 @@ public class Player {
     private boolean activeSuggestionBlock;
     private int lastSeen = 0;
     private String notes;
+    private int[] drawnLocation;
 
     public GameController game;
 
@@ -45,6 +47,7 @@ public class Player {
         activeSuggestionBlock = false;
         cards = new ArrayList();
         intrigues = new ArrayList();
+        drawnLocation = new int[2];
     }
 
     /**
@@ -113,10 +116,38 @@ public class Player {
      * @param t destination
      */
     public void setPosition(Tile t) {
+        if (position.isRoom()){
+            ((Room) position).unassignLocation(drawnLocation);//allow room to re assign location
+        }
         position = t;
         t.setOccupied(true);
+        if (t.isRoom()){
+            drawnLocation = ((Room)t).assignLocation();//get a location from the room
+        }
+        else{
+            drawnLocation[0] = t.getX();
+            drawnLocation[1] = t.getY();
+           
+        }
     }
 
+    /**
+     * Gets the x coordinate that the player should be drawn at
+     * @return the x coordinate
+     */
+    public int getDrawX(){
+        return drawnLocation[0];
+    }
+    
+    /**
+     * Gets the y coordinate that the player should be drawn at
+     * @return the y coordinate
+     */
+    public int getDrawY(){
+        return drawnLocation[1];
+    }
+        
+    
     /**
      * Adds the card to this player.
      *
