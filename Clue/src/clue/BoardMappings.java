@@ -221,9 +221,9 @@ public final class BoardMappings {
             for (String[] row : lines){//store ourput from csv into 2d arraylist
                 rowBuffer = new ArrayList<>();
                 for (String cell : row){  
-                    System.out.println("b"+cell);
+                    //System.out.println("b"+cell);
                     cell = cell.replaceAll("[^0-9A-Z-]+", "");
-                    System.out.println("a"+cell);
+                    //System.out.println("a"+cell);
                     rowBuffer.add(cell);
                 }
                 csvData.add(rowBuffer);
@@ -506,10 +506,7 @@ public final class BoardMappings {
             }
         }
         
-        for (Room room : rooms){
-            room.removeDoorLocationsFromDrawingLocations();
         
-        }
         return localMappings;
     }
 
@@ -539,6 +536,11 @@ public final class BoardMappings {
             catch (ArrayIndexOutOfBoundsException ex){
                 throw new NoSuchTileException(ex.toString());
             }
+        }
+        
+        for (Room r : rooms){
+            r.removeDoorLocationsFromDrawingLocations();
+        
         }
     }
      /**
