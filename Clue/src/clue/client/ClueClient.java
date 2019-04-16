@@ -132,10 +132,13 @@ public class ClueClient extends Application {
         MenuItem howToPlayButton = new MenuItem("How To Play", avenirTitle);
         howToPlayButton.setOnMouseClicked(e -> howToPlayScene(stage));
         
+        MenuItem boardCreator = new MenuItem("Board Editor", avenirTitle);
+        boardCreator.setOnMouseClicked(e -> System.out.println("Board"));
+        
         MenuItem settingsButton = new MenuItem("Settings", avenirTitle);
         settingsButton.setOnMouseClicked(e -> settingScene(stage));
 
-         menuOptions.getChildren().addAll(createGameButton, howToPlayButton, settingsButton);
+         menuOptions.getChildren().addAll(createGameButton, howToPlayButton, boardCreator, settingsButton);
     }
     
     /**
