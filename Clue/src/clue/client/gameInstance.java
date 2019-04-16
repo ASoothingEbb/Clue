@@ -144,7 +144,6 @@ public class gameInstance {
                             Prompt rollError = new Prompt("Roll First");
                             rollError.show();
                         }
-;
                     });
                     if (cell.equals("-1") || cell.equals("")) {
                         tileSprite.setFill(Color.rgb(0, 93, 31));
@@ -172,10 +171,8 @@ public class gameInstance {
         ArrayList<int[]> doorLocations = gameInterface.getDoorLocations();
         System.out.println(doorLocations.size());
         doorLocations.forEach((coords) -> {
-            Tile tileSprite = new Tile(TILE_SIZE);
+            Tile tileSprite = (Tile) board[coords[1]][coords[0]].getChildren().get(0);
             tileSprite.setFill(Color.rgb(159, 101, 0));
-            board[coords[1]][coords[0]].getChildren().clear();
-            board[coords[1]][coords[0]].getChildren().add(tileSprite);
         });
 
         spawnPlayers(board);
