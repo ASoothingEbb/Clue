@@ -93,7 +93,8 @@ public class boardEditor {
         doorRightButton.setPrefWidth(120);
         doorRightButton.setOnMouseClicked(e -> lastSelected = EditorTileType.DOOR_RIGHT);
         
-        mapNameField = new TextField("Custom Map 1");
+        mapNameField = new TextField();
+        mapNameField.setText("Custom Map 1");
         mapNameField.setPrefColumnCount(5);
         
         MenuItem createCSV = new MenuItem("SAVE", avenirLarge);
