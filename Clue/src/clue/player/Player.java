@@ -27,7 +27,6 @@ public class Player {
     private Tile position;
     protected int movements;
     private int id;
-    private boolean activeSuggestionBlock;
     private int lastSeen = 0;
     private String notes;
     private int[] drawnLocation;
@@ -44,7 +43,6 @@ public class Player {
         this.id = id;
         notes = "";
         active = true;
-        activeSuggestionBlock = false;
         cards = new ArrayList();
         intrigues = new ArrayList();
         drawnLocation = new int[2];
@@ -59,7 +57,6 @@ public class Player {
         this.id = id;
         notes = "";
         active = true;
-        activeSuggestionBlock = false;
         cards = new ArrayList();
         intrigues = new ArrayList();
     }
@@ -166,9 +163,6 @@ public class Player {
     public IntrigueCard addIntrigue() {
         IntrigueCard card = (IntrigueCard) game.drawCard();
         intrigues.add(card);
-        if (card.getCardType() == CardType.AVOIDSUGGESTION){
-            setActiveSuggestionBlock(true);
-        }
         return card;
     }
     
@@ -178,9 +172,6 @@ public class Player {
      */
     public void addIntrigue(IntrigueCard card){
         intrigues.add(card);
-        if(card.getCardType() == CardType.AVOIDSUGGESTION){
-            setActiveSuggestionBlock(true);
-        }
     }
 
     public void removeIntrigue(IntrigueCard card){
@@ -215,24 +206,44 @@ public class Player {
         return intrigues;
     }
 
+
     /**
-     * Sets whether or not the player has an active suggestion block
+     * Gets whether or not the player has a given intrigue card type
      *
-     * @param newActiveSuggestionBlockValue
+     * @param type the intrigue card type to search for
+     * @return true if they have a card of that type, false otherwise
      */
-    public void setActiveSuggestionBlock(boolean newActiveSuggestionBlockValue) {
-        activeSuggestionBlock = newActiveSuggestionBlockValue;
+    public boolean hasIntrigue(CardType type) {
+        for (IntrigueCard intrigue: intrigues){
+            if (intrigue.cardType == type){
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
-     * Gets whether or not the player has an active suggestion block
-     *
-     * @return activeSuggestionBlock
+     * Removes one intrigue of the given card type from the player
+     * @param type the intrigue card type to remove
      */
-    public boolean getActiveSuggestionBlock() {
-        return activeSuggestionBlock;
+    public void removeIntrigueOnce(CardType type){
+        IntrigueCard toRemove = null;
+        
+        for (IntrigueCard intrigue: intrigues){
+            if (intrigue.cardType == type){
+                toRemove = intrigue;
+                break;
+            }
+        }
+        
+        if (toRemove != null){
+            intrigues.remove(toRemove);    
+        }
+        
     }
-
+    
+    
+    
     /**
      * Returns the game controller object.
      *

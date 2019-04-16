@@ -7,6 +7,7 @@ package clue.action;
 
 import clue.GameState;
 import clue.card.Card;
+import clue.card.CardType;
 import clue.card.PersonCard;
 import clue.card.RoomCard;
 import clue.card.WeaponCard;
@@ -54,7 +55,7 @@ public class SuggestAction extends Action {
         int i = player.getId();
         boolean found = false;
         int playersLeftToCheck = players.size()-1;
-        
+        System.out.println("[SuggestAction.execute] player is making a suggestion: "+i);
         while (playersLeftToCheck > 0) {
             i++;
             if (i >= players.size()){
@@ -62,14 +63,15 @@ public class SuggestAction extends Action {
             }
             check = players.get(i);
             playersLeftToCheck--;
-            if (player.isActive()) {
-                if (check.getActiveSuggestionBlock() == false){
+            if (check.isActive() && player.getId() != i) {
+                if (!check.hasIntrigue(CardType.AVOIDSUGGESTION)){
                     for (Card c : cards) {
                         if (check.hasCard(c)) {
                             show = players.get(i);
                             foundCards.add(c);
                             playersLeftToCheck = 0;
-                            System.out.println("[SuggestAction.execute] player :"+player.getId()+" was found to have card: "+c);
+                            System.out.println("[SuggestAction.execute] player : "+check.getId()+" was found to have card: "+c);
+                            found = true;
                         }
                     }
                 }

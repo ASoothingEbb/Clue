@@ -137,7 +137,7 @@ public class Room extends Tile{
     public int[] assignLocation(){
         int [] location = locations.get(0);
         if (nonOccupiedLocations.size() > 0){
-            int selected = nonOccupiedLocations.size()/2;
+            int selected = 0;
             location = nonOccupiedLocations.get(selected);
             nonOccupiedLocations.remove(selected);
         }
