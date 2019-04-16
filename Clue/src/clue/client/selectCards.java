@@ -6,18 +6,11 @@
 package clue.client;
 
 import clue.GameController;
-import clue.action.UnknownActionException;
-import clue.card.PersonCard;
-import clue.card.RoomCard;
-import clue.card.WeaponCard;
-import clue.tile.TileOccupiedException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -121,18 +114,13 @@ public class selectCards {
                 selectCard.showAndWait();
             } else {
                 String personKey = getKey(CardNameMap, characterOptions.getValue().toString());
-                PersonCard personCard = new PersonCard(Integer.valueOf(personKey.substring(personKey.length() - 1)));
+                int personCard = Integer.valueOf(personKey.substring(personKey.length() - 1));
                 String weaponKey = getKey(CardNameMap, characterOptions.getValue().toString());
-                WeaponCard weaponCard = new WeaponCard(Integer.valueOf(weaponKey.substring(weaponKey.length() - 1)));
-                RoomCard roomCard = new RoomCard(currentRoom);
-                try {
-                    if (actionType.equals("Suggestion")) {
-                        gameInterface.suggest(personCard, roomCard, weaponCard, gameInterface.getPlayer());
-                    } else if (actionType.equals("Accusation")) {
-                        gameInterface.accuse(personCard, roomCard, weaponCard);
-                    }
-                } catch (UnknownActionException | InterruptedException | TileOccupiedException ex) {
-                    Logger.getLogger(selectCards.class.getName()).log(Level.SEVERE, null, ex);
+                int weaponCard = Integer.valueOf(weaponKey.substring(weaponKey.length() - 1));
+                if (actionType.equals("Suggestion")) {
+                    gameInterface.suggest(personCard, weaponCard);
+                } else if (actionType.equals("Accusation")) {
+                    gameInterface.accuse(personCard, weaponCard);
                 }
                 stage.close();
             }

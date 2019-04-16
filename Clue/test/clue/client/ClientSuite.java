@@ -17,7 +17,7 @@ import org.junit.runners.Suite;
  * @author steve
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({clue.client.CardTest.class, clue.client.MenuItemTest.class, clue.client.TileTest.class, clue.client.RoomTest.class, clue.client.BoardTest.class, clue.client.SpecialCardTest.class, clue.client.gameInstanceTest.class, clue.client.PromptTest.class, clue.client.PlayerTest.class, clue.client.SettingsMenuItemTest.class, clue.client.ClueClientTest.class, clue.client.selectCardsTest.class})
+@Suite.SuiteClasses({clue.client.CardTest.class, clue.client.MenuItemTest.class, clue.client.TileTest.class, clue.client.BoardTest.class, clue.client.SpecialCardTest.class, clue.client.PromptTest.class, clue.client.PlayerTest.class, clue.client.SettingsMenuItemTest.class, clue.client.ClueClientTest.class})
 public class ClientSuite {
 
     @BeforeClass
