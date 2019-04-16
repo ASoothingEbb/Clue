@@ -15,6 +15,7 @@ import java.util.ArrayList;
 public class Room extends Tile{
     private RoomCard card;
     private ArrayList<int[]> locations;
+    private ArrayList<int[]> nonOccupiedLocations;
     /**
      * Creates a new Room
      * @param card the RoomCard associated with this room.
@@ -47,6 +48,7 @@ public class Room extends Tile{
         loc[0] = x;
         loc[1] = y;
         locations.add(loc);
+        nonOccupiedLocations.add(loc);
     }
     
     /**
@@ -87,5 +89,29 @@ public class Room extends Tile{
             throw new NoSuchRoomException("room was not created correctly, does not contain a valid roomCard");
         }
         return card;
+    }
+    
+    /**
+     * Gives a location resource to the caller
+     * @return 
+     */
+    public int[] assignLocation(){
+        int [] location = locations.get(0);
+        if (nonOccupiedLocations.size() > 0){
+            int selected = nonOccupiedLocations.size()/2;
+            location = nonOccupiedLocations.get(selected);
+            nonOccupiedLocations.remove(selected);
+        }
+        
+        return location;
+
+    
+    }
+    /**
+     * Adds a location resource back to the room to be given to future players
+     * @param location x,y coordinate of the location resource
+     */
+    public void unassignLocation(int[] location){
+        nonOccupiedLocations.add(location);
     }
 }
