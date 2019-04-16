@@ -40,10 +40,16 @@ public class Room extends Tile{
         room = true;
         locations = new ArrayList<>();
     }
+    
+    /**
+     * Adds a door location to a room
+     * @param loc x,y,key of direction key: (up = 1, right = 2, down = 3, left = 4)
+     */
     public void addDoorLocation(int[] loc){
-        int[] toAdd = new int[2];
+        int[] toAdd = new int[3];
         toAdd[0] = loc[0];
         toAdd[1] = loc[1];
+        toAdd[3] = loc[3];
         doorLocations.add(toAdd);
     }
     /**
@@ -65,7 +71,7 @@ public class Room extends Tile{
     
     /**
      * Gets the door locations in the room
-     * @return the list of door locations, where a door location is x,y
+     * @return the list of door locations, where a door location is x,y and the direction of the door (up = 1, right = 2, down = 3, left = 4)
      */
     public ArrayList<int[]> getDoorLocations(){
         return doorLocations;
