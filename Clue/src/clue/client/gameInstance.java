@@ -112,15 +112,19 @@ public class gameInstance {
                 final int coordY = y;
                 tile.setOnMouseClicked((MouseEvent e) -> {
                     try {
-                        System.out.println(coordX + " " + coordY);
-                        System.out.println(gameInterface.move(coordX, coordY));
-                        remainingMoves.set(remainingMoves.get() - 1);
+                        if (remainingMoves.get() > 0 && gameInterface.move(coordX, coordY)) {
+                            currentPlayer.move(coordX, coordY, board, currentPlayer);
+                            remainingMoves.set(gameInterface.getPlayer().getMoves());
+                        } else {
+                            Prompt error = new Prompt("Invalid Move");
+                            error.showAndWait();
+                        }
                     } catch (NoSuchRoomException | UnknownActionException | InterruptedException | GameController.MovementException | TileOccupiedException ex) {
                         Logger.getLogger(gameInstance.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    currentPlayer.move(coordX, coordY, board, currentPlayer);
-                    System.out.println("HELLO " + counter);
-                    counter++;
+                    } catch(NullPointerException ex) {
+                        Prompt rollError = new Prompt("Roll First");
+                        rollError.showAndWait();
+                    }   
                 });
                 
                 tilePane.getChildren().add(tile);
@@ -141,15 +145,15 @@ public class gameInstance {
 
     private void spawnPlayers(StackPane[][] board) {
         List<Player> players = gameInterface.getPlayers();
-        Collections.reverse(players);
-        players.forEach((player) -> {
+        for(int i = players.size()-1; i>= 0; i--) {
+            Player player = players.get(i);
             System.out.println(player.getId());
             int x = player.getPosition().getX();
             int y = player.getPosition().getY();
             PlayerSprite playerSprite = new PlayerSprite(x, y, "PP"+player.getId());
             currentPlayer = playerSprite;
             board[y][x].getChildren().add(playerSprite);
-        });
+        };
     }
     
     private VBox createLeftPanel() {
