@@ -14,7 +14,7 @@ import javafx.scene.control.Label;
 public class EditorTile {
     
     private final Label label;
-    private final String s;
+    private String s;
     private final int x;
     private final int y;
     private int roomId;
@@ -27,6 +27,10 @@ public class EditorTile {
         this.y = y;
         this.roomId = -1;
         this.doorDirection = "-1";
+    }
+
+    public void setS(String s) {
+        this.s = s;
     }
 
     public void setRoomId(int roomId) {
