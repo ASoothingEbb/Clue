@@ -221,7 +221,7 @@ public final class BoardMappings {
             for (String[] row : lines){//store ourput from csv into 2d arraylist
                 rowBuffer = new ArrayList<>();
                 for (String cell : row){  
-                    cell = cell.replaceAll("[^0-9A-Z/*]+", "");
+                    cell = cell.replaceAll("[^0-9A-Z]+", "");
                     rowBuffer.add(cell);
                 }
                 csvData.add(rowBuffer);
