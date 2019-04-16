@@ -5,14 +5,11 @@
  */
 package clue.ai;
 
-<<<<<<< HEAD
 import clue.card.Card;
-=======
 import clue.GameController;
 import clue.card.Card;
 import clue.card.RoomCard;
 import clue.tile.Room;
->>>>>>> 5268d5ec6c49b40d64709cd9aff36735e5932343
 import clue.tile.Tile;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -29,21 +26,15 @@ import static org.junit.Assert.*;
  */
 public class AiAdvancedTest {
     
-<<<<<<< HEAD
-=======
+
     private static GameController gc;
->>>>>>> 5268d5ec6c49b40d64709cd9aff36735e5932343
+
     public AiAdvancedTest() {
     }
     
     @BeforeClass
-<<<<<<< HEAD
-    public static void setUpClass() {
-=======
     public static void setUpClass() throws Exception {
         gc = new GameController(1,1,"testCsv/tiles1.csv", "testCsv/doors1.csv");
-    
->>>>>>> 5268d5ec6c49b40d64709cd9aff36735e5932343
     }
     
     @AfterClass
@@ -64,17 +55,12 @@ public class AiAdvancedTest {
     @Test
     public void testOnUpdate() {
         System.out.println("onUpdate");
-<<<<<<< HEAD
         AiAdvanced instance = null;
         instance.onUpdate();
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
-=======
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
 
     /**
      * Test of makeLists method, of class AiAdvanced.
@@ -115,24 +101,13 @@ public class AiAdvancedTest {
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
-    
-    
->>>>>>> 5268d5ec6c49b40d64709cd9aff36735e5932343
+
     /**
      * Test of BFS method, of class AiAdvanced.
      */
     @Test
-<<<<<<< HEAD
-    public void testBFS() {
-        System.out.println("BFS");
-        AiAdvanced instance = null;
-        LinkedList<Tile> expResult = null;
-        LinkedList<Tile> result = instance.BFS();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-=======
+
+
     public void testBFS() throws InterruptedException{//Trying to find a room.
         System.out.println("BFS (one valid path to room)");
         //--Layout of map--
@@ -185,21 +160,9 @@ public class AiAdvancedTest {
         
     }
     
->>>>>>> 5268d5ec6c49b40d64709cd9aff36735e5932343
 
-    /**
-     * Test of makeLists method, of class AiAdvanced.
-     */
-    @Test
-<<<<<<< HEAD
-    public void testMakeLists() {
-        System.out.println("makeLists");
-        AiAdvanced instance = null;
-        instance.makeLists();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-=======
+
+
     public void testBFS2() throws InterruptedException{//Testing it on a board with no room.
         System.out.println("BFS (no room)");
         //Board Layout
@@ -237,21 +200,9 @@ public class AiAdvancedTest {
     }    
     
     
->>>>>>> 5268d5ec6c49b40d64709cd9aff36735e5932343
 
-    /**
-     * Test of moveToRoom method, of class AiAdvanced.
-     */
-    @Test
-<<<<<<< HEAD
-    public void testMoveToRoom() {
-        System.out.println("moveToRoom");
-        AiAdvanced instance = null;
-        instance.moveToRoom();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-=======
+
+
     public void testBFS3() throws InterruptedException{//testing bfs with players as obstacles w/valid route
         System.out.println("BFS (with room, with valid path, with players)");
         //Board Layout
@@ -298,42 +249,6 @@ public class AiAdvancedTest {
         assertEquals(resultPath, expectedPath);
     }   
 
-    
->>>>>>> 5268d5ec6c49b40d64709cd9aff36735e5932343
-
-    /**
-     * Test of getLists method, of class AiAdvanced.
-     */
-    @Test
-    public void testGetLists() {
-        System.out.println("getLists");
-        AiAdvanced instance = null;
-        ArrayList<ArrayList<Card>> expResult = null;
-        ArrayList<ArrayList<Card>> result = instance.getLists();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-<<<<<<< HEAD
-=======
-
->>>>>>> 5268d5ec6c49b40d64709cd9aff36735e5932343
-    /**
-     * Test of getPathToRoom method, of class AiAdvanced.
-     */
-    @Test
-<<<<<<< HEAD
-    public void testGetPathToRoom() {
-        System.out.println("getPathToRoom");
-        AiAdvanced instance = null;
-        LinkedList<Tile> expResult = null;
-        LinkedList<Tile> result = instance.getPathToRoom();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-=======
     public void testBFS5() throws InterruptedException{//testing bfs with multiple rooms
         System.out.println("BFS (many rooms)");
         //Board Layout 
@@ -369,6 +284,5 @@ public class AiAdvancedTest {
         
     }
 
->>>>>>> 5268d5ec6c49b40d64709cd9aff36735e5932343
     
 }
