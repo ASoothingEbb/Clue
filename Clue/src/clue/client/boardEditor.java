@@ -5,8 +5,6 @@
  */
 package clue.client;
 
-import clue.client.EditorTileType;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
