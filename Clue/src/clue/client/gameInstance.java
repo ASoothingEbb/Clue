@@ -87,6 +87,8 @@ public class gameInstance {
     
     private String boardTilePath;
     private String boardDoorPath;
+    
+    private GridPane cardsDisplay;
             
     private Font avenirLarge;
     private Font avenirTitle;
@@ -169,9 +171,12 @@ public class gameInstance {
         
         ArrayList<int[]> doorLocations = gameInterface.getDoorLocations();
         System.out.println(doorLocations.size());
-        for (int[] coords: doorLocations) {
-            System.out.println("X: " + coords[0] + " Y: " + coords[1]);
-        }
+        doorLocations.forEach((coords) -> {
+            Tile tileSprite = new Tile(TILE_SIZE);
+            tileSprite.setFill(Color.rgb(159, 101, 0));
+            board[coords[1]][coords[0]].getChildren().clear();
+            board[coords[1]][coords[0]].getChildren().add(tileSprite);
+        });
 
         spawnPlayers(board);
         
@@ -223,9 +228,11 @@ public class gameInstance {
         Label historyLabel = getLabel("History", avenirTitle); 
 
         StackPane history = new StackPane();
-        
+                
         ScrollPane historyPane = new ScrollPane();
-        historyPane.setBackground(new Background(new BackgroundFill(Color.GREY, CornerRadii.EMPTY, Insets.EMPTY)));
+        //TODO make transparent or notepad yellow
+        //historyPane.setStyle("-fx-control-inner-background: #fff2ab;");
+        //historyPane.setBackground(new Background(new BackgroundFill(Color.GREY, CornerRadii.EMPTY, Insets.EMPTY)));
         historyPane.setPannable(false);
         historyPane.setPrefHeight(400);
         historyPane.setContent(history);
@@ -242,12 +249,10 @@ public class gameInstance {
         return historyItem;
     }
     
-    private GridPane createCardsDisplay() {
-        GridPane cardsLayout = new GridPane();
+    private void createCardsDisplay(GridPane cardsLayout) {
         Label playerCardsLabel = getLabel("Cards", avenirTitle);
         int x = 1;
         int y = 0;
-        //System.out.println(gameInterface.getPlayer().getCards());
         for (clue.card.Card card: gameInterface.getPlayer().getCards()) {
             Image cardImage = null;
             try {
@@ -281,8 +286,6 @@ public class gameInstance {
         }
         cardsLayout.add(playerCardsLabel, 0, 0, 3, 1);
         GridPane.setHalignment(playerCardsLabel,HPos.CENTER);
-        
-        return cardsLayout;
     }
     
     private VBox createPlayerControls() {        
@@ -345,6 +348,7 @@ public class gameInstance {
                 currentPlayer = playerSprites[gameInterface.getPlayer().getId()];
                 remainingMovesLabel.setText("Roll Available");
                 switchToCurtain();
+                createCardsDisplay(cardsDisplay);
             } catch (UnknownActionException | InterruptedException | GameController.MovementException | TileOccupiedException ex) {
                 Logger.getLogger(gameInstance.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -370,7 +374,10 @@ public class gameInstance {
         main.setCenter(createBoard());
         
         BorderPane rightPanel = new BorderPane();
-        rightPanel.setTop(createCardsDisplay());
+        
+        cardsDisplay = new GridPane();
+        createCardsDisplay(cardsDisplay);
+        rightPanel.setTop(cardsDisplay);
         rightPanel.setBottom(createPlayerControls());
         
         main.setRight(rightPanel);
