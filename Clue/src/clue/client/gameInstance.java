@@ -144,7 +144,6 @@ public class gameInstance {
                             Prompt rollError = new Prompt("Roll First");
                             rollError.show();
                         }
-;
                     });
                     if (cell.equals("-1") || cell.equals("")) {
                         tileSprite.setFill(Color.rgb(0, 93, 31));
