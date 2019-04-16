@@ -205,7 +205,7 @@ public final class GameController {
                 if (state.getAction().actionType == ActionType.SUGGEST) {
                     //TODO
                 }
-                actionLog.add(turns, action);
+                actionLog.add(action);
                 break;
             case START:
                 System.out.println("CASE START "+player.getId());
@@ -234,7 +234,7 @@ public final class GameController {
                         //tell GUI that no one had one of those cards
                     }
                 }
-                actionLog.add(turns, action);
+                actionLog.add(action);
                 break;
             case TELEPORT:
                 System.out.println("CASE TELEPORT");
