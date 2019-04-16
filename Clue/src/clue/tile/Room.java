@@ -52,8 +52,8 @@ public class Room extends Tile{
         for (int[] loc : nonOccupiedLocations){//for each drawing location
             isDoor = false;
             for (Tile adjacent : getAdjacent()){//for each adjacent tile to the room
-                
                 //check if the adjacent tile is next to the drawn location, if it is, queue it to be removed from nonOccupiedLocations
+                //System.out.println(loc[0] +","+adjacent.getX() + " :: "+ loc[1] +","+adjacent.getY());
                 if (loc[0] == adjacent.getX()+1 && loc[1] == adjacent.getY()){//to left               
                     isDoor = true;
                 }
@@ -75,6 +75,7 @@ public class Room extends Tile{
             nonOccupiedLocations.remove(removing);
         }
         doorLocations = toRemove;
+        System.out.println(doorLocations);
     }
     
     /**
