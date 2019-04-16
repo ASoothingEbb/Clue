@@ -21,6 +21,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Performs internal game logic for a Clue game instance
@@ -49,6 +51,9 @@ public final class GameController {
     private List<Action> actionLog;
     private Queue<Action> actions;
     private int turns = 0;
+    private List<WeaponCard> weaponCards;
+    private List<PersonCard> personCards;
+    private List<RoomCard> roomCards;
 
     /**
      * Creates a new GameController.
@@ -79,7 +84,10 @@ public final class GameController {
         if (players.size() > 6 || players.size() > startingTiles.size()) {
             throw new TooManyPlayersException();
         }
-        this.players = players;
+        if (players.size() < 3){
+            
+        }
+        
         random = new Random(Calendar.getInstance().getTimeInMillis());
         actionLog = new ArrayList();
         state = new GameState(players);
@@ -108,7 +116,12 @@ public final class GameController {
      */
     public void performAction(Action action) throws UnknownActionException, InterruptedException, TileOccupiedException {
         Action nextAction = null;
+        if (player != null){
+            System.out.println("player turn before: "+player.getId());
+        }
+        
         player = players.get(state.getPlayerTurn());
+        System.out.println("player turn after: "+player.getId());
         action.execute();
         System.out.println(action.actionType + " executing");
         //Action specific lplayersogic
@@ -118,6 +131,7 @@ public final class GameController {
             case DEFAULT:
                 throw new UnknownActionException();
             case ACCUSATION:
+                System.out.println("CASE ACCUSATION");
                 if (action.result) {
                     winner = state.endGame();
                     endGame();
@@ -130,11 +144,13 @@ public final class GameController {
                 actionLog.add(turns, action);
                 break;
             case AVOIDSUGGESTIONCARD:
+                System.out.println("CASE AVOIDSUGGESTIONCARD");
                 action.getPlayer().setActiveSuggestionBlock(true);//player will not be checked in next turns suggestion check
                 //TODO: notify player they have a suggestion block
                 returnCard(((AvoidSuggestionAction) action).card);
                 break;
             case ENDTURN:
+                System.out.println("CASE ENDTURN");
                 player.setMoves(0);
                 state.nextTurn(state.nextPlayer());
 
@@ -153,48 +169,43 @@ public final class GameController {
                 nextAction = new StartTurnAction(state.getCurrentPlayer());
                 break;
             case EXTRATURN:
+                System.out.println("CASE EXTRATURN");
                 returnCard((IntrigueCard) action.card);
                 //does it also need to be physicalled removed from the player?
                 nextAction = new StartTurnAction(action.getPlayer());
                 break;
             case MOVE:
-                if (action.result && (state.getAction().actionType == ActionType.STARTTURN || state.getAction().actionType == ActionType.MOVE)) {
-                    Tile loc = ((MoveAction) action).getTile();
-                    player.getPosition().setOccupied(false);
-                    player.setPosition(loc);
-                    loc.setOccupied(true);
+                System.out.println("CASE MOVE "+player.getId() + "FROM: "+state.getAction().actionType);
+                if (action.result && (state.getAction().actionType == ActionType.STARTTURN || state.getAction().actionType == ActionType.MOVE || state.getAction().actionType == ActionType.THROWAGAIN)) {
+                    Tile loc = ((MoveAction) action).getTile();    
+                    player.getPosition().setOccupied(false);  
+                    player.setPosition(loc); 
+                    loc.setOccupied(true);                    
                     if (loc.special) {
                         getSpecial(loc);
                     }
-                }
-                else if (state.getAction().actionType == ActionType.THROWAGAIN){
-                    action = new MoveAgainAction((MoveAction)action);
-                    Tile loc = ((MoveAgainAction) action).getTile();
-                    player.getPosition().setOccupied(false);
-                    player.setPosition(loc);
-                    loc.setOccupied(true);
-                    if (loc.special) {
-                        getSpecial(loc);
+                    System.out.println("CASE MOVEa "+player.getId());
+                    if (state.getAction().actionType == ActionType.THROWAGAIN){
+                        action = new MoveAgainAction((MoveAction)action);
                     }
                 }
-                else{
-                    System.out.println("move was not checked" + action.actionType);
-                }
-                
                 System.out.println("playerId: "+player.getId()+", move attempt result: "+action.result);
                 break;
             case SHOWCARD:
+                System.out.println("CASE SHOWCARD");
                 if (state.getAction().actionType == ActionType.SHOWCARDS) {
                     //TODO
                 }
                 break;
             case SHOWCARDS:
+                System.out.println("CASE SHOWCARDS");
                 if (state.getAction().actionType == ActionType.SUGGEST) {
                     //TODO
                 }
                 actionLog.add(turns, action);
                 break;
             case START:
+                System.out.println("CASE START "+player.getId());
                 nextAction = new StartTurnAction(player);
                 
                 //GIVE PLAYERS CARDS
@@ -202,11 +213,15 @@ public final class GameController {
 
                 break;
             case STARTTURN:
-                if (state.getAction().actionType == ActionType.ENDTURN || state.getAction().actionType == ActionType.EXTRATURN) {
+                System.out.println("CASE STARTTURN "+player.getId() + " FROM: "+state.getAction().actionType);
+                if (state.getAction().actionType == ActionType.ENDTURN || state.getAction().actionType == ActionType.EXTRATURN || state.getAction().actionType == ActionType.START) {
+                    System.out.println("b"+player.getId());
                     state.nextTurn(player.getId());
+                    System.out.println("a"+player.getId());
                 }
                 break;
             case SUGGEST:
+                System.out.println("CASE SUGGEST");
                 if (state.getAction().actionType == ActionType.STARTTURN | state.getAction().actionType == ActionType.MOVE) {
                     if (action.result){
                         nextAction = new ShowCardsAction(((SuggestAction) action).show, ((SuggestAction) action).player, ((SuggestAction) action).foundCards);
@@ -219,6 +234,7 @@ public final class GameController {
                 actionLog.add(turns, action);
                 break;
             case TELEPORT:
+                System.out.println("CASE TELEPORT");
                 if (!action.result) {
                     throw new TileOccupiedException();
                 }
@@ -226,6 +242,7 @@ public final class GameController {
                 //TODO update occupied status of tiles
                 break;
             case THROWAGAIN:
+                System.out.println("CASE THROWAGAIN");
                 //TODO: tell gui to roll again
                 //TODO: allow players to roll again
                 roll();
@@ -324,6 +341,7 @@ public final class GameController {
         randInt = rand.nextInt(rooms.length);
         try {
             for (int i = 0; i < rooms.length; i++){
+                roomCards.add(rooms[i].getCard());
                 if (i == randInt){
                     murderRoom = rooms[i].getCard();
                 }
@@ -338,24 +356,29 @@ public final class GameController {
         }
         
         randInt = rand.nextInt(numberOfWeapons);       
+        WeaponCard weaponCard;
         for (int i = 0; i < numberOfWeapons; i++){
+            weaponCard = new WeaponCard(i);
+            weaponCards.add(weaponCard);
             if (i == randInt){
-                murderWeapon = new WeaponCard(i);
+                murderWeapon = weaponCard;
             }
             else{
-                cards.add(new WeaponCard(i));
+                cards.add(weaponCard);
             }
             
         }
         randInt = rand.nextInt(numberOfWeapons);   
         
+        PersonCard personCard;
         for (int i = 0; i < numberOfPersons; i++){
-            
+            personCard = new PersonCard(i);
+            personCards.add(personCard);
             if (i == randInt){
-                murderPerson = new PersonCard(i);
+                murderPerson = personCard;
             }
             else{
-                cards.add(new PersonCard(i));
+                cards.add(personCard);
             }
             
         }
@@ -378,15 +401,21 @@ public final class GameController {
     /**
      * Moves the current player in a sequence of moves.
      *
+     * @param tile
      * @param tiles tiles to move to
+     * @return 
      * @throws UnknownActionException
      * @throws InterruptedException
      * @throws clue.GameController.MovementException the movements were invalid
      * @throws clue.tile.TileOccupiedException
      */
     public boolean move(Tile tile) throws UnknownActionException, InterruptedException, MovementException, TileOccupiedException {
+        
         MoveAction moveAction = new MoveAction(player, tile, bm.getBoardWidth(), bm.getBoardHeight());
+        
+        System.out.println("before playerId = "+player.getId());
         performAction(moveAction);
+        System.out.println("after playerId = "+player.getId());
         return moveAction.result;
         
     }
@@ -402,6 +431,8 @@ public final class GameController {
      * @throws TileOccupiedException 
      */
     public boolean move(int x, int y) throws NoSuchRoomException, UnknownActionException, InterruptedException, MovementException, TileOccupiedException{
+        Tile target = getTile(x,y);
+        System.out.println("playerId = "+player.getId()+" move was called to go to tile: "+target);
         return move(getTile(x,y));
     
     }
@@ -413,13 +444,67 @@ public final class GameController {
      * @param room the murderRoom card to be suggested
      * @param weapon the murderWeapon card to be suggested
      * @param player the suggesting Player
+     * @return false if no one has to show a card, true otherwise
      * @throws clue.action.UnknownActionException
      * @throws java.lang.InterruptedException
+     * @throws clue.tile.TileOccupiedException
      */
-    public void suggest(PersonCard person, RoomCard room, WeaponCard weapon, Player player) throws UnknownActionException, InterruptedException, TileOccupiedException {
-        performAction(new SuggestAction(person, room, weapon, player, state));
+    public boolean suggest(PersonCard person, RoomCard room, WeaponCard weapon, Player player) throws UnknownActionException, InterruptedException, TileOccupiedException {
+        SuggestAction suggestAction = new SuggestAction(person, room, weapon, player, state);
+        performAction(suggestAction);
+        return suggestAction.result;
     }
 
+    
+    
+    /**
+     * 
+     * @param personId
+     * @param weaponId
+     * @return false if no one has to show a card, true otherwise
+     */
+    public boolean suggest(int personId, int weaponId){
+        PersonCard person = null;
+        RoomCard room = null;
+        WeaponCard weapon = null;
+        
+        for (PersonCard c : personCards){
+            if (c.getid() == personId){
+                person = c;
+                break;
+            }
+        }
+        
+        for (WeaponCard c : weaponCards){
+            if (c.getid() == weaponId){
+                weapon = c;
+                break;
+            }
+        }
+        
+        if (player.getPosition().isRoom()){
+            try {
+                room = ((Room)player.getPosition()).getCard();
+            } catch (NoSuchRoomException ex) {
+                Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        if (person == null || room == null || weapon == null){
+            System.err.println("unable to find 3 cards");
+            return false;
+        }
+        try {
+            return suggest(person, room, weapon, player);
+        } catch (UnknownActionException | InterruptedException | TileOccupiedException ex) {
+            Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }    
+    
+    
+    
+    
     /**
      * Shows a card to a suggesting player
      *
