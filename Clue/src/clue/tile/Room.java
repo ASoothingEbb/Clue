@@ -49,7 +49,7 @@ public class Room extends Tile{
         int[] toAdd = new int[3];
         toAdd[0] = loc[0];
         toAdd[1] = loc[1];
-        toAdd[3] = loc[3];
+        toAdd[2] = loc[2];
         doorLocations.add(toAdd);
     }
     /**
