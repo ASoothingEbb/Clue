@@ -5,6 +5,7 @@
  */
 package clue.action;
 
+import clue.player.Player;
 import clue.tile.Tile;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -44,10 +45,15 @@ public class MoveActionTest {
     @Test
     public void testExecute() {
         System.out.println("execute");
-        MoveAction instance = null;
+        Player player = new Player(0);
+        Tile s = new Tile(0,0);
+        player.setPosition(s);
+        Tile t = new Tile(0,1);
+        player.setMoves(1);
+        s.addAdjacent(t);
+        MoveAction instance = new MoveAction(player,t,10,10);
         instance.execute();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertTrue(instance.result);
     }
 
     /**
@@ -56,12 +62,10 @@ public class MoveActionTest {
     @Test
     public void testGetTile() {
         System.out.println("getTile");
-        MoveAction instance = null;
-        Tile expResult = null;
+        Tile expResult = new Tile(0,1);
+        MoveAction instance = new MoveAction(new Player(0),expResult,10,10);
         Tile result = instance.getTile();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
     
 }

@@ -191,10 +191,6 @@ public final class GameController {
                     if (loc.special) {
                         getSpecial(loc);
                     }
-                    System.out.println("CASE MOVEa "+player.getId());
-                    if (state.getAction().actionType == ActionType.THROWAGAIN){
-                        action = new MoveAgainAction((MoveAction)action);
-                    }
                 }
                 System.out.println("playerId: "+player.getId()+", move attempt result: "+action.result);
                 break;
@@ -607,7 +603,7 @@ public final class GameController {
     private void moveActionLog() {
         //TODO
         int pointer = player.getLogPointer();
-        while (pointer < actionLog.size()) {
+        while (pointer != actionLog.size()) {
             System.out.println("[GameController.moveActionLog] pointer: "+pointer +" turns: "+turns);
             actions.offer(actionLog.get(pointer));
             pointer++;

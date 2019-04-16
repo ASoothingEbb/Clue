@@ -38,9 +38,10 @@ public class StartActionTest {
     }
 
     @Test
-    public void testSomeMethod() {
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void testExecute() {
+        StartAction instance = new StartAction();
+        instance.execute();
+        assertTrue(instance.result);
     }
     
 }

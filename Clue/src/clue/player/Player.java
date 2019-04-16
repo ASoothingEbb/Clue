@@ -159,6 +159,10 @@ public class Player {
         cards.add(card);
     }
 
+    /**
+     * 
+     * @return 
+     */
     public IntrigueCard addIntrigue() {
         IntrigueCard card = (IntrigueCard) game.drawCard();
         intrigues.add(card);
@@ -167,7 +171,21 @@ public class Player {
         }
         return card;
     }
+    
+    /**
+     * @deprecated this is a test method
+     * @param card 
+     */
+    public void addIntrigue(IntrigueCard card){
+        intrigues.add(card);
+        if(card.getCardType() == CardType.AVOIDSUGGESTION){
+            setActiveSuggestionBlock(true);
+        }
+    }
 
+    public void removeIntrigue(IntrigueCard card){
+        intrigues.remove(card);
+    }
     /**
      * Removes a card from this player.
      *
@@ -189,6 +207,9 @@ public class Player {
         return cards.contains(card);
     }
 
+    public boolean hasIntrigue(IntrigueCard card){
+        return intrigues.contains(card);
+    }
 
     public List<IntrigueCard> getIntrigue() {
         return intrigues;
