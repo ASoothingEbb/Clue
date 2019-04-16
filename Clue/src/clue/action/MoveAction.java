@@ -23,6 +23,7 @@ public class MoveAction extends Action {
     private Tile t;
     private int boardWidth;
     private int boardHeight;
+    private int cost;
 
     /**
      * Creates a new MoveAction
@@ -40,6 +41,7 @@ public class MoveAction extends Action {
         this.t = t;
         this.boardWidth = boardWidth;
         this.boardHeight = boardHeight;
+        
     }
 
     /**
@@ -51,8 +53,21 @@ public class MoveAction extends Action {
         if (t.isFull()){
             result = false;
         }
-        else{
-            result = BFS();  
+        else if (!BFS()){//run and update cost
+            result = false;
+        }
+        else{//bfs found a path to the target
+            if ((player.getMoves() - cost) >= 0){
+                player.setMoves(player.getMoves() - cost);
+                
+                //System.out.println("new player.getMoves() :"+player.getMoves());
+                result = true;
+                
+            }
+            else{
+                result = false;
+            }
+            
         }    
         
     }
@@ -67,9 +82,13 @@ public class MoveAction extends Action {
     }
     
     private boolean BFS(){   
-        System.out.println("BFS...");
-        System.out.println("s: "+s);
-        System.out.println("t: "+s);
+        cost = 0;
+        //System.out.println("BFS with moves left: "+player.getMoves());
+        //System.out.println("s: "+s);
+        //System.out.println("t: ->>"+t.getX()+","+t.getY());
+        if (t==s){
+            return true;
+        }
         boolean visited[][] = new boolean[boardWidth][boardHeight];
         
         for(boolean []a : visited){
@@ -87,7 +106,7 @@ public class MoveAction extends Action {
         while(true){
             
             if (pathList.isEmpty()){
-                System.out.println("no valid path found");
+                //System.out.println("no valid path found");
                 return false;
             }
             
@@ -97,10 +116,16 @@ public class MoveAction extends Action {
             
             for (Tile currentTile : currentPath.getLast().getAdjacent()){//try to explore all the tiles adjacent to the last tile in the path
                 if (currentTile == t){//shortest path found to target
-                    currentPath.add(currentTile);
-                    System.out.println("found target :"+ player.getMoves() + " " + currentPath.size());
-                    return currentPath.size() < player.getMoves();
+                    //currentPath.add(currentTile);
+                    cost = currentPath.size()+1;
+                    //System.out.println("found target, player has enough moves :"+ (cost < player.getMoves()));
+                    
+                    return cost < player.getMoves();
                 }
+                else if (currentTile.isRoom()){//do not try to build a path through a room, this else if must come before indexing visited because rooms.getX() returns -1
+                    continue;
+                }    
+                    
                 else if (currentTile.isFull() || visited[currentTile.getX()][currentTile.getY()]){//if the tile is full or is already visited, do not explore it
                     continue;
                 }
