@@ -12,11 +12,14 @@ import clue.player.Player;
 import clue.tile.NoSuchRoomException;
 import clue.tile.Room;
 import clue.tile.TileOccupiedException;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -61,7 +64,6 @@ import javafx.util.Duration;
 public class gameInstance {
     
     private static final int TILE_SIZE = 38;
-    private int counter;
    
     private StackPane[][] board;
     private String notes;
@@ -82,6 +84,9 @@ public class gameInstance {
     
     private HashMap<String, String> ImagePathMap = new HashMap<>();
     private HashMap<String, String> CardNameMap = new HashMap<>();
+    
+    private String boardTilePath;
+    private String boardDoorPath;
             
     private Font avenirLarge;
     private Font avenirTitle;
@@ -91,52 +96,83 @@ public class gameInstance {
     
     private StackPane createBoard() {
         StackPane root = new StackPane();
-        root.setPadding(new Insets(10, 0, 0, 0));
+        root.setPadding(new Insets(10, 5, 5, 0));
                 
         GridPane boardPane = new GridPane();
         
-        try {
-            Image boardImage = new Image(new FileInputStream(ImagePathMap.get("board")));
-            boardPane.setBackground(new Background(new BackgroundImage(boardImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
-        } catch(IOException ex) {
-            System.out.println("Failed to load board texture");
-        }
+        //try {
+        //    Image boardImage = new Image(new FileInputStream(ImagePathMap.get("board")));
+        //    boardPane.setBackground(new Background(new BackgroundImage(boardImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
+        //} catch(IOException ex) {
+        //    System.out.println("Failed to load board texture");
+        //}
         
         int boardHeight = gameInterface.getBoardHeight();
         int boardWidth = gameInterface.getBoardWidth();
         board = new StackPane[boardHeight][boardWidth];
         
-        // create base Tiles
-        for (int y=0; y < boardHeight; y++) {
-            for (int x=0; x < boardWidth; x++) {
-                StackPane tilePane = new StackPane();
-                Tile tile = new Tile(TILE_SIZE);
-                final int coordX = x;
-                final int coordY = y;
-                tile.setOnMouseClicked((MouseEvent e) -> {
-                    try {
-                        if (remainingMoves.get() > 0 && gameInterface.move(coordX, coordY)) {
-                            currentPlayer.move(coordX, coordY, board, currentPlayer);
-                            remainingMoves.set(gameInterface.getPlayer().getMoves());
-                        } else {
-                            Prompt error = new Prompt("Invalid Move");
-                            error.showAndWait();
+        
+        String line = "";
+        
+        try (BufferedReader br = new BufferedReader(new FileReader(boardTilePath))) {
+            int y = 0;
+            while ((line = br.readLine()) != null && y < boardHeight) {
+                String[] tiles = line.split(",");
+                int x = 0;
+                for (int i=0; i < boardWidth; i++) {
+                    String tile = tiles[i];
+                    String cell = tile.replaceAll("[^0-9A-Z-]+", "");
+                    StackPane tilePane = new StackPane();
+                    Tile tileSprite = new Tile(TILE_SIZE);
+                    final int coordX = x;
+                    final int coordY = y;
+                    
+                    tileSprite.setOnMouseClicked(e -> {
+                        try {
+                            if (remainingMoves.get() > 0 && gameInterface.move(coordX, coordY)) {
+                                currentPlayer.move(coordX, coordY, board, currentPlayer);
+                                remainingMoves.set(gameInterface.getPlayer().getMoves());
+                            } else {
+                                Prompt moveError = new Prompt("Invalid Move");
+                                moveError.show();
+                            }
+                        } catch (NoSuchRoomException | UnknownActionException | InterruptedException | GameController.MovementException | TileOccupiedException ex) {
+                            Logger.getLogger(gameInstance.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (NullPointerException ex) {
+                            Prompt rollError = new Prompt("Roll First");
+                            rollError.show();
                         }
-                    } catch (NoSuchRoomException | UnknownActionException | InterruptedException | GameController.MovementException | TileOccupiedException ex) {
-                        Logger.getLogger(gameInstance.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch(NullPointerException ex) {
-                        Prompt rollError = new Prompt("Roll First");
-                        rollError.showAndWait();
-                    }   
-                });
+;
+                    });
+                    if (cell.equals("-1") || cell.equals("")) {
+                        tileSprite.setFill(Color.rgb(0, 93, 31));
+                    } else if (cell.equals("0")) {
+                        tileSprite.setFill(Color.rgb(222, 151,  29));
+                    } else if (cell.contains("S")) {
+                        tileSprite.setFill(Color.rgb(55, 136, 4));
+                    } else if (Integer.valueOf(cell) > 0) {
+                        tileSprite.setFill(Color.rgb(90, 76, 65));
+                    }
+                    
+                    tilePane.getChildren().add(tileSprite);
+                    board[y][x] = tilePane;
+                    boardPane.add(tilePane, x, y);
+                    x++;
+                }
+                y++;
                 
-                tilePane.getChildren().add(tile);
-                board[y][x] = tilePane;
-                boardPane.add(tilePane, x, y);
             }
+        } catch(IOException ex) {
+            Prompt boardMapError = new Prompt("Board File not found");
+            boardMapError.show();
         }
         
-        // TODO: spawn players
+        ArrayList<int[]> doorLocations = gameInterface.getDoorLocations();
+        System.out.println(doorLocations.size());
+        for (int[] coords: doorLocations) {
+            System.out.println("X: " + coords[0] + " Y: " + coords[1]);
+        }
+
         spawnPlayers(board);
         
         rolled = false;
@@ -157,7 +193,7 @@ public class gameInstance {
             playerSprites[i] = playerSprite;
             currentPlayer = playerSprite;
             board[y][x].getChildren().add(playerSprite);
-        };
+        }
     }
     
     private VBox createLeftPanel() {
@@ -266,7 +302,7 @@ public class gameInstance {
                 createCardsWindow("Suggestion", Color.ORANGE);
             } else {
                 Prompt suggestError = new Prompt("You are not in a room");
-                suggestError.showAndWait();
+                suggestError.show();
             }
         });
         
@@ -280,7 +316,7 @@ public class gameInstance {
                 createCardsWindow("Accusation", Color.RED);
             } else {
                 Prompt suggestError = new Prompt("You are not in a room");
-                suggestError.showAndWait();
+                suggestError.show();
             }
         });
 
@@ -296,7 +332,7 @@ public class gameInstance {
                 rolled = true;
             } else {
                 Prompt alreadyRolled = new Prompt("You cannot roll");
-                alreadyRolled.showAndWait();
+                alreadyRolled.show();
             }
         });
         
@@ -379,6 +415,11 @@ public class gameInstance {
         return label;
     }
     
+    private void initDefaultMap() {
+        boardTilePath = "./resources/archersAvenueTiles.csv";
+        boardDoorPath = "./resources/archersAvenueDoors.csv";
+    }
+    
     private void initDefaultGraphics() {
         ImagePathMap.put("board", "./resources/board.png");
         
@@ -447,7 +488,6 @@ public class gameInstance {
     }
     
     private void initGraphics() {
-        //String configPath = getClass().getResource("assets/config.properties").toExternalForm();
         try (InputStream input = new FileInputStream("resources/config.properties")) {
             Properties prop = new Properties();
             
@@ -475,6 +515,7 @@ public class gameInstance {
         gameInterface = gameController;
         
         initFonts();
+        initDefaultMap();
         initDefaultGraphics();
         initDefaultNames();
         initGraphics();
