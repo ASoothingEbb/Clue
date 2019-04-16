@@ -479,7 +479,12 @@ public final class BoardMappings {
                             if (Pattern.matches(nonRoomTilePattern, tiles.get(y).get(x-1))){ //if tile to the left is also a standard tile
                                 currentTile.addAdjacentBoth(localMappings[y][x-1]);
                             }
-                        }    
+                        } 
+                        
+                        //*********************TODO*****************************************//
+                        
+                        
+                        
                         //if (x<boardWidth-1){//if there is a right tile
                         //    if (Pattern.matches(nonRoomTilePattern, tiles.get(y).get(x+1))){ ///if tile to the right is also a standard tile
                         //        currentTile.addAdjacent(localMappings[y][x+1]);

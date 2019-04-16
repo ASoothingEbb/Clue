@@ -52,13 +52,50 @@ public class AiAdvancedTest {
     /**
      * Test of onUpdate method, of class AiAdvanced.
      */
-    @Test
-    public void testOnUpdate() {
-        System.out.println("onUpdate");
-        AiAdvanced instance = null;
-        instance.onUpdate();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+//    @Test
+//    public void testOnUpdate() {
+//        System.out.println("onUpdate");
+//        AIAdvanced instance = null;
+//        instance.onUpdate();
+//        // TODO review the generated test code and remove the default call to fail.
+//        fail("The test case is a prototype.");
+//    }
+//
+//    /**
+//     * Test of findNewRoom method, of class AIAdvanced.
+//     */
+//    @Test
+//    public void testFindNewRoom() {
+//        System.out.println("findNewRoom");
+//        AIAdvanced instance = null;
+//        instance.findNewRoom();
+//        // TODO review the generated test code and remove the default call to fail.
+//        fail("The test case is a prototype.");
+//    }
+    
+    //@Test
+    public void testMakeLists() throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException, TileOccupiedException{
+        System.out.println("makeListTest");
+        Player p1 = new AiAdvanced(1, gc, 0, 0);
+        Player p2 = new AiAdvanced(2, gc, 0 ,0);
+        Player p3 = new AiAdvanced(3, gc, 0, 0);
+        
+        ArrayList<Player> players = new ArrayList<>();
+        ArrayList<ArrayList<Card>> testList;
+        
+        
+        Card c1 = new WeaponCard(1);
+        
+        //gc.getPlayer(1).addCard(c1);
+        
+       // p1.makeLists();
+       // testList = p2.getLists();
+        
+        //System.out.println(testList);
+        
+        
+        
+        
     }
 
 
@@ -109,7 +146,7 @@ public class AiAdvancedTest {
 
 
     public void testBFS() throws InterruptedException{//Trying to find a room.
-        System.out.println("BFS (one valid path to room)");
+        System.out.println("BFS trying to find a room");
         //--Layout of map--
         // t1 t2 t3
         // t4    t6
