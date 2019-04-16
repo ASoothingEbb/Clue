@@ -60,31 +60,31 @@ public class SuggestAction extends Action {
             if (i >= players.size()){
                 i = 0;
             }
-            if (!found){
-                check = players.get(i);
-                if (i != player.getId()) {
-                    if (check.getActiveSuggestionBlock() == false){
-                        for (Card c : cards) {
-                            if (check.hasCard(c)) {
-                                show = players.get(i);
-                                foundCards.add(c);
-                                found = true;
-                            }
+            check = players.get(i);
+            playersLeftToCheck--;
+            if (player.isActive()) {
+                if (check.getActiveSuggestionBlock() == false){
+                    for (Card c : cards) {
+                        if (check.hasCard(c)) {
+                            show = players.get(i);
+                            foundCards.add(c);
+                            playersLeftToCheck = 0;
+                            System.out.println("[SuggestAction.execute] player :"+player.getId()+" was found to have card: "+c);
                         }
                     }
-                    else{
-
-                        for (Card c : cards) {
-                            if (check.hasCard(c)) {
-                               //TODO
-                               //notify player with id j that thier avoid suggestion prevented them from revleaing card c
+                }
+                else{
+                    for (Card c : cards) {
+                        if (check.hasCard(c)) {
+                            //TODO
+                            //notify player with id i that thier avoid suggestion prevented them from revleaing card c
+                            System.out.println("[SuggestAction.execute] player has avoided showing cards due to suggestion: "+i);
                                
-                            }
                         }
-
                     }
                 }
             }
+            
             
         }
         result = found;
