@@ -543,22 +543,33 @@ public final class BoardMappings {
                     case "U"://the tile is above the room
                         loc[0] = outside.getX();
                         loc[1] = outside.getY()+1;
-                        break;
-                    case "D"://the tile is below the room
-                        loc[0] = outside.getX();
-                        loc[1] = outside.getY()-1;
-                        break;
-                    case "L":
-                        loc[0] = outside.getX()+1;
-                        loc[1] = outside.getY();
+                        loc[2] = 1;
+                        
                         break;
                     case "R":
                         loc[0] = outside.getX()-1;
                         loc[1] = outside.getY();
+                        loc[2] = 2;
                         break;
+                    case "D"://the tile is below the room
+                        loc[0] = outside.getX();
+                        loc[1] = outside.getY()-1;
+                        loc[2] = 3;
+                        break;   
+                        
+                    case "L":
+                        loc[0] = outside.getX()+1;
+                        loc[1] = outside.getY();
+                        loc[2] = 4;
+                        break;    
+                        
+                    
+                    
+                    
                     default:
                         loc[0] = -1;
                         loc[1] = -1;
+                        loc[2] = -1;
                         break;
                 }
                 ((Room)room).addDoorLocation(loc);
