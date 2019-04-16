@@ -28,7 +28,8 @@ public class ExtraTurnAction extends Action {
 
     @Override
     public void execute() {
-        player.removeCard(card);
+        player.removeIntrigue((ExtraTurnIntrigue)card);
+        super.execute();
     }
     
 }

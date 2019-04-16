@@ -7,6 +7,7 @@ package clue.action;
 
 import clue.card.Card;
 import clue.player.Player;
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -46,10 +47,9 @@ public class ShowCardsActionTest {
     @Test
     public void testExecute() {
         System.out.println("execute");
-        ShowCardsAction instance = null;
+        ShowCardsAction instance = new ShowCardsAction(new Player(0),new Player(1),new ArrayList<Card>());
         instance.execute();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertTrue(instance.result);
     }
 
     /**
@@ -58,12 +58,10 @@ public class ShowCardsActionTest {
     @Test
     public void testGetCardList() {
         System.out.println("getCardList");
-        ShowCardsAction instance = null;
-        List<Card> expResult = null;
+        List<Card> expResult = new ArrayList<Card>();
+        ShowCardsAction instance = new ShowCardsAction(new Player(0),new Player(1),expResult);
         List<Card> result = instance.getCardList();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -72,12 +70,11 @@ public class ShowCardsActionTest {
     @Test
     public void testGetSuggester() {
         System.out.println("getSuggester");
-        ShowCardsAction instance = null;
-        Player expResult = null;
+        Player player = new Player(1);
+        ShowCardsAction instance = new ShowCardsAction(new Player(0), player, new ArrayList<Card>());
+        Player expResult = player;
         Player result = instance.getSuggester();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
     
 }

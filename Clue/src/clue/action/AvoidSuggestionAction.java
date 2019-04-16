@@ -31,6 +31,7 @@ public class AvoidSuggestionAction extends Action {
 
     @Override
     public void execute() {
-        player.removeCard(card);
+        player.removeIntrigue(card);
+        super.execute();
     }
 }

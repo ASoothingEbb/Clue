@@ -5,6 +5,8 @@
  */
 package clue.action;
 
+import clue.card.ExtraTurnIntrigue;
+import clue.player.Player;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -43,10 +45,13 @@ public class ExtraTurnActionTest {
     @Test
     public void testExecute() {
         System.out.println("execute");
-        ExtraTurnAction instance = null;
+        Player player = new Player(0);
+        ExtraTurnIntrigue card = new ExtraTurnIntrigue(0);
+        player.addIntrigue(card);
+        ExtraTurnAction instance = new ExtraTurnAction(player, card);
         instance.execute();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertFalse(player.hasIntrigue(card));
+        assertTrue(instance.result);
     }
 
     
