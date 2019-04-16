@@ -74,10 +74,12 @@ public final class GameController {
         //TODO
         this.bm = new BoardMappings(tilePath, doorPath);
         LinkedList<Tile> startingTiles = bm.getStartingTiles();
+        
         weaponCards = new ArrayList<>();
         personCards = new ArrayList<>();
         roomCards = new ArrayList<>();
         players = new ArrayList();
+
         for (int i = 0; i < human; i++) {
             players.add(new Player(i, this));
         }
