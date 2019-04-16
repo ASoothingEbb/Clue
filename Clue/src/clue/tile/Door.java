@@ -15,6 +15,7 @@ import clue.tile.Tile;
 public class Door {
     
     private int xRoom, yRoom, xTile, yTile;
+    private String dir;
     /**
      * constructor for making a door to be used by BoardMappings to link a tile to a room
      * 
@@ -22,11 +23,13 @@ public class Door {
      * @param yRoom the y location of the room of the door
      * @param xTile the x location of the outside tile
      * @param yTile the y location of the outside tile
+     * @param dir the direction the player travels to go from the room to the outside tile
      */
-    public Door(int yRoom, int xTile, int yTile){
+    public Door(int yRoom, int xTile, int yTile, String dir){
         this.yRoom = yRoom;
         this.xTile = xTile;
         this.yTile = yTile;
+        this.dir = dir;
         if (xTile < 0 || yTile < 0 || yRoom < 0){
             throw new ArrayIndexOutOfBoundsException("xTile, yTile and yRoom must be > 0");
         }
@@ -54,5 +57,9 @@ public class Door {
      */
     public int getTileY(){
         return yTile;
+    }
+    
+    public String getDir(){
+        return dir;
     }
 }
