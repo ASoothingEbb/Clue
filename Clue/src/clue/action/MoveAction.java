@@ -121,7 +121,7 @@ public class MoveAction extends Action {
                     cost = currentPath.size();
                     //System.out.println("found target, player has enough moves :"+ (cost < player.getMoves()));
                     
-                    return cost < player.getMoves();
+                    return cost <= player.getMoves();
                 }
                 else if (currentTile.isRoom()){//do not try to build a path through a room, this else if must come before indexing visited because rooms.getX() returns -1
                     continue;
