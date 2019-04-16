@@ -74,7 +74,10 @@ public final class GameController {
         //TODO
         this.bm = new BoardMappings(tilePath, doorPath);
         LinkedList<Tile> startingTiles = bm.getStartingTiles();
-        List<Player> players = new ArrayList();
+        weaponCards = new ArrayList<>();
+        personCards = new ArrayList<>();
+        roomCards = new ArrayList<>();
+        players = new ArrayList();
         for (int i = 0; i < human; i++) {
             players.add(new Player(i, this));
         }
@@ -119,7 +122,6 @@ public final class GameController {
         if (player != null){
             System.out.println("player turn before: "+player.getId());
         }
-        
         player = players.get(state.getPlayerTurn());
         System.out.println("player turn after: "+player.getId());
         action.execute();
@@ -337,7 +339,7 @@ public final class GameController {
         int numberOfWeapons = 6;
         int numberOfPersons = 6;
                 
-        ArrayList<Card> cards = new ArrayList<>();
+        ArrayList<Card> cardDeck = new ArrayList<>();
         Random rand = new Random();
         int randInt = -1;
               
@@ -350,7 +352,7 @@ public final class GameController {
                     murderRoom = rooms[i].getCard();
                 }
                 else{
-                    cards.add(rooms[i].getCard());
+                    cardDeck.add(rooms[i].getCard());
                 }
                 
             }
@@ -368,7 +370,7 @@ public final class GameController {
                 murderWeapon = weaponCard;
             }
             else{
-                cards.add(weaponCard);
+                cardDeck.add(weaponCard);
             }
             
         }
@@ -382,21 +384,21 @@ public final class GameController {
                 murderPerson = personCard;
             }
             else{
-                cards.add(personCard);
+                cardDeck.add(personCard);
             }
             
         }
                 
         
         int playerIndex = 0;
-        while (!cards.isEmpty()){
+        while (!cardDeck.isEmpty()){
             if (playerIndex >= players.size()){
                 playerIndex = 0;
             }
             else if (players.get(playerIndex).isActive()){//only give cards to active players
-                randInt = rand.nextInt(cards.size());//select random index
-                players.get(playerIndex).addCard(cards.get(randInt));//give card from cards list at the random index
-                cards.remove(randInt);//remove the already given card from cards list
+                randInt = rand.nextInt(cardDeck.size());//select random index
+                players.get(playerIndex).addCard(cardDeck.get(randInt));//give card from cards list at the random index
+                cardDeck.remove(randInt);//remove the already given card from cards list
                 playerIndex++;
             }
         }
