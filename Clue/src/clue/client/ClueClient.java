@@ -133,7 +133,7 @@ public class ClueClient extends Application {
         howToPlayButton.setOnMouseClicked(e -> howToPlayScene(stage));
         
         MenuItem boardCreator = new MenuItem("Board Editor", avenirTitle);
-        boardCreator.setOnMouseClicked(e -> System.out.println("Board"));
+        boardCreator.setOnMouseClicked(e -> boardCreator(stage));
         
         MenuItem settingsButton = new MenuItem("Settings", avenirTitle);
         settingsButton.setOnMouseClicked(e -> settingScene(stage));
@@ -146,6 +146,11 @@ public class ClueClient extends Application {
      * players specified, and can be started.
      * @param stage 
      */
+    
+    private void boardCreator(Stage stage) {
+        
+    }
+    
     private void startGameScene(Stage stage) {
         numberOfPlayers = 1;
         
@@ -214,7 +219,6 @@ public class ClueClient extends Application {
         
         AIs.getChildren().addAll(minusAI, AIsNumber, addAI);
         
-        // Create Game Instance
         gameInstance game = new gameInstance();
         
         MenuItem startGameButton = new MenuItem("Start Game", avenirTitle);
