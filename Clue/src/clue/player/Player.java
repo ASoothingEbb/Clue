@@ -174,6 +174,9 @@ public class Player {
         return cards.contains(card);
     }
 
+    public boolean hasIntrigue(IntrigueCard card){
+        return intrigues.contains(card);
+    }
 
     public List<IntrigueCard> getIntrigue() {
         return intrigues;

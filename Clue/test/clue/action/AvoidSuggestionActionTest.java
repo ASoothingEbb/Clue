@@ -51,7 +51,7 @@ public class AvoidSuggestionActionTest {
         player.addIntrigue(card);
         AvoidSuggestionAction instance = new AvoidSuggestionAction(player,card);
         instance.execute();
-        assertFalse(player.hasCard(card));
+        assertFalse(player.hasIntrigue(card));
         assertTrue(instance.result);
     }
     
