@@ -58,10 +58,16 @@ public class MoveAction extends Action {
         }
         else{//bfs found a path to the target
             if ((player.getMoves() - cost) >= 0){
-                player.setMoves(player.getMoves() - cost);
+                if (t.isRoom()){
+                    player.setMoves(0);
+                }
+                else{
+                    player.setMoves(player.getMoves() - cost);
+                }
                 
                 //System.out.println("new player.getMoves() :"+player.getMoves());
                 result = true;
+                
                 
             }
             else{
@@ -95,7 +101,10 @@ public class MoveAction extends Action {
         for(boolean []a : visited){
             Arrays.fill(a,false);
         }
-        visited[s.getX()][s.getY()] = true;
+        if (!s.isRoom()){
+            visited[s.getX()][s.getY()] = true;
+        }
+        
         
         LinkedList<LinkedList<Tile>> pathList = new LinkedList<>();      
         LinkedList<Tile> newPath = new LinkedList<>();
