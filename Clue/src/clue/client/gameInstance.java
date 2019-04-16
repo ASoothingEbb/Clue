@@ -10,6 +10,7 @@ import clue.action.Action;
 import clue.action.UnknownActionException;
 import clue.player.Player;
 import clue.tile.NoSuchRoomException;
+import clue.tile.Room;
 import clue.tile.TileOccupiedException;
 import java.io.File;
 import java.io.FileInputStream;
@@ -77,6 +78,8 @@ public class gameInstance {
    
     private FadeTransition uiToCurtain;
     
+    private PlayerSprite[] playerSprites;
+    
     private HashMap<String, String> ImagePathMap = new HashMap<>();
     private HashMap<String, String> CardNameMap = new HashMap<>();
             
@@ -112,15 +115,19 @@ public class gameInstance {
                 final int coordY = y;
                 tile.setOnMouseClicked((MouseEvent e) -> {
                     try {
-                        System.out.println(coordX + " " + coordY);
-                        System.out.println(gameInterface.move(coordX, coordY));
-                        remainingMoves.set(remainingMoves.get() - 1);
+                        if (remainingMoves.get() > 0 && gameInterface.move(coordX, coordY)) {
+                            currentPlayer.move(coordX, coordY, board, currentPlayer);
+                            remainingMoves.set(gameInterface.getPlayer().getMoves());
+                        } else {
+                            Prompt error = new Prompt("Invalid Move");
+                            error.showAndWait();
+                        }
                     } catch (NoSuchRoomException | UnknownActionException | InterruptedException | GameController.MovementException | TileOccupiedException ex) {
                         Logger.getLogger(gameInstance.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    currentPlayer.move(coordX, coordY, board, currentPlayer);
-                    System.out.println("HELLO " + counter);
-                    counter++;
+                    } catch(NullPointerException ex) {
+                        Prompt rollError = new Prompt("Roll First");
+                        rollError.showAndWait();
+                    }   
                 });
                 
                 tilePane.getChildren().add(tile);
@@ -141,15 +148,16 @@ public class gameInstance {
 
     private void spawnPlayers(StackPane[][] board) {
         List<Player> players = gameInterface.getPlayers();
-        Collections.reverse(players);
-        players.forEach((player) -> {
-            System.out.println(player.getId());
+        playerSprites = new PlayerSprite[players.size()];
+        for(int i = players.size()-1; i>= 0; i--) {
+            Player player = players.get(i);
             int x = player.getPosition().getX();
             int y = player.getPosition().getY();
             PlayerSprite playerSprite = new PlayerSprite(x, y, "PP"+player.getId());
+            playerSprites[i] = playerSprite;
             currentPlayer = playerSprite;
             board[y][x].getChildren().add(playerSprite);
-        });
+        };
     }
     
     private VBox createLeftPanel() {
@@ -253,11 +261,12 @@ public class gameInstance {
         suggestionButton.setInactiveColor(Color.DARKORANGE);
         suggestionButton.setActive(false); //refresh Colour
         suggestionButton.setOnMouseClicked(e -> {
-            //gameInterface.getPlayer().getPosition().isRoom()
-            if (true) {
-                //currentRoom = ((Room) gameInterface.getPlayer().getPosition()).getId();
-                currentRoom = 1;
+            if (gameInterface.getPlayer().getPosition().isRoom()) {
+                currentRoom = ((Room) gameInterface.getPlayer().getPosition()).getId();
                 createCardsWindow("Suggestion", Color.ORANGE);
+            } else {
+                Prompt suggestError = new Prompt("You are not in a room");
+                suggestError.showAndWait();
             }
         });
         
@@ -266,15 +275,19 @@ public class gameInstance {
         accusationButton.setInactiveColor(Color.DARKRED);
         accusationButton.setActive(false);
         accusationButton.setOnMouseClicked(e -> {
-            createCardsWindow("Accusation", Color.RED);
+            if (gameInterface.getPlayer().getPosition().isRoom()) {
+                currentRoom = ((Room) gameInterface.getPlayer().getPosition()).getId();
+                createCardsWindow("Accusation", Color.RED);
+            } else {
+                Prompt suggestError = new Prompt("You are not in a room");
+                suggestError.showAndWait();
+            }
         });
 
         MenuItem rollButton = new MenuItem("Roll", avenirLarge);
         
         rollButton.setOnMouseClicked(e -> {      
             if (!rolled) {
-                // waiting for gamecontroller to be finalised.
-                // remainingMovesLabel.setText("Remaining Moves: " + gameInterface.roll());
                 int roll = gameInterface.roll();
                 remainingMoves = new SimpleIntegerProperty();
                 remainingMoves.set(roll);
@@ -289,14 +302,21 @@ public class gameInstance {
         
         MenuItem endButton = new MenuItem("End Turn", avenirLarge);
         endButton.setOnMouseClicked(e -> {
-            switchToCurtain();
-            System.out.println("End Turn");
-            gameInterface.getPlayer().setNotes(notes);
+            try {
+                gameInterface.endTurn();
+                gameInterface.getPlayer().setNotes(notes);
+                rolled = false;
+                currentPlayer = playerSprites[gameInterface.getPlayer().getId()];
+                remainingMovesLabel.setText("Roll Available");
+                switchToCurtain();
+            } catch (UnknownActionException | InterruptedException | GameController.MovementException | TileOccupiedException ex) {
+                Logger.getLogger(gameInstance.class.getName()).log(Level.SEVERE, null, ex);
+            }
         });
         
         playerControlsLayout.getChildren().addAll(remainingMovesLabel, suggestionButton, accusationButton, rollButton, endButton);
         
-        return playerControlsLayout;        
+        return playerControlsLayout;
     }
     
     private void createCardsWindow(String title, Color color) {
