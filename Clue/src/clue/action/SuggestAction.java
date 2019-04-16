@@ -24,7 +24,7 @@ public class SuggestAction extends Action {
     public Player show;
     public List<Card> foundCards;
     private final Card[] cards;
-    private GameState state;
+    private List<Player> players;
 
     /**
      * Creates a new SuggestAction.
@@ -33,14 +33,14 @@ public class SuggestAction extends Action {
      * @param room the room to suggest
      * @param weapon the weapon to suggest
      * @param player the player making the suggestion
-     * @param state the game state reference for the current game instance
+     * 
      */
-    public SuggestAction(PersonCard person, RoomCard room, WeaponCard weapon, Player player,GameState state) {
+    public SuggestAction(PersonCard person, RoomCard room, WeaponCard weapon, Player player, List<Player> players) {
         super(player);
         this.actionType = ActionType.SUGGEST;
         this.cards = new Card[]{person, room, weapon};
-        this.state = state;
         this.foundCards = new ArrayList();
+        this.players = players;
         player.setMoves(0);
     }
 
@@ -51,16 +51,22 @@ public class SuggestAction extends Action {
     @Override
     public void execute() {
         Player check;
-        int j = player.getId();
+        int i = player.getId();
         boolean found = false;
-        for (int i = 0; i < state.playersNumber; i++) {
+        int playersLeftToCheck = players.size()-1;
+        
+        while (playersLeftToCheck > 0) {
+            i+=1;
+            if (i > players.size()){
+                i = 0;
+            }
             if (!found){
-                check = state.getPlayer(j);
-                if (j != player.getId()) {
+                check = players.get(i);
+                if (i != player.getId()) {
                     if (check.getActiveSuggestionBlock() == false){
                         for (Card c : cards) {
                             if (check.hasCard(c)) {
-                                show = state.getPlayer(j);
+                                show = players.get(i);
                                 foundCards.add(c);
                                 found = true;
                             }
@@ -72,12 +78,12 @@ public class SuggestAction extends Action {
                             if (check.hasCard(c)) {
                                //TODO
                                //notify player with id j that thier avoid suggestion prevented them from revleaing card c
+                               
                             }
                         }
 
                     }
                 }
-                j = state.getNextPointer(j);
             }
             
         }
