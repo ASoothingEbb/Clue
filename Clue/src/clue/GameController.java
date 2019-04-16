@@ -528,7 +528,7 @@ public final class GameController {
     }
 
     /**
-     * makes an accusation. The player is immediately removed from the
+     * Makes an accusation. The player is immediately removed from the
      * GameState's active player list.
      *
      * @param person the character to accuse
@@ -537,9 +537,57 @@ public final class GameController {
      * @throws UnknownActionException
      * @throws InterruptedException
      * @throws clue.tile.TileOccupiedException
+     * 
      */
     public void accuse(PersonCard person, RoomCard room, WeaponCard weapon) throws UnknownActionException, InterruptedException, TileOccupiedException {
-        performAction(new AccuseAction(player, person, room, weapon, person == this.murderPerson && room == this.murderRoom && weapon == this.murderWeapon));
+        AccuseAction accuseAction = new AccuseAction(player, person, room, weapon, person == this.murderPerson && room == this.murderRoom && weapon == this.murderWeapon);
+        
+        performAction(accuseAction);
+    }
+    
+    /**
+     * Makes an accusation. The player is immediately removed from the
+     * GameState's active player list.
+     * 
+     * @param personId the character to accuse
+     * @param weaponId the murder murderWeapon to accuse
+     */
+    public void accuse(int personId, int weaponId){
+    PersonCard person = null;
+        RoomCard room = null;
+        WeaponCard weapon = null;
+        
+        for (PersonCard c : personCards){
+            if (c.getid() == personId){
+                person = c;
+                break;
+            }
+        }
+        
+        for (WeaponCard c : weaponCards){
+            if (c.getid() == weaponId){
+                weapon = c;
+                break;
+            }
+        }
+        
+        if (player.getPosition().isRoom()){
+            try {
+                room = ((Room)player.getPosition()).getCard();
+            } catch (NoSuchRoomException ex) {
+                Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        if (person == null || room == null || weapon == null){
+            System.err.println("unable to find 3 cards");
+        }
+        try {
+            accuse(person, room, weapon);
+        } catch (UnknownActionException | InterruptedException | TileOccupiedException ex) {
+            Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       
     }
 
     /**
@@ -559,7 +607,8 @@ public final class GameController {
     private void moveActionLog() {
         //TODO
         int pointer = player.getLogPointer();
-        while (pointer != turns) {
+        while (pointer < actionLog.size()) {
+            System.out.println("[GameController.moveActionLog] pointer: "+pointer +" turns: "+turns);
             actions.offer(actionLog.get(pointer));
             pointer++;
         }
