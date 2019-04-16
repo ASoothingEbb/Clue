@@ -151,6 +151,12 @@ public class Room extends Tile{
      * @param location x,y coordinate of the location resource
      */
     public void unassignLocation(int[] location){
-        nonOccupiedLocations.add(location);
+        for (int loc[] : locations){
+            if (loc[0] == location[0] && loc[1] == location[1]){//only accept the drawn location if room has this location
+                nonOccupiedLocations.add(location);
+                break;
+            }
+        }
+        
     }
 }
