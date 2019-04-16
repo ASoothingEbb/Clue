@@ -40,6 +40,41 @@ public class Room extends Tile{
     }
     
     /**
+     * Removes door locations from unOccupiedLocations
+     * 
+     */
+    public void removeDoorLocationsFromDrawingLocations(){
+    
+        boolean isDoor = false;
+        ArrayList<int[]> toRemove = new ArrayList<>();
+        for (int[] loc : nonOccupiedLocations){//for each drawing location
+            isDoor = false;
+            for (Tile adjacent : getAdjacent()){//for each adjacent tile to the room
+                
+                //check if the adjacent tile is next to the drawn location, if it is, queue it to be removed from nonOccupiedLocations
+                if (loc[0] == adjacent.getX()+1 && loc[1] == adjacent.getY()){//to left               
+                    isDoor = true;
+                }
+                else if (loc[0] == adjacent.getX()-1 && loc[1] == adjacent.getY()){//to right                    
+                    isDoor = true;
+                }
+                else if (loc[0] == adjacent.getX() && loc[1] == adjacent.getY()+1){//below
+                    isDoor = true;;
+                }
+                else if (loc[0] == adjacent.getX() && loc[1] == adjacent.getY()-1){//above
+                    isDoor = true;
+                }
+            }
+            if (isDoor){
+                toRemove.add(loc);
+            }
+        }   
+        for (int[] removing : toRemove){
+            nonOccupiedLocations.remove(removing);
+        }
+    }
+    
+    /**
      * Adds a x y location to the room location
      * @param x the x coordinate of the location to be added
      * @param y the y coordinate of the location to be added
