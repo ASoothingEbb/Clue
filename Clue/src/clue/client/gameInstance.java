@@ -101,6 +101,7 @@ public class gameInstance {
         root.setPadding(new Insets(10, 5, 5, 0));
                 
         GridPane boardPane = new GridPane();
+        boardPane.setGridLinesVisible(true);
         
         //try {
         //    Image boardImage = new Image(new FileInputStream(ImagePathMap.get("board")));
@@ -126,13 +127,14 @@ public class gameInstance {
                     String cell = tile.replaceAll("[^0-9A-Z-]+", "");
                     StackPane tilePane = new StackPane();
                     Tile tileSprite = new Tile(TILE_SIZE);
+                    tileSprite.setStyle("-fx-border-width: 1px 1px 1px 1px; -fx-border-style: solid; -fx-border-color: black;");
                     final int coordX = x;
                     final int coordY = y;
                     
-                    tileSprite.setOnMouseClicked(e -> {
+                    tilePane.setOnMouseClicked(e -> {
                         try {
-                            if (remainingMoves.get() > 0 && gameInterface.move(coordX, coordY)) {
-                                currentPlayer.move(coordX, coordY, board, currentPlayer);
+                            if (gameInterface.move(coordX, coordY)) {
+                                currentPlayer.move(gameInterface.getPlayer().getDrawX(), gameInterface.getPlayer().getDrawY(), board, currentPlayer);
                                 remainingMoves.set(gameInterface.getPlayer().getMoves());
                             } else {
                                 Prompt moveError = new Prompt("Invalid Move");
@@ -146,13 +148,13 @@ public class gameInstance {
                         }
                     });
                     if (cell.equals("-1") || cell.equals("")) {
-                        tileSprite.setFill(Color.rgb(0, 93, 31));
+                        tileSprite.setColor(Color.rgb(7, 80, 2));
                     } else if (cell.equals("0")) {
-                        tileSprite.setFill(Color.rgb(222, 151,  29));
+                        tileSprite.setColor(Color.rgb(222, 151,  29));
                     } else if (cell.contains("S")) {
-                        tileSprite.setFill(Color.rgb(55, 136, 4));
+                        tileSprite.setColor(Color.rgb(55, 136, 4));
                     } else if (Integer.valueOf(cell) > 0) {
-                        tileSprite.setFill(Color.rgb(90, 76, 65));
+                        tileSprite.setColor(Color.rgb(90, 76, 65));
                     }
                     
                     tilePane.getChildren().add(tileSprite);
@@ -171,8 +173,27 @@ public class gameInstance {
         ArrayList<int[]> doorLocations = gameInterface.getDoorLocations();
         System.out.println(doorLocations.size());
         doorLocations.forEach((coords) -> {
-            Tile tileSprite = (Tile) board[coords[1]][coords[0]].getChildren().get(0);
-            tileSprite.setFill(Color.rgb(159, 101, 0));
+            Tile doorSprite = new Tile(TILE_SIZE);
+            switch (coords[2]) {
+                case 1:
+                    System.out.println("UP");
+                    doorSprite.setStyle("-fx-border-width: 5px 0px 0px 0px; -fx-border-style: solid; -fx-border-color: #A36200;");
+                    break;
+                case 2:
+                    System.out.println("RIGHT");
+                    doorSprite.setStyle("-fx-border-width: 0px 5px 0px 0px; -fx-border-style: solid; -fx-border-color: #A36200;");
+                    break;
+                case 3:
+                    System.out.println("DOWN");
+                    doorSprite.setStyle("-fx-border-width: 0px 0px 5px 0px; -fx-border-style: solid; -fx-border-color: #A36200;");
+                    break;
+                case 4:
+                    System.out.println("LEFT");
+                    doorSprite.setStyle("-fx-border-width: 0px 0px 0px 5px; -fx-border-style: solid; -fx-border-color: #A36200;");
+                    break;
+            }
+            
+            board[coords[1]][coords[0]].getChildren().add(doorSprite);
         });
 
         spawnPlayers(board);

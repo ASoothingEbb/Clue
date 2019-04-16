@@ -148,7 +148,9 @@ public class ClueClient extends Application {
      */
     
     private void boardCreator(Stage stage) {
-        
+        boardEditor editor = new boardEditor();
+        stage.hide();
+        editor.startEditor();
     }
     
     private void startGameScene(Stage stage) {
@@ -610,5 +612,4 @@ public class ClueClient extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-    
 }
