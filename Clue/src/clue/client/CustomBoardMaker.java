@@ -547,24 +547,28 @@ public class CustomBoardMaker extends Application{
         for(int y=0; y < board.length; y++){
             for(int x=0; x< board[0].length; x++){
                 if(!board[y][x].doorDirection.equals("-1")){
-                     String[] temp = new String[3]; 
+                     String[] temp = new String[4]; 
                      temp[0] = board[y][x].s;
                     switch(board[y][x].doorDirection){
                         case "left":
                             temp[1] = Integer.toString(x-1);
                             temp[2] = Integer.toString(y);
+                            temp[3] = "left";
                             break;
                         case "right":
                             temp[1] = Integer.toString(x+1);
                             temp[2] = Integer.toString(y);
+                            temp[3] = "right";
                             break;
                         case "down":
                             temp[1] = Integer.toString(x);
                             temp[2] = Integer.toString(y+1);
+                            temp[3] = "down";
                             break;
                         case "up":
                             temp[1] = Integer.toString(x);
                             temp[2] = Integer.toString(y-1);
+                            temp[3] = "up";
                             break;
                     }
                     
