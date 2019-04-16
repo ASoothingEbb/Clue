@@ -470,24 +470,24 @@ public final class GameController {
      * @return false if no one has to show a card, true otherwise
      */
     public boolean suggest(int personId, int weaponId){
+        System.out.println("[GameController.suggest]");
         PersonCard person = null;
         RoomCard room = null;
         WeaponCard weapon = null;
-        
         for (PersonCard c : personCards){
             if (c.getid() == personId){
                 person = c;
                 break;
             }
         }
-        
+        System.out.println("[GameController.suggest] person: "+person);
         for (WeaponCard c : weaponCards){
             if (c.getid() == weaponId){
                 weapon = c;
                 break;
             }
         }
-        
+        System.out.println("[GameController.suggest] weapon: "+weapon);
         if (player.getPosition().isRoom()){
             try {
                 room = ((Room)player.getPosition()).getCard();
@@ -495,6 +495,7 @@ public final class GameController {
                 Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        System.out.println("[GameController.suggest] room: "+room);
         
         if (person == null || room == null || weapon == null){
             System.err.println("unable to find 3 cards");
