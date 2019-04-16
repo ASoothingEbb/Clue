@@ -5,6 +5,14 @@
  */
 package clue.action;
 
+import clue.GameController;
+import clue.MissingRoomDuringCreationException;
+import clue.player.Player;
+import clue.tile.NoSuchRoomException;
+import clue.tile.NoSuchTileException;
+import clue.tile.TileOccupiedException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -17,30 +25,36 @@ import static org.junit.Assert.*;
  * @author steve
  */
 public class StartTurnActionTest {
-    
+
     public StartTurnActionTest() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() {
     }
-    
+
     @After
     public void tearDown() {
     }
 
     @Test
-    public void testSomeMethod() {
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void testExecute() throws UnknownActionException, InterruptedException, TileOccupiedException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException {
+        GameController gc = null;
+        gc = new GameController(1, 1, "testCsv/tiles1.csv", "testCsv/doors1.csv");
+
+        Player player = new Player(77);
+        StartTurnAction instance = new StartTurnAction(player);
+        gc.performAction(instance);
+        assertTrue(instance.result);
+        assertNotEquals(gc.getPlayer().getId(), player.getId());
     }
-    
+
 }

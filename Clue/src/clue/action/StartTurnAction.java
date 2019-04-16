@@ -21,5 +21,9 @@ public class StartTurnAction extends Action{
         super(player);
         this.actionType = ActionType.STARTTURN;
     }
-  
+
+    @Override
+    public void execute() {
+        super.execute(); //To change body of generated methods, choose Tools | Templates.
+    }
 }
