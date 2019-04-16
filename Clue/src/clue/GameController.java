@@ -603,7 +603,7 @@ public final class GameController {
     private void moveActionLog() {
         //TODO
         int pointer = player.getLogPointer();
-        while (pointer < actionLog.size()) {
+        while (pointer != actionLog.size()) {
             System.out.println("[GameController.moveActionLog] pointer: "+pointer +" turns: "+turns);
             actions.offer(actionLog.get(pointer));
             pointer++;
