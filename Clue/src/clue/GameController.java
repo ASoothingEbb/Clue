@@ -693,4 +693,17 @@ public final class GameController {
     public int getBoardHeight() {
         return bm.getBoardHeight();
     }
+    
+    /**
+     * Gets all the (x,y) coordinates of room tiles which the GUI should drawn doors at
+     * @return the list of (x,y) coordinates
+     */
+    public ArrayList<int[]> getDoorLocations(){
+        ArrayList<int[]> doorLocations = new ArrayList<>();
+        for (Room r : bm.getRooms()){
+            doorLocations.addAll(r.getDoorLocations());
+        }
+        return doorLocations;
+        
+    }
 }
