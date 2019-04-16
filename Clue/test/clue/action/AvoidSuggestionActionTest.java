@@ -48,7 +48,7 @@ public class AvoidSuggestionActionTest {
         System.out.println("execute");
         Player player = new Player(0);
         AvoidSuggestionIntrigue card = new AvoidSuggestionIntrigue(0);
-        player.addCard(card);
+        player.addIntrigue(card);
         AvoidSuggestionAction instance = new AvoidSuggestionAction(player,card);
         instance.execute();
         assertFalse(player.hasCard(card));
