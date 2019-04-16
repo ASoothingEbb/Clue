@@ -34,7 +34,7 @@ public final class BoardMappings {
     public static void main(String[] args){//TODO:              delete me final submission
         System.out.println("[BoardMappings.main (temp, delete main later)] running example1 (BoardMappings.main)");
         try {
-            BoardMappings boardMappings = new BoardMappings("testCsv/tiles1.csv", "testCsv/doors1.csv");
+            BoardMappings boardMappings = new BoardMappings("resources/archersAvenueTiles.csv", "resources/archersAvenueDoors.csv");
         } catch (NoSuchRoomException ex) {
             System.out.println("oof");
             Logger.getLogger(BoardMappings.class.getName()).log(Level.SEVERE, null, ex);
@@ -347,7 +347,11 @@ public final class BoardMappings {
             }
             try{
                 if (Integer.parseInt(row.get(0).replaceAll("[^0-9]+", ""))-1 < getRooms().length){
-                    door = new Door(Integer.parseInt(row.get(0).replaceAll("[^0-9]+", ""))-1, Integer.parseInt(row.get(1).replaceAll("[^0-9]+", "")), Integer.parseInt(row.get(2).replaceAll("[^0-9]+", "")));
+                    door = new Door(
+                            Integer.parseInt(row.get(0).replaceAll("[^0-9]+", ""))-1, 
+                            Integer.parseInt(row.get(1).replaceAll("[^0-9]+", "")), 
+                            Integer.parseInt(row.get(2).replaceAll("[^0-9]+", "")),
+                            row.get(3).replaceAll("[^UDLR]", ""));
                     doors.add(door);
                 }
                 else{
@@ -481,7 +485,7 @@ public final class BoardMappings {
                             }
                         } 
                         
-                        //*********************TODO*****************************************//
+                       
                         
                         
                         
@@ -524,6 +528,7 @@ public final class BoardMappings {
     private void addDoorsToTileAdjacencies(List<Door> doorLocations) throws NoSuchRoomException, NoSuchTileException {
         Tile outside;
         Tile room;
+        int[] loc = new int[2];
         for (Door door: doorLocations){
             
             try {
@@ -532,6 +537,34 @@ public final class BoardMappings {
                 outside = getTile(door.getTileX(), door.getTileY());
                 //System.out.println("O"+outside);
                 room.addAdjacentBoth(outside);
+                
+                switch (door.getDir()) {
+                    
+                    case "U"://the tile is above the room
+                        loc[0] = outside.getX();
+                        loc[1] = outside.getY()+1;
+                        break;
+                    case "D"://the tile is below the room
+                        loc[0] = outside.getX();
+                        loc[1] = outside.getY()-1;
+                        break;
+                    case "L":
+                        loc[0] = outside.getX()+1;
+                        loc[1] = outside.getY();
+                        break;
+                    case "R":
+                        loc[0] = outside.getX()-1;
+                        loc[1] = outside.getY();
+                        break;
+                    default:
+                        loc[0] = -1;
+                        loc[1] = -1;
+                        break;
+                }
+                ((Room)room).addDoorLocation(loc);
+                
+                
+                
             } catch (NoSuchRoomException ex) {
                 throw ex;
             }
@@ -545,7 +578,6 @@ public final class BoardMappings {
         
         for (Room r : rooms){
             r.removeDoorLocationsFromDrawingLocations();
-        
         }
     }
      /**
