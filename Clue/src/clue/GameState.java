@@ -146,7 +146,7 @@ public class GameState {
      * @return player id
      */
     public int getPlayerTurn() {
-        System.out.println("turn:"+turn+" playerId: "+currentPlayer.getId());
+        System.out.println("[GameState.getPlayerTurn]turn:"+turn+" playerId: "+currentPlayer.getId());
         return currentPlayer.getId();
     }
 
