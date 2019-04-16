@@ -528,7 +528,7 @@ public final class BoardMappings {
     private void addDoorsToTileAdjacencies(List<Door> doorLocations) throws NoSuchRoomException, NoSuchTileException {
         Tile outside;
         Tile room;
-        int[] loc = new int[2];
+        int[] loc = new int[3];
         for (Door door: doorLocations){
             
             try {
@@ -562,10 +562,7 @@ public final class BoardMappings {
                         loc[1] = outside.getY();
                         loc[2] = 4;
                         break;    
-                        
-                    
-                    
-                    
+
                     default:
                         loc[0] = -1;
                         loc[1] = -1;
