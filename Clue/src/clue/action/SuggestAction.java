@@ -56,8 +56,8 @@ public class SuggestAction extends Action {
         int playersLeftToCheck = players.size()-1;
         
         while (playersLeftToCheck > 0) {
-            i+=1;
-            if (i > players.size()){
+            i++;
+            if (i >= players.size()){
                 i = 0;
             }
             if (!found){
