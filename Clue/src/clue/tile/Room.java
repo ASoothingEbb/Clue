@@ -40,42 +40,27 @@ public class Room extends Tile{
         room = true;
         locations = new ArrayList<>();
     }
-    
+    public void addDoorLocation(int[] loc){
+        int[] toAdd = new int[2];
+        toAdd[0] = loc[0];
+        toAdd[1] = loc[1];
+        doorLocations.add(toAdd);
+    }
     /**
      * Removes door locations from unOccupiedLocations
      * 
      */
     public void removeDoorLocationsFromDrawingLocations(){
     
-        boolean isDoor = false;
-        ArrayList<int[]> toRemove = new ArrayList<>();
-        for (int[] loc : nonOccupiedLocations){//for each drawing location
-            isDoor = false;
-            for (Tile adjacent : getAdjacent()){//for each adjacent tile to the room
-                //check if the adjacent tile is next to the drawn location, if it is, queue it to be removed from nonOccupiedLocations
-                //System.out.println(loc[0] +","+adjacent.getX() + " :: "+ loc[1] +","+adjacent.getY());
-                if (loc[0] == adjacent.getX()+1 && loc[1] == adjacent.getY()){//to left               
-                    isDoor = true;
-                }
-                else if (loc[0] == adjacent.getX()-1 && loc[1] == adjacent.getY()){//to right                    
-                    isDoor = true;
-                }
-                else if (loc[0] == adjacent.getX() && loc[1] == adjacent.getY()+1){//below
-                    isDoor = true;;
-                }
-                else if (loc[0] == adjacent.getX() && loc[1] == adjacent.getY()-1){//above
-                    isDoor = true;
+        for (int[] loc : doorLocations){
+            for (int i = 0; i < nonOccupiedLocations.size(); i++){
+                if (loc[0] == nonOccupiedLocations.get(i)[0] && loc[1] == nonOccupiedLocations.get(i)[1]){//if door location == nonOccupied location
+                    nonOccupiedLocations.remove(i);
+                    break;
                 }
             }
-            if (isDoor){
-                toRemove.add(loc);
-            }
-        }   
-        for (int[] removing : toRemove){
-            nonOccupiedLocations.remove(removing);
+        
         }
-        doorLocations = toRemove;
-        System.out.println(doorLocations);
     }
     
     /**
