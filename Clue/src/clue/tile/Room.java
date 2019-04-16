@@ -16,6 +16,7 @@ public class Room extends Tile{
     private RoomCard card;
     private ArrayList<int[]> locations;
     private ArrayList<int[]> nonOccupiedLocations;
+    private ArrayList<int[]> doorLocations;
     /**
      * Creates a new Room
      * @param card the RoomCard associated with this room.
@@ -26,6 +27,7 @@ public class Room extends Tile{
         room = true;
         locations = new ArrayList<>();
         nonOccupiedLocations = new ArrayList<>();
+        doorLocations = new ArrayList<>();
     }
     /**
      * Creates a new Room
@@ -72,6 +74,15 @@ public class Room extends Tile{
         for (int[] removing : toRemove){
             nonOccupiedLocations.remove(removing);
         }
+        doorLocations = toRemove;
+    }
+    
+    /**
+     * Gets the door locations in the room
+     * @return the list of door locations, where a door location is x,y
+     */
+    public ArrayList<int[]> getDoorLocations(){
+        return doorLocations;
     }
     
     /**
