@@ -24,7 +24,7 @@ public abstract class Card {
      *
      * @return id
      */
-    public int getid() {
+    public int getId() {
         return id;
     }
 }

@@ -38,14 +38,14 @@ public class CardTest {
     }
 
     /**
-     * Test of getid method, of class Card.
+     * Test of getId method, of class Card.
      */
     @Test
     public void testGetid() {
         System.out.println("getid");
         Card instance = new CardImpl();
         int expResult = 0;
-        int result = instance.getid();
+        int result = instance.getId();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");

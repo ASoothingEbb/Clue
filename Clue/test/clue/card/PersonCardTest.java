@@ -38,14 +38,14 @@ public class PersonCardTest {
     }
 
     /**
-     * Test of getid method, of class PersonCard.
+     * Test of getId method, of class PersonCard.
      */
     @Test
     public void testGetid() {
         System.out.println("getid");
         PersonCard instance = new PersonCard(0);
         int expResult = 0;
-        int result = instance.getid();
+        int result = instance.getId();
         assertEquals(expResult, result);
     }
     

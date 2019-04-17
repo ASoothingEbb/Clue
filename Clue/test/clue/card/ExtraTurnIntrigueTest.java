@@ -39,14 +39,14 @@ public class ExtraTurnIntrigueTest {
     }
 
     /**
-     * Test of getid method, of class ExtraTurnIntrigue.
+     * Test of getId method, of class ExtraTurnIntrigue.
      */
     @Test
     public void testGetid() {
         System.out.println("getid");
         ExtraTurnIntrigue instance = new ExtraTurnIntrigue(0);
         int expResult = 0;
-        int result = instance.getid();
+        int result = instance.getId();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
