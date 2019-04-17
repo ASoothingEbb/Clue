@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -178,28 +179,22 @@ public class gameInstance {
         }
         
         ArrayList<int[]> doorLocations = gameInterface.getDoorLocations();
-        System.out.println(doorLocations.size());
         doorLocations.forEach((coords) -> {
             Tile doorSprite = new Tile(TILE_SIZE);
             switch (coords[2]) {
                 case 1:
-                    System.out.println("UP");
                     doorSprite.setStyle("-fx-border-width: 5px 0px 0px 0px; -fx-border-style: solid; -fx-border-color: #A36200;");
                     break;
                 case 2:
-                    System.out.println("RIGHT");
                     doorSprite.setStyle("-fx-border-width: 0px 5px 0px 0px; -fx-border-style: solid; -fx-border-color: #A36200;");
                     break;
                 case 3:
-                    System.out.println("DOWN");
                     doorSprite.setStyle("-fx-border-width: 0px 0px 5px 0px; -fx-border-style: solid; -fx-border-color: #A36200;");
                     break;
                 case 4:
-                    System.out.println("LEFT");
                     doorSprite.setStyle("-fx-border-width: 0px 0px 0px 5px; -fx-border-style: solid; -fx-border-color: #A36200;");
                     break;
             }
-            
             board[coords[1]][coords[0]].getChildren().add(doorSprite);
         });
 
@@ -224,7 +219,6 @@ public class gameInstance {
             board[y][x].getChildren().add(playerSprite);
         }
     }
-    
     
    /**
     * 
@@ -335,13 +329,7 @@ public class gameInstance {
         accusationButton.setInactiveColor(Color.DARKRED);
         accusationButton.setActive(false);
         accusationButton.setOnMouseClicked(e -> {
-            if (gameInterface.getPlayer().getPosition().isRoom()) {
-                currentRoom = ((Room) gameInterface.getPlayer().getPosition()).getId();
-                createCardsWindow("Accusation", Color.RED);
-            } else {
-                Prompt suggestError = new Prompt("You are not in a room");
-                suggestError.show();
-            }
+            createCardsWindow("Accusation", Color.RED);
         });
 
         MenuItem rollButton = new MenuItem("Roll", avenirLarge);
@@ -478,11 +466,11 @@ public class gameInstance {
     }
     
     private void showCard(Action action) {
-        String suggestee = CardNameMap.get("character" + ((ShowCardsAction) action).getPlayer().getId());
-        Prompt showCard = new Prompt(suggestee + " showed");
+        //String suggestee = CardNameMap.get("character" + ((ShowCardsAction) action).getPlayer().getId());
+        //Prompt showCard = new Prompt(suggestee + " showed");
         //((ShowCard) action).
         //ImageView cardViewer = new ImageView(getImage(((ShowCardsAction) action).getIdOfCardToShow(), ((ShowCardsAction) action).));
-        showCard.setImage(selectedView);
+        //showCard.setImage(selectedView);
     }
     
     private void switchPlayerScene(int playerId, Scene next) {
@@ -654,8 +642,14 @@ public class gameInstance {
     private void initGraphics() {
         try (InputStream input = new FileInputStream("resources/config.properties")) {
             Properties prop = new Properties();
-            
             prop.load(input);
+            
+            prop.keySet();
+            
+            for (Map.Entry entry: prop.entrySet()) {
+                System.out.println(entry.getKey());
+                System.out.println(entry.getValue());
+            }
             System.out.println("here");
             input.close();
         } catch (IOException ex) {
@@ -735,5 +729,4 @@ public class gameInstance {
         gameStage.setScene(uiScene);
         System.out.println(gameStage.getWidth() + "" + gameStage.getHeight());
     }
-
 }
