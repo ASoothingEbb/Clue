@@ -5,7 +5,10 @@
  */
 package clue.action;
 
+import clue.ai.AiAdvanced;
 import clue.card.Card;
+import clue.card.CardType;
+import clue.client.gameInstance;
 import clue.player.Player;
 import java.util.List;
 
@@ -17,6 +20,9 @@ public class ShowCardsAction extends Action{
 
     private final List<Card> cards;
     private final Player suggester;
+    private gameInstance gui;
+    private int idOfCardToShow;
+    private CardType typeOfCardToShow;
 
     /**
      * Creates a new ShowCardsAction
@@ -25,11 +31,14 @@ public class ShowCardsAction extends Action{
      * @param cards the cards to prompt
      */
 
-    public ShowCardsAction(Player player, Player suggester, List<Card> cards) {
+    public ShowCardsAction(Player player, Player suggester, List<Card> cards, gameInstance gui) {
         super(player);
         this.actionType = ActionType.SHOWCARDS;
         this.cards = cards;
         this.suggester = suggester;
+        this.gui = gui;
+        idOfCardToShow = -1;
+        typeOfCardToShow = null;
 
     }
 
@@ -38,9 +47,29 @@ public class ShowCardsAction extends Action{
      */
     @Override
     public void execute() {
-        super.execute(); //To change body of generated methods, choose Tools | Templates.
+        if (player.isAi()){
+            Card responseCard = ((AiAdvanced) player).respondToShowCards(cards);
+            idOfCardToShow = responseCard.getId();
+            typeOfCardToShow = responseCard.cardType;
+        }
+        else{
+            gui.actionResponse(this);
+        }
+        
     }
     
+    public void setCardToShow(int i, CardType type){
+        idOfCardToShow = i;
+        typeOfCardToShow = type;
+    }
+    
+    public int getIdOfCardToShow(){
+        return idOfCardToShow;
+    }
+    
+    public CardType getCardTypeOfCardToShow(){
+        return typeOfCardToShow;
+    }
 
     /**
      * Returns the Card list for this action.
