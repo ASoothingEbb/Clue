@@ -276,13 +276,13 @@ public class gameInstance {
             try {
                 switch (card.cardType) {
                     case PERSON:
-                        cardImage = new Image(new FileInputStream(new File(ImagePathMap.get("character"+card.getid()))));
+                        cardImage = new Image(new FileInputStream(new File(ImagePathMap.get("character"+card.getId()))));
                         break;
                     case WEAPON:
-                        cardImage = new Image(new FileInputStream(new File(ImagePathMap.get("weapon"+card.getid()))));
+                        cardImage = new Image(new FileInputStream(new File(ImagePathMap.get("weapon"+card.getId()))));
                         break;
                     case ROOM:
-                        cardImage = new Image(new FileInputStream(new File(ImagePathMap.get("room"+card.getid()))));
+                        cardImage = new Image(new FileInputStream(new File(ImagePathMap.get("room"+card.getId()))));
                         break;
                     default:
                         cardImage = new Image(new FileInputStream(new File(ImagePathMap.get("character1"))));
