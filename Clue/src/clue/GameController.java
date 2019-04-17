@@ -449,19 +449,15 @@ public final class GameController {
      * @param room the murderRoom card to be suggested
      * @param weapon the murderWeapon card to be suggested
      * @param suggestee the player who is making the suggestion
-     * @return the id of the player who has to show a card as a result of the suggestion, -1 if no one has to show a card
+     * @return the constructed suggestion action
      * @throws clue.action.UnknownActionException
      * @throws java.lang.InterruptedException
      * @throws clue.tile.TileOccupiedException
      */
-    public int suggest(PersonCard person, RoomCard room, WeaponCard weapon, Player suggestee) throws UnknownActionException, InterruptedException, TileOccupiedException {
-        Player toShow = suggestee;
+    public SuggestAction suggest(PersonCard person, RoomCard room, WeaponCard weapon, Player suggestee) throws UnknownActionException, InterruptedException, TileOccupiedException {
         SuggestAction suggestAction = new SuggestAction(person, room, weapon, suggestee, players);
         performAction(suggestAction);
-        if (suggestAction.result){
-            return suggestAction.show.getId();
-        }
-        return -1;
+        return suggestAction;
     }
 
     
@@ -472,20 +468,20 @@ public final class GameController {
      * @param weaponId the id of the weapon being suggested
      * @return the id of the player who has to show a card as a result of the suggestion, -1 if no one has to show a card
      */
-    public int suggest(int personId, int weaponId){
+    public SuggestAction suggest(int personId, int weaponId){
         System.out.println("[GameController.suggest]");
         PersonCard person = null;
         RoomCard room = null;
         WeaponCard weapon = null;
         for (PersonCard c : personCards){
-            if (c.getid() == personId){
+            if (c.getId() == personId){
                 person = c;
                 break;
             }
         }
         System.out.println("[GameController.suggest] person: "+person);
         for (WeaponCard c : weaponCards){
-            if (c.getid() == weaponId){
+            if (c.getId() == weaponId){
                 weapon = c;
                 break;
             }
@@ -502,14 +498,14 @@ public final class GameController {
         
         if (person == null || room == null || weapon == null){
             System.err.println("unable to find 3 cards");
-            return -1;
+            return null;
         }
         try {
             return suggest(person, room, weapon, player);
         } catch (UnknownActionException | InterruptedException | TileOccupiedException ex) {
             Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return -1;
+        return null;
     }    
     
     
@@ -534,15 +530,19 @@ public final class GameController {
      * @param person the character to accuse
      * @param room the crime scene to accuse
      * @param weapon the murder murderWeapon to accuse
+     * @return nothing if accusation was incorrect, if correct : list of Integers representing the ids of: the winner of the game, the murderPerson, murderRoom, murderWeapon
      * @throws UnknownActionException
      * @throws InterruptedException
      * @throws clue.tile.TileOccupiedException
      * 
      */
-    public void accuse(PersonCard person, RoomCard room, WeaponCard weapon) throws UnknownActionException, InterruptedException, TileOccupiedException {
+    public AccuseAction accuse(PersonCard person, RoomCard room, WeaponCard weapon) throws UnknownActionException, InterruptedException, TileOccupiedException {
+        
         AccuseAction accuseAction = new AccuseAction(player, person, room, weapon, person == this.murderPerson && room == this.murderRoom && weapon == this.murderWeapon);
         
         performAction(accuseAction);
+        return accuseAction;
+            
     }
     
     /**
@@ -551,21 +551,23 @@ public final class GameController {
      * 
      * @param personId the character to accuse
      * @param weaponId the murder murderWeapon to accuse
+     * @return nothing if accusation was incorrect, if correct : list of Integers representing the ids of: the winner of the game, the murderPerson, murderRoom, murderWeapon
+    
      */
-    public void accuse(int personId, int weaponId){
+    public AccuseAction accuse(int personId, int weaponId){
     PersonCard person = null;
         RoomCard room = null;
         WeaponCard weapon = null;
         
         for (PersonCard c : personCards){
-            if (c.getid() == personId){
+            if (c.getId() == personId){
                 person = c;
                 break;
             }
         }
         
         for (WeaponCard c : weaponCards){
-            if (c.getid() == weaponId){
+            if (c.getId() == weaponId){
                 weapon = c;
                 break;
             }
@@ -583,10 +585,11 @@ public final class GameController {
             System.err.println("unable to find 3 cards");
         }
         try {
-            accuse(person, room, weapon);
+            return accuse(person, room, weapon);
         } catch (UnknownActionException | InterruptedException | TileOccupiedException ex) {
             Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return null;
        
     }
 
