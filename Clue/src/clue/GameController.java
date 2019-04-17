@@ -6,6 +6,7 @@
 package clue;
 
 import clue.action.*;
+import clue.ai.AiAdvanced;
 import clue.ai.AiBasic;
 import clue.card.*;
 import clue.player.Player;
@@ -23,6 +24,7 @@ import java.util.Queue;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import clue.client.gameInstance;
 
 /**
  * Performs internal game logic for a Clue game instance
@@ -54,6 +56,7 @@ public final class GameController {
     private List<WeaponCard> weaponCards;
     private List<PersonCard> personCards;
     private List<RoomCard> roomCards;
+    private gameInstance gui;
 
     /**
      * Creates a new GameController.
@@ -84,7 +87,7 @@ public final class GameController {
             players.add(new Player(i, this));
         }
         for (int i = human; i < human + ai; i++) {
-            players.add(new AiBasic(i, this));
+            players.add(new AiAdvanced(i, this, getBoardWidth(), getBoardHeight()));
         }
         if (players.size() > 6 || players.size() > startingTiles.size()) {
             throw new TooManyPlayersException();
@@ -110,6 +113,14 @@ public final class GameController {
         }
     }
 
+    /** 
+     * Add gameInstance reference to backend so that it can make GUI calls
+     * @param gs 
+     */
+    public void setGameInstance(gameInstance gui){
+        this.gui = gui;
+    }
+    
     /**
      * Executes an action from the queue. Waits for the current action to
      * complete before executing.
@@ -196,13 +207,20 @@ public final class GameController {
             case SHOWCARD:
                 System.out.println("    CASE SHOWCARD");
                 if (state.getAction().actionType == ActionType.SHOWCARDS) {
-                    //TODO
+                    
                 }
                 break;
             case SHOWCARDS:
                 System.out.println("    CASE SHOWCARDS");
-                if (state.getAction().actionType == ActionType.SUGGEST) {
-                    //TODO
+                if (state.getAction().actionType != ActionType.ACCUSATION) {
+                    
+                    int id = ((ShowCardsAction)action).getIdOfCardToShow();
+                    CardType type = ((ShowCardsAction)action).getCardTypeOfCardToShow();
+                    Player personToShow = ((ShowCardsAction)action).getSuggester();
+                    Card cardToShow = getCard(id, type);
+                    
+                   
+                    nextAction = new ShowCardAction(personToShow, cardToShow, gui, ((ShowCardsAction)action).getPlayer());
                 }
                 actionLog.add(action);
                 break;
@@ -226,7 +244,7 @@ public final class GameController {
                 System.out.println("    CASE SUGGEST "+player.getId() + " FROM: "+state.getAction().actionType);
                 if (state.getAction().actionType == ActionType.STARTTURN || state.getAction().actionType == ActionType.MOVE) {
                     if (action.result){
-                        nextAction = new ShowCardsAction(((SuggestAction) action).show, ((SuggestAction) action).player, ((SuggestAction) action).foundCards);
+                        nextAction = new ShowCardsAction(((SuggestAction) action).show, ((SuggestAction) action).player, ((SuggestAction) action).foundCards, gui);
                     }
                     else{
                         //TODO
@@ -466,26 +484,15 @@ public final class GameController {
      * Creates and performs a new SuggestAction for a player
      * @param personId the id of the person being suggested
      * @param weaponId the id of the weapon being suggested
-     * @return the id of the player who has to show a card as a result of the suggestion, -1 if no one has to show a card
+     * 
      */
-    public SuggestAction suggest(int personId, int weaponId){
+    public void suggest(int personId, int weaponId){
         System.out.println("[GameController.suggest]");
-        PersonCard person = null;
+        PersonCard person = getPersonCard(personId);
         RoomCard room = null;
-        WeaponCard weapon = null;
-        for (PersonCard c : personCards){
-            if (c.getId() == personId){
-                person = c;
-                break;
-            }
-        }
-        System.out.println("[GameController.suggest] person: "+person);
-        for (WeaponCard c : weaponCards){
-            if (c.getId() == weaponId){
-                weapon = c;
-                break;
-            }
-        }
+        WeaponCard weapon = getWeaponCard(weaponId);
+        
+        System.out.println("[GameController.suggest] person: "+person);        
         System.out.println("[GameController.suggest] weapon: "+weapon);
         if (player.getPosition().isRoom()){
             try {
@@ -498,14 +505,13 @@ public final class GameController {
         
         if (person == null || room == null || weapon == null){
             System.err.println("unable to find 3 cards");
-            return null;
+            
         }
         try {
-            return suggest(person, room, weapon, player);
+            suggest(person, room, weapon, player);
         } catch (UnknownActionException | InterruptedException | TileOccupiedException ex) {
             Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return null;
     }    
     
     
@@ -519,9 +525,9 @@ public final class GameController {
      * @throws InterruptedException
      * @throws clue.tile.TileOccupiedException
      */
-    public void showCard(Card card) throws UnknownActionException, InterruptedException, TileOccupiedException {
-        performAction(new ShowCardAction(player, card));
-    }
+    //public void showCard(Card card) throws UnknownActionException, InterruptedException, TileOccupiedException {
+        //performAction(new ShowCardAction(player, card));
+    //}
 
     /**
      * Makes an accusation. The player is immediately removed from the
@@ -551,27 +557,14 @@ public final class GameController {
      * 
      * @param personId the character to accuse
      * @param weaponId the murder murderWeapon to accuse
-     * @return nothing if accusation was incorrect, if correct : list of Integers representing the ids of: the winner of the game, the murderPerson, murderRoom, murderWeapon
+     * 
     
      */
-    public AccuseAction accuse(int personId, int weaponId){
-    PersonCard person = null;
+    public void accuse(int personId, int weaponId){
+        PersonCard person = getPersonCard(personId);
         RoomCard room = null;
-        WeaponCard weapon = null;
+        WeaponCard weapon = getWeaponCard(weaponId);
         
-        for (PersonCard c : personCards){
-            if (c.getId() == personId){
-                person = c;
-                break;
-            }
-        }
-        
-        for (WeaponCard c : weaponCards){
-            if (c.getId() == weaponId){
-                weapon = c;
-                break;
-            }
-        }
         
         if (player.getPosition().isRoom()){
             try {
@@ -585,11 +578,11 @@ public final class GameController {
             System.err.println("unable to find 3 cards");
         }
         try {
-            return accuse(person, room, weapon);
+            accuse(person, room, weapon);
         } catch (UnknownActionException | InterruptedException | TileOccupiedException ex) {
             Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return null;
+        //return null;
        
     }
 
@@ -709,4 +702,56 @@ public final class GameController {
         return doorLocations;
         
     }
+    
+    public PersonCard getPersonCard(int i){
+        PersonCard result = null;
+        for (PersonCard c : personCards){
+            if (c.getId() == i){
+                result = c;
+                break;
+            }
+        }
+        return result;
+    }
+    
+    public WeaponCard getWeaponCard(int i){
+        WeaponCard result = null;
+        for (WeaponCard c : weaponCards){
+            if (c.getId() == i){
+                result = c;
+                break;
+            }
+        }
+        return result;
+    }
+    
+    public RoomCard getRoomCard(int i){
+        RoomCard result = null;
+        for (RoomCard c : roomCards){
+            if (c.getId() == i){
+                result = c;
+                break;
+            }
+        }
+        return result;
+    }
+    
+    public Card getCard(int i, CardType type){
+        if (null != type)switch (type) {
+            case ROOM:
+                return getRoomCard(i);
+                
+            case PERSON:
+                return getPersonCard(i);
+                
+            case WEAPON:
+                return getWeaponCard(i);
+                
+            default:
+                break;
+        }
+        return null;
+    }
+    
+    
 }
