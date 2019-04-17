@@ -37,6 +37,9 @@ import javafx.stage.Stage;
  */
 public class boardEditor {
     
+    private Stage clientStage;
+    private Stage editorStage;
+    
     private Font avenirLarge;
     private EditorTile[][] board;
     private EditorTileType lastSelected;
@@ -97,7 +100,7 @@ public class boardEditor {
         mapNameField.setText("Custom Map 1");
         mapNameField.setPrefColumnCount(5);
         
-        MenuItem createCSV = new MenuItem("SAVE", avenirLarge);
+        MenuItem createCSV = new MenuItem("Save", avenirLarge);
         createCSV.setOnMouseClicked(e-> {
             try {
                 createCSV();
@@ -109,9 +112,16 @@ public class boardEditor {
             }
         });
         
+        MenuItem backButton = new MenuItem("Back", avenirLarge);
+        backButton.setOnMouseClicked(e -> {
+            clientStage.show();
+            editorStage.close();
+        });
+        
         paletteLayout.getChildren().addAll(roomButton, emptyButton, hallButton,
                 spawnButton, intrigueButton, doorUpButton, doorDownButton,
-                doorLeftButton, doorRightButton, mapNameField, createCSV);
+                doorLeftButton, doorRightButton, mapNameField, createCSV,
+                backButton);
         return paletteLayout;
     }
     
@@ -127,7 +137,7 @@ public class boardEditor {
                     try {
                         paintTile(l);
                     } catch (CreationException ex) {
-                        Prompt error = new Prompt(ex.toString());
+                        Prompt error = new Prompt(ex.message);
                         error.show();
                     }
                 });
@@ -451,11 +461,13 @@ public class boardEditor {
         }
     }
     
-    public void startEditor() {
-        Stage editorStage = new Stage();
+    public void startEditor(Stage clientStage) {
+        editorStage = new Stage();
         editorStage.initModality(Modality.APPLICATION_MODAL);
         editorStage.setTitle("Board Editor");
         editorStage.setResizable(false);
+        
+        this.clientStage = clientStage;
         
         initFonts();
         
