@@ -32,7 +32,7 @@ public class TeleportAction extends Action {
     public void execute() {
         player.removeCard(card);
         if (player.isAi()){
-            ((AiAdvanced) player).respondToTeleport();
+            ((AiAdvanced) player).respondToTeleport(this);
 
         }
         else{
