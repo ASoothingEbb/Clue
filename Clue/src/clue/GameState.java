@@ -96,6 +96,7 @@ public class GameState {
     public int nextPlayer() {
         System.out.println("[GameState.nextPlayer]");
         int i = -1;
+        Player next = currentPlayer;
         if (running && hasActive()) {
             i = turn;
             
@@ -103,9 +104,12 @@ public class GameState {
             if (i >= players.size()){
                 i = 0;
             }
-            currentPlayer = players.get(i);
-            while (!currentPlayer.isActive()){
+            System.out.println("[GameState.nextPlayer] i = "+i);
+            next = players.get(i);
+            System.out.println("[GameState.nextPlayer] player id = " + next.getId() + ", active: "  + next.isActive());
+            while (!next.isActive()){
                 i++;
+                next = players.get(i);
                 if (i >= players.size()){
                     i = 0;
                 }
@@ -118,9 +122,8 @@ public class GameState {
         } 
         else{
             System.out.println("[GameState.nextPlayer] running: "+running+" hasActive: "+hasActive()+"----------------");
-            return i;
         }
-        System.out.println("[GameState.nextPlayer] currentPlayer after: "+currentPlayer.getId());
+        System.out.println("[GameState.nextPlayer] player index: "+i);
         return i;
         
     }
