@@ -260,8 +260,7 @@ public final class GameController {
                         nextAction = new ShowCardsAction(((SuggestAction) action).show, ((SuggestAction) action).player, ((SuggestAction) action).foundCards, gui);
                     }
                     else{
-                        //TODO
-                        //tell GUI that no one had one of those cards
+                        gui.notifyUser("No other player had a card from your suggestion.");
                     }
                 }
                 actionLog.add(action);
