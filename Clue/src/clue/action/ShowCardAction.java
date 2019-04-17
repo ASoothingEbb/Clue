@@ -34,6 +34,14 @@ public class ShowCardAction extends Action {
         this.gui = gui;
         this.whoShowedTheCard = whoShowedTheCard;
     }
+
+    public ShowCardAction(Player player, Card card, Player shower) {
+        super(player);
+        this.card = card;
+        this.whoShowedTheCard = shower;
+    }
+    
+    
 /**
  * Executes the ShowCardAction.
  */

@@ -22,7 +22,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
@@ -41,13 +40,8 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
@@ -66,22 +60,15 @@ import javafx.util.Duration;
 public class gameInstance {
     
     private static final int TILE_SIZE = 38;
-   
-    private StackPane[][] board;
-    private String notes;
-    
-    private PlayerSprite currentPlayer;
-    private IntegerProperty remainingMoves;
     private int currentRoom;
     private boolean rolled;
-    
-    private GameController gameInterface;
-    private Stage gameStage;
-    private Scene uiScene;
-    private Scene curtainScene;
+    private String notes;
    
-    private FadeTransition uiToCurtain;
-    
+    private IntegerProperty remainingMoves;
+     
+    private GameController gameInterface;
+   
+    private PlayerSprite currentPlayer;
     private PlayerSprite[] playerSprites;
     
     private HashMap<String, String> ImagePathMap = new HashMap<>();
@@ -89,14 +76,30 @@ public class gameInstance {
     
     private String boardTilePath;
     
+    
+    //JavaFX
     private GridPane cardsDisplay;
-            
+    private Stage gameStage;
+    private Scene uiScene;
+    private Scene curtainScene;
+    private StackPane[][] board;
+    private FadeTransition uiToCurtain;
+    
+    //Fonts
     private Font avenirLarge;
     private Font avenirTitle;
     private Font avenirText;
+    
+    //Backgrounds
     private final Background blackFill = new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY));
     private final Background greenFill = new Background(new BackgroundFill(Color.rgb(7, 80, 2), CornerRadii.EMPTY, Insets.EMPTY));
     
+    
+    /**
+     * Creates the Tile board in the form of a GridPane and adds it to a StackPane.
+     * 
+     * @return Stackpane object 
+     */
     private StackPane createBoard() {
         StackPane root = new StackPane();
         root.setPadding(new Insets(10, 5, 5, 0));
@@ -202,7 +205,6 @@ public class gameInstance {
         rolled = false;
         
         root.getChildren().add(boardPane);
-        
         return root;
     }
 
@@ -220,6 +222,11 @@ public class gameInstance {
         }
     }
     
+    
+   /**
+    * 
+    * @return 
+    */
     private VBox createLeftPanel() {
         VBox leftPanelLayout = new VBox();
         leftPanelLayout.setPadding(new Insets(0, 10, 10, 10));
@@ -261,6 +268,10 @@ public class gameInstance {
         return leftPanelLayout;
     }
     
+    /**
+     * 
+     * @return 
+     */
     private Label formatHistoryItem() {
         // TODO String processing
         // waiting for definite format from backend
@@ -268,6 +279,10 @@ public class gameInstance {
         return historyItem;
     }
     
+    /**
+     * 
+     * @param cardsLayout 
+     */
     private void createCardsDisplay(GridPane cardsLayout) {
         Label playerCardsLabel = getLabel("Cards", avenirTitle);
         int x = 1;
@@ -307,6 +322,10 @@ public class gameInstance {
         GridPane.setHalignment(playerCardsLabel,HPos.CENTER);
     }
     
+    /**
+     * 
+     * @return 
+     */
     private VBox createPlayerControls() {        
         VBox playerControlsLayout = new VBox();
         playerControlsLayout.setAlignment(Pos.CENTER);
@@ -378,11 +397,20 @@ public class gameInstance {
         return playerControlsLayout;
     }
     
+    /**
+     * 
+     * @param title
+     * @param color 
+     */
     private void createCardsWindow(String title, Color color) {
         selectCards cardsWindow = new selectCards();
         cardsWindow.show(title, color, currentRoom, ImagePathMap, CardNameMap, gameInterface);
     }
     
+    /**
+     * 
+     * @return 
+     */
     private BorderPane createUI() {
         curtainScene =  new Scene(createCurtain());
         BorderPane main = new BorderPane();
@@ -411,6 +439,10 @@ public class gameInstance {
         return main;
     }
     
+    /**
+     * 
+     * @param action 
+     */
     public void actionResponse(Action action) {
         switch (action.actionType) {
             case SHOWCARDS:
@@ -436,6 +468,12 @@ public class gameInstance {
         }
     }
 
+    /**
+     * 
+     * @param text
+     * @param font
+     * @return 
+     */
     private Label getLabel(String text, Font font) {
         Label label = new Label(text);
         label.setTextFill(Color.WHITE);
@@ -443,6 +481,9 @@ public class gameInstance {
         return label;
     }
     
+    /**
+     * 
+     */
     private void initDefaultGraphics() {
         ImagePathMap.put("board", "./resources/board.png");
         
@@ -471,6 +512,9 @@ public class gameInstance {
         ImagePathMap.put("room8","./resources/Room/Study.png");
     }
     
+    /**
+     * 
+     */
     private void initDefaultNames() {
         CardNameMap.put("character0", "Miss Scarlet");
         CardNameMap.put("character1", "Colonel Mustard");
@@ -497,6 +541,9 @@ public class gameInstance {
         CardNameMap.put("room8", "Study");
     }
     
+    /**
+     * 
+     */
     private void initFonts() {
         avenirLarge = new Font(30);
         avenirTitle = new Font(20);
@@ -510,6 +557,9 @@ public class gameInstance {
         }
     }
     
+    /**
+     * 
+     */
     private void initGraphics() {
         try (InputStream input = new FileInputStream("resources/config.properties")) {
             Properties prop = new Properties();
@@ -521,7 +571,12 @@ public class gameInstance {
             System.out.println("there");
         }
     }
-        
+       
+    /**
+     * 
+     * @param gameController
+     * @param tilePath 
+     */
     public void startGame(GameController gameController, String tilePath) {
         gameStage = new Stage();
         
@@ -550,25 +605,40 @@ public class gameInstance {
         gameStage.show();
     }
     
+    /**
+     * 
+     * @return 
+     */
     public VBox createCurtain(){
         VBox curtain = new VBox();
         
         curtain.setAlignment(Pos.CENTER);
         curtain.setBackground(blackFill);
         
+        Label txt = new Label("IT'S PLAYER'S ------ TURN.");
+        Font titleFont = new Font(80);
+         
+        txt.setFont(titleFont);
+        txt.setTextFill(Color.WHITE);
+        
         curtain.setMinSize(1736, 960);
         Button fadeSwitch = new Button("Unfade");
         fadeSwitch.setOnAction(e -> switchToUi());
         
-        curtain.getChildren().add(fadeSwitch);
+        curtain.getChildren().addAll(txt, fadeSwitch);
         return curtain;
     }
-    
+    /**
+     * Switches the current scene to the Curtain scene.
+     */
     public void switchToCurtain(){
         gameStage.setScene(curtainScene);
         System.out.println(gameStage.getWidth() + "" + gameStage.getHeight());
     }
     
+    /**
+     * Switches the current scene to the uiScene and fade animation plays.
+     */
     public void switchToUi(){
         uiToCurtain.play();
         gameStage.setScene(uiScene);

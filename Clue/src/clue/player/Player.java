@@ -172,8 +172,9 @@ public class Player {
      * @deprecated this is a test method
      * @param card 
      */
-    public void addIntrigue(IntrigueCard card){
+    public IntrigueCard addIntrigue(IntrigueCard card){
         intrigues.add(card);
+        return card;
     }
 
     public void removeIntrigue(IntrigueCard card){

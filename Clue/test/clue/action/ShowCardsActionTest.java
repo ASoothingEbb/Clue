@@ -6,6 +6,7 @@
 package clue.action;
 
 import clue.card.Card;
+import clue.player.AIPlayer;
 import clue.player.Player;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +48,7 @@ public class ShowCardsActionTest {
     @Test
     public void testExecute() {
         System.out.println("execute");
-        ShowCardsAction instance = new ShowCardsAction(new Player(0),new Player(1),new ArrayList<Card>());
+        ShowCardsAction instance = new ShowCardsAction(new AIPlayer(0),new Player(1),new ArrayList<Card>());
         instance.execute();
         assertTrue(instance.result);
     }
@@ -59,7 +60,7 @@ public class ShowCardsActionTest {
     public void testGetCardList() {
         System.out.println("getCardList");
         List<Card> expResult = new ArrayList<Card>();
-        ShowCardsAction instance = new ShowCardsAction(new Player(0),new Player(1),expResult);
+        ShowCardsAction instance = new ShowCardsAction(new AIPlayer(0),new Player(1),expResult);
         List<Card> result = instance.getCardList();
         assertEquals(expResult, result);
     }
@@ -71,7 +72,7 @@ public class ShowCardsActionTest {
     public void testGetSuggester() {
         System.out.println("getSuggester");
         Player player = new Player(1);
-        ShowCardsAction instance = new ShowCardsAction(new Player(0), player, new ArrayList<Card>());
+        ShowCardsAction instance = new ShowCardsAction(new AIPlayer(0), player, new ArrayList<Card>());
         Player expResult = player;
         Player result = instance.getSuggester();
         assertEquals(expResult, result);
