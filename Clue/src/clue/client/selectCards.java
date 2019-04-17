@@ -133,12 +133,14 @@ public class selectCards {
             } else {
                 String personKey = getKey(CardNameMap, characterOptions.getValue().toString());
                 int personCard = Integer.valueOf(personKey.substring(personKey.length() - 1));
-                String weaponKey = getKey(CardNameMap, characterOptions.getValue().toString());
+                String weaponKey = getKey(CardNameMap, weaponOptions.getValue().toString());
                 int weaponCard = Integer.valueOf(weaponKey.substring(weaponKey.length() - 1));
+                String roomKey = getKey(CardNameMap, roomOptions.getValue().toString());
+                int roomCard = Integer.valueOf(roomKey.substring(roomKey.length() - 1));
                 if (actionType.equals("Suggestion")) {
                     gameInterface.suggest(personCard, weaponCard);
                 } else if (actionType.equals("Accusation")) {
-                    gameInterface.accuse(personCard, weaponCard);
+                    gameInterface.accuse(personCard, weaponCard, roomCard);
                 }
                 stage.close();
             }
