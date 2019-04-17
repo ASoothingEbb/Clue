@@ -7,6 +7,7 @@ package clue.client;
 
 import clue.GameController;
 import clue.action.Action;
+import clue.action.ShowCardAction;
 import clue.action.ShowCardsAction;
 import clue.action.UnknownActionException;
 import clue.card.Card;
@@ -85,6 +86,8 @@ public class gameInstance {
     private GridPane cardsDisplay;
     
     private Scene prevScene;
+    
+    private Prompt showCardPrompt = null;
     
     private CardType selectedCardType;
     private int selectedCardId;
@@ -437,8 +440,6 @@ public class gameInstance {
             case ACCUSATION:
                 System.out.println("[gameInstance.actionResponse] case ACCUSATION");
                 break;
-                
-        
         }
         System.out.println("return");
     }
@@ -468,11 +469,15 @@ public class gameInstance {
     }
     
     private void showCard(Action action) {
-        String suggestee = CardNameMap.get("character1");
-        Prompt showCard = new Prompt(suggestee + " showed");
-        ImageView cardViewer = new ImageView(getImage(1, CardType.WEAPON));
-        showCard.setImage(cardViewer);
-        //showCard.show();
+        ShowCardAction response = ((ShowCardAction) action);
+        String suggestee = CardNameMap.get("character" + ((ShowCardAction) action).getWhoShowedTheCard().getId());
+        showCardPrompt = new Prompt(suggestee + " showed");
+        showCardPrompt.setLabelTitle("Suggestion Response");
+        ImageView cardViewer = new ImageView(getImage(response.getCardToShow().getId(), response.getCardToShow().cardType));
+        showCardPrompt.setImage(cardViewer);
+        showCardPrompt.setOnCloseRequest(e -> {
+            showCardPrompt = null;
+        });
     }
     
     private void switchPlayerScene(int playerId, Scene next) {
@@ -483,12 +488,21 @@ public class gameInstance {
         MenuItem showButton = new MenuItem("Play", avenirTitle);
         showButton.setOnMouseClicked(e -> {
             gameStage.setScene(next);
+            if (showCardPrompt != null) {
+                showCardPrompt.show();
+            }
         });
         
         switchPlayer.getChildren().addAll(switchToLabel, showButton);
         
         Scene scene = new Scene(switchPlayer, 1736, 960);
         gameStage.setScene(scene);
+    }
+    
+    public void notifyUser(String message) {
+        Prompt notifyPrompt = new Prompt(message);
+        notifyPrompt.setLabelTitle("Notice");
+        notifyPrompt.show();
     }
     
     private void showCards(Action action) {

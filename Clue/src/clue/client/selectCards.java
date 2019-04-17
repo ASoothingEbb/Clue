@@ -98,7 +98,7 @@ public class selectCards {
         ImageView roomView;
         ComboBox roomOptions = new ComboBox();
         
-        if (name.equals("suggestion")) {
+        if (name.equals("Suggestion")) {
             try {
                 room = new Image(new FileInputStream(new File(ImagePathMap.get("room"+currentRoom))));
             } catch(FileNotFoundException ex) {
