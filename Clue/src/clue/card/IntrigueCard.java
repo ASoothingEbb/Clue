@@ -33,4 +33,8 @@ public abstract class IntrigueCard extends Card {
     public CardType getCardType() {
         return cardType;
     }
+    
+    public boolean equals(Card c){
+        return (cardType == c.cardType);
+    }
 }
