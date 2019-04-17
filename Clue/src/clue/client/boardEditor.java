@@ -472,6 +472,8 @@ public class boardEditor {
         Scene scene = new Scene(editorLayout);
         editorStage.setScene(scene);
         editorStage.show();
+        
+        lastSelected = EditorTileType.HALL;
     }
 
 
