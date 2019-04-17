@@ -6,9 +6,12 @@
 package clue.client;
 
 /**
- *
+ *  Denotes what kind of tile it is in the boardEditor.
+ * 
  * @author hungb
  */
+
+
 public enum EditorTileType {
     ROOM,
     DOOR_UP,

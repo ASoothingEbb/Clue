@@ -5,7 +5,6 @@
  */
 package clue.client;
 
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
@@ -24,6 +23,12 @@ public class SettingsMenuItem extends MenuItem {
     private final Background backgroundInactive;
     private boolean toggled; 
     
+    /**
+     * 
+     * @param name the text displayed in the menu Item(label).
+     * @param font the type of font used for the text in this label.
+     * @param active the active colour of this label.
+     */
     public SettingsMenuItem(String name, Font font, Color active) {
         super(name, font);
         
@@ -43,12 +48,20 @@ public class SettingsMenuItem extends MenuItem {
         });
     }
     
-    
+    /**
+     * 
+     * @param active 
+     */
     private void setBackgroundActive(boolean active) {
         setBackground(active ? backgroundActive : backgroundInactive);
         setTextFill(active ? Color.WHITE : Color.GREY);
     }
     
+    /**
+     * Sets the toggled boolean to true or false.
+     * 
+     * @param toggle true or false
+     */
     public void setToggled(boolean toggle) {
         this.toggled = toggle;
     }

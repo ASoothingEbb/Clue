@@ -31,6 +31,11 @@ public class Prompt extends Dialog {
     private Font avenirLarge;
     private Font avenirMedium;
     
+    /**
+     * Makes and Styles the dialog box(prompt).
+     * 
+     * @param text the message displayed in the prompt.
+     */
     public Prompt(String text) {
         initStyle(StageStyle.UNDECORATED);
         dialogPane = getDialogPane();
@@ -60,6 +65,10 @@ public class Prompt extends Dialog {
         dialogPane.setContent(layout);
     }
     
+    
+    /**
+     * Initialises the Fonts.
+     */
     private void initFonts() {
         avenirLarge = new Font(20);
         avenirMedium = new Font(15);
