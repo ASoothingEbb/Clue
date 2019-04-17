@@ -7,7 +7,9 @@ package clue.client;
 
 import clue.GameController;
 import clue.action.Action;
+import clue.action.ShowCardsAction;
 import clue.action.UnknownActionException;
+import clue.card.CardType;
 import clue.player.Player;
 import clue.tile.NoSuchRoomException;
 import clue.tile.Room;
@@ -413,6 +415,8 @@ public class gameInstance {
         switch (action.actionType) {
             case SHOWCARDS:
                 System.out.println("[gameInstance.actionResponse] case SHOWCARDS");
+                
+                //((ShowCardsAction) action).setCardToShow(id, CardType.);//pass in the id and card type of the card selected by user
                 break;
             case MOVE:
                 System.out.println("[gameInstance.actionResponse] case MOVE");
@@ -534,6 +538,7 @@ public class gameInstance {
         });
         
         gameInterface = gameController;
+        gameInterface.setGameInstance(this);
         
         initFonts();
         initDefaultGraphics();
