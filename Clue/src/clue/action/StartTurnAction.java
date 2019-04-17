@@ -30,5 +30,6 @@ public class StartTurnAction extends Action{
         if (player.isAi()){
             ((AiAdvanced) player).respondToStartTurn();
         }
+        //TODO prompt GUI
     }
 }
