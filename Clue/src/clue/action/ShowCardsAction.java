@@ -52,8 +52,11 @@ public class ShowCardsAction extends Action{
             idOfCardToShow = responseCard.getId();
             typeOfCardToShow = responseCard.cardType;
         }
-        else{
+        else if (gui != null){
             gui.actionResponse(this);
+        }
+        else{
+            System.out.println("[ShowCardsAction.execute] no gui found");
         }
         
     }
