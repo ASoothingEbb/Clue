@@ -41,7 +41,7 @@ public class ShowCardAction extends Action {
         this.whoShowedTheCard = shower;
     }
     
-    public Player getSugester(){
+    public Player getWhoShowedTheCard(){
         return whoShowedTheCard;
     }
     
