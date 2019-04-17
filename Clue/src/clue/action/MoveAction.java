@@ -58,6 +58,7 @@ public class MoveAction extends Action {
         }
         else{//bfs found a path to the target
             if ((player.getMoves() - cost) >= 0){
+                
                 if (t.isRoom()){
                     player.setMoves(0);
                 }
@@ -67,6 +68,7 @@ public class MoveAction extends Action {
                 
                 //System.out.println("new player.getMoves() :"+player.getMoves());
                 result = true;
+                System.out.println("[MoveAction.execute] moves left: "+player.getMoves() +" targetIsRoom: "+t.isRoom());
                 
                 
             }
