@@ -5,7 +5,9 @@
  */
 package clue.action;
 
+import clue.ai.AiAdvanced;
 import clue.card.Card;
+import clue.client.gameInstance;
 import clue.player.Player;
 import java.util.List;
 
@@ -15,22 +17,34 @@ import java.util.List;
  */
 public class ShowCardAction extends Action {
     private final Card card;
-/**
- * Creates a new ShowCardAction
- * @param player the Player to show the Card to
- * @param card the Card to be shown.
- */
-    public ShowCardAction(Player player,Card card) {
+    private gameInstance gui;
+    private Player whoShowedTheCard;
+    
+    /**
+     * Creates a new ShowCardAction
+     * @param player the Player to show the Card to
+     * @param card the Card to be shown.
+     * @param gui the gameInstance to be prompted
+     * @param whoShowedTheCard the player who revealed the card
+     */
+    public ShowCardAction(Player player,Card card, gameInstance gui, Player whoShowedTheCard) {
         super(player);
         this.actionType = ActionType.SHOWCARD;
         this.card = card;
+        this.gui = gui;
+        this.whoShowedTheCard = whoShowedTheCard;
     }
 /**
  * Executes the ShowCardAction.
  */
     @Override
     public void execute() {
-        super.execute();
+        if (player.isAi()){
+            ((AiAdvanced) player).ShowCards(card, whoShowedTheCard);
+        }
+        else{
+            gui.actionResponse(this);
+        }
     }
 
 }
