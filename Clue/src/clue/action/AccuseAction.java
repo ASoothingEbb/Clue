@@ -26,6 +26,7 @@ public class AccuseAction extends Action {
      * @param person the person card to accuse
      * @param room the room card to accuse
      * @param weapon the weapon card to accuse
+     * @param result true if the players accusation was correct, false otherwise
      */
     public AccuseAction(Player player, PersonCard person, RoomCard room, WeaponCard weapon,boolean result) {
         super(player);
@@ -38,12 +39,9 @@ public class AccuseAction extends Action {
     }
 
     /**
-     * executes the AccusationAction. Result stores if the accusation was 
-     * correct.
-     * @param person the person to accuse
-     * @param room the room to accuse
-     * @param weapon the weapon to accuse
+     * executes the AccusationAction, removing the player from play.
      */
+    @Override
     public void execute() {
         player.removeFromPlay();
     }
