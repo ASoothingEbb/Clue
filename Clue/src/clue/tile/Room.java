@@ -22,7 +22,7 @@ public class Room extends Tile{
      * @param card the RoomCard associated with this room.
      */
     public Room(RoomCard card) {
-        super(-1,card.getid());
+        super(-1,card.getId());
         this.card = card;
         room = true;
         locations = new ArrayList<>();
