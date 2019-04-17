@@ -42,8 +42,11 @@ public class ShowCardAction extends Action {
         if (player.isAi()){
             ((AiAdvanced) player).revealCard(card, whoShowedTheCard);
         }
-        else{
+        else if (gui!=null){
             gui.actionResponse(this);
+        }
+        else{
+            System.out.println("[ShowCardAction.execute] no gui found");
         }
     }
 
