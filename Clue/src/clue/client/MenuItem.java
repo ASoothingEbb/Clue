@@ -24,6 +24,12 @@ public class MenuItem extends Label {
     private Color activeColor;
     private Color inactiveColor;
 
+    /**
+     * MenuItem is a Label which has a hoverProperty.
+     * 
+     * @param name the text displayed in the label.
+     * @param font  the font that is used for all text in this label.
+     */
     public MenuItem(String name, Font font) {
         super(name);
         setAlignment(Pos.CENTER);
@@ -43,23 +49,42 @@ public class MenuItem extends Label {
             }
         });
     }
-    
+    /**
+     * Sets the label to either is active colour or its inactive colour.
+     * 
+     * @param active true if you want label active, false otherwise 
+     */
     public void setActive(boolean active) {
         setTextFill(active ? activeColor : inactiveColor);
     }
     
+    /**
+     * Sets the colour which the label is when active
+     * 
+     * @param color Colour which you want the label to have when it is active.
+     */
     public void setActiveColor(Color color) {
         this.activeColor = color;
         //refresh colour state
         setActive(false);
     }
     
+     /**
+     * Sets the colour which the label is when inactive
+     * 
+     * @param color Colour which you want the label to have when it is inactive.
+     */
     public void setInactiveColor(Color color) {
         this.inactiveColor = color;
         //refresh colour state
         setActive(false);
     }
-    
+  
+    /**
+     * Sets the background color of the label.
+     * 
+     * @param color Colour which you want the label to be.
+     */
     public void setBackgroundColor(Color color) {
         setBackground(new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY)));
     }

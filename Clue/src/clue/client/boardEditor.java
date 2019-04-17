@@ -46,6 +46,13 @@ public class boardEditor {
     private String mapName;
     private TextField mapNameField;
     
+    
+    /**
+     * Creates buttons which sets the user's current "brush". This will allow them to "paint" their baord and make a custom map.
+     * This will also have a text field which lets the user pick the name of their map and save it. 
+     *
+     * @return All the tile types which people can use to paint the board in a VBox.
+     */
     private VBox createPalette() {
         VBox paletteLayout = new VBox();
         paletteLayout.setPadding(new Insets(0, 0, 0, 10));
@@ -125,6 +132,13 @@ public class boardEditor {
         return paletteLayout;
     }
     
+    /**
+     * Makes the tiles and renders them in the boardEditor.
+     * 
+     * @param x the width of the board
+     * @param y the height of the board
+     * @param pane where the tiles will be placed 
+     */
     private void generateBoard(int x, int y, GridPane pane) {
         board = new EditorTile[y][x];
         
@@ -149,6 +163,11 @@ public class boardEditor {
         }
     }
     
+    /**
+     * Sets it so there is no door in Tile which corresponds to l
+     * 
+     * @param l label(tile) to have their door direction reverted.
+     */
     public void resetDoorDirection(Label l) {
         for (int y = 0; y < board.length; y++) {
             for (int x = 0; x < board[0].length; x++) {
@@ -160,6 +179,15 @@ public class boardEditor {
         }
     }
     
+    /**
+     * This method finds room tiles and groups them together into one room/"building".
+     * It will do this by updating their roomId to the corresponding id.
+     * This method runs recursively until it finishes.
+     * 
+     * @param x the x coordinate of a tile.
+     * @param y the y coordinate of a tile.
+     * @param roomId the highest of the current found room/s.
+     */
     private void grabRoom(int x, int y, int roomId) {
         if(x<board[0].length-1){//If thereis a RIGHT tile
             if ("r".equals(board[y][x+1].getS())){
@@ -190,6 +218,9 @@ public class boardEditor {
         }
     }
     
+    /**
+     * Resets the rooms with roomsIds greater than 0 and sets them back to r.
+     */
     private void ungrabRooms(){
         for(int y=0; y < board.length; y++){
             for(int x=0; x< board[0].length; x++){
@@ -205,7 +236,13 @@ public class boardEditor {
             }
         }
     }
-    
+ 
+    /**
+     * Changes the representation of the tile into something else.
+     * 
+     * @param l the tile to change string of.
+     * @param s the string to change it to.
+     */
     private void updateBoard(Label l, String s){
         for(int y = 0; y < board.length; y++){
             for(int x = 0; x < board[0].length; x++){
@@ -217,6 +254,13 @@ public class boardEditor {
         }
     }
     
+    /**
+     * This is called when a tile is clicked. It will "paint" the depending on their last selected "brush" from the palette.
+     * This will change the tiles String representation to correspond their "brush" and changes the style of the Label(tile) accordingly.
+     * 
+     * @param l the tile to be "painted".
+     * @throws CreationException 
+     */
     private void paintTile(Label l) throws CreationException {
         int x = -1;
         int y = -1;
@@ -334,6 +378,16 @@ public class boardEditor {
         }
     }
     
+    /**
+     * This is run when the "Save" button is pressed.
+     * Creates 2 CSV files. These 2 files are representations of the custom board.
+     * these 2 files are to be interpreted by the boardMappings class which can then load a map.
+     * 
+     * This will save the CSV files into a folder named after what the player wants to name their map.
+     * 
+     * @throws CreationException
+     * @throws FileNotFoundException 
+     */
     private void createCSV() throws CreationException, FileNotFoundException {
         int currentRoomInt = 1;
         int startTileCounter= 0;
@@ -387,6 +441,14 @@ public class boardEditor {
         }
     }
 
+    /**
+     * Called by createCSV()
+     * 
+     * Creates the CSV file for the Doors.
+     * 
+     * @param name the name of the CSV file.
+     * @throws FileNotFoundException 
+     */
     private void makeDoorCsv(String name) throws FileNotFoundException{    
         List<String[]> csv = new ArrayList<>();
                 
@@ -430,6 +492,14 @@ public class boardEditor {
         }
     }    
     
+    /**
+     * Called by createCSV()
+     * 
+     * Creates the CSV file for the Tiles(everything but the doors).
+     * 
+     * @param name the name of the CSV file.
+     * @throws FileNotFoundException 
+     */
     private void makeTileCsv(String name) throws FileNotFoundException{
         List<String[]> csv = new ArrayList<>();
                 
@@ -448,10 +518,19 @@ public class boardEditor {
         }
     }
     
+    /**
+     * Separates an Array of Strings into COmma separated values.
+     * 
+     * @param data a row of the CSV file.
+     * @return a String (CSV).
+     */
     public String convertToCSV(String[] data) {
         return Stream.of(data).collect(Collectors.joining(","));
     }
     
+    /**
+     * Initialises the fonts.
+     */
     private void initFonts() {
         avenirLarge = new Font(20);
         try {
@@ -461,6 +540,11 @@ public class boardEditor {
         }
     }
     
+    /**
+     * This is called by the Game Client in order to open a new window with the board editor.
+     * 
+     * @param clientStage the stage to set the boardEditor scene to. 
+     */
     public void startEditor(Stage clientStage) {
         editorStage = new Stage();
         editorStage.initModality(Modality.APPLICATION_MODAL);
