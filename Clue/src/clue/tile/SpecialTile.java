@@ -11,6 +11,7 @@ import clue.action.AvoidSuggestionAction;
 import clue.action.ExtraTurnAction;
 import clue.action.ThrowAgainAction;
 import clue.action.UnknownActionException;
+import clue.card.AvoidSuggestionIntrigue;
 import clue.card.IntrigueCard;
 import clue.player.Player;
 import java.util.List;
@@ -37,5 +38,15 @@ public class SpecialTile extends Tile {
      */
     public IntrigueCard getIntrigue(Player player) {
         return player.addIntrigue();
+    }
+    
+    /**
+     * @deprecated this is a test method
+     * @param player
+     * @param bool
+     * @return 
+     */
+    public IntrigueCard getIntrigue(Player player,boolean bool){
+        return player.addIntrigue(new AvoidSuggestionIntrigue(0));
     }
 }

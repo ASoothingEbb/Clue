@@ -95,14 +95,33 @@ public class GameState {
      */
     public int nextPlayer() {
         System.out.println("[GameState.nextPlayer]");
+        int i = -1;
         if (running) {
-            do {
-                turn = getNextPointer(turn);
-            } while (!currentPlayer.isActive());
-            return players.get(turn).getId();
-        } else {
-            return currentPlayer.getId();
+            i = turn;
+            
+            i++;
+            if (i >= players.size()){
+                i = 0;
+            }
+            currentPlayer = players.get(i);
+            while (!currentPlayer.isActive()){
+                i++;
+                if (i >= players.size()){
+                    i = 0;
+                }
+            }
+            
+            //do {
+            //    turn = getNextPointer(turn);
+            //} while (!currentPlayer.isActive());
+            //return players.get(turn).getId();
+        } 
+        else{
+            return -1;
         }
+        System.out.println("[GameState.nextPlayer] currentPlayer after: "+currentPlayer.getId());
+        return i;
+        
     }
 
     /**
@@ -210,4 +229,17 @@ public class GameState {
     public List<Player> getPlayerList() {
         return players;
     }
+    
+    public boolean hasActive(){
+        System.out.println("[GameState.hasActive]");
+        boolean active = false;
+        for (Player p : players){
+            if (p.isActive()){
+                active = true;
+            }
+        }
+        System.out.println("[GameState.hasActive] has active: "+active);
+        return active;
+    }    
+        
 }

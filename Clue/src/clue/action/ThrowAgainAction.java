@@ -36,8 +36,11 @@ public class ThrowAgainAction extends Action{
             ((AiAdvanced) player).respondToThrowAgain();
 
         }
-        else{
+        else if (gui != null){
             gui.actionResponse(this);
+        }
+        else{
+            System.out.println("[ThrowAgainAction.execute] no gui found");
         }
     }
         

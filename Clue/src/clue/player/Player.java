@@ -172,8 +172,9 @@ public class Player {
      * @deprecated this is a test method
      * @param card 
      */
-    public void addIntrigue(IntrigueCard card){
+    public IntrigueCard addIntrigue(IntrigueCard card){
         intrigues.add(card);
+        return card;
     }
 
     public void removeIntrigue(IntrigueCard card){
@@ -281,6 +282,16 @@ public class Player {
     
     public boolean isAi(){
         return isAi;
+    }
+    
+    public String toString(){
+        String result = "";
+        result += "Player id: "+id;
+        result += " isAi: "+isAi();
+        result += " position: "+getPosition();
+        
+        
+        return result;
     }
     
 //    /**

@@ -49,7 +49,7 @@ public class GameControllerTest {
     @BeforeClass
     public static void setUpClass() throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException, TileOccupiedException {
 
-        gc = new GameController(1,1,"testCsv/tiles1.csv", "testCsv/doors1.csv");
+        gc = new GameController(2,0,"resources/archersAvenueTiles.csv", "resources/archersAvenueDoors.csv");
     }
     
     @AfterClass
@@ -87,8 +87,12 @@ public class GameControllerTest {
         Player p0 = gc.getPlayer(0);
         Player p1 = gc.getPlayer(1);
         
-        assertTrue(p0.getPosition().getX() == 5 && p0.getPosition().getY() == 6);
-        assertTrue(p1.getPosition().getX() == 1 && p1.getPosition().getY() == 7);
+        assertEquals(5, p0.getPosition().getX());
+        assertEquals(6, p0.getPosition().getY());
+        
+        
+        assertEquals(1, p1.getPosition().getX());
+        assertEquals(7, p1.getPosition().getY());
     
     
     }
@@ -123,7 +127,7 @@ public class GameControllerTest {
      * Test of getLastAction method, of class GameController.
      */
     @Test
-    public void testGetLastAction() throws UnknownActionException, InterruptedException, TileOccupiedException {
+    public void testGetLastAction() throws UnknownActionException, InterruptedException, TileOccupiedException, NoSuchRoomException, MovementException {
         System.out.println("getLastAction");
         Card card = new CardImpl();
         gc.suggest(1, 1);
@@ -327,7 +331,7 @@ public class GameControllerTest {
     public void testHandOutCards() throws Exception{
         System.out.println("handOutCards");
         
-        gc = new GameController(1,1,"testCsv/tiles1WithIds.csv", "testCsv/doors1.csv");
+        gc = new GameController(2,0,"testCsv/tiles1WithIds.csv", "testCsv/doors1.csv");
         
         
         ArrayList<Card> cards = new ArrayList<>();
@@ -435,7 +439,7 @@ public class GameControllerTest {
         gc.getPlayer().setMoves(1);
         //tiles.add(tile2);
         gc.move(tile2);
-        assertEquals(tile2,gc.getPlayer().getPosition());
+        assertTrue(tile2 == gc.getPlayer().getPosition());
     }
 
     /**
@@ -459,6 +463,7 @@ public class GameControllerTest {
     @Test
     public void testEndTurn() throws Exception {
         System.out.println("endTurn");
+        System.out.println(gc);
         Player expResult = gc.getPlayer();
         gc.endTurn();
         assertNotEquals(expResult, gc.getPlayer());
@@ -470,5 +475,12 @@ public class GameControllerTest {
             super(0);
         }
         
+    }
+    
+    
+    @Test
+    public void testAivsAi() throws Exception{
+        System.out.println("AivsAi");
+        gc = new GameController(0,2,"resources/archersAvenueTiles.csv", "resources/archersAvenueDoors.csv");
     }
 }
