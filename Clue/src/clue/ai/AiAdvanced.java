@@ -256,13 +256,9 @@ public class AiAdvanced extends Player{
         }
     }
 
-    public void respondToTeleport() {
+    public void respondToTeleport(Action action) {
         LinkedList<Tile> path = BFS();
-        try {
-            gameController.move(path.getLast());
-            suggestAccuse();
-        } catch (UnknownActionException | InterruptedException | GameController.MovementException | TileOccupiedException ex) {
-            Logger.getLogger(AiAdvanced.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        ((TeleportAction)action).setTarget(path.getLast());
+        suggestAccuse();
     }
 }
