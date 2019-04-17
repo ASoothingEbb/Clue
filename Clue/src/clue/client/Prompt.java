@@ -32,6 +32,7 @@ public class Prompt extends Dialog {
     private Font avenirLarge;
     private Font avenirMedium;
     private VBox layout;
+    private Label title;
     
     /**
      * Makes and Styles the dialog box(prompt).
@@ -81,6 +82,10 @@ public class Prompt extends Dialog {
         } catch(FileNotFoundException ex) {
             
         }
+    }
+    
+    public void setLabelTitle(String title) {
+        this.title.setText(title);
     }
     
     public void setImage(ImageView  card) {
