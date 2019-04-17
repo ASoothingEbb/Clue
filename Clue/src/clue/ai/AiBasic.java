@@ -52,32 +52,32 @@ public class AiBasic extends Player{
     public void onUpdate() {//Runs after every event.
        
         //Generating Random Cards (ids).
-        PersonCard randPersonCard = new PersonCard(rand.nextInt(6) + 1);
-        RoomCard randRoomCard = new RoomCard(rand.nextInt(6) + 1);
-        WeaponCard randWeaponCard = new WeaponCard(rand.nextInt(9)+ 1);
+        //PersonCard randPersonCard = new PersonCard(rand.nextInt(6) + 1);
+        //RoomCard randRoomCard = new RoomCard(rand.nextInt(6) + 1);
+        //WeaponCard randWeaponCard = new WeaponCard(rand.nextInt(9)+ 1);
         
         
-        if(gameController.getPlayer().getId() == getId()){//If I need to respond.
-            if(gameController.getLastAction() instanceof EndTurnAction){//If my turn, last action was end turn.
-                if(this.getPosition().isRoom()){//If I'm in a room
-                    try {           
-                        game.accuse(randPersonCard, randRoomCard, randWeaponCard);
-                    } catch (InterruptedException | UnknownActionException | TileOccupiedException ex) {
-                        Logger.getLogger(AiBasic.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-                
-            } else if (gameController.getLastAction() instanceof ShowCardsAction){//If I need to show a card 
+        //if(gameController.getPlayer().getId() == getId()){//If I need to respond.
+        //    if(gameController.getLastAction() instanceof EndTurnAction){//If my turn, last action was end turn.
+        //        if(this.getPosition().isRoom()){//If I'm in a room
+        //            try {           
+        //                game.accuse(randPersonCard, randRoomCard, randWeaponCard);
+        //            } catch (InterruptedException | UnknownActionException | TileOccupiedException ex) {
+        //                Logger.getLogger(AiBasic.class.getName()).log(Level.SEVERE, null, ex);
+        //            }
+        //        }
+        //        
+        //    } else if (gameController.getLastAction() instanceof ShowCardsAction){//If I need to show a card 
 
-                ShowCardsAction action = (ShowCardsAction) gameController.getLastAction();
-                Card card = action.getCardList().get(0);
+        //        ShowCardsAction action = (ShowCardsAction) gameController.getLastAction();
+        //        Card card = action.getCardList().get(0);
 
-                try {
-                    gameController.showCard(card);//Show Card.
-                }catch (UnknownActionException | InterruptedException | TileOccupiedException ex) {
-                    Logger.getLogger(AiBasic.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        }
+        //        try {
+        //            gameController.showCard(card);//Show Card.
+        //        }catch (UnknownActionException | InterruptedException | TileOccupiedException ex) {
+        //            Logger.getLogger(AiBasic.class.getName()).log(Level.SEVERE, null, ex);
+        //        }
+        //    }
+        //}
     } 
 }
