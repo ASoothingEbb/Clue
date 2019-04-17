@@ -440,8 +440,6 @@ public class gameInstance {
             case ACCUSATION:
                 System.out.println("[gameInstance.actionResponse] case ACCUSATION");
                 break;
-                
-        
         }
         System.out.println("return");
     }
@@ -499,6 +497,12 @@ public class gameInstance {
         
         Scene scene = new Scene(switchPlayer, 1736, 960);
         gameStage.setScene(scene);
+    }
+    
+    public void notifyUser(String message) {
+        Prompt notifyPrompt = new Prompt(message);
+        notifyPrompt.setLabelTitle("Notice");
+        notifyPrompt.show();
     }
     
     private void showCards(Action action) {
