@@ -86,7 +86,6 @@ public class gameInstance {
     private HashMap<String, String> CardNameMap = new HashMap<>();
     
     private String boardTilePath;
-    private String boardDoorPath;
     
     private GridPane cardsDisplay;
             
@@ -440,11 +439,6 @@ public class gameInstance {
         return label;
     }
     
-    private void initDefaultMap() {
-        boardTilePath = "./resources/archersAvenueTiles.csv";
-        boardDoorPath = "./resources/archersAvenueDoors.csv";
-    }
-    
     private void initDefaultGraphics() {
         ImagePathMap.put("board", "./resources/board.png");
         
@@ -524,12 +518,14 @@ public class gameInstance {
         }
     }
         
-    public void startGame(GameController gameController) {
+    public void startGame(GameController gameController, String tilePath) {
         gameStage = new Stage();
         
         gameStage.initModality(Modality.APPLICATION_MODAL);
         gameStage.setTitle("Clue");
         gameStage.setResizable(false);
+        
+        this.boardTilePath = tilePath;
 
         // Temp return button
         Button returnButton = new Button("Back");
@@ -540,7 +536,6 @@ public class gameInstance {
         gameInterface = gameController;
         
         initFonts();
-        initDefaultMap();
         initDefaultGraphics();
         initDefaultNames();
         initGraphics();

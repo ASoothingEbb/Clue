@@ -16,21 +16,29 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.ResourceBundle;
+import java.util.stream.Stream;
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
@@ -42,6 +50,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Path;
 import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -150,7 +159,7 @@ public class ClueClient extends Application {
     private void boardCreator(Stage stage) {
         boardEditor editor = new boardEditor();
         stage.hide();
-        editor.startEditor();
+        editor.startEditor(stage);
     }
     
     private void startGameScene(Stage stage) {
@@ -168,9 +177,7 @@ public class ClueClient extends Application {
         // Scene Title
         Label startGameTitle = getLabel("Create Game", avenirTitle);
         
-        // Number of Players
-
-        
+        // Number of Players        
         Label numberOfPlayersLabel = getLabel("Number of Players", avenirNormal);
         
         HBox players = new HBox();
@@ -182,6 +189,9 @@ public class ClueClient extends Application {
         //TextField playersNumber = getTextField(1, false);
         
         MenuItem minusPlayer = new MenuItem("-", avenirTitle);
+        minusPlayer.setPadding(new Insets(0, 5, 0, 0));
+        minusPlayer.setBackgroundColor(Color.rgb(7, 80, 2));
+        minusPlayer.setMinSize(15, 15);
         minusPlayer.setOnMouseClicked(e -> {
             if (numberOfPlayers > 1) {
             updateNumberOfPlayers(false, playersNumber);
@@ -206,6 +216,9 @@ public class ClueClient extends Application {
         AIsNumber.setActiveColor(Color.GREY);
         
         MenuItem minusAI = new MenuItem("-", avenirTitle);
+        minusAI.setPadding(new Insets(0, 5, 0, 0));
+        minusAI.setBackgroundColor(Color.rgb(7, 80, 2));
+        minusAI.setMinSize(15, 15);
         minusAI.setOnMouseClicked(e -> {
             if (numberOfAIs > 0) {
                 updateNumberOfAIs(false, AIsNumber);
@@ -221,14 +234,35 @@ public class ClueClient extends Application {
         
         AIs.getChildren().addAll(minusAI, AIsNumber, addAI);
         
+        Label mapLabel = getLabel("Map", avenirNormal);
+        
+        File directory = new File("./Maps");
+        String[] directories = directory.list((File current, String name) -> new File(current, name).isDirectory());
+        ComboBox maps = new ComboBox();
+        maps.setItems(FXCollections.observableArrayList(directories));
+        maps.setVisibleRowCount(8);
+        maps.setValue("archersAvenue");
+            
         gameInstance game = new gameInstance();
         
         MenuItem startGameButton = new MenuItem("Start Game", avenirTitle);
         startGameButton.setOnMouseClicked(e -> {
             stage.hide();
+            String mapDirPath = "Maps/" + maps.getValue();
+            File mapDirectory = new File(mapDirPath);
+            String[] mapFiles = mapDirectory.list();
+            String doorFile;
+            String tileFile;
+            if (mapFiles[0].contains("Door")) {
+                doorFile = mapFiles[0];
+                tileFile = mapFiles[1];
+            } else {
+                doorFile = mapFiles[1];
+                tileFile = mapFiles[0];
+            }
             try {
-                GameController gameController = new GameController(numberOfPlayers, numberOfAIs, "resources/archersAvenueTiles.csv", "resources/archersAvenueDoors.csv");
-                game.startGame(gameController);
+                GameController gameController = new GameController(numberOfPlayers, numberOfAIs, mapDirPath + "/" + tileFile, mapDirPath + "/" + doorFile);
+                game.startGame(gameController, mapDirPath + "/" + tileFile);
             } catch(TooManyPlayersException | MissingRoomDuringCreationException | UnknownActionException | NoSuchRoomException | NoSuchTileException | TileOccupiedException | InterruptedException ex) {
                 System.out.println("Ice Cream Machine BROKE");
                 ex.printStackTrace();
@@ -255,7 +289,13 @@ public class ClueClient extends Application {
         startGameOptions.add(AIs, 1, 2);
         GridPane.setMargin(AIs, new Insets(0, 0, 0, 10));
         
-        startGameOptions.add(startGameButton, 0, 3, 2, 1);
+        startGameOptions.add(mapLabel, 0, 3);
+        GridPane.setHalignment(mapLabel, HPos.CENTER);
+        
+        startGameOptions.add(maps, 1, 3);
+        GridPane.setMargin(maps, new Insets(0, 0, 0, 10));
+        
+        startGameOptions.add(startGameButton, 0, 4, 2, 1);
         GridPane.setHalignment(startGameButton, HPos.CENTER);
         
         alignmentPane.setBottom(returnButton);
