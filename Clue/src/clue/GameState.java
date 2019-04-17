@@ -109,10 +109,10 @@ public class GameState {
             System.out.println("[GameState.nextPlayer] player id = " + next.getId() + ", active: "  + next.isActive());
             while (!next.isActive()){
                 i++;
-                next = players.get(i);
                 if (i >= players.size()){
                     i = 0;
                 }
+                next = players.get(i);
             }
             
             //do {
