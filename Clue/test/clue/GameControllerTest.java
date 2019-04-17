@@ -389,9 +389,8 @@ public class GameControllerTest {
         gc = new GameController(2,0,"resources/archersAvenueTiles.csv", "resources/archersAvenueDoors.csv");
         Queue<Action> expResult = new LinkedList();
         gc.endTurn();
-        gc.suggest(0, 0);
-        expResult.add(gc.getLastAction());
-        gc.accuse(0, 0);
+        gc.move(3,22);
+        gc.suggest(1, 1);
         expResult.add(gc.getLastAction());
         gc.endTurn();
         Queue<Action> result = gc.getActions();

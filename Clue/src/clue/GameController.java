@@ -254,7 +254,7 @@ public final class GameController {
                 break;
             case STARTTURN:
                 System.out.println("    CASE STARTTURN "+player.getId() + " FROM: "+state.getAction().actionType);
-                if (state.getAction().actionType == ActionType.ENDTURN || state.getAction().actionType == ActionType.EXTRATURN || state.getAction().actionType == ActionType.START) {
+                if (state.getAction().actionType == ActionType.ENDTURN || state.getAction().actionType == ActionType.EXTRATURN || state.getAction().actionType == ActionType.START&&state.isRunning()) {
                     //System.out.println("b"+player.getId());
                     //state.nextTurn(player.getId());
                     //System.out.println("a"+player.getId());
