@@ -96,7 +96,7 @@ public class GameState {
     public int nextPlayer() {
         System.out.println("[GameState.nextPlayer]");
         int i = -1;
-        if (running) {
+        if (running && hasActive()) {
             i = turn;
             
             i++;
@@ -117,7 +117,8 @@ public class GameState {
             //return players.get(turn).getId();
         } 
         else{
-            return -1;
+            System.out.println("[GameState.nextPlayer] running: "+running+" hasActive: "+hasActive()+"----------------");
+            return i;
         }
         System.out.println("[GameState.nextPlayer] currentPlayer after: "+currentPlayer.getId());
         return i;
