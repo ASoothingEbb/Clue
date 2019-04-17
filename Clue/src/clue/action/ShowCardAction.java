@@ -30,7 +30,7 @@ public class ShowCardAction extends Action {
  */
     @Override
     public void execute() {
-        
+        super.execute();
     }
 
 }

@@ -5,19 +5,12 @@
  */
 package clue.ai;
 
-import clue.GameController;
-import clue.MissingRoomDuringCreationException;
-import clue.action.UnknownActionException;
 import clue.card.Card;
-import clue.card.WeaponCard;
+import clue.GameController;
+import clue.card.Card;
 import clue.card.RoomCard;
-import clue.player.Player;
-import clue.tile.NoSuchRoomException;
-import clue.tile.NoSuchTileException;
 import clue.tile.Room;
 import clue.tile.Tile;
-import clue.ai.AiAdvanced;
-import clue.tile.TileOccupiedException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import org.junit.After;
@@ -29,20 +22,20 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author zemig
+ * @author steve
  */
-public class AIAdvancedTest {
-    private static GameController gc;
-    public AIAdvancedTest() {
-    }
+public class AiAdvancedTest {
+    
 
+    private static GameController gc;
+
+    public AiAdvancedTest() {
+    }
     
     @BeforeClass
-    public static void setUpClass() throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException, TileOccupiedException {
-
+    public static void setUpClass() throws Exception {
         gc = new GameController(1,1,"testCsv/tiles1.csv", "testCsv/doors1.csv");
     }
-
     
     @AfterClass
     public static void tearDownClass() {
@@ -57,13 +50,7 @@ public class AIAdvancedTest {
     }
 
     /**
-     * Test of onUpdate method, of class AIAdvanced.
-     * @throws java.lang.InterruptedException
-     * @throws clue.action.UnknownActionException
-     * @throws clue.tile.NoSuchRoomException
-     * @throws clue.tile.NoSuchTileException
-     * @throws clue.MissingRoomDuringCreationException
-     * @throws clue.GameController.TooManyPlayersException
+     * Test of onUpdate method, of class AiAdvanced.
      */
 //    @Test
 //    public void testOnUpdate() {
@@ -110,10 +97,56 @@ public class AIAdvancedTest {
         
         
     }
-    
+
+
+    /**
+     * Test of makeLists method, of class AiAdvanced.
+     */
     @Test
+    public void testMakeLists() {
+        System.out.println("makeLists");
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of moveToRoom method, of class AiAdvanced.
+     */
+    @Test
+    public void testMoveToRoom() {
+        System.out.println("moveToRoom");
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getLists method, of class AiAdvanced.
+     */
+    @Test
+    public void testGetLists() {
+        System.out.println("getLists");
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getPathToRoom method, of class AiAdvanced.
+     */
+    @Test
+    public void testGetPathToRoom() {
+        System.out.println("getPathToRoom");
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of BFS method, of class AiAdvanced.
+     */
+    @Test
+
+
     public void testBFS() throws InterruptedException{//Trying to find a room.
-        System.out.println("BFS trying to find a room");
+        System.out.println("BFS (one valid path to room)");
         //--Layout of map--
         // t1 t2 t3
         // t4    t6
@@ -161,11 +194,14 @@ public class AIAdvancedTest {
         
         assertEquals(1 ,((Room) p1.BFS().getLast()).getId());
         assertEquals(expectedPath, solutionPath);
+        
     }
     
-    @Test
+
+
+
     public void testBFS2() throws InterruptedException{//Testing it on a board with no room.
-        System.out.println("test");
+        System.out.println("BFS (no room)");
         //Board Layout
         //t1 t2 t3 t4 
         //t5 t6 t7 t8
@@ -198,13 +234,14 @@ public class AIAdvancedTest {
         LinkedList<Tile> resultPath = testPlayer.BFS();
         
         assertTrue(resultPath.isEmpty());
-        
-    }
+    }    
     
     
-    @Test
+
+
+
     public void testBFS3() throws InterruptedException{//testing bfs with players as obstacles w/valid route
-        
+        System.out.println("BFS (with room, with valid path, with players)");
         //Board Layout
         //t1 t2 t3 t4
         //t5 t6 t7 r8
@@ -247,35 +284,10 @@ public class AIAdvancedTest {
         LinkedList<Tile> resultPath = testPlayer.BFS();
         
         assertEquals(resultPath, expectedPath);
-        
-    }
-    
-    @Test
-    public void testBFS4() throws InterruptedException{//testing bfs with players as obstacles W/O Valid route
-        //Board Layout
-        //t1 t2 t3 r4
-        Tile t1 = new Tile(0, 0);
-        Tile t2 = new Tile(1, 0);
-        Tile t3 = new Tile(2, 0);
-        Tile r4 = new Room();
-        
-        t1.addAdjacentBoth(t2);
-        t2.addAdjacentBoth(t3);
-        t3.addAdjacentBoth(r4);
-        
-        AiAdvanced p1 = new AiAdvanced(1, gc, 4, 1);
-        p1.setPosition(t1);
-        
-        AiAdvanced p2 = new AiAdvanced(2, gc, 4, 1);
-        p2.setPosition(t3);
-        
-        LinkedList<Tile> resultPath = p1.BFS();
-        
-        assertTrue(resultPath.isEmpty());
-    }
-    @Test
+    }   
+
     public void testBFS5() throws InterruptedException{//testing bfs with multiple rooms
-        
+        System.out.println("BFS (many rooms)");
         //Board Layout 
         //t1 t2 t3 r4
         //t5
@@ -306,19 +318,8 @@ public class AIAdvancedTest {
         LinkedList<Tile> resultPath = p1.BFS();
         
         assertEquals(expectedPath, resultPath);  
+        
     }
+
     
-    @Test
-    public void testGameControllerRef() throws InterruptedException, UnknownActionException{
-        AiAdvanced p1 = new AiAdvanced(1, gc, 1, 1);
-        AiAdvanced p2 = new AiAdvanced(2, gc, 1, 1);
-        
-        ArrayList players = new ArrayList<>();
-        players.add(p1);
-        players.add(p2);
-        
-//        System.out.println(gc.getPlayers());
-//        System.out.println(p1.getGameController().getPlayers());
-//        assertEquals(gc.getPlayers(), p1.getGameController().getPlayers());
-    }
 }

@@ -7,6 +7,7 @@ package clue.player;
 
 import clue.GameController;
 import clue.card.Card;
+import clue.card.CardType;
 import clue.card.IntrigueCard;
 import clue.tile.Tile;
 import java.util.ArrayList;
@@ -33,9 +34,25 @@ public class Player {
 
     /**
      * Creates a new player.
+     * @param id
+     * @param gc
      */
     public Player(int id, GameController gc) {
         this.game = gc;
+        this.id = id;
+        notes = "";
+        active = true;
+        activeSuggestionBlock = false;
+        cards = new ArrayList();
+        intrigues = new ArrayList();
+    }
+
+    /**
+     * Creates a new Player
+     * @deprecated for test use only - please instantiate a GameController
+     * @param id 
+     */
+    public Player(int id){
         this.id = id;
         notes = "";
         active = true;
@@ -109,12 +126,33 @@ public class Player {
         cards.add(card);
     }
 
+    /**
+     * 
+     * @return 
+     */
     public IntrigueCard addIntrigue() {
         IntrigueCard card = (IntrigueCard) game.drawCard();
         intrigues.add(card);
+        if (card.getCardType() == CardType.AVOIDSUGGESTION){
+            setActiveSuggestionBlock(true);
+        }
         return card;
     }
+    
+    /**
+     * @deprecated this is a test method
+     * @param card 
+     */
+    public void addIntrigue(IntrigueCard card){
+        intrigues.add(card);
+        if(card.getCardType() == CardType.AVOIDSUGGESTION){
+            setActiveSuggestionBlock(true);
+        }
+    }
 
+    public void removeIntrigue(IntrigueCard card){
+        intrigues.remove(card);
+    }
     /**
      * Removes a card from this player.
      *
@@ -136,6 +174,9 @@ public class Player {
         return cards.contains(card);
     }
 
+    public boolean hasIntrigue(IntrigueCard card){
+        return intrigues.contains(card);
+    }
 
     public List<IntrigueCard> getIntrigue() {
         return intrigues;

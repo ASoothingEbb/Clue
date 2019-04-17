@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package clue.action;
+package clue.client;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -16,9 +16,9 @@ import static org.junit.Assert.*;
  *
  * @author steve
  */
-public class StartActionTest {
+public class PromptTest {
     
-    public StartActionTest() {
+    public PromptTest() {
     }
     
     @BeforeClass
@@ -38,10 +38,9 @@ public class StartActionTest {
     }
 
     @Test
-    public void testExecute() {
-        StartAction instance = new StartAction();
-        instance.execute();
-        assertTrue(instance.result);
+    public void testSomeMethod() {
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
     
 }

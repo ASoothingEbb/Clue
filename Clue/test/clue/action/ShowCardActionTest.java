@@ -5,6 +5,9 @@
  */
 package clue.action;
 
+import clue.card.Card;
+import clue.card.CardTest.CardImpl;
+import clue.player.Player;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -43,9 +46,16 @@ public class ShowCardActionTest {
     @Test
     public void testExecute() {
         System.out.println("execute");
-        ShowCardAction instance = null;
+        ShowCardAction instance = new ShowCardAction(new Player(0),new CardImpl());
         instance.execute();
-        
+        assertTrue(instance.result);
     }
     
+    public class CardImpl extends Card{
+
+        public CardImpl() {
+            super(0);
+        }
+    
+}
 }

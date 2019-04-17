@@ -5,6 +5,7 @@
  */
 package clue.action;
 
+import clue.player.Player;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -37,5 +38,10 @@ public class EndTurnActionTest {
     public void tearDown() {
     }
 
-    
+    @Test
+    public void testExecute(){
+        EndTurnAction instance = new EndTurnAction(new Player(0));
+        instance.execute();
+        assertTrue(instance.result);
+    }
 }

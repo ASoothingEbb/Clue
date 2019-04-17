@@ -42,5 +42,17 @@ public class TeleportActionTest {
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
+
+    /**
+     * Test of execute method, of class TeleportAction.
+     */
+    @Test
+    public void testExecute() {
+        System.out.println("execute");
+        TeleportAction instance = null;
+        instance.execute();
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
     
 }

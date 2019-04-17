@@ -21,4 +21,11 @@ public class EndTurnAction extends Action{
         super(player);
         this.actionType = ActionType.ENDTURN;
     }
+
+    @Override
+    public void execute() {
+        super.execute(); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    
 }

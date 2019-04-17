@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package clue.action;
+package clue.tile;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -16,9 +16,9 @@ import static org.junit.Assert.*;
  *
  * @author steve
  */
-public class SuggestActionTest {
+public class DoorTest {
     
-    public SuggestActionTest() {
+    public DoorTest() {
     }
     
     @BeforeClass
@@ -37,33 +37,43 @@ public class SuggestActionTest {
     public void tearDown() {
     }
 
+    /**
+     * Test of getRoomY method, of class Door.
+     */
     @Test
-    public void testSomeMethod() {
+    public void testGetRoomY() {
+        System.out.println("getRoomY");
+        Door instance = null;
+        int expResult = 0;
+        int result = instance.getRoomY();
+        assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
     /**
-     * Test of execute method, of class SuggestAction.
+     * Test of getTileX method, of class Door.
      */
     @Test
-    public void testExecute() {
-        System.out.println("execute");
-        SuggestAction instance = null;
-        instance.execute();
+    public void testGetTileX() {
+        System.out.println("getTileX");
+        Door instance = null;
+        int expResult = 0;
+        int result = instance.getTileX();
+        assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
     /**
-     * Test of toString method, of class SuggestAction.
+     * Test of getTileY method, of class Door.
      */
     @Test
-    public void testToString() {
-        System.out.println("toString");
-        SuggestAction instance = null;
-        String expResult = "";
-        String result = instance.toString();
+    public void testGetTileY() {
+        System.out.println("getTileY");
+        Door instance = null;
+        int expResult = 0;
+        int result = instance.getTileY();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");

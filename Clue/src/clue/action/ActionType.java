@@ -6,15 +6,16 @@
 package clue.action;
 
 /**
- *Creates a public type accessor for use with Actions.
+ * Creates a public type accessor for use with Actions.
+ *
  * @author steve
  */
-public enum ActionType{
+public enum ActionType {
 
-    DEFAULT,ACCUSATION,AVOIDSUGGESTIONCARD,ENDTURN,EXTRATURN,MOVE,SHOWCARD,SHOWCARDS,START,STARTTURN,SUGGEST,THROWAGAIN,TELEPORT;
+    DEFAULT, ACCUSATION, AVOIDSUGGESTIONCARD, ENDTURN, EXTRATURN, MOVE, MOVEAGAIN, SHOWCARD, SHOWCARDS, START, STARTTURN, SUGGEST, TELEPORT, THROWAGAIN;
 
     private ActionType() {
         
     }
-    
-        }
+
+}

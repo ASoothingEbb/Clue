@@ -17,7 +17,7 @@ import org.junit.runners.Suite;
  * @author steve
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ShowCardActionTest.class, StartActionTest.class, TeleportActionTest.class, AccuseActionTest.class, AvoidSuggestionActionTest.class, UnknownActionExceptionTest.class, ActionTest.class, EndTurnActionTest.class, KickActionTest.class, ShowCardsActionTest.class, StartTurnActionTest.class, ThrowAgainActionTest.class, SuggestActionTest.class, MoveActionTest.class, ExtraTurnActionTest.class, ActionTypeTest.class})
+@Suite.SuiteClasses({ShowCardActionTest.class, StartActionTest.class, TeleportActionTest.class, AccuseActionTest.class, AvoidSuggestionActionTest.class, UnknownActionExceptionTest.class, ActionTest.class, EndTurnActionTest.class, ShowCardsActionTest.class, StartTurnActionTest.class, ThrowAgainActionTest.class, SuggestActionTest.class, MoveActionTest.class, ExtraTurnActionTest.class, ActionTypeTest.class})
 public class ActionSuite {
 
     @BeforeClass

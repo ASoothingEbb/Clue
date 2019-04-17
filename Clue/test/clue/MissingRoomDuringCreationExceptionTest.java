@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package clue.action;
+package clue;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -16,9 +16,9 @@ import static org.junit.Assert.*;
  *
  * @author steve
  */
-public class StartActionTest {
+public class MissingRoomDuringCreationExceptionTest {
     
-    public StartActionTest() {
+    public MissingRoomDuringCreationExceptionTest() {
     }
     
     @BeforeClass
@@ -35,13 +35,6 @@ public class StartActionTest {
     
     @After
     public void tearDown() {
-    }
-
-    @Test
-    public void testExecute() {
-        StartAction instance = new StartAction();
-        instance.execute();
-        assertTrue(instance.result);
     }
     
 }

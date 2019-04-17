@@ -6,8 +6,26 @@
 package clue.client;
 
 import clue.GameController;
+import clue.action.Action;
+import clue.action.UnknownActionException;
+import clue.player.Player;
+import clue.tile.NoSuchRoomException;
+import clue.tile.Room;
+import clue.tile.TileOccupiedException;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.animation.FadeTransition;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -34,6 +52,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 /**
  *
@@ -44,24 +63,31 @@ public class gameInstance {
     private static final int TILE_SIZE = 38;
     private int counter;
    
-    private StackPane[][] board = new StackPane[25][24];
+    private StackPane[][] board;
     private String notes;
     
-    private HashMap<Integer, Integer> spawnlocations = new HashMap<>();
-    private Player currentPlayer;
-    private String remainingMoves;
+    private PlayerSprite currentPlayer;
+    private IntegerProperty remainingMoves;
+    private int currentRoom;
     private boolean rolled;
     
     private GameController gameInterface;
+    private Stage gameStage;
+    private Scene uiScene;
+    private Scene curtainScene;
+   
+    private FadeTransition uiToCurtain;
     
-    private HashMap<String, String> characterImageMap = new HashMap<>();
-    private HashMap<String, String> WeaponImageMap = new HashMap<>();
-    private HashMap<String, String> RoomImageMap = new HashMap<>();
+    private PlayerSprite[] playerSprites;
+    
+    private HashMap<String, String> ImagePathMap = new HashMap<>();
+    private HashMap<String, String> CardNameMap = new HashMap<>();
             
-    private final Font avenirButtonLarge = Font.loadFont(getClass().getResourceAsStream("resources/fonts/Avenir-Book.ttf"), 30);
-    private final Font avenirTitle = Font.loadFont(getClass().getResourceAsStream("resources/fonts/Avenir-Book.ttf"), 20);
-    private final Font avenirText = Font.loadFont(getClass().getResourceAsStream("resources/fonts/Avenir-Book.ttf"), 15);
+    private Font avenirLarge;
+    private Font avenirTitle;
+    private Font avenirText;
     private final Background blackFill = new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY));
+    private final Background greenFill = new Background(new BackgroundFill(Color.rgb(7, 80, 2), CornerRadii.EMPTY, Insets.EMPTY));
     
     private StackPane createBoard() {
         StackPane root = new StackPane();
@@ -69,46 +95,72 @@ public class gameInstance {
                 
         GridPane boardPane = new GridPane();
         
-        //
-        //System.out.println(boardImage.exists());        
-        Image boardImage = new Image(getClass().getResourceAsStream("resources/boardImage.png"));
+        try {
+            Image boardImage = new Image(new FileInputStream(ImagePathMap.get("board")));
+            boardPane.setBackground(new Background(new BackgroundImage(boardImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
+        } catch(IOException ex) {
+            System.out.println("Failed to load board texture");
+        }
         
-        boardPane.setBackground(new Background(new BackgroundImage(boardImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
+        int boardHeight = gameInterface.getBoardHeight();
+        int boardWidth = gameInterface.getBoardWidth();
+        board = new StackPane[boardHeight][boardWidth];
         
         // create base Tiles
-        for (int y=0; y < 24; y++) {
-            for (int x=0; x < 25; x++) {
+        for (int y=0; y < boardHeight; y++) {
+            for (int x=0; x < boardWidth; x++) {
                 StackPane tilePane = new StackPane();
                 Tile tile = new Tile(TILE_SIZE);
                 final int coordX = x;
                 final int coordY = y;
                 tile.setOnMouseClicked((MouseEvent e) -> {
-                    boolean moved = currentPlayer.move(coordX, coordY, board, currentPlayer);
-                    System.out.println("HELLO " + counter);
-                    counter++;
+                    try {
+                        if (remainingMoves.get() > 0 && gameInterface.move(coordX, coordY)) {
+                            currentPlayer.move(coordX, coordY, board, currentPlayer);
+                            remainingMoves.set(gameInterface.getPlayer().getMoves());
+                        } else {
+                            Prompt error = new Prompt("Invalid Move");
+                            error.showAndWait();
+                        }
+                    } catch (NoSuchRoomException | UnknownActionException | InterruptedException | GameController.MovementException | TileOccupiedException ex) {
+                        Logger.getLogger(gameInstance.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch(NullPointerException ex) {
+                        Prompt rollError = new Prompt("Roll First");
+                        rollError.showAndWait();
+                    }   
                 });
                 
                 tilePane.getChildren().add(tile);
-                        
-                board[x][y] = tilePane;
-                boardPane.add(tilePane, y, x);   
+                board[y][x] = tilePane;
+                boardPane.add(tilePane, x, y);
             }
         }
         
         // TODO: spawn players
+        spawnPlayers(board);
         
         rolled = false;
-        
-        Player player1 = new Player(0, 4, "PP");
-        board[5][0].getChildren().add(player1);
-        currentPlayer = player1;
         
         root.getChildren().add(boardPane);
         
         return root;
     }
+
+    private void spawnPlayers(StackPane[][] board) {
+        List<Player> players = gameInterface.getPlayers();
+        playerSprites = new PlayerSprite[players.size()];
+        for(int i = players.size()-1; i>= 0; i--) {
+            Player player = players.get(i);
+            int x = player.getPosition().getX();
+            int y = player.getPosition().getY();
+            PlayerSprite playerSprite = new PlayerSprite(x, y, "PP"+player.getId());
+            playerSprites[i] = playerSprite;
+            currentPlayer = playerSprite;
+            board[y][x].getChildren().add(playerSprite);
+        };
+    }
     
-    public VBox createLeftPanel() {
+    private VBox createLeftPanel() {
         VBox leftPanelLayout = new VBox();
         leftPanelLayout.setPadding(new Insets(0, 10, 10, 10));
         
@@ -118,6 +170,12 @@ public class gameInstance {
         TextArea notepad = new TextArea();
         notepad.setPrefRowCount(20);
         notepad.setPrefColumnCount(20);
+        notepad.setWrapText(true);
+        notepad.setFont(avenirText);
+        notepad.setStyle("-fx-control-inner-background: #fff2ab;");
+        notepad.textProperty().addListener((observable, oldValue, newValue) -> {
+            notes = newValue;
+        });
         
         // Test
         MenuItem print = new MenuItem("Print", avenirTitle);
@@ -131,7 +189,9 @@ public class gameInstance {
         StackPane history = new StackPane();
         
         ScrollPane historyPane = new ScrollPane();
+        historyPane.setBackground(new Background(new BackgroundFill(Color.GREY, CornerRadii.EMPTY, Insets.EMPTY)));
         historyPane.setPannable(false);
+        historyPane.setPrefHeight(400);
         historyPane.setContent(history);
         
         leftPanelLayout.getChildren().addAll(notepadLabel, notepad, print, historyLabel, historyPane);
@@ -143,28 +203,47 @@ public class gameInstance {
         // TODO String processing
         // waiting for definite format from backend
         Label historyItem = new Label();
-        
         return historyItem;
     }
     
-    public GridPane createCardsDisplay() {
+    private GridPane createCardsDisplay() {
         GridPane cardsLayout = new GridPane();
-        
         Label playerCardsLabel = getLabel("Cards", avenirTitle);
+        int x = 1;
+        int y = 0;
+        //System.out.println(gameInterface.getPlayer().getCards());
+        for (clue.card.Card card: gameInterface.getPlayer().getCards()) {
+            Image cardImage = null;
+            try {
+                switch (card.cardType) {
+                    case PERSON:
+                        cardImage = new Image(new FileInputStream(new File(ImagePathMap.get("character"+card.getid()))));
+                        break;
+                    case WEAPON:
+                        cardImage = new Image(new FileInputStream(new File(ImagePathMap.get("weapon"+card.getid()))));
+                        break;
+                    case ROOM:
+                        cardImage = new Image(new FileInputStream(new File(ImagePathMap.get("room"+card.getid()))));
+                        break;
+                    default:
+                        cardImage = new Image(new FileInputStream(new File(ImagePathMap.get("character1"))));
+                        break;
+                }
+            } catch(FileNotFoundException ex) {
+                System.out.println("Not Found");
+            }
 
-        Card weaponCard = new Card(new Image(getClass().getResourceAsStream("assets/card.png")), "weapon", 1);
-        ImageView View1 = new ImageView(weaponCard.getImage());
-        ImageView View2 = new ImageView(weaponCard.getImage());
-        ImageView View3 = new ImageView(weaponCard.getImage());
-        
-        // Insets(top, right, bottom, left);
-        cardsLayout.add(View1, 0, 1);
-        GridPane.setMargin(View1, new Insets(0,10,10,0));
-        cardsLayout.add(View2, 1, 1);
-        GridPane.setMargin(View2, new Insets(0,10,10,0));
-        cardsLayout.add(View3, 0, 2);
-        GridPane.setMargin(View3, new Insets(0,10,10,0));
-        cardsLayout.add(playerCardsLabel, 0, 0, 2, 1);
+            ImageView view = new ImageView(cardImage);
+            cardsLayout.add(view, y, x);
+            GridPane.setMargin(view, new Insets(0, 10, 10, 0));
+            if (y == 2) {
+                x++;
+                y = 0;
+            } else {
+                y++;
+            }
+        }
+        cardsLayout.add(playerCardsLabel, 0, 0, 3, 1);
         GridPane.setHalignment(playerCardsLabel,HPos.CENTER);
         
         return cardsLayout;
@@ -173,44 +252,47 @@ public class gameInstance {
     private VBox createPlayerControls() {        
         VBox playerControlsLayout = new VBox();
         playerControlsLayout.setAlignment(Pos.CENTER);
+        playerControlsLayout.setPadding(new Insets(0, 0, 5, 0));
         
         Label remainingMovesLabel = getLabel("Roll Available", avenirTitle);
 
-        MenuItem suggestionButton = new MenuItem("Suggestion", avenirButtonLarge);
+        MenuItem suggestionButton = new MenuItem("Suggestion", avenirLarge);
         suggestionButton.setActiveColor(Color.ORANGE);
         suggestionButton.setInactiveColor(Color.DARKORANGE);
         suggestionButton.setActive(false); //refresh Colour
         suggestionButton.setOnMouseClicked(e -> {
-            createCardsWindow("Suggetsion", Color.ORANGE);
+            if (gameInterface.getPlayer().getPosition().isRoom()) {
+                currentRoom = ((Room) gameInterface.getPlayer().getPosition()).getId();
+                createCardsWindow("Suggestion", Color.ORANGE);
+            } else {
+                Prompt suggestError = new Prompt("You are not in a room");
+                suggestError.showAndWait();
+            }
         });
         
-        Button suggestButton = new Button("Suggestion");
-        suggestButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        suggestButton.setOnAction(e -> {
-            createCardsWindow("Suggestion", Color.ORANGE);
-        });
-        
-        MenuItem accusationButton = new MenuItem("Accusation", avenirButtonLarge);
+        MenuItem accusationButton = new MenuItem("Accusation", avenirLarge);
         accusationButton.setActiveColor(Color.RED);
         accusationButton.setInactiveColor(Color.DARKRED);
         accusationButton.setActive(false);
         accusationButton.setOnMouseClicked(e -> {
-            createCardsWindow("Accusation", Color.RED);
+            if (gameInterface.getPlayer().getPosition().isRoom()) {
+                currentRoom = ((Room) gameInterface.getPlayer().getPosition()).getId();
+                createCardsWindow("Accusation", Color.RED);
+            } else {
+                Prompt suggestError = new Prompt("You are not in a room");
+                suggestError.showAndWait();
+            }
         });
+
+        MenuItem rollButton = new MenuItem("Roll", avenirLarge);
         
-        Button accuseButton = new Button("Accusation");
-        accuseButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        accuseButton.setOnAction(e -> {
-            createCardsWindow("Accusation", Color.RED);
-        });
-        
-        MenuItem rollButton = new MenuItem("Roll", avenirButtonLarge);
-        
-        rollButton.setOnMouseClicked(e -> {
+        rollButton.setOnMouseClicked(e -> {      
             if (!rolled) {
-                // waiting for gamecontroller to be finalised.
-                // remainingMovesLabel.setText("Remaining Moves: " + gameInterface.roll());
-                remainingMovesLabel.setText("Remaining Moves: " + "Rolled");
+                int roll = gameInterface.roll();
+                remainingMoves = new SimpleIntegerProperty();
+                remainingMoves.set(roll);
+                remainingMovesLabel.setText("Remaining Moves: " + remainingMoves.get());
+                remainingMoves.addListener((observable, oldValue, newValue) -> remainingMovesLabel.setText("Remaining Moves: " + newValue));
                 rolled = true;
             } else {
                 Prompt alreadyRolled = new Prompt("You cannot roll");
@@ -218,26 +300,34 @@ public class gameInstance {
             }
         });
         
-        MenuItem endButton = new MenuItem("End Turn", avenirButtonLarge);
+        MenuItem endButton = new MenuItem("End Turn", avenirLarge);
         endButton.setOnMouseClicked(e -> {
-            System.out.println("End Turn");
+            try {
+                gameInterface.endTurn();
+                gameInterface.getPlayer().setNotes(notes);
+                rolled = false;
+                currentPlayer = playerSprites[gameInterface.getPlayer().getId()];
+                remainingMovesLabel.setText("Roll Available");
+                switchToCurtain();
+            } catch (UnknownActionException | InterruptedException | GameController.MovementException | TileOccupiedException ex) {
+                Logger.getLogger(gameInstance.class.getName()).log(Level.SEVERE, null, ex);
+            }
         });
         
-        Button endTurnButton = new Button("End Turn");
-        // Insets(top, right, bottom, left);
         playerControlsLayout.getChildren().addAll(remainingMovesLabel, suggestionButton, accusationButton, rollButton, endButton);
         
-        return playerControlsLayout;        
+        return playerControlsLayout;
     }
     
     private void createCardsWindow(String title, Color color) {
         selectCards cardsWindow = new selectCards();
-        cardsWindow.show(title, color);
+        cardsWindow.show(title, color, currentRoom, ImagePathMap, CardNameMap, gameInterface);
     }
     
     private BorderPane createUI() {
+        curtainScene =  new Scene(createCurtain());
         BorderPane main = new BorderPane();
-        main.setBackground(blackFill);
+        main.setBackground(greenFill);
         
         main.setLeft(createLeftPanel());
         
@@ -249,7 +339,37 @@ public class gameInstance {
         
         main.setRight(rightPanel);
         
+        
+        //Fade Transition
+        uiToCurtain = new FadeTransition(Duration.millis(2500), main);
+        uiToCurtain.setNode(main);
+        uiToCurtain.setFromValue(0);
+        uiToCurtain.setToValue(1);
+        
         return main;
+    }
+    
+    public void actionResponse(Action action) {
+        switch (action.actionType) {
+            case SHOWCARDS:
+                
+                break;
+            case MOVE:
+                
+                break;
+            case AVOIDSUGGESTIONCARD:
+                
+                break;
+            case THROWAGAIN:
+                
+                break;
+            case STARTTURN:
+                
+                break;
+            case ACCUSATION:
+                
+                break;
+        }
     }
 
     private Label getLabel(String text, Font font) {
@@ -259,14 +379,88 @@ public class gameInstance {
         return label;
     }
     
+    private void initDefaultGraphics() {
+        ImagePathMap.put("board", "./resources/board.png");
+        
+        ImagePathMap.put("character0", "./resources/Character/MissScarlet.png");
+        ImagePathMap.put("character1", "./resources/Character/ColonelMustard.png");
+        ImagePathMap.put("character2", "./resources/Character/MrsWhite.png");
+        ImagePathMap.put("character3", "./resources/Character/MrGreen.png");
+        ImagePathMap.put("character4", "./resources/Character/MrsPeacock.png");
+        ImagePathMap.put("character5", "./resources/Character/ProfessorPlum.png");
+        
+        ImagePathMap.put("weapon0","./resources/Weapon/Candlestick.png");
+        ImagePathMap.put("weapon1","./resources/Weapon/Dagger.png");
+        ImagePathMap.put("weapon2","./resources/Weapon/LeadPipe.png");
+        ImagePathMap.put("weapon3","./resources/Weapon/Revolver.png");
+        ImagePathMap.put("weapon4","./resources/Weapon/Rope.png");
+        ImagePathMap.put("weapon5","./resources/Weapon/Wrench.png");
+        
+        ImagePathMap.put("room0","./resources/Room/Ballroom.png");
+        ImagePathMap.put("room1","./resources/Room/BillardRoom.png");
+        ImagePathMap.put("room2","./resources/Room/Conservatory.png");
+        ImagePathMap.put("room3","./resources/Room/DiningRoom.png");
+        ImagePathMap.put("room4","./resources/Room/Hall.png");
+        ImagePathMap.put("room5","./resources/Room/Kitchen.png");
+        ImagePathMap.put("room6","./resources/Room/Library.png");
+        ImagePathMap.put("room7","./resources/Room/Lounge.png");
+        ImagePathMap.put("room8","./resources/Room/Study.png");
+    }
+    
+    private void initDefaultNames() {
+        CardNameMap.put("character0", "Miss Scarlet");
+        CardNameMap.put("character1", "Colonel Mustard");
+        CardNameMap.put("character2", "Mrs White");
+        CardNameMap.put("character3", "Mr Green");
+        CardNameMap.put("character4", "Mrs Peacock");
+        CardNameMap.put("character5", "Professor Plum");
+        
+        CardNameMap.put("weapon0", "Candlestick");
+        CardNameMap.put("weapon1", "Dagger");
+        CardNameMap.put("weapon2", "Lead Pipe");
+        CardNameMap.put("weapon3", "Revolver");
+        CardNameMap.put("weapon4", "Rope");
+        CardNameMap.put("weapon5", "Wrench");
+        
+        CardNameMap.put("room0", "Ballroom");
+        CardNameMap.put("room1", "Billard Room");
+        CardNameMap.put("room2", "Conservatory");
+        CardNameMap.put("room3", "Dining Room");
+        CardNameMap.put("room4", "Hall");
+        CardNameMap.put("room5", "Kitchen");
+        CardNameMap.put("room6", "Library");
+        CardNameMap.put("room7", "Lounge");
+        CardNameMap.put("room8", "Study");
+    }
+    
+    private void initFonts() {
+        avenirLarge = new Font(30);
+        avenirTitle = new Font(20);
+        avenirText = new Font(15);
+        try {
+            avenirLarge = Font.loadFont(new FileInputStream(new File("./resources/fonts/Avenir-Book.ttf")), 30);
+            avenirTitle = Font.loadFont(new FileInputStream(new File("./resources/fonts/Avenir-Book.ttf")), 20);
+            avenirText = Font.loadFont(new FileInputStream(new File("./resources/fonts/Avenir-Book.ttf")), 15);
+        } catch(FileNotFoundException e) {
+            
+        }
+    }
+    
     private void initGraphics() {
         //String configPath = getClass().getResource("assets/config.properties").toExternalForm();
-        ClassLoader classLoader = ClassLoader.getSystemClassLoader();
-        File configFile = new File(classLoader.getResource("clue/client/resources/config.properties").getFile());
+        try (InputStream input = new FileInputStream("resources/config.properties")) {
+            Properties prop = new Properties();
+            
+            prop.load(input);
+            System.out.println("here");
+            input.close();
+        } catch (IOException ex) {
+            System.out.println("there");
+        }
     }
         
-    public void startGame(int numberOfPlayers, int numberOfAIs) {
-        Stage gameStage = new Stage();
+    public void startGame(GameController gameController) {
+        gameStage = new Stage();
         
         gameStage.initModality(Modality.APPLICATION_MODAL);
         gameStage.setTitle("Clue");
@@ -278,10 +472,41 @@ public class gameInstance {
             gameStage.close();
         });
         
-        //gameInteface = new GameController(numberOfPlayers, numberOfAIs, );
+        gameInterface = gameController;
         
-        Scene scene = new Scene(createUI());
-        gameStage.setScene(scene);
+        initFonts();
+        initDefaultGraphics();
+        initDefaultNames();
+        initGraphics();
+        
+        uiScene = new Scene(createUI(), Color.BLACK);
+        gameStage.setScene(uiScene);
         gameStage.show();
     }
+    
+    public VBox createCurtain(){
+        VBox curtain = new VBox();
+        
+        curtain.setAlignment(Pos.CENTER);
+        curtain.setBackground(blackFill);
+        
+        curtain.setMinSize(1736, 960);
+        Button fadeSwitch = new Button("Unfade");
+        fadeSwitch.setOnAction(e -> switchToUi());
+        
+        curtain.getChildren().add(fadeSwitch);
+        return curtain;
+    }
+    
+    public void switchToCurtain(){
+        gameStage.setScene(curtainScene);
+        System.out.println(gameStage.getWidth() + "" + gameStage.getHeight());
+    }
+    
+    public void switchToUi(){
+        uiToCurtain.play();
+        gameStage.setScene(uiScene);
+        System.out.println(gameStage.getWidth() + "" + gameStage.getHeight());
+    }
+
 }

@@ -5,6 +5,8 @@
  */
 package clue.action;
 
+import clue.card.AvoidSuggestionIntrigue;
+import clue.player.Player;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -37,10 +39,20 @@ public class AvoidSuggestionActionTest {
     public void tearDown() {
     }
 
+
+    /**
+     * Test of execute method, of class AvoidSuggestionAction.
+     */
     @Test
-    public void testSomeMethod() {
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void testExecute() {
+        System.out.println("execute");
+        Player player = new Player(0);
+        AvoidSuggestionIntrigue card = new AvoidSuggestionIntrigue(0);
+        player.addIntrigue(card);
+        AvoidSuggestionAction instance = new AvoidSuggestionAction(player,card);
+        instance.execute();
+        assertFalse(player.hasIntrigue(card));
+        assertTrue(instance.result);
     }
     
 }

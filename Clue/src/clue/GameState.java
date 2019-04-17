@@ -52,10 +52,11 @@ public class GameState {
      */
     public GameState(List<Player> players) {
         this.players = players;
-        previousPlayer = players.get(1);
-        currentPlayer = players.get(1);
+        previousPlayer = getStartingPlayer();// TODO should be null?
+        currentPlayer = getStartingPlayer(); 
         running = true;
         playersNumber = players.size();
+        System.out.println("[GameState.constructor]");
     }
 
     /**
@@ -77,7 +78,7 @@ public class GameState {
      */
     public void unregister(Player player) {
         player.removeFromPlay();
-        playersNumber = players.size() - 1;
+        playersNumber = players.size();
     }
 
     /**
@@ -93,6 +94,7 @@ public class GameState {
      * Returns the id of the next player in the player list.
      */
     public int nextPlayer() {
+        System.out.println("[GameState.nextPlayer]");
         if (running) {
             do {
                 turn = getNextPointer(turn);
@@ -103,9 +105,22 @@ public class GameState {
         }
     }
 
+    /**
+     * Gets the starting player in the list
+     * @return 
+     */
+    public final Player getStartingPlayer(){
+        for (Player p : players){
+            if (p.isActive()){
+                return p;
+            }    
+        }
+        return null;
+    }
     public int getNextPointer(int i) {
+        System.out.println("[GameState.getNextPointer]");
         if (i + 1 == players.size()) {
-            i = 1;
+            i = 0;
         } else {
             i++;
         }
@@ -118,9 +133,11 @@ public class GameState {
      * @param player id of next player
      */
     public void nextTurn(int player) {
+        
         previousPlayer = currentPlayer;
         currentPlayer = players.get(player);
         turn = currentPlayer.getId();
+        System.out.println("[GameState.nextTurn] new current player: "+turn) ;
     }
 
     /**
@@ -129,6 +146,7 @@ public class GameState {
      * @return player id
      */
     public int getPlayerTurn() {
+        System.out.println("[GameState.getPlayerTurn]turn:"+turn+" playerId: "+currentPlayer.getId());
         return currentPlayer.getId();
     }
 
@@ -136,6 +154,7 @@ public class GameState {
      * Sets the previous player to be the current player
      */
     public void previousPlayer() {
+        System.out.println("[GameState.previousPlayer]");
         currentPlayer = previousPlayer;
     }
 
@@ -148,7 +167,7 @@ public class GameState {
         return this.lastAction;
     }
 
-    public Player getPlayer(int id) {
+    public Player getPlayer(int id) {//TODO javadocs?
         return players.get(id);
     }
 

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package clue.card;
+package clue.client;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -17,8 +17,8 @@ import org.junit.runners.Suite;
  * @author steve
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({CardTest.class, TeleportIntrigueTest.class, ExtraTurnIntrigueTest.class, ThrowAgainIntrigueTest.class, AvoidSuggestionIntrigueTest.class, CardTypeTest.class, RoomCardTest.class, WeaponCardTest.class, IntrigueCardTest.class, PersonCardTest.class})
-public class CardSuite {
+@Suite.SuiteClasses({clue.client.CardTest.class, clue.client.MenuItemTest.class, clue.client.TileTest.class, clue.client.BoardTest.class, clue.client.SpecialCardTest.class, clue.client.PromptTest.class, clue.client.PlayerTest.class, clue.client.SettingsMenuItemTest.class, clue.client.ClueClientTest.class})
+public class ClientSuite {
 
     @BeforeClass
     public static void setUpClass() throws Exception {

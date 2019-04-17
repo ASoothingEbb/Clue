@@ -5,6 +5,7 @@
  */
 package clue.action;
 
+import clue.card.Card;
 import clue.player.Player;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -44,12 +45,10 @@ public class ActionTest {
     @Test
     public void testGetPlayer() {
         System.out.println("getPlayer");
-        Action instance = null;
-        Player expResult = null;
+        Player expResult = new Player(0);
+        Action instance = new ActionImpl(expResult);
         Player result = instance.getPlayer();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -58,10 +57,9 @@ public class ActionTest {
     @Test
     public void testExecute() {
         System.out.println("execute");
-        Action instance = null;
+        Action instance = new ActionImpl();
         instance.execute();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertTrue(instance.result);
     }
 
     public class ActionImpl extends Action {
@@ -69,6 +67,24 @@ public class ActionTest {
         public ActionImpl() {
             super(null);
         }
+        public ActionImpl(Player player){
+            super(player);
+        }
+        public ActionImpl(Player player, Card card){
+            super(player,card);
+        }
     }
 
+    /**
+     * Test of toString method, of class Action.
+     */
+    @Test
+    public void testToString() {
+        System.out.println("toString");
+        Player player = new Player(0);
+        Action instance = new ActionImpl(player);
+        String expResult = ActionType.DEFAULT + "," + player.getId() + "," + instance.result;
+        String result = instance.toString();
+        assertEquals(expResult, result);
+    }
 }

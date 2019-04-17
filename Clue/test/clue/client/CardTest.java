@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package clue.action;
+package clue.client;
 
+import javafx.scene.image.Image;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -16,9 +17,9 @@ import static org.junit.Assert.*;
  *
  * @author steve
  */
-public class StartActionTest {
+public class CardTest {
     
-    public StartActionTest() {
+    public CardTest() {
     }
     
     @BeforeClass
@@ -37,11 +38,18 @@ public class StartActionTest {
     public void tearDown() {
     }
 
+    /**
+     * Test of getImage method, of class Card.
+     */
     @Test
-    public void testExecute() {
-        StartAction instance = new StartAction();
-        instance.execute();
-        assertTrue(instance.result);
+    public void testGetImage() {
+        System.out.println("getImage");
+        Card instance = null;
+        Image expResult = null;
+        Image result = instance.getImage();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
     
 }

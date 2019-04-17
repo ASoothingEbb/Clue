@@ -8,29 +8,29 @@ package clue.client;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 
 /**
  *
  * @author hungb
  */
-public class Player extends Label {
+public class PlayerSprite extends Label {
     private int positionX;
     private int positionY;
     private String character;
     
-    public Player(int positionX, int positionY, String character) {
+    public PlayerSprite(int positionX, int positionY, String character) {
         setText(character);
+        setTextFill(Color.WHITE);
         this.positionX = positionX;
         this.positionY = positionY;
         this.character = character;
     }
     
-    public boolean move(int x, int y, StackPane[][] board, Player player) {
-        board[positionX][positionY].getChildren().remove(player);
-        board[x][y].getChildren().add(player);
+    public void move(int x, int y, StackPane[][] board, PlayerSprite player) {
+        board[positionY][positionX].getChildren().remove(player);
+        board[y][x].getChildren().add(player);
         positionX = x;
         positionY = y;
-        
-        return true;
     }
 }
