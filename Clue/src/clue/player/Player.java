@@ -283,6 +283,16 @@ public class Player {
         return isAi;
     }
     
+    public String toString(){
+        String result = "";
+        result += "Player id: "+id;
+        result += " isAi: "+isAi();
+        result += " position: "+getPosition();
+        
+        
+        return result;
+    }
+    
 //    /**
 //     * Executes a sequence of moves
 //     *
