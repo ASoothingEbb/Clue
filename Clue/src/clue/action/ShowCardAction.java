@@ -45,6 +45,10 @@ public class ShowCardAction extends Action {
         return whoShowedTheCard;
     }
     
+    public Card getCardToShow(){
+        return card;
+    }
+    
     
 /**
  * Executes the ShowCardAction.
