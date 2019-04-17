@@ -421,10 +421,9 @@ public class gameInstance {
                 showCards(action);
                 break;
             case SHOWCARD:
+                System.out.println("[gameInstance.actionResponse] case SHOWCARD");
+                System.out.println("------------------------------");
                 showCard(action);
-                break;
-            case MOVE:
-                System.out.println("[gameInstance.actionResponse] case MOVE");
                 break;
             case AVOIDSUGGESTIONCARD:
                 System.out.println("[gameInstance.actionResponse] case AVOIDSUGGESTIONCARD");
@@ -466,11 +465,11 @@ public class gameInstance {
     }
     
     private void showCard(Action action) {
-        //String suggestee = CardNameMap.get("character" + ((ShowCardsAction) action).getPlayer().getId());
-        //Prompt showCard = new Prompt(suggestee + " showed");
-        //((ShowCard) action).
-        //ImageView cardViewer = new ImageView(getImage(((ShowCardsAction) action).getIdOfCardToShow(), ((ShowCardsAction) action).));
-        //showCard.setImage(selectedView);
+        String suggestee = CardNameMap.get("character1");
+        Prompt showCard = new Prompt(suggestee + " showed");
+        ImageView cardViewer = new ImageView(getImage(1, CardType.WEAPON));
+        showCard.setImage(cardViewer);
+        showCard.show();
     }
     
     private void switchPlayerScene(int playerId, Scene next) {
@@ -699,20 +698,28 @@ public class gameInstance {
         
         curtain.setAlignment(Pos.CENTER);
         curtain.setBackground(blackFill);
-        
-        Label txt = new Label("IT'S PLAYER'S ------ TURN.");
-        Font titleFont = new Font(80);
-         
-        txt.setFont(titleFont);
-        txt.setTextFill(Color.WHITE);
-        
         curtain.setMinSize(1736, 960);
-        Button fadeSwitch = new Button("Unfade");
-        fadeSwitch.setOnAction(e -> switchToUi());
         
-        curtain.getChildren().addAll(txt, fadeSwitch);
+        //Label txt = new Label("IT'S PLAYER'S ------ TURN.");
+        //Font titleFont = new Font(80);
+         
+        //txt.setFont(titleFont);
+        //txt.setTextFill(Color.WHITE);
+        
+        //TODO fix transition to update
+        Label switchPlayerLabel = getLabel(CardNameMap.get("character"+gameInterface.getPlayer().getId()) + "'s Turn", avenirTitle);
+        
+        MenuItem fadeSwitch = new MenuItem("Start Turn", avenirTitle);
+        fadeSwitch.setOnMouseClicked(e -> {
+            switchToUi();
+        });
+        //Button fadeSwitch = new Button("Unfade");
+        //fadeSwitch.setOnAction(e -> switchToUi());
+        
+        curtain.getChildren().addAll(switchPlayerLabel, fadeSwitch);
         return curtain;
     }
+    
     /**
      * Switches the current scene to the Curtain scene.
      */
