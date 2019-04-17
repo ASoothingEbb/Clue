@@ -40,7 +40,7 @@ public class ShowCardAction extends Action {
     @Override
     public void execute() {
         if (player.isAi()){
-            ((AiAdvanced) player).ShowCards(card, whoShowedTheCard);
+            ((AiAdvanced) player).revealCard(card, whoShowedTheCard);
         }
         else{
             gui.actionResponse(this);
