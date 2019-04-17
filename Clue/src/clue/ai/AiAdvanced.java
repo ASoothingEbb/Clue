@@ -20,6 +20,7 @@ import clue.card.RoomCard;
 import clue.card.WeaponCard;
 import clue.player.Player;
 import clue.tile.Tile;
+import clue.tile.TileOccupiedException;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -92,30 +93,28 @@ public class AiAdvanced extends Player{
         
         if(gameController.getPlayer().getId() == getId()){//If I need to respond.
             if(gameController.getLastAction() instanceof EndTurnAction){//If my turn, last action was end turn.
-                if(this.getPosition().isRoom()){//If I'm in a room
-//                    try {           
-//                        sendAction(Accuse(randPersonCard, randRoomCard, randWeaponCard));
-//                    } catch (InterruptedException ex) {
-//                        Logger.getLogger(AIAdvanced.class.getName()).log(Level.SEVERE, null, ex);
-//                    }
-                } else {
-                    moveToRoom();
-                }
                 
-            } else if (gameController.getLastAction() instanceof ShowCardsAction){//If I need to show a card 
+                
+            } 
+            
+            //else if (gameController.getLastAction() instanceof ShowCardsAction){//If I need to show a card 
 
-                ShowCardsAction action = (ShowCardsAction) gameController.getLastAction();
-                Card card = action.getCardList().get(0);
-                ShowCardAction newAction = new ShowCardAction(action.getSuggester(), card);//Shows one card to person who requested cards to be shown(suggested).
-                shownCards.add(card);
+                //ShowCardsAction action = (ShowCardsAction) gameController.getLastAction();
+                ///Card card = action.getCardList().get(0);
+                //ShowCardAction newAction = new ShowCardAction(action.getSuggester(), card);//Shows one card to person who requested cards to be shown(suggested).
+                //shownCards.add(card);
 
                 //try {
                 //    sendAction(newAction);//Show Card.
                 //} catch (InterruptedException ex) {
                 //    Logger.getLogger(AIAdvanced.class.getName()).log(Level.SEVERE, null, ex);
                 //}
-            }
+            //}
         }
+    }
+    
+    public Card respondToShowCards(List<Card> cards){
+        return cards.get(0);
     }
     
    /** 
@@ -201,8 +200,15 @@ public class AiAdvanced extends Player{
      * Sends an action to the game controller that will move the player one move in the path towards the room.
      */
     public void moveToRoom(){
-//        MoveAction move = new MoveAction(pathToRoom.removeFirst());
-//        sendAction(move);
+        LinkedList<Tile> path = BFS();
+        try {
+            while (getMoves() > 0 && path.size() > 0){
+                gameController.move(path.poll());
+            }
+            
+        } catch (UnknownActionException | InterruptedException | GameController.MovementException | TileOccupiedException ex) {
+            Logger.getLogger(AiAdvanced.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public ArrayList<ArrayList<Card>> getLists(){
@@ -211,5 +217,23 @@ public class AiAdvanced extends Player{
     
     public LinkedList<Tile> getPathToRoom(){
         return pathToRoom;
+    }
+
+    public void ShowCards(Card card, Player whoShowedTheCard) {//called when a player is showing a card to AI
+        
+    }
+
+    public void respondToStartTurn() {
+        if(this.getPosition().isRoom()){//If I'm in a room
+//                    try {           
+//                        sendAction(Accuse(randPersonCard, randRoomCard, randWeaponCard));
+//                    } catch (InterruptedException ex) {
+//                        Logger.getLogger(AIAdvanced.class.getName()).log(Level.SEVERE, null, ex);
+//                    }
+        } 
+        else {
+            moveToRoom();
+        }
+        
     }
 }
