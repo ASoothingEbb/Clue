@@ -9,6 +9,7 @@ import clue.GameController;
 import clue.action.Action;
 import clue.action.ShowCardsAction;
 import clue.action.UnknownActionException;
+import clue.card.Card;
 import clue.card.CardType;
 import clue.player.Player;
 import clue.tile.NoSuchRoomException;
@@ -38,6 +39,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -45,6 +47,7 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -79,6 +82,13 @@ public class gameInstance {
     
     //JavaFX
     private GridPane cardsDisplay;
+    
+    private Scene prevScene;
+    
+    private CardType selectedCardType;
+    private int selectedCardId;
+    private ImageView selectedView = null;
+            
     private Stage gameStage;
     private Scene uiScene;
     private Scene curtainScene;
@@ -106,13 +116,6 @@ public class gameInstance {
                 
         GridPane boardPane = new GridPane();
         boardPane.setGridLinesVisible(true);
-        
-        //try {
-        //    Image boardImage = new Image(new FileInputStream(ImagePathMap.get("board")));
-        //    boardPane.setBackground(new Background(new BackgroundImage(boardImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
-        //} catch(IOException ex) {
-        //    System.out.println("Failed to load board texture");
-        //}
         
         int boardHeight = gameInterface.getBoardHeight();
         int boardWidth = gameInterface.getBoardWidth();
@@ -287,28 +290,8 @@ public class gameInstance {
         Label playerCardsLabel = getLabel("Cards", avenirTitle);
         int x = 1;
         int y = 0;
-        for (clue.card.Card card: gameInterface.getPlayer().getCards()) {
-            Image cardImage = null;
-            try {
-                switch (card.cardType) {
-                    case PERSON:
-                        cardImage = new Image(new FileInputStream(new File(ImagePathMap.get("character"+card.getId()))));
-                        break;
-                    case WEAPON:
-                        cardImage = new Image(new FileInputStream(new File(ImagePathMap.get("weapon"+card.getId()))));
-                        break;
-                    case ROOM:
-                        cardImage = new Image(new FileInputStream(new File(ImagePathMap.get("room"+card.getId()))));
-                        break;
-                    default:
-                        cardImage = new Image(new FileInputStream(new File(ImagePathMap.get("character1"))));
-                        break;
-                }
-            } catch(FileNotFoundException ex) {
-                System.out.println("Not Found");
-            }
-
-            ImageView view = new ImageView(cardImage);
+        for (Card card: gameInterface.getPlayer().getCards()) {
+            ImageView view = new ImageView(getImage(card.getId(), card.cardType));
             cardsLayout.add(view, y, x);
             GridPane.setMargin(view, new Insets(0, 10, 10, 0));
             if (y == 2) {
@@ -447,8 +430,10 @@ public class gameInstance {
         switch (action.actionType) {
             case SHOWCARDS:
                 System.out.println("[gameInstance.actionResponse] case SHOWCARDS");
-                
-                //((ShowCardsAction) action).setCardToShow(id, CardType.);//pass in the id and card type of the card selected by user
+                showCards(action);
+                break;
+            case SHOWCARD:
+                showCard(action);
                 break;
             case MOVE:
                 System.out.println("[gameInstance.actionResponse] case MOVE");
@@ -466,6 +451,112 @@ public class gameInstance {
                 System.out.println("[gameInstance.actionResponse] case ACCUSATION");
                 break;
         }
+    }
+    
+    private Image getImage(int cardId, CardType cardType) {
+        Image cardImage = null;
+        try {
+            switch (cardType) {
+                case PERSON:
+                    cardImage = new Image(new FileInputStream(new File(ImagePathMap.get("character"+cardId))));
+                    break;
+                case WEAPON:
+                    cardImage = new Image(new FileInputStream(new File(ImagePathMap.get("weapon"+cardId))));
+                    break;
+                case ROOM:
+                    cardImage = new Image(new FileInputStream(new File(ImagePathMap.get("room"+cardId))));
+                    break;
+                default:
+                    cardImage = new Image(new FileInputStream(new File(ImagePathMap.get("character1"))));
+                    break;
+            }
+        } catch(FileNotFoundException ex) {
+
+        }
+        
+        return cardImage;
+    }
+    
+    private void showCard(Action action) {
+        String suggestee = CardNameMap.get("character" + ((ShowCardsAction) action).getPlayer().getId());
+        Prompt showCard = new Prompt(suggestee + " showed");
+        //((ShowCard) action).
+        //ImageView cardViewer = new ImageView(getImage(((ShowCardsAction) action).getIdOfCardToShow(), ((ShowCardsAction) action).));
+        showCard.setImage(selectedView);
+    }
+    
+    private void switchPlayerScene(int playerId, Scene next) {
+        VBox switchPlayer = new VBox();
+        switchPlayer.setBackground(blackFill);
+        switchPlayer.setAlignment(Pos.CENTER);
+        Label switchToLabel = getLabel("Switch to " + CardNameMap.get("character"+playerId), avenirTitle);
+        MenuItem showButton = new MenuItem("Play", avenirTitle);
+        showButton.setOnMouseClicked(e -> {
+            gameStage.setScene(next);
+        });
+        
+        switchPlayer.getChildren().addAll(switchToLabel, showButton);
+        
+        Scene scene = new Scene(switchPlayer, 1736, 960);
+        gameStage.setScene(scene);
+    }
+    
+    private void showCards(Action action) {
+        VBox showCardsDisplay = new VBox();
+        showCardsDisplay.setBackground(greenFill);
+        showCardsDisplay.setAlignment(Pos.CENTER);
+        
+        List<Card> cards = ((ShowCardsAction) action).getCardList();
+        
+        Label showCardsLabel = getLabel("Select a card to show", avenirTitle);
+        
+        HBox cardDisplay = new HBox();
+        cardDisplay.setPadding(new Insets(10));
+        cardDisplay.setSpacing(10);
+        cardDisplay.setAlignment(Pos.CENTER);
+                
+        for (Card card: cards) {
+            final int cardId = card.getId();
+            final CardType cardType = card.cardType;
+
+            ImageView view = new ImageView(getImage(card.getId(), card.cardType));
+            view.setOnMouseClicked(e -> {
+                setSelectedCard(cardId, cardType, view);
+            });
+            cardDisplay.getChildren().add(view);
+        }
+        
+        MenuItem confirmCardButton = new MenuItem("Confirm Selection", avenirTitle);
+        confirmCardButton.setOnMouseClicked(e -> {
+            System.out.println(selectedCardId + " " + selectedCardType.toString());
+            ((ShowCardsAction) action).setCardToShow(selectedCardId, selectedCardType);
+            switchPlayerScene(((ShowCardsAction) action).getSuggester().getId(), prevScene);
+        });
+        
+        showCardsDisplay.getChildren().addAll(showCardsLabel, cardDisplay, confirmCardButton);
+        
+        Scene scene = new Scene(showCardsDisplay, 1736, 960);
+        prevScene = gameStage.getScene();
+        switchPlayerScene(((ShowCardsAction) action).getPlayer().getId(), scene);
+    }
+    
+    private void setSelectedCard(int id, CardType type, ImageView view) {
+        this.selectedCardId = id;
+        this.selectedCardType = type;
+        
+        DropShadow borderGlow = new DropShadow();
+        borderGlow.setColor(Color.rgb(255,215,0));
+        borderGlow.setOffsetX(0f);
+        borderGlow.setOffsetY(0f);
+        
+        if (selectedView != null && !selectedView.equals(view)) {
+            view.setEffect(borderGlow);
+            this.selectedView.setEffect(null);
+        } else {
+            view.setEffect(borderGlow);
+            this.selectedView = view;
+        }
+        this.selectedView = view;
     }
 
     /**

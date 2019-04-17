@@ -13,6 +13,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -30,6 +31,7 @@ public class Prompt extends Dialog {
     private final DialogPane dialogPane;
     private Font avenirLarge;
     private Font avenirMedium;
+    private VBox layout;
     
     /**
      * Makes and Styles the dialog box(prompt).
@@ -43,7 +45,7 @@ public class Prompt extends Dialog {
         
         initFonts();
         
-        VBox layout = new VBox();
+        layout = new VBox();
         
         Label title = new Label("Error:");
         title.setTextFill(Color.WHITE);
@@ -79,5 +81,9 @@ public class Prompt extends Dialog {
         } catch(FileNotFoundException ex) {
             
         }
+    }
+    
+    public void setImage(ImageView  card) {
+        layout.getChildren().add(2, card);
     }
 }
