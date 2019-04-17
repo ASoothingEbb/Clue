@@ -437,7 +437,10 @@ public class gameInstance {
             case ACCUSATION:
                 System.out.println("[gameInstance.actionResponse] case ACCUSATION");
                 break;
+                
+        
         }
+        System.out.println("return");
     }
     
     private Image getImage(int cardId, CardType cardType) {
@@ -469,7 +472,7 @@ public class gameInstance {
         Prompt showCard = new Prompt(suggestee + " showed");
         ImageView cardViewer = new ImageView(getImage(1, CardType.WEAPON));
         showCard.setImage(cardViewer);
-        showCard.show();
+        //showCard.show();
     }
     
     private void switchPlayerScene(int playerId, Scene next) {
