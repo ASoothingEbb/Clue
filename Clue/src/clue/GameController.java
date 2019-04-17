@@ -234,13 +234,6 @@ public final class GameController {
                 System.out.println("    CASE SHOWCARDS");
                 if (state.getAction().actionType != ActionType.ACCUSATION) {
                     
-                    int id = ((ShowCardsAction)action).getIdOfCardToShow();
-                    CardType type = ((ShowCardsAction)action).getCardTypeOfCardToShow();
-                    Player personToShow = ((ShowCardsAction)action).getSuggester();
-                    Card cardToShow = getCard(id, type);
-                    
-                   
-                    nextAction = new ShowCardAction(personToShow, cardToShow, gui, ((ShowCardsAction)action).getPlayer());
                 }
                 actionLog.add(action);
                 break;
@@ -769,6 +762,23 @@ public final class GameController {
                 break;
         }
         return null;
+    }
+    
+    public void replyToShowCards (ShowCardsAction action){
+        System.out.println("[GameController.showCard]");
+        int id = action.getIdOfCardToShow();
+        CardType type = action.getCardTypeOfCardToShow();
+        Player personToShow = action.getSuggester();
+        Card cardToShow = getCard(id, type);
+                  
+                   
+        try {
+            performAction(new ShowCardAction(personToShow, cardToShow, gui, ((ShowCardsAction)action).getPlayer()));
+        } catch (UnknownActionException | InterruptedException | TileOccupiedException ex) {
+            Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    
+    
     }
     
     
