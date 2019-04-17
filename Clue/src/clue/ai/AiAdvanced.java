@@ -268,7 +268,7 @@ public class AiAdvanced extends Player{
             gameController.suggest(0, 0);
         }
         if (suggestionsLeft == 0){
-            gameController.accuse(0, 0);
+            gameController.accuse(0, 0,0);
         }
     }
 
