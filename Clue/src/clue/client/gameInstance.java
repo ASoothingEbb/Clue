@@ -413,22 +413,22 @@ public class gameInstance {
     public void actionResponse(Action action) {
         switch (action.actionType) {
             case SHOWCARDS:
-                
+                System.out.println("[gameInstance.actionResponse] case SHOWCARDS");
                 break;
             case MOVE:
-                
+                System.out.println("[gameInstance.actionResponse] case MOVE");
                 break;
             case AVOIDSUGGESTIONCARD:
-                
+                System.out.println("[gameInstance.actionResponse] case AVOIDSUGGESTIONCARD");
                 break;
             case THROWAGAIN:
-                
+                System.out.println("[gameInstance.actionResponse] case THROWAGAIN");
                 break;
             case STARTTURN:
-                
+                System.out.println("[gameInstance.actionResponse] case STARTTURN");
                 break;
             case ACCUSATION:
-                
+                System.out.println("[gameInstance.actionResponse] case ACCUSATION");
                 break;
         }
     }
