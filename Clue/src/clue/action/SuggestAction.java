@@ -96,7 +96,7 @@ public class SuggestAction extends Action {
     public String toString() {
         String cards = "";
         for(Card c : this.cards){
-            cards += c.cardType+ ":" + c.getid() + " ";
+            cards += c.cardType+ ":" + c.getId() + " ";
         }
         return super.toString() + cards;
     }
