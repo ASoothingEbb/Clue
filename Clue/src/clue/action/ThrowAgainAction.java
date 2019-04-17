@@ -5,7 +5,9 @@
  */
 package clue.action;
 
+import clue.ai.AiAdvanced;
 import clue.card.ThrowAgainIntrigue;
+import clue.client.gameInstance;
 import clue.player.Player;
 
 /**
@@ -14,18 +16,29 @@ import clue.player.Player;
  * @author slb35
  */
 public class ThrowAgainAction extends Action{
-        /**
-         * Creates a new ThrowAgainAction
-         * @param player the Player to roll again
-         */
-        public ThrowAgainAction(Player player,ThrowAgainIntrigue card){
-            super(player,card);
+    gameInstance gui;
+     /**
+     * Creates a new ThrowAgainAction
+     * @param player the Player to roll again
+     * @param card
+     * @param gui
+     */
+    public ThrowAgainAction(Player player,ThrowAgainIntrigue card, gameInstance gui){
+        super(player,card);
         this.actionType = ActionType.THROWAGAIN;
-        }
+        this.gui = gui;
+    }
 
     @Override
     public void execute() {
         player.removeCard(card);
+        if (player.isAi()){
+            ((AiAdvanced) player).respondToThrowAgain();
+
+        }
+        else{
+            gui.actionResponse(this);
+        }
     }
         
 }
