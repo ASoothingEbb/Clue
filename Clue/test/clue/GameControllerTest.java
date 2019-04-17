@@ -126,8 +126,8 @@ public class GameControllerTest {
     public void testGetLastAction() throws UnknownActionException, InterruptedException, TileOccupiedException {
         System.out.println("getLastAction");
         Card card = new CardImpl();
-        gc.showCard(card);
-        assertEquals(ActionType.SHOWCARD,gc.getLastAction().actionType);
+        gc.suggest(1, 1);
+        assertEquals(ActionType.SUGGEST,gc.getLastAction().actionType);
     }
 
     /**
@@ -347,15 +347,15 @@ public class GameControllerTest {
 
     }
 
-    /**
-     * Test of showCard method, of class GameController.
-     */
-    @Test
-    public void testShowCard() throws Exception {
-        System.out.println("showCard");
-        fail("The test case is a prototype.");
-
-    }
+//    /**
+//     * Test of showCard method, of class GameController.
+//     */
+//    @Test
+//    public void testShowCard() throws Exception {
+//        System.out.println("showCard");
+//        fail("The test case is a prototype.");
+//
+//    }
     /**
      * Test of accuse method, of class GameController.
      */

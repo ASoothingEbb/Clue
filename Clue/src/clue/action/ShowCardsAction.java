@@ -43,6 +43,19 @@ public class ShowCardsAction extends Action{
     }
 
     /**
+     * 
+     * @deprecated Test purposes only
+     * @param player
+     * @param suggester
+     * @param cards 
+     */
+    public ShowCardsAction(Player player, Player suggester, List<Card> cards) {
+        super(player);
+        this.cards = cards;
+        this.suggester = suggester;
+    }
+
+    /**
      * Executes the ShowCardsAction. Stores result in result.
      */
     @Override
@@ -55,7 +68,6 @@ public class ShowCardsAction extends Action{
         else{
             gui.actionResponse(this);
         }
-        
     }
     
     public void setCardToShow(int i, CardType type){
