@@ -41,6 +41,7 @@ public class boardEditor {
     private Stage editorStage;
     
     private Font avenirLarge;
+    private Font avenirNormal;
     private EditorTile[][] board;
     private EditorTileType lastSelected;
     private String mapName;
@@ -50,51 +51,95 @@ public class boardEditor {
         VBox paletteLayout = new VBox();
         paletteLayout.setPadding(new Insets(0, 0, 0, 10));
         paletteLayout.setAlignment(Pos.CENTER);
+        
+        Label selectedLabel = new Label("Selected");
+        selectedLabel.setFont(avenirLarge);
+        selectedLabel.setTextFill(Color.WHITE);
+        
+        Label currentlySelected = new Label("HALL");
+        currentlySelected.setFont(avenirNormal);
+        currentlySelected.setTextFill(Color.WHITE);
 
         MenuItem roomButton = new MenuItem("Room", avenirLarge);
         roomButton.setBackgroundColor(Color.rgb(87, 73, 60));
         roomButton.setPrefWidth(120);
-        roomButton.setOnMouseClicked(e -> lastSelected = EditorTileType.ROOM);
+        roomButton.setColorScheme(Color.WHITE, Color.BLACK);
+        roomButton.setOnMouseClicked(e -> {
+            lastSelected = EditorTileType.ROOM;
+            currentlySelected.setText(lastSelected.toString());
+        });
         
         MenuItem emptyButton = new MenuItem("Empty", avenirLarge);
-        emptyButton.setBackgroundColor(Color.rgb(6, 96, 38));
+        emptyButton.setBackgroundColor(Color.rgb(7, 80, 2));
         emptyButton.setPrefWidth(120);
-        emptyButton.setOnMouseClicked(e -> lastSelected = EditorTileType.EMPTY);
+        emptyButton.setColorScheme(Color.WHITE, Color.BLACK);
+        emptyButton.setOnMouseClicked(e -> {
+            lastSelected = EditorTileType.EMPTY;
+            currentlySelected.setText(lastSelected.toString());
+        });
         
         MenuItem hallButton = new MenuItem("Hall", avenirLarge);
         hallButton.setBackgroundColor(Color.rgb(225, 147, 31));
         hallButton.setPrefWidth(120);
-        hallButton.setOnMouseClicked(e -> lastSelected = EditorTileType.HALL);
+        hallButton.setColorScheme(Color.WHITE, Color.BLACK);
+        hallButton.setOnMouseClicked(e -> {
+            lastSelected = EditorTileType.HALL;
+            currentlySelected.setText(lastSelected.toString());
+        });
         
         MenuItem spawnButton = new MenuItem("Spawn", avenirLarge);
         spawnButton.setBackgroundColor(Color.rgb(60, 134, 1));
         spawnButton.setPrefWidth(120);
-        spawnButton.setOnMouseClicked(e -> lastSelected = EditorTileType.START);
+        spawnButton.setColorScheme(Color.WHITE, Color.BLACK);
+        spawnButton.setOnMouseClicked(e -> {
+            lastSelected = EditorTileType.START;
+            currentlySelected.setText(lastSelected.toString());
+        });
         
         MenuItem intrigueButton = new MenuItem("Intrigue", avenirLarge);
         intrigueButton.setBackgroundColor(Color.GOLD);
         intrigueButton.setPrefWidth(120);
-        intrigueButton.setOnMouseClicked(e -> lastSelected = EditorTileType.INTRIGUE);
+        intrigueButton.setColorScheme(Color.WHITE, Color.BLACK);
+        intrigueButton.setOnMouseClicked(e -> {
+            lastSelected = EditorTileType.INTRIGUE;
+            currentlySelected.setText(lastSelected.toString());
+        });
         
         MenuItem doorUpButton = new MenuItem("Door Up", avenirLarge);
         doorUpButton.setBackgroundColor(Color.rgb(161, 97, 0));
         doorUpButton.setPrefWidth(120);
-        doorUpButton.setOnMouseClicked(e -> lastSelected = EditorTileType.DOOR_UP);
+        doorUpButton.setColorScheme(Color.WHITE, Color.BLACK);
+        doorUpButton.setOnMouseClicked(e -> {
+            lastSelected = EditorTileType.DOOR_UP;
+            currentlySelected.setText(lastSelected.toString().replace("_", " "));
+        });
         
         MenuItem doorDownButton = new MenuItem("Door Down", avenirLarge);
         doorDownButton.setBackgroundColor(Color.rgb(161, 97, 0));
         doorDownButton.setPrefWidth(120);
-        doorDownButton.setOnMouseClicked(e -> lastSelected = EditorTileType.DOOR_DOWN);
+        doorDownButton.setColorScheme(Color.WHITE, Color.BLACK);
+        doorDownButton.setOnMouseClicked(e -> {
+            lastSelected = EditorTileType.DOOR_DOWN;
+            currentlySelected.setText(lastSelected.toString().replace("_", " "));
+        });
         
         MenuItem doorLeftButton = new MenuItem("Door Left", avenirLarge);
         doorLeftButton.setBackgroundColor(Color.rgb(161, 97, 0));
         doorLeftButton.setPrefWidth(120);
-        doorLeftButton.setOnMouseClicked(e -> lastSelected = EditorTileType.DOOR_LEFT);
+        doorLeftButton.setColorScheme(Color.WHITE, Color.BLACK);
+        doorLeftButton.setOnMouseClicked(e -> {
+            lastSelected = EditorTileType.DOOR_LEFT;
+            currentlySelected.setText(lastSelected.toString().replace("_", " "));
+        });
         
         MenuItem doorRightButton = new MenuItem("Door Right", avenirLarge);
         doorRightButton.setBackgroundColor(Color.rgb(161, 97, 0));
         doorRightButton.setPrefWidth(120);
-        doorRightButton.setOnMouseClicked(e -> lastSelected = EditorTileType.DOOR_RIGHT);
+        doorRightButton.setColorScheme(Color.WHITE, Color.BLACK);
+        doorRightButton.setOnMouseClicked(e -> {
+            lastSelected = EditorTileType.DOOR_RIGHT;
+            currentlySelected.setText(lastSelected.toString().replace("_", " "));
+        });
         
         mapNameField = new TextField();
         mapNameField.setText("Custom Map 1");
@@ -118,8 +163,9 @@ public class boardEditor {
             editorStage.close();
         });
         
-        paletteLayout.getChildren().addAll(roomButton, emptyButton, hallButton,
-                spawnButton, intrigueButton, doorUpButton, doorDownButton,
+        paletteLayout.getChildren().addAll(selectedLabel, currentlySelected,
+                roomButton, emptyButton, hallButton, spawnButton, 
+                intrigueButton, doorUpButton, doorDownButton,
                 doorLeftButton, doorRightButton, mapNameField, createCSV,
                 backButton);
         return paletteLayout;
@@ -454,8 +500,10 @@ public class boardEditor {
     
     private void initFonts() {
         avenirLarge = new Font(20);
+        avenirNormal = new Font(15);
         try {
             avenirLarge = Font.loadFont(new FileInputStream(new File("./resources/fonts/Avenir-Book.ttf")), 20);
+            avenirNormal = Font.loadFont(new FileInputStream(new File("./resources/fonts/Avenir-Book.ttf")), 15);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(boardEditor.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -468,6 +516,7 @@ public class boardEditor {
         editorStage.setResizable(false);
         
         this.clientStage = clientStage;
+        this.lastSelected = EditorTileType.HALL;
         
         initFonts();
         
@@ -485,6 +534,4 @@ public class boardEditor {
         editorStage.setScene(scene);
         editorStage.show();
     }
-
-
 }
