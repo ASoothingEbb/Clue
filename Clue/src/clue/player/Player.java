@@ -30,6 +30,7 @@ public class Player {
     private int lastSeen = 0;
     private String notes;
     private int[] drawnLocation;
+    private boolean isAi;
 
     public GameController game;
 
@@ -46,6 +47,7 @@ public class Player {
         cards = new ArrayList();
         intrigues = new ArrayList();
         drawnLocation = new int[2];
+        isAi = false;
     }
 
     /**
@@ -272,6 +274,15 @@ public class Player {
     public void setNotes(String notes){
         this.notes = notes;
     }
+    
+    public void setAi(){
+        isAi = true;
+    }
+    
+    public boolean isAi(){
+        return isAi;
+    }
+    
 //    /**
 //     * Executes a sequence of moves
 //     *
