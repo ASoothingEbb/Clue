@@ -75,27 +75,27 @@ public class AiAdvanced extends Player{
     @Override
     public void onUpdate(){
         
-        if(gameController.getLastAction() instanceof StartAction){//If the game has just started.
-            players = gameController.getPlayers();
-            makeLists();///TODO
-        }
+        //if(gameController.getLastAction() instanceof StartAction){//If the game has just started.
+        //    players = gameController.getPlayers();
+        //    makeLists();///TODO
+        //}
         
-        for(Tile t : pathToRoom){
-            if(t.isFull() || previousPosition != getPosition()){//If the Player has moved since last turn, or if anay of the tiles in the path have changed(occupied).
-                pathToRoom = BFS();
-            }
-        }
+        //for(Tile t : pathToRoom){
+        //    if(t.isFull() || previousPosition != getPosition()){//If the Player has moved since last turn, or if anay of the tiles in the path have changed(occupied).
+        //        pathToRoom = BFS();
+        //    }
+        //}
         
         //Generating Random Cards (ids).
-        PersonCard randPersonCard = new PersonCard(rand.nextInt(6) + 1);
-        RoomCard randRoomCard = new RoomCard(rand.nextInt(6) + 1);
-        WeaponCard randWeaponCard = new WeaponCard(rand.nextInt(9)+ 1);
+        //PersonCard randPersonCard = new PersonCard(rand.nextInt(6) + 1);
+        //RoomCard randRoomCard = new RoomCard(rand.nextInt(6) + 1);
+        //WeaponCard randWeaponCard = new WeaponCard(rand.nextInt(9)+ 1);
         
-        if(gameController.getPlayer().getId() == getId()){//If I need to respond.
-            if(gameController.getLastAction() instanceof EndTurnAction){//If my turn, last action was end turn.
+        //if(gameController.getPlayer().getId() == getId()){//If I need to respond.
+        //    if(gameController.getLastAction() instanceof EndTurnAction){//If my turn, last action was end turn.
                 
                 
-            } 
+        //    } 
             
             //else if (gameController.getLastAction() instanceof ShowCardsAction){//If I need to show a card 
 
@@ -110,7 +110,7 @@ public class AiAdvanced extends Player{
                 //    Logger.getLogger(AIAdvanced.class.getName()).log(Level.SEVERE, null, ex);
                 //}
             //}
-        }
+        //}
     }
     
     public Card respondToShowCards(List<Card> cards){
@@ -219,21 +219,50 @@ public class AiAdvanced extends Player{
         return pathToRoom;
     }
 
-    public void ShowCards(Card card, Player whoShowedTheCard) {//called when a player is showing a card to AI
-        
-    }
-
     public void respondToStartTurn() {
-        if(this.getPosition().isRoom()){//If I'm in a room
-//                    try {           
-//                        sendAction(Accuse(randPersonCard, randRoomCard, randWeaponCard));
-//                    } catch (InterruptedException ex) {
-//                        Logger.getLogger(AIAdvanced.class.getName()).log(Level.SEVERE, null, ex);
-//                    }
+        if(getPosition().isRoom()){//If I'm in a room
+            suggestAccuse();
         } 
         else {
             moveToRoom();
+            if (getPosition().isRoom()){
+                suggestAccuse();
+            }
+            
         }
         
+    }
+
+    public void respondToThrowAgain() {
+        if (!getPosition().isRoom()){
+            moveToRoom();
+        }
+        endTurn();
+    }
+    
+    public void revealCard(Card card, Player whoShowedTheCard) {//called when a player is showing a card to AI
+        
+    }
+    private void suggestAccuse() {
+        //TODO -- suggest unseen cards 15-25 times then accuse
+        endTurn();
+    }
+
+    private void endTurn() {
+        try {
+            gameController.endTurn();
+        } catch (UnknownActionException | InterruptedException | GameController.MovementException | TileOccupiedException ex) {
+            Logger.getLogger(AiAdvanced.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void respondToTeleport() {
+        LinkedList<Tile> path = BFS();
+        try {
+            gameController.move(path.getLast());
+            suggestAccuse();
+        } catch (UnknownActionException | InterruptedException | GameController.MovementException | TileOccupiedException ex) {
+            Logger.getLogger(AiAdvanced.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
