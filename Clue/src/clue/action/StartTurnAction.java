@@ -5,6 +5,8 @@
  */
 package clue.action;
 
+import clue.ai.AiAdvanced;
+import clue.card.Card;
 import clue.player.Player;
 
 /**
@@ -25,5 +27,8 @@ public class StartTurnAction extends Action{
     @Override
     public void execute() {
         super.execute(); //To change body of generated methods, choose Tools | Templates.
+        if (player.isAi()){
+            ((AiAdvanced) player).respondToStartTurn();
+        }
     }
 }
