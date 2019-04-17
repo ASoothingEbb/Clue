@@ -75,13 +75,16 @@ public final class GameController {
      */
     public GameController(int human, int ai, String tilePath, String doorPath) throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, TooManyPlayersException, TileOccupiedException {
         //TODO
-        this.bm = new BoardMappings(tilePath, doorPath);
+        bm = new BoardMappings(tilePath, doorPath);
         LinkedList<Tile> startingTiles = bm.getStartingTiles();
+        
+        gui = null;
         
         weaponCards = new ArrayList<>();
         personCards = new ArrayList<>();
         roomCards = new ArrayList<>();
         players = new ArrayList();
+        actions = new LinkedList<>();
 
         for (int i = 0; i < human; i++) {
             players.add(new Player(i, this));
@@ -99,6 +102,9 @@ public final class GameController {
         random = new Random(Calendar.getInstance().getTimeInMillis());
         actionLog = new ArrayList();
         state = new GameState(players);
+        if (human+ai > startingTiles.size()){
+            throw new NoSuchTileException("bad tiles map, not enough starting location for given players");
+        }
         if (human + ai >= 2) {
             for (Player p : players) {
                 if (p.isActive()) {
@@ -132,17 +138,13 @@ public final class GameController {
      */
     public void performAction(Action action) throws UnknownActionException, InterruptedException, TileOccupiedException {
         Action nextAction = null;
-        if (player != null){
-            System.out.println("[GameController.performAction] player turn before: "+player.getId());
-        }
-        
-        for (Player p : players){
-            System.out.println("[GameController.performAction] player order: "+p.getId());
-        }
+        //if (player != null){
+        //    System.out.println("[GameController.performAction] player turn before: "+player.getId());
+        //}
         player = players.get(state.getPlayerTurn());
-        System.out.println("[GameController.performAction] player turn after: "+player.getId());
+        
+        System.out.println("[GameController.performAction] ----"+action.actionType + " executing---- player turn: "+player.getId());
         action.execute();
-        System.out.println("[GameController.performAction] "+action.actionType + " executing");
         //Action specific lplayersogic
         switch (action.actionType) {
             default:
@@ -154,13 +156,13 @@ public final class GameController {
                 if (action.result) {
                     winner = state.endGame();
                     endGame();
-                } else if (state.playersNumber == 0) {
+                } else if (!state.hasActive()) {
                     state.endGame();
                     endGame();
                 } else {
                     nextAction = new EndTurnAction(state.getCurrentPlayer());
                 }
-                actionLog.add(turns, action);
+                actionLog.add(action);
                 break;
             case AVOIDSUGGESTIONCARD:
                 System.out.println("    CASE AVOIDSUGGESTIONCARD");
@@ -183,7 +185,15 @@ public final class GameController {
                 
                 moveActionLog();
                 turns++;
-                nextAction = new StartTurnAction(state.getCurrentPlayer());
+                
+                if (state.hasActive()){
+                    nextAction = new StartTurnAction(state.getCurrentPlayer());    
+                }
+                else{
+                    state.endGame();
+                    endGame();
+                }
+                
                 break;
             case EXTRATURN:
                 System.out.println("    CASE EXTRATURN");
@@ -193,7 +203,7 @@ public final class GameController {
                 break;
             case MOVE:
                 System.out.println("    CASE MOVE "+player.getId() + "FROM: "+state.getAction().actionType);
-                if (action.result && (state.getAction().actionType == ActionType.STARTTURN || state.getAction().actionType == ActionType.MOVE || state.getAction().actionType == ActionType.THROWAGAIN)) {
+                if (action.result && (state.getAction().actionType == ActionType.STARTTURN || state.getAction().actionType == ActionType.MOVE || state.getAction().actionType == ActionType.THROWAGAIN || state.getAction().actionType == ActionType.ENDTURN || state.getAction().actionType == ActionType.START)) {
                     Tile loc = ((MoveAction) action).getTile();    
                     player.getPosition().setOccupied(false);  
                     player.setPosition(loc); 
@@ -201,8 +211,12 @@ public final class GameController {
                     if (loc.special) {
                         getSpecial(loc);
                     }
-                    System.out.println("playerId: "+player.getId()+", move attempt result: "+action.result);
+                    System.out.println("playerId: "+player.getId()+", move attempt result: "+action.result);    
                 }
+                else{
+                    System.out.println("bad move call------------");
+                }
+                
                 
                 
                 break;
@@ -238,7 +252,7 @@ public final class GameController {
                 System.out.println("    CASE STARTTURN "+player.getId() + " FROM: "+state.getAction().actionType);
                 if (state.getAction().actionType == ActionType.ENDTURN || state.getAction().actionType == ActionType.EXTRATURN || state.getAction().actionType == ActionType.START) {
                     //System.out.println("b"+player.getId());
-                    state.nextTurn(player.getId());
+                    //state.nextTurn(player.getId());
                     //System.out.println("a"+player.getId());
                 }
                 break;
