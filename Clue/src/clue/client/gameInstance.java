@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -225,7 +226,6 @@ public class gameInstance {
         }
     }
     
-    
    /**
     * 
     * @return 
@@ -335,13 +335,8 @@ public class gameInstance {
         accusationButton.setInactiveColor(Color.DARKRED);
         accusationButton.setActive(false);
         accusationButton.setOnMouseClicked(e -> {
-            if (gameInterface.getPlayer().getPosition().isRoom()) {
-                currentRoom = ((Room) gameInterface.getPlayer().getPosition()).getId();
-                createCardsWindow("Accusation", Color.RED);
-            } else {
-                Prompt suggestError = new Prompt("You are not in a room");
-                suggestError.show();
-            }
+            currentRoom = ((Room) gameInterface.getPlayer().getPosition()).getId();
+            createCardsWindow("Accusation", Color.RED);
         });
 
         MenuItem rollButton = new MenuItem("Roll", avenirLarge);
@@ -478,11 +473,11 @@ public class gameInstance {
     }
     
     private void showCard(Action action) {
-        String suggestee = CardNameMap.get("character" + ((ShowCardsAction) action).getPlayer().getId());
-        Prompt showCard = new Prompt(suggestee + " showed");
+        //String suggestee = CardNameMap.get("character" + ((ShowCardsAction) action).getPlayer().getId());
+        //Prompt showCard = new Prompt(suggestee + " showed");
         //((ShowCard) action).
         //ImageView cardViewer = new ImageView(getImage(((ShowCardsAction) action).getIdOfCardToShow(), ((ShowCardsAction) action).));
-        showCard.setImage(selectedView);
+        //showCard.setImage(selectedView);
     }
     
     private void switchPlayerScene(int playerId, Scene next) {
@@ -654,8 +649,14 @@ public class gameInstance {
     private void initGraphics() {
         try (InputStream input = new FileInputStream("resources/config.properties")) {
             Properties prop = new Properties();
-            
             prop.load(input);
+            
+            prop.keySet();
+            
+            for (Map.Entry entry: prop.entrySet()) {
+                System.out.println(entry.getKey());
+                System.out.println(entry.getValue());
+            }
             System.out.println("here");
             input.close();
         } catch (IOException ex) {
@@ -735,5 +736,4 @@ public class gameInstance {
         gameStage.setScene(uiScene);
         System.out.println(gameStage.getWidth() + "" + gameStage.getHeight());
     }
-
 }
