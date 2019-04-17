@@ -275,8 +275,7 @@ public final class GameController {
                 break;
             case THROWAGAIN:
                 System.out.println("    CASE THROWAGAIN");
-                //TODO: tell gui to roll again
-                //TODO: allow players to roll again
+                
                 break;
         }
         //update game state
