@@ -179,28 +179,22 @@ public class gameInstance {
         }
         
         ArrayList<int[]> doorLocations = gameInterface.getDoorLocations();
-        System.out.println(doorLocations.size());
         doorLocations.forEach((coords) -> {
             Tile doorSprite = new Tile(TILE_SIZE);
             switch (coords[2]) {
                 case 1:
-                    System.out.println("UP");
                     doorSprite.setStyle("-fx-border-width: 5px 0px 0px 0px; -fx-border-style: solid; -fx-border-color: #A36200;");
                     break;
                 case 2:
-                    System.out.println("RIGHT");
                     doorSprite.setStyle("-fx-border-width: 0px 5px 0px 0px; -fx-border-style: solid; -fx-border-color: #A36200;");
                     break;
                 case 3:
-                    System.out.println("DOWN");
                     doorSprite.setStyle("-fx-border-width: 0px 0px 5px 0px; -fx-border-style: solid; -fx-border-color: #A36200;");
                     break;
                 case 4:
-                    System.out.println("LEFT");
                     doorSprite.setStyle("-fx-border-width: 0px 0px 0px 5px; -fx-border-style: solid; -fx-border-color: #A36200;");
                     break;
             }
-            
             board[coords[1]][coords[0]].getChildren().add(doorSprite);
         });
 
@@ -335,7 +329,6 @@ public class gameInstance {
         accusationButton.setInactiveColor(Color.DARKRED);
         accusationButton.setActive(false);
         accusationButton.setOnMouseClicked(e -> {
-            currentRoom = ((Room) gameInterface.getPlayer().getPosition()).getId();
             createCardsWindow("Accusation", Color.RED);
         });
 
