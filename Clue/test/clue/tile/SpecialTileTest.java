@@ -46,16 +46,13 @@ public class SpecialTileTest {
     @Test
     public void testGetIntrigue() {
         System.out.println("getIntrigue");
-        //Player player = new Player(0, new GameController());
-        //SpecialTile sp = new SpecialTile(0,0);
+        Player player = new Player(0);
+        SpecialTile sp = new SpecialTile(0,0);
         
-        //int oldSize = player.getCards().size();
+        int oldSize = player.getCards().size();
         
-        //sp.getIntrigue(player);
-        //assertEquals(oldSize+1,player.getCards().size());
-        
-        //assertTrue(player.getCards())
-        fail();
+        sp.getIntrigue(player,true);
+        assertEquals(oldSize+1,player.getIntrigue().size());
     }
     
     @Test

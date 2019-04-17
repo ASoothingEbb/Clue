@@ -7,10 +7,17 @@ package clue.ai;
 
 import clue.card.Card;
 import clue.GameController;
+import clue.MissingRoomDuringCreationException;
+import clue.action.UnknownActionException;
 import clue.card.Card;
 import clue.card.RoomCard;
+import clue.card.WeaponCard;
+import clue.player.Player;
+import clue.tile.NoSuchRoomException;
+import clue.tile.NoSuchTileException;
 import clue.tile.Room;
 import clue.tile.Tile;
+import clue.tile.TileOccupiedException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import org.junit.After;
@@ -99,15 +106,6 @@ public class AiAdvancedTest {
     }
 
 
-    /**
-     * Test of makeLists method, of class AiAdvanced.
-     */
-    @Test
-    public void testMakeLists() {
-        System.out.println("makeLists");
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
 
     /**
      * Test of moveToRoom method, of class AiAdvanced.

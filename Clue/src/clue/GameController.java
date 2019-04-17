@@ -201,8 +201,10 @@ public final class GameController {
                     if (loc.special) {
                         getSpecial(loc);
                     }
+                    System.out.println("playerId: "+player.getId()+", move attempt result: "+action.result);
                 }
-                System.out.println("playerId: "+player.getId()+", move attempt result: "+action.result);
+                
+                
                 break;
             case SHOWCARD:
                 System.out.println("    CASE SHOWCARD");
@@ -242,7 +244,7 @@ public final class GameController {
                 break;
             case SUGGEST:
                 System.out.println("    CASE SUGGEST "+player.getId() + " FROM: "+state.getAction().actionType);
-                if (state.getAction().actionType == ActionType.STARTTURN || state.getAction().actionType == ActionType.MOVE) {
+                if (state.getAction().actionType == ActionType.STARTTURN || state.getAction().actionType == ActionType.MOVE || state.getAction().actionType == ActionType.TELEPORT) {
                     if (action.result){
                         nextAction = new ShowCardsAction(((SuggestAction) action).show, ((SuggestAction) action).player, ((SuggestAction) action).foundCards, gui);
                     }
@@ -255,17 +257,26 @@ public final class GameController {
                 break;
             case TELEPORT:
                 System.out.println("    CASE TELEPORT");
-                if (!action.result) {
-                    throw new TileOccupiedException();
+
+                Tile target = ((TeleportAction) action).getTarget();
+                boolean result = false;
+                if (!target.isFull()){
+                    result = true;
+                    player.getPosition().setOccupied(false);  
+                    player.setPosition(target); 
+                    target.setOccupied(true);                    
+                    if (target.special) {
+                        getSpecial(target);
+                    }
+                        
                 }
+                System.out.println("playerId: "+player.getId()+", [teleport] move attempt result: "+result);
                 
-                //TODO update occupied status of tiles
                 break;
             case THROWAGAIN:
                 System.out.println("    CASE THROWAGAIN");
                 //TODO: tell gui to roll again
                 //TODO: allow players to roll again
-                roll();
                 break;
         }
         //update game state
@@ -640,20 +651,17 @@ public final class GameController {
         IntrigueCard card = ((SpecialTile) loc).getIntrigue(player);
         switch (card.cardType) {
             case AVOIDSUGGESTION:
+                //handled by suggestion
                 break;
             case EXTRATURN:
                 //TODOplayer
                 performAction(new ExtraTurnAction(player, (ExtraTurnIntrigue) card));
                 break;
             case TELEPORT:
-                //TODO
-                //Prompt GUI to choose tile
-                //Construct action from result
-                //performAction(new TeleportAction(player));
+                performAction(new TeleportAction(player, (TeleportIntrigue) card, gui));
                 break;
             case THROWAGAIN:
-                //TODO
-                performAction(new ThrowAgainAction(player, (ThrowAgainIntrigue) card));
+                performAction(new ThrowAgainAction(player, (ThrowAgainIntrigue) card, gui));
                 break;
         }
     }

@@ -34,13 +34,21 @@ public class ShowCardAction extends Action {
         this.gui = gui;
         this.whoShowedTheCard = whoShowedTheCard;
     }
+
+    public ShowCardAction(Player player, Card card, Player shower) {
+        super(player);
+        this.card = card;
+        this.whoShowedTheCard = shower;
+    }
+    
+    
 /**
  * Executes the ShowCardAction.
  */
     @Override
     public void execute() {
         if (player.isAi()){
-            ((AiAdvanced) player).ShowCards(card, whoShowedTheCard);
+            ((AiAdvanced) player).revealCard(card, whoShowedTheCard);
         }
         else{
             gui.actionResponse(this);

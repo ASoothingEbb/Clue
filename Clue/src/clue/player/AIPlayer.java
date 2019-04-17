@@ -12,14 +12,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *Represents a Player being simulated by an AI
+ * Represents a Player being simulated by an AI
+ *
  * @author slb35
  */
-public class AIPlayer extends Player{
+public class AIPlayer extends Player {
 
     public AIPlayer(int id, GameController gc) {
         super(id, gc);
     }
-   
-    
+
+    /**
+     * @deprecated test purposes only
+     * @param i 
+     */
+    public AIPlayer(int id) {
+        super(id);
+    }
+
 }

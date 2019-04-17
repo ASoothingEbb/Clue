@@ -23,7 +23,7 @@ import org.junit.runners.Suite;
  * @author steve
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({AiBasicTest.class, AiAdvancedTest.class})
+@Suite.SuiteClasses({AiAdvancedTest.class})
 public class AiSuite {
    private static GameController gc;
 

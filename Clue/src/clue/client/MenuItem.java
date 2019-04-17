@@ -85,6 +85,12 @@ public class MenuItem extends Label {
      * 
      * @param color Colour which you want the label to be.
      */
+    
+    public void setColorScheme(Color active, Color inactive) {
+        setActiveColor(active);
+        setInactiveColor(inactive);
+    }
+    
     public void setBackgroundColor(Color color) {
         setBackground(new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY)));
     }

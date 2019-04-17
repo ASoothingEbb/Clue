@@ -5,8 +5,10 @@
  */
 package clue.action;
 
+import clue.ai.AiAdvanced;
 import clue.player.Player;
 import clue.card.TeleportIntrigue;
+import clue.client.gameInstance;
 import clue.tile.Tile;
 import clue.tile.TileOccupiedException;
 
@@ -18,23 +20,31 @@ import clue.tile.TileOccupiedException;
  */
 public class TeleportAction extends Action {
 
-    private final Tile t;
+    private gameInstance gui;
+    private Tile target;
 
-    public TeleportAction(Player p, TeleportIntrigue card, Tile t) {
+    public TeleportAction(Player p, TeleportIntrigue card, gameInstance gui) {
         super(p, card);
         this.actionType = ActionType.TELEPORT;
-        this.t = t;
     }
 
     @Override
     public void execute() {
-        if(!t.isFull()){
-        player.setPosition(t);
         player.removeCard(card);
-        result = true;
+        if (player.isAi()){
+            ((AiAdvanced) player).respondToTeleport(this);
+
         }
         else{
-            result = false;
+            gui.actionResponse(this);
         }
+    }
+    
+    public void setTarget(Tile t){
+        target = t;
+    }
+    
+    public Tile getTarget(){
+        return target;
     }
 }
