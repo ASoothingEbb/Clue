@@ -60,6 +60,11 @@ public class MenuItem extends Label {
         setActive(false);
     }
     
+    public void setColorScheme(Color active, Color inactive) {
+        setActiveColor(active);
+        setInactiveColor(inactive);
+    }
+    
     public void setBackgroundColor(Color color) {
         setBackground(new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY)));
     }
