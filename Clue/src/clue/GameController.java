@@ -172,7 +172,7 @@ public final class GameController {
             case ENDTURN:
                 System.out.println("    CASE ENDTURN");
                 player.setMoves(0);
-                state.nextTurn(state.nextPlayer());
+                
 
                 int j = player.getId();
                 
@@ -187,9 +187,13 @@ public final class GameController {
                 turns++;
                 
                 if (state.hasActive()){
+                    int old = player.getId();
+                    state.nextTurn(state.nextPlayer());
+                    System.out.println("[GameController.performAction] case end turn transitioning to next player turn: "+old+"->"+player.getId());
                     nextAction = new StartTurnAction(state.getCurrentPlayer());    
                 }
                 else{
+                    System.out.println("[GameController.performAction] case end turn no more active players");
                     state.endGame();
                     endGame();
                 }
