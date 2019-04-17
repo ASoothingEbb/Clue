@@ -521,6 +521,7 @@ public class gameInstance {
             System.out.println(selectedCardId + " " + selectedCardType.toString());
             ((ShowCardsAction) action).setCardToShow(selectedCardId, selectedCardType);
             switchPlayerScene(((ShowCardsAction) action).getSuggester().getId(), prevScene);
+            gameInterface.replyToShowCards((ShowCardsAction) action);
         });
         
         showCardsDisplay.getChildren().addAll(showCardsLabel, cardDisplay, confirmCardButton);
