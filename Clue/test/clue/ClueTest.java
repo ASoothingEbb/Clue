@@ -6,6 +6,9 @@
 package clue;
 
 import clue.action.UnknownActionException;
+import clue.tile.NoSuchRoomException;
+import clue.tile.NoSuchTileException;
+import clue.tile.TileOccupiedException;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -42,12 +45,10 @@ public class ClueTest {
      * Test of main method, of class Clue.
      */
     @Test
-    public void testMain() throws InterruptedException, UnknownActionException {
+    public void testMain() throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException, TileOccupiedException {
         System.out.println("main");
         String[] args = null;
-        //Clue.main(args);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Clue.main(args);
     }
     
 }
