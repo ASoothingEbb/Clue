@@ -66,6 +66,8 @@ public class ClueClient extends Application {
     private Scene prevScene;
     private Stage stage;
     
+    Sound backgroundMusic;
+    
     private int width;
     private int height;
     private String currentWindowMode;
@@ -93,7 +95,7 @@ public class ClueClient extends Application {
         
         stage = primaryStage;
         
-        Sound backgroundMusic = new Sound("./resources/Music/backgroundMusic.wav");
+        backgroundMusic = new Sound("./resources/Music/backgroundMusic.wav");
         backgroundMusic.play();
         
         VBox menuOptions = new VBox();
@@ -487,6 +489,7 @@ public class ClueClient extends Application {
             @Override
             public void changed(ObservableValue observable, Object oldValue, Object newValue) {
                 masterVolumeShow.setText(String.valueOf((int) masterVolume.getValue()));
+                backgroundMusic.setvolume((float) ((float) masterVolume.getValue()*0.01));
             }
         });
         
