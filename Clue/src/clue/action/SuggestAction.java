@@ -46,6 +46,15 @@ public class SuggestAction extends Action {
     }
 
     /**
+     * Gets the room card used in the suggestion
+     * @return 
+     */
+    public RoomCard getRoomCard(){
+        return (RoomCard)cards[1];
+    }
+    
+    
+    /**
      * Executes the SuggestAction. Result stores if another player has any of
      * the suggested cards. show stores the 
      */
