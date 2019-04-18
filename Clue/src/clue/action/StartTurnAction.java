@@ -30,11 +30,6 @@ public class StartTurnAction extends Action{
     @Override
     public void execute() {
         super.execute(); //To change body of generated methods, choose Tools | Templates.
-        try {
-            sleep(1000);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(AiAdvanced.class.getName()).log(Level.SEVERE, null, ex);
-        }
         if (player.isAi()){
             ((AiAdvanced) player).respondToStartTurn();
         }
