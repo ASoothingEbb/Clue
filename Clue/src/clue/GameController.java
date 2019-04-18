@@ -265,7 +265,7 @@ public final class GameController {
                 System.out.println("    CASE SUGGEST "+player.getId() + " FROM: "+state.getAction().actionType);
                 if (state.getAction().actionType == ActionType.STARTTURN || state.getAction().actionType == ActionType.MOVE || state.getAction().actionType == ActionType.TELEPORT) {
                     if (action.result){
-                        nextAction = new ShowCardsAction(((SuggestAction) action).show, ((SuggestAction) action).player, ((SuggestAction) action).foundCards, gui);
+                        nextAction = new ShowCardsAction(((SuggestAction) action).show, ((SuggestAction) action).player, ((SuggestAction) action).foundCards, gui, this);
                     }
                     else {
                         if (gui != null){
