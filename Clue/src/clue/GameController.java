@@ -72,7 +72,7 @@ public final class GameController {
      * @throws clue.GameController.TooManyPlayersException thrown when player count exceeds 6 or the number of starting locations
      * @throws clue.tile.TileOccupiedException
      */
-    public GameController(int human, int ai, String tilePath, String doorPath) throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, TooManyPlayersException, TileOccupiedException {
+    public GameController(int human, int ai, String tilePath, String doorPath) throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, TooManyPlayersException, TileOccupiedException, NotEnoughPlayersException {
         //TODO
         bm = new BoardMappings(tilePath, doorPath);
         LinkedList<Tile> startingTiles = bm.getStartingTiles();
@@ -110,11 +110,13 @@ public final class GameController {
                     //System.out.println(p+" :"+startingTiles.peek());
                     p.setPosition(startingTiles.poll());
                 }
+                System.out.println(p);
             }
             performAction(new StartAction());
         } else {
             state.endGame();
             endGame();
+            throw new NotEnoughPlayersException();
         }
     }
 

@@ -13,7 +13,7 @@ import java.util.List;
 
 /**
  * Represents a Player being simulated by an AI
- *
+ * @deprecated use clue.ai.AiAdvanced instead. 
  * @author slb35
  */
 public class AIPlayer extends Player {
