@@ -68,7 +68,7 @@ public class AiAdvanced extends Player{
         gameController = gc;
         rand = new Random();
         shownCards = new ArrayList<>();
-        suggestionsLeft = 2;//rand.nextInt(15)+11;
+        suggestionsLeft = 50;//rand.nextInt(15)+11;
         myTurn = false;
         
         knownCards = new ArrayList<>();
