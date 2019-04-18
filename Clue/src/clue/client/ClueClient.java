@@ -509,22 +509,6 @@ public class ClueClient extends Application {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(imageFormats);
         fileChooser.setTitle("Select");
-        
-        Label board = getLabel("Board", avenirTitle);
-        TextField boardFilePath = getTextField(40, false);
-        
-        MenuItem selectBoardFile = new MenuItem("Choose", avenirTitle);
-        selectBoardFile.setOnMouseClicked(e -> {
-            File boardTexture = fileChooser.showOpenDialog(stage);
-            boardFilePath.setText(boardTexture.getAbsolutePath());
-            textureMap.put("BoardTexture",boardTexture.getAbsolutePath());
-        });
-        
-        layout.add(board, 0, 0);
-        GridPane.setMargin(board, new Insets(0, 10, 0, 0));
-        layout.add(boardFilePath, 1, 0, 3, 1);
-        layout.add(selectBoardFile, 4, 0);
-        GridPane.setMargin(selectBoardFile, new Insets(0, 0, 0, 10));
 
         for (int i=1; i < 7; i++) {
             Label character = getLabel("Character " + i, avenirTitle);

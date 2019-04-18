@@ -172,7 +172,7 @@ public final class GameController {
             case ENDTURN:
                 System.out.println("    CASE ENDTURN");
                 player.setMoves(0);
-                state.nextTurn(state.nextPlayer());
+                
 
                 int j = player.getId();
                 
@@ -187,9 +187,13 @@ public final class GameController {
                 turns++;
                 
                 if (state.hasActive()){
+                    int old = player.getId();
+                    state.nextTurn(state.nextPlayer());
+                    System.out.println("[GameController.performAction] case end turn transitioning to next player turn: "+old+"->"+player.getId());
                     nextAction = new StartTurnAction(state.getCurrentPlayer());    
                 }
                 else{
+                    System.out.println("[GameController.performAction] case end turn no more active players");
                     state.endGame();
                     endGame();
                 }
@@ -230,13 +234,6 @@ public final class GameController {
                 System.out.println("    CASE SHOWCARDS");
                 if (state.getAction().actionType != ActionType.ACCUSATION) {
                     
-                    int id = ((ShowCardsAction)action).getIdOfCardToShow();
-                    CardType type = ((ShowCardsAction)action).getCardTypeOfCardToShow();
-                    Player personToShow = ((ShowCardsAction)action).getSuggester();
-                    Card cardToShow = getCard(id, type);
-                    
-                   
-                    nextAction = new ShowCardAction(personToShow, cardToShow, gui, ((ShowCardsAction)action).getPlayer());
                 }
                 actionLog.add(action);
                 break;
@@ -250,7 +247,7 @@ public final class GameController {
                 break;
             case STARTTURN:
                 System.out.println("    CASE STARTTURN "+player.getId() + " FROM: "+state.getAction().actionType);
-                if (state.getAction().actionType == ActionType.ENDTURN || state.getAction().actionType == ActionType.EXTRATURN || state.getAction().actionType == ActionType.START) {
+                if (state.getAction().actionType == ActionType.ENDTURN || state.getAction().actionType == ActionType.EXTRATURN || state.getAction().actionType == ActionType.START&&state.isRunning()) {
                     //System.out.println("b"+player.getId());
                     //state.nextTurn(player.getId());
                     //System.out.println("a"+player.getId());
@@ -263,8 +260,7 @@ public final class GameController {
                         nextAction = new ShowCardsAction(((SuggestAction) action).show, ((SuggestAction) action).player, ((SuggestAction) action).foundCards, gui);
                     }
                     else{
-                        //TODO
-                        //tell GUI that no one had one of those cards
+                        gui.notifyUser("No other player had to show a card due to your suggestion.");
                     }
                 }
                 actionLog.add(action);
@@ -581,22 +577,15 @@ public final class GameController {
      * 
      * @param personId the character to accuse
      * @param weaponId the murder murderWeapon to accuse
+     * @param roomId the murder location
      * 
     
      */
-    public void accuse(int personId, int weaponId){
+    public void accuse(int personId, int weaponId, int roomId){
         PersonCard person = getPersonCard(personId);
-        RoomCard room = null;
+        RoomCard room = getRoomCard(roomId);
         WeaponCard weapon = getWeaponCard(weaponId);
-        
-        
-        if (player.getPosition().isRoom()){
-            try {
-                room = ((Room)player.getPosition()).getCard();
-            } catch (NoSuchRoomException ex) {
-                Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+  
         
         if (person == null || room == null || weapon == null){
             System.err.println("unable to find 3 cards");
@@ -772,6 +761,23 @@ public final class GameController {
                 break;
         }
         return null;
+    }
+    
+    public void replyToShowCards (ShowCardsAction action){
+        System.out.println("[GameController.showCard]");
+        int id = action.getIdOfCardToShow();
+        CardType type = action.getCardTypeOfCardToShow();
+        Player personToShow = action.getSuggester();
+        Card cardToShow = getCard(id, type);
+                  
+                   
+        try {
+            performAction(new ShowCardAction(personToShow, cardToShow, gui, ((ShowCardsAction)action).getPlayer()));
+        } catch (UnknownActionException | InterruptedException | TileOccupiedException ex) {
+            Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    
+    
     }
     
     

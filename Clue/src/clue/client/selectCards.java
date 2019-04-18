@@ -34,6 +34,7 @@ public class selectCards {
     
     private Stage stage;
     
+    private String name;
     private Font avenir;
     private Font avenirText;
     private String actionType;
@@ -51,12 +52,15 @@ public class selectCards {
         
         ArrayList<String> characters = new ArrayList<>();
         ArrayList<String> weapons = new ArrayList<>();
+        ArrayList<String> rooms = new ArrayList<>();
         
         CardNameMap.entrySet().forEach((entry) -> {
             if (entry.getKey().contains("character")) {
                 characters.add(entry.getValue());
             } else if (entry.getKey().contains("weapon")) {
                 weapons.add(entry.getValue());
+            } else if (entry.getKey().contains("room")) {
+                rooms.add(entry.getValue());
             }
         });
          
@@ -91,17 +95,31 @@ public class selectCards {
         });
         
         Image room = null;
-        try {
-            room = new Image(new FileInputStream(new File(ImagePathMap.get("room"+currentRoom))));
-        } catch(FileNotFoundException ex) {
-            System.out.println("File not found");
-        }
-        
-        ImageView roomView = new ImageView(room);
-        
+        ImageView roomView;
         ComboBox roomOptions = new ComboBox();
-        roomOptions.getItems().add(CardNameMap.get("room"+currentRoom));
-        roomOptions.setValue(CardNameMap.get("room"+currentRoom));
+        
+        if (name.equals("Suggestion")) {
+            try {
+                room = new Image(new FileInputStream(new File(ImagePathMap.get("room"+currentRoom))));
+            } catch(FileNotFoundException ex) {
+                System.out.println("File not found");
+            }
+            roomOptions.getItems().add(CardNameMap.get("room"+currentRoom));
+            roomOptions.setValue(CardNameMap.get("room"+currentRoom));
+            roomView = new ImageView(room);
+        } else {
+            try {
+                room = new Image(new FileInputStream(new File(ImagePathMap.get("room0"))));
+            } catch(FileNotFoundException ex) {
+                System.out.println("File not found");
+            }
+            roomOptions.getItems().addAll(rooms);
+            roomOptions.setValue(CardNameMap.get("room0"));
+            roomView = new ImageView(room);
+            roomOptions.getSelectionModel().selectedItemProperty().addListener((Observable, oldValue, newValue) -> {
+            roomView.setImage(getImage(newValue.toString()));
+        });
+        }
         
         MenuItem sendCards = new MenuItem(actionType, avenir);
         sendCards.setActiveColor(color);
@@ -115,12 +133,14 @@ public class selectCards {
             } else {
                 String personKey = getKey(CardNameMap, characterOptions.getValue().toString());
                 int personCard = Integer.valueOf(personKey.substring(personKey.length() - 1));
-                String weaponKey = getKey(CardNameMap, characterOptions.getValue().toString());
+                String weaponKey = getKey(CardNameMap, weaponOptions.getValue().toString());
                 int weaponCard = Integer.valueOf(weaponKey.substring(weaponKey.length() - 1));
+                String roomKey = getKey(CardNameMap, roomOptions.getValue().toString());
+                int roomCard = Integer.valueOf(roomKey.substring(roomKey.length() - 1));
                 if (actionType.equals("Suggestion")) {
                     gameInterface.suggest(personCard, weaponCard);
                 } else if (actionType.equals("Accusation")) {
-                    gameInterface.accuse(personCard, weaponCard);
+                    gameInterface.accuse(personCard, weaponCard, roomCard);
                 }
                 stage.close();
             }
@@ -181,6 +201,7 @@ public class selectCards {
     public void show(String name, Color color, int room, HashMap<String,String> ImagePathMap, HashMap<String, String> CardNameMap, GameController gameController) {
         stage = new Stage();
         
+        this.name = name;        
         this.gameInterface = gameController;
         this.actionType = name;
         this.color = color;

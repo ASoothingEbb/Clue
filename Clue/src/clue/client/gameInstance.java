@@ -7,8 +7,10 @@ package clue.client;
 
 import clue.GameController;
 import clue.action.Action;
+import clue.action.ShowCardAction;
 import clue.action.ShowCardsAction;
 import clue.action.UnknownActionException;
+import clue.card.Card;
 import clue.card.CardType;
 import clue.player.Player;
 import clue.tile.NoSuchRoomException;
@@ -24,6 +26,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,6 +41,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -45,6 +49,7 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -79,6 +84,15 @@ public class gameInstance {
     
     //JavaFX
     private GridPane cardsDisplay;
+    
+    private Scene prevScene;
+    
+    private Prompt showCardPrompt = null;
+    
+    private CardType selectedCardType;
+    private int selectedCardId;
+    private ImageView selectedView = null;
+            
     private Stage gameStage;
     private Scene uiScene;
     private Scene curtainScene;
@@ -106,13 +120,6 @@ public class gameInstance {
                 
         GridPane boardPane = new GridPane();
         boardPane.setGridLinesVisible(true);
-        
-        //try {
-        //    Image boardImage = new Image(new FileInputStream(ImagePathMap.get("board")));
-        //    boardPane.setBackground(new Background(new BackgroundImage(boardImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
-        //} catch(IOException ex) {
-        //    System.out.println("Failed to load board texture");
-        //}
         
         int boardHeight = gameInterface.getBoardHeight();
         int boardWidth = gameInterface.getBoardWidth();
@@ -175,28 +182,22 @@ public class gameInstance {
         }
         
         ArrayList<int[]> doorLocations = gameInterface.getDoorLocations();
-        System.out.println(doorLocations.size());
         doorLocations.forEach((coords) -> {
             Tile doorSprite = new Tile(TILE_SIZE);
             switch (coords[2]) {
                 case 1:
-                    System.out.println("UP");
                     doorSprite.setStyle("-fx-border-width: 5px 0px 0px 0px; -fx-border-style: solid; -fx-border-color: #A36200;");
                     break;
                 case 2:
-                    System.out.println("RIGHT");
                     doorSprite.setStyle("-fx-border-width: 0px 5px 0px 0px; -fx-border-style: solid; -fx-border-color: #A36200;");
                     break;
                 case 3:
-                    System.out.println("DOWN");
                     doorSprite.setStyle("-fx-border-width: 0px 0px 5px 0px; -fx-border-style: solid; -fx-border-color: #A36200;");
                     break;
                 case 4:
-                    System.out.println("LEFT");
                     doorSprite.setStyle("-fx-border-width: 0px 0px 0px 5px; -fx-border-style: solid; -fx-border-color: #A36200;");
                     break;
             }
-            
             board[coords[1]][coords[0]].getChildren().add(doorSprite);
         });
 
@@ -221,7 +222,6 @@ public class gameInstance {
             board[y][x].getChildren().add(playerSprite);
         }
     }
-    
     
    /**
     * 
@@ -287,28 +287,8 @@ public class gameInstance {
         Label playerCardsLabel = getLabel("Cards", avenirTitle);
         int x = 1;
         int y = 0;
-        for (clue.card.Card card: gameInterface.getPlayer().getCards()) {
-            Image cardImage = null;
-            try {
-                switch (card.cardType) {
-                    case PERSON:
-                        cardImage = new Image(new FileInputStream(new File(ImagePathMap.get("character"+card.getId()))));
-                        break;
-                    case WEAPON:
-                        cardImage = new Image(new FileInputStream(new File(ImagePathMap.get("weapon"+card.getId()))));
-                        break;
-                    case ROOM:
-                        cardImage = new Image(new FileInputStream(new File(ImagePathMap.get("room"+card.getId()))));
-                        break;
-                    default:
-                        cardImage = new Image(new FileInputStream(new File(ImagePathMap.get("character1"))));
-                        break;
-                }
-            } catch(FileNotFoundException ex) {
-                System.out.println("Not Found");
-            }
-
-            ImageView view = new ImageView(cardImage);
+        for (Card card: gameInterface.getPlayer().getCards()) {
+            ImageView view = new ImageView(getImage(card.getId(), card.cardType));
             cardsLayout.add(view, y, x);
             GridPane.setMargin(view, new Insets(0, 10, 10, 0));
             if (y == 2) {
@@ -352,13 +332,7 @@ public class gameInstance {
         accusationButton.setInactiveColor(Color.DARKRED);
         accusationButton.setActive(false);
         accusationButton.setOnMouseClicked(e -> {
-            if (gameInterface.getPlayer().getPosition().isRoom()) {
-                currentRoom = ((Room) gameInterface.getPlayer().getPosition()).getId();
-                createCardsWindow("Accusation", Color.RED);
-            } else {
-                Prompt suggestError = new Prompt("You are not in a room");
-                suggestError.show();
-            }
+            createCardsWindow("Accusation", Color.RED);
         });
 
         MenuItem rollButton = new MenuItem("Roll", avenirLarge);
@@ -447,11 +421,12 @@ public class gameInstance {
         switch (action.actionType) {
             case SHOWCARDS:
                 System.out.println("[gameInstance.actionResponse] case SHOWCARDS");
-                
-                //((ShowCardsAction) action).setCardToShow(id, CardType.);//pass in the id and card type of the card selected by user
+                showCards(action);
                 break;
-            case MOVE:
-                System.out.println("[gameInstance.actionResponse] case MOVE");
+            case SHOWCARD:
+                System.out.println("[gameInstance.actionResponse] case SHOWCARD");
+                System.out.println("------------------------------");
+                showCard(action);
                 break;
             case AVOIDSUGGESTIONCARD:
                 System.out.println("[gameInstance.actionResponse] case AVOIDSUGGESTIONCARD");
@@ -466,6 +441,127 @@ public class gameInstance {
                 System.out.println("[gameInstance.actionResponse] case ACCUSATION");
                 break;
         }
+        System.out.println("return");
+    }
+    
+    private Image getImage(int cardId, CardType cardType) {
+        Image cardImage = null;
+        try {
+            switch (cardType) {
+                case PERSON:
+                    cardImage = new Image(new FileInputStream(new File(ImagePathMap.get("character"+cardId))));
+                    break;
+                case WEAPON:
+                    cardImage = new Image(new FileInputStream(new File(ImagePathMap.get("weapon"+cardId))));
+                    break;
+                case ROOM:
+                    cardImage = new Image(new FileInputStream(new File(ImagePathMap.get("room"+cardId))));
+                    break;
+                default:
+                    cardImage = new Image(new FileInputStream(new File(ImagePathMap.get("character1"))));
+                    break;
+            }
+        } catch(FileNotFoundException ex) {
+
+        }
+        
+        return cardImage;
+    }
+    
+    private void showCard(Action action) {
+        ShowCardAction response = ((ShowCardAction) action);
+        String suggestee = CardNameMap.get("character" + ((ShowCardAction) action).getWhoShowedTheCard().getId());
+        showCardPrompt = new Prompt(suggestee + " showed");
+        showCardPrompt.setLabelTitle("Suggestion Response");
+        ImageView cardViewer = new ImageView(getImage(response.getCardToShow().getId(), response.getCardToShow().cardType));
+        showCardPrompt.setImage(cardViewer);
+        showCardPrompt.setOnCloseRequest(e -> {
+            showCardPrompt = null;
+        });
+    }
+    
+    private void switchPlayerScene(int playerId, Scene next) {
+        VBox switchPlayer = new VBox();
+        switchPlayer.setBackground(blackFill);
+        switchPlayer.setAlignment(Pos.CENTER);
+        Label switchToLabel = getLabel("Switch to " + CardNameMap.get("character"+playerId), avenirTitle);
+        MenuItem showButton = new MenuItem("Play", avenirTitle);
+        showButton.setOnMouseClicked(e -> {
+            gameStage.setScene(next);
+            if (showCardPrompt != null) {
+                showCardPrompt.show();
+            }
+        });
+        
+        switchPlayer.getChildren().addAll(switchToLabel, showButton);
+        
+        Scene scene = new Scene(switchPlayer, 1736, 960);
+        gameStage.setScene(scene);
+    }
+    
+    public void notifyUser(String message) {
+        Prompt notifyPrompt = new Prompt(message);
+        notifyPrompt.setLabelTitle("Notice");
+        notifyPrompt.show();
+    }
+    
+    private void showCards(Action action) {
+        VBox showCardsDisplay = new VBox();
+        showCardsDisplay.setBackground(greenFill);
+        showCardsDisplay.setAlignment(Pos.CENTER);
+        
+        List<Card> cards = ((ShowCardsAction) action).getCardList();
+        
+        Label showCardsLabel = getLabel("Select a card to show", avenirTitle);
+        
+        HBox cardDisplay = new HBox();
+        cardDisplay.setPadding(new Insets(10));
+        cardDisplay.setSpacing(10);
+        cardDisplay.setAlignment(Pos.CENTER);
+                
+        for (Card card: cards) {
+            final int cardId = card.getId();
+            final CardType cardType = card.cardType;
+
+            ImageView view = new ImageView(getImage(card.getId(), card.cardType));
+            view.setOnMouseClicked(e -> {
+                setSelectedCard(cardId, cardType, view);
+            });
+            cardDisplay.getChildren().add(view);
+        }
+        
+        MenuItem confirmCardButton = new MenuItem("Confirm Selection", avenirTitle);
+        confirmCardButton.setOnMouseClicked(e -> {
+            System.out.println(selectedCardId + " " + selectedCardType.toString());
+            ((ShowCardsAction) action).setCardToShow(selectedCardId, selectedCardType);
+            switchPlayerScene(((ShowCardsAction) action).getSuggester().getId(), prevScene);
+            gameInterface.replyToShowCards((ShowCardsAction) action);
+        });
+        
+        showCardsDisplay.getChildren().addAll(showCardsLabel, cardDisplay, confirmCardButton);
+        
+        Scene scene = new Scene(showCardsDisplay, 1736, 960);
+        prevScene = gameStage.getScene();
+        switchPlayerScene(((ShowCardsAction) action).getPlayer().getId(), scene);
+    }
+    
+    private void setSelectedCard(int id, CardType type, ImageView view) {
+        this.selectedCardId = id;
+        this.selectedCardType = type;
+        
+        DropShadow borderGlow = new DropShadow();
+        borderGlow.setColor(Color.rgb(255,215,0));
+        borderGlow.setOffsetX(0f);
+        borderGlow.setOffsetY(0f);
+        
+        if (selectedView != null && !selectedView.equals(view)) {
+            view.setEffect(borderGlow);
+            this.selectedView.setEffect(null);
+        } else {
+            view.setEffect(borderGlow);
+            this.selectedView = view;
+        }
+        this.selectedView = view;
     }
 
     /**
@@ -563,8 +659,14 @@ public class gameInstance {
     private void initGraphics() {
         try (InputStream input = new FileInputStream("resources/config.properties")) {
             Properties prop = new Properties();
-            
             prop.load(input);
+            
+            prop.keySet();
+            
+            for (Map.Entry entry: prop.entrySet()) {
+                System.out.println(entry.getKey());
+                System.out.println(entry.getValue());
+            }
             System.out.println("here");
             input.close();
         } catch (IOException ex) {
@@ -614,20 +716,28 @@ public class gameInstance {
         
         curtain.setAlignment(Pos.CENTER);
         curtain.setBackground(blackFill);
-        
-        Label txt = new Label("IT'S PLAYER'S ------ TURN.");
-        Font titleFont = new Font(80);
-         
-        txt.setFont(titleFont);
-        txt.setTextFill(Color.WHITE);
-        
         curtain.setMinSize(1736, 960);
-        Button fadeSwitch = new Button("Unfade");
-        fadeSwitch.setOnAction(e -> switchToUi());
         
-        curtain.getChildren().addAll(txt, fadeSwitch);
+        //Label txt = new Label("IT'S PLAYER'S ------ TURN.");
+        //Font titleFont = new Font(80);
+         
+        //txt.setFont(titleFont);
+        //txt.setTextFill(Color.WHITE);
+        
+        //TODO fix transition to update
+        Label switchPlayerLabel = getLabel(CardNameMap.get("character"+gameInterface.getPlayer().getId()) + "'s Turn", avenirTitle);
+        
+        MenuItem fadeSwitch = new MenuItem("Start Turn", avenirTitle);
+        fadeSwitch.setOnMouseClicked(e -> {
+            switchToUi();
+        });
+        //Button fadeSwitch = new Button("Unfade");
+        //fadeSwitch.setOnAction(e -> switchToUi());
+        
+        curtain.getChildren().addAll(switchPlayerLabel, fadeSwitch);
         return curtain;
     }
+    
     /**
      * Switches the current scene to the Curtain scene.
      */
@@ -644,5 +754,4 @@ public class gameInstance {
         gameStage.setScene(uiScene);
         System.out.println(gameStage.getWidth() + "" + gameStage.getHeight());
     }
-
 }

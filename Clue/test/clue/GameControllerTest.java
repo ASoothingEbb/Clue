@@ -130,8 +130,8 @@ public class GameControllerTest {
     public void testGetLastAction() throws UnknownActionException, InterruptedException, TileOccupiedException, NoSuchRoomException, MovementException {
         System.out.println("getLastAction");
         Card card = new CardImpl();
-        gc.suggest(1, 1);
-        assertEquals(ActionType.SUGGEST,gc.getLastAction().actionType);
+        gc.move(0, 0);
+        assertEquals(ActionType.MOVE,gc.getLastAction().actionType);
     }
 
     /**
@@ -384,10 +384,17 @@ public class GameControllerTest {
      * Test of getActions method, of class GameController.
      */
     @Test
-    public void testGetActions() {
+    public void testGetActions() throws Exception {
         System.out.println("getActions");
-        gc.getActions();
-        fail("The test case is a prototype.");
+        gc = new GameController(2,0,"resources/archersAvenueTiles.csv", "resources/archersAvenueDoors.csv");
+        Queue<Action> expResult = new LinkedList();
+        gc.endTurn();
+        gc.move(3,22);
+        gc.suggest(0, 0);
+        expResult.add(gc.getLastAction());
+        gc.endTurn();
+        Queue<Action> result = gc.getActions();
+        assertEquals(expResult.element().actionType, result.element().actionType);
     }
 
     /**
@@ -404,10 +411,12 @@ public class GameControllerTest {
      * Test of getPlayer method, of class GameController.
      */
     @Test
-    public void testGetPlayer_int() {
-        //System.out.println("getPlayer");
-        fail("The test case is a prototype.");
-
+    public void testGetPlayer_int() throws Exception{
+        System.out.println("getPlayer");
+        gc = new GameController(2,0,"resources/archersAvenueTiles.csv", "resources/archersAvenueDoors.csv");
+        Player expResult = new Player(1);
+        Player result = gc.getPlayer(1);
+        assertEquals(expResult.getId(),result.getId());
     }
 
     /**
@@ -463,6 +472,7 @@ public class GameControllerTest {
     @Test
     public void testEndTurn() throws Exception {
         System.out.println("endTurn");
+        gc = new GameController(2,0,"resources/archersAvenueTiles.csv", "resources/archersAvenueDoors.csv");
         System.out.println(gc);
         Player expResult = gc.getPlayer();
         gc.endTurn();
