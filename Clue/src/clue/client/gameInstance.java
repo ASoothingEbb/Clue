@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -753,5 +754,10 @@ public class gameInstance {
         uiToCurtain.play();
         gameStage.setScene(uiScene);
         System.out.println(gameStage.getWidth() + "" + gameStage.getHeight());
+    }
+
+    public void showActionLog(LinkedList<Action> actionsToNotify) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO
     }
 }
