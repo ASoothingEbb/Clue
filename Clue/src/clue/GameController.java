@@ -265,7 +265,14 @@ public final class GameController {
                 System.out.println("    CASE SUGGEST "+player.getId() + " FROM: "+state.getAction().actionType);
                 if (state.getAction().actionType == ActionType.STARTTURN || state.getAction().actionType == ActionType.MOVE || state.getAction().actionType == ActionType.TELEPORT) {
                     if (action.result){
+                        
+                        try {
+                            ((SuggestAction) action).getPlayer().setPosition(bm.getRoom(((SuggestAction) action).getRoomCard().getId()));//move the person being suggested into the room of the suggestion
+                        } catch (NoSuchRoomException ex) {
+                            Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                         nextAction = new ShowCardsAction(((SuggestAction) action).show, ((SuggestAction) action).player, ((SuggestAction) action).foundCards, gui, this);
+                        
                     }
                     else {
                         if (gui != null && !player.isAi()){
