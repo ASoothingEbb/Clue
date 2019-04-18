@@ -52,6 +52,8 @@ public class AccuseAction extends Action {
         murderCards.add(murderRoom);
         murderCards.add(murderWeapon);
         this.gui = gui;
+        
+        result = murderPerson == person && murderRoom == room && murderWeapon == weapon;
     }
     
     

@@ -6,6 +6,7 @@
 package clue.client;
 
 import clue.GameController;
+import clue.action.AccuseAction;
 import clue.action.Action;
 import clue.action.ShowCardAction;
 import clue.action.ShowCardsAction;
@@ -29,6 +30,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.FadeTransition;
@@ -166,7 +168,8 @@ public class gameInstance {
                     } else if (cell.contains("S")) {
                         tileSprite.setColor(Color.rgb(55, 136, 4));
                     } else if (Integer.valueOf(cell) > 0) {
-                        tileSprite.setColor(Color.rgb(90, 76, 65));
+                        paintRoom(tileSprite, Integer.valueOf(cell));
+                        //tileSprite.setColor(Color.rgb(90, 76, 65));
                     }
                     
                     tilePane.getChildren().add(tileSprite);
@@ -208,6 +211,45 @@ public class gameInstance {
         
         root.getChildren().add(boardPane);
         return root;
+    }
+    
+    private void paintRoom(Tile tile, int id){
+        Random rand = new Random();
+        switch(id){
+            case 1:
+                tile.setColor(Color.CORAL);
+                break;
+            case 2:
+                tile.setColor(Color.CRIMSON);
+                break;
+            case 3:
+                tile.setColor(Color.DEEPPINK);
+                break;
+            case 4:
+                tile.setColor(Color.CRIMSON);
+                break;
+            case 5:
+                tile.setColor(Color.SALMON);
+                break;
+            case 6:
+                tile.setColor(Color.HONEYDEW);
+                break;
+            case 7:
+                tile.setColor(Color.THISTLE);
+                break;
+            case 8:
+                tile.setColor(Color.POWDERBLUE);
+                break;
+            case 9:
+                tile.setColor(Color.WHITE);
+                break;
+            default:
+                int r = rand.nextInt(255)+1;
+                int g = rand.nextInt(255)+1;
+                int b = rand.nextInt(255)+1;
+                tile.setColor(Color.rgb(r,g,b));
+                break;
+        }
     }
 
     private void spawnPlayers(StackPane[][] board) {
@@ -439,6 +481,7 @@ public class gameInstance {
                 break;
             case ACCUSATION:
                 System.out.println("[gameInstance.actionResponse] case ACCUSATION");
+                showAccusationResult(action);
                 break;
         }
         System.out.println("return");
@@ -466,6 +509,25 @@ public class gameInstance {
         }
         
         return cardImage;
+    }
+    
+    public void showAccusationResult(Action action) {
+        Prompt accusationResultPrompt = new Prompt("");
+        if (((AccuseAction) action).wasCorrect()) { //accusation correct
+            accusationResultPrompt.setMessage("WINNER WINNER CHICKHEN DINNER");
+            accusationResultPrompt.setLabelTitle("YOU WON");
+        } else {
+            accusationResultPrompt.setMessage("HAHA YOU SUCK, THIS IS WHAT THE CARDS WERE XD. GET SMURFED ON KID");
+            accusationResultPrompt.setLabelTitle("YOU LOSE");
+        }
+        
+        List<Card> murderCards = ((AccuseAction) action).getMurderCards();
+        ImageView[] cards = new ImageView[3];
+        for (int i=0; i < murderCards.size(); i++) {
+            cards[i] = new ImageView(getImage(murderCards.get(i).getId(), murderCards.get(i).cardType));
+        }
+        accusationResultPrompt.setImage(cards);
+        accusationResultPrompt.show();
     }
     
     private void showCard(Action action) {
