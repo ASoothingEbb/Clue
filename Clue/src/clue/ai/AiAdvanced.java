@@ -22,6 +22,7 @@ import clue.card.WeaponCard;
 import clue.player.Player;
 import clue.tile.Tile;
 import clue.tile.TileOccupiedException;
+import static java.lang.Thread.sleep;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -118,6 +119,11 @@ public class AiAdvanced extends Player{
      * Called by GameConstructor when the ai player turns begins
      */
     public void respondToStartTurn() {
+        try {
+            sleep(1000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(AiAdvanced.class.getName()).log(Level.SEVERE, null, ex);
+        }
         System.out.println("[AiAdvanced.respondToStartTurn] id: "+id);
         myTurn = true;
         
