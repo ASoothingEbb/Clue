@@ -253,7 +253,7 @@ public final class GameController {
                     moveActionLog();
                     LinkedList<Action> actionsToNotify = getActions();
                     
-                    gui.showActionLog(actionsToNotify);
+                    gui.newHumanPlayerTurn(player, actionsToNotify);
                 }
                 break;
             case SUGGEST:
