@@ -254,6 +254,9 @@ public final class GameController {
                     if (gui != null){
                         gui.newHumanPlayerTurn(player, actionsToNotify);
                     }
+                    else{
+                        System.out.println("[GameController.performAction] null gui -> gui.newHumanPlayerTurn(player, actionsToNotify)");
+                    }
                 }
                 break;
             case SUGGEST:
@@ -262,8 +265,14 @@ public final class GameController {
                     if (action.result){
                         nextAction = new ShowCardsAction(((SuggestAction) action).show, ((SuggestAction) action).player, ((SuggestAction) action).foundCards, gui);
                     }
-                    else if (gui!=null){
-                        gui.notifyUser("No other player had to show a card due to your suggestion.");
+                    else {
+                        if (gui != null){
+                            gui.notifyUser("No other player had to show a card due to your suggestion.");
+                        }
+                        else{
+                            System.out.println("[GameController.performAction] null gui -> gui.notifyUser(No other player had to show a card due to your suggestion.");
+                        }
+                        
                     }
                 }
                 actionLog.add(action);
