@@ -92,6 +92,8 @@ public class gameInstance {
     
     //JavaFX
     private GridPane cardsDisplay;
+    private TextArea notepad;
+    private Label remainingMovesLabel;
     
     private Scene prevScene;
     
@@ -285,8 +287,16 @@ public class gameInstance {
             int y = player.getPosition().getY();
             PlayerSprite playerSprite = new PlayerSprite(x, y, "PP"+player.getId());
             playerSprites[i] = playerSprite;
-            currentPlayer = playerSprite;
             board[y][x].getChildren().add(playerSprite);
+        }
+        currentPlayer = playerSprites[0];
+    }
+    
+    private void redrawPlayers() {
+        List<Player> players = gameInterface.getPlayers();
+        for (Player player: players) {
+            PlayerSprite sprite = playerSprites[player.getId()];
+            sprite.move(player.getDrawX(), player.getDrawY(), board, sprite);
         }
     }
     
@@ -301,7 +311,7 @@ public class gameInstance {
         // Notepad
         Label notepadLabel = getLabel("Notepad", avenirTitle);
         
-        TextArea notepad = new TextArea();
+        notepad = new TextArea();
         notepad.setPrefRowCount(20);
         notepad.setPrefColumnCount(20);
         notepad.setWrapText(true);
@@ -378,7 +388,7 @@ public class gameInstance {
         playerControlsLayout.setAlignment(Pos.CENTER);
         playerControlsLayout.setPadding(new Insets(0, 0, 5, 0));
         
-        Label remainingMovesLabel = getLabel("Roll Available", avenirTitle);
+        remainingMovesLabel = getLabel("Roll Available", avenirTitle);
 
         MenuItem suggestionButton = new MenuItem("Suggestion", avenirLarge);
         suggestionButton.setActiveColor(Color.ORANGE);
@@ -423,11 +433,6 @@ public class gameInstance {
             try {
                 gameInterface.endTurn();
                 gameInterface.getPlayer().setNotes(notes);
-                rolled = false;
-                currentPlayer = playerSprites[gameInterface.getPlayer().getId()];
-                remainingMovesLabel.setText("Roll Available");
-                switchToCurtain();
-                createCardsDisplay(cardsDisplay);
             } catch (UnknownActionException | InterruptedException | GameController.MovementException | TileOccupiedException ex) {
                 Logger.getLogger(gameInstance.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -848,8 +853,17 @@ public class gameInstance {
     }
 
     public void newHumanPlayerTurn(Player player, LinkedList<Action> actionsToNotify) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        resetRoll();
+        currentPlayer = playerSprites[gameInterface.getPlayer().getId()];
+        switchToCurtain();
+        redrawPlayers();
+        createCardsDisplay(cardsDisplay);
         //TODO
         //call showAction(actionsToNotify) after player turn has begun (after they click start turn and they fade in)
+    }
+    
+    private void resetRoll() {
+        remainingMovesLabel.setText("Roll Available");
+        rolled = false;
     }
 }
