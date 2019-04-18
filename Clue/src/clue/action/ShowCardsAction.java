@@ -5,6 +5,7 @@
  */
 package clue.action;
 
+import clue.GameController;
 import clue.ai.AiAdvanced;
 import clue.card.Card;
 import clue.card.CardType;
@@ -23,6 +24,7 @@ public class ShowCardsAction extends Action{
     private gameInstance gui;
     private int idOfCardToShow;
     private CardType typeOfCardToShow;
+    private GameController gc;
 
     /**
      * Creates a new ShowCardsAction
@@ -31,12 +33,13 @@ public class ShowCardsAction extends Action{
      * @param cards the cards to prompt
      */
 
-    public ShowCardsAction(Player player, Player suggester, List<Card> cards, gameInstance gui) {
+    public ShowCardsAction(Player player, Player suggester, List<Card> cards, gameInstance gui, GameController gc) {
         super(player);
         this.actionType = ActionType.SHOWCARDS;
         this.cards = cards;
         this.suggester = suggester;
         this.gui = gui;
+        this.gc = gc;
         idOfCardToShow = -1;
         typeOfCardToShow = null;
 
@@ -53,6 +56,8 @@ public class ShowCardsAction extends Action{
         super(player);
         this.cards = cards;
         this.suggester = suggester;
+        this.gc = null;
+        this.gui = null;
     }
 
     /**
@@ -64,6 +69,7 @@ public class ShowCardsAction extends Action{
             Card responseCard = ((AiAdvanced) player).respondToShowCards(cards);
             idOfCardToShow = responseCard.getId();
             typeOfCardToShow = responseCard.cardType;
+            gc.replyToShowCards(this);
         }
         else if (gui != null){
             gui.actionResponse(this);

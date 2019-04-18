@@ -8,6 +8,7 @@ package clue.client;
 import clue.GameController;
 import clue.GameController.TooManyPlayersException;
 import clue.MissingRoomDuringCreationException;
+import clue.NotEnoughPlayersException;
 import clue.action.UnknownActionException;
 import clue.tile.NoSuchRoomException;
 import clue.tile.NoSuchTileException;
@@ -272,6 +273,10 @@ public class ClueClient extends Application {
             } catch(TooManyPlayersException | MissingRoomDuringCreationException | UnknownActionException | NoSuchRoomException | NoSuchTileException | TileOccupiedException | InterruptedException ex) {
                 System.out.println("Ice Cream Machine BROKE");
                 ex.printStackTrace();
+            } catch(NotEnoughPlayersException ex) {
+                Prompt playerPrompt = new Prompt("Not Enough Players");
+                playerPrompt.setLabelTitle("Start Game Error");
+                playerPrompt.showAndWait();
             }
             
         });
