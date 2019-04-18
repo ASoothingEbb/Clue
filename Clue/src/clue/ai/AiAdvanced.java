@@ -255,6 +255,7 @@ public class AiAdvanced extends Player{
     }
 
     public void respondToTeleport(Action action) {
+        //TODO change type casting and parameters
         System.out.println("[AiAdvanced.respondToTeleport] id: "+id);
         LinkedList<Tile> path = BFS();
         ((TeleportAction)action).setTarget(path.getLast());
