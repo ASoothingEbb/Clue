@@ -48,10 +48,15 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -119,15 +124,29 @@ public class gameInstance {
     private StackPane createBoard() {
         StackPane root = new StackPane();
         root.setPadding(new Insets(10, 5, 5, 0));
+        root.setAlignment(Pos.CENTER);
                 
         GridPane boardPane = new GridPane();
-        boardPane.setGridLinesVisible(true);
-        
+
         int boardHeight = gameInterface.getBoardHeight();
         int boardWidth = gameInterface.getBoardWidth();
         board = new StackPane[boardHeight][boardWidth];
+
+        Image image = null;
+        try {
+            image = new Image(new FileInputStream(new File("./Resources/cluedoBoard.png")));
+        } catch(FileNotFoundException ex) {
+            
+        }
         
+        ImageView boardview = new ImageView(image);
+        boardview.setFitWidth(912);
+        boardview.setFitHeight(950);
         
+        Pane alignment = new Pane();
+        alignment.getChildren().addAll(boardview, boardPane);
+        
+        root.getChildren().add(alignment);
         String line = "";
         
         try (BufferedReader br = new BufferedReader(new FileReader(boardTilePath))) {
@@ -140,7 +159,9 @@ public class gameInstance {
                     String cell = tile.replaceAll("[^0-9A-Z-]+", "");
                     StackPane tilePane = new StackPane();
                     Tile tileSprite = new Tile(TILE_SIZE);
-                    tileSprite.setStyle("-fx-border-width: 1px 1px 1px 1px; -fx-border-style: solid; -fx-border-color: black;");
+                    if (!boardTilePath.contains("archersAvenue")) {
+                        tileSprite.setStyle("-fx-border-width: 1px 1px 1px 1px; -fx-border-style: solid; -fx-border-color: black;");
+                    }
                     final int coordX = x;
                     final int coordY = y;
                     
@@ -160,17 +181,19 @@ public class gameInstance {
                             rollError.show();
                         }
                     });
-                    if (cell.equals("-1") || cell.equals("")) {
-                        tileSprite.setColor(Color.rgb(7, 80, 2));
-                    } else if (cell.equals("0")) {
-                        tileSprite.setColor(Color.rgb(222, 151,  29));
-                    } else if (cell.contains("S")) {
-                        tileSprite.setColor(Color.rgb(55, 136, 4));
-                    } else if (Integer.valueOf(cell) > 0) {
-                        paintRoom(tileSprite, Integer.valueOf(cell));
-                        //tileSprite.setColor(Color.rgb(90, 76, 65));
+                    if (!boardTilePath.contains("archersAvenue")) {
+                        if (cell.equals("-1") || cell.equals("")) {
+                            tileSprite.setColor(Color.rgb(7, 80, 2));
+                        } else if (cell.equals("0")) {
+                            tileSprite.setColor(Color.rgb(222, 151,  29));
+                        } else if (cell.contains("S")) {
+                            tileSprite.setColor(Color.rgb(55, 136, 4));
+                        } else if (Integer.valueOf(cell) > 0) {
+                            //paintRoom(tileSprite, Integer.valueOf(cell));
+                            tileSprite.setColor(Color.rgb(90, 76, 65));
+                        }
                     }
-                    
+
                     tilePane.getChildren().add(tileSprite);
                     board[y][x] = tilePane;
                     boardPane.add(tilePane, x, y);
@@ -184,31 +207,32 @@ public class gameInstance {
             boardMapError.show();
         }
         
-        ArrayList<int[]> doorLocations = gameInterface.getDoorLocations();
-        doorLocations.forEach((coords) -> {
-            Tile doorSprite = new Tile(TILE_SIZE);
-            switch (coords[2]) {
-                case 1:
-                    doorSprite.setStyle("-fx-border-width: 5px 0px 0px 0px; -fx-border-style: solid; -fx-border-color: #A36200;");
-                    break;
-                case 2:
-                    doorSprite.setStyle("-fx-border-width: 0px 5px 0px 0px; -fx-border-style: solid; -fx-border-color: #A36200;");
-                    break;
-                case 3:
-                    doorSprite.setStyle("-fx-border-width: 0px 0px 5px 0px; -fx-border-style: solid; -fx-border-color: #A36200;");
-                    break;
-                case 4:
-                    doorSprite.setStyle("-fx-border-width: 0px 0px 0px 5px; -fx-border-style: solid; -fx-border-color: #A36200;");
-                    break;
-            }
-            board[coords[1]][coords[0]].getChildren().add(doorSprite);
-        });
+        if (!boardTilePath.contains("archersAvenue")) {
+            ArrayList<int[]> doorLocations = gameInterface.getDoorLocations();
+            doorLocations.forEach((coords) -> {
+                Tile doorSprite = new Tile(TILE_SIZE);
+                switch (coords[2]) {
+                    case 1:
+                        doorSprite.setStyle("-fx-border-width: 5px 0px 0px 0px; -fx-border-style: solid; -fx-border-color: #A36200;");
+                        break;
+                    case 2:
+                        doorSprite.setStyle("-fx-border-width: 0px 5px 0px 0px; -fx-border-style: solid; -fx-border-color: #A36200;");
+                        break;
+                    case 3:
+                        doorSprite.setStyle("-fx-border-width: 0px 0px 5px 0px; -fx-border-style: solid; -fx-border-color: #A36200;");
+                        break;
+                    case 4:
+                        doorSprite.setStyle("-fx-border-width: 0px 0px 0px 5px; -fx-border-style: solid; -fx-border-color: #A36200;");
+                        break;
+                }
+                board[coords[1]][coords[0]].getChildren().add(doorSprite);
+            });
+        }
 
+ 
         spawnPlayers(board);
         
         rolled = false;
-        
-        root.getChildren().add(boardPane);
         return root;
     }
     
