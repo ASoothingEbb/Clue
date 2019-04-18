@@ -386,7 +386,6 @@ public class gameInstance {
      * @return 
      */
     private BorderPane createUI() {
-        curtainScene =  new Scene(createCurtain());
         BorderPane main = new BorderPane();
         main.setBackground(greenFill);
         
@@ -711,7 +710,7 @@ public class gameInstance {
      * 
      * @return 
      */
-    public VBox createCurtain(){
+    public Scene createCurtainScene(){
         VBox curtain = new VBox();
         
         curtain.setAlignment(Pos.CENTER);
@@ -735,14 +734,15 @@ public class gameInstance {
         //fadeSwitch.setOnAction(e -> switchToUi());
         
         curtain.getChildren().addAll(switchPlayerLabel, fadeSwitch);
-        return curtain;
+        curtainScene =  new Scene(curtain);
+        return curtainScene;
     }
     
     /**
      * Switches the current scene to the Curtain scene.
      */
     public void switchToCurtain(){
-        gameStage.setScene(curtainScene);
+        gameStage.setScene(createCurtainScene());
         System.out.println(gameStage.getWidth() + "" + gameStage.getHeight());
     }
     
