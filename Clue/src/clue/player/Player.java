@@ -276,6 +276,7 @@ public class Player {
         this.notes = notes;
     }
     
+    //TODO move to AiAdvanced constructor
     public void setAi(){
         isAi = true;
     }
