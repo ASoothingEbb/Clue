@@ -8,6 +8,9 @@ package clue.action;
 import clue.ai.AiAdvanced;
 import clue.card.Card;
 import clue.player.Player;
+import static java.lang.Thread.sleep;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *Represents the start of the next turn.

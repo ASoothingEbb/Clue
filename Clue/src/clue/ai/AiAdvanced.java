@@ -68,7 +68,7 @@ public class AiAdvanced extends Player{
         gameController = gc;
         rand = new Random();
         shownCards = new ArrayList<>();
-        suggestionsLeft = 2;//rand.nextInt(15)+11;
+        suggestionsLeft = 50;//rand.nextInt(15)+11;
         myTurn = false;
         
         knownCards = new ArrayList<>();
@@ -119,11 +119,6 @@ public class AiAdvanced extends Player{
      * Called by GameConstructor when the ai player turns begins
      */
     public void respondToStartTurn() {
-        try {
-            sleep(1000);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(AiAdvanced.class.getName()).log(Level.SEVERE, null, ex);
-        }
         System.out.println("[AiAdvanced.respondToStartTurn] id: "+id);
         myTurn = true;
         

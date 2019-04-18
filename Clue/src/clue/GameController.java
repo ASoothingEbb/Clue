@@ -253,7 +253,7 @@ public final class GameController {
                     moveActionLog();
                     LinkedList<Action> actionsToNotify = getActions();
                     
-                    if (gui != null){
+                    if (gui != null && !player.isAi()){
                         gui.newHumanPlayerTurn(player, actionsToNotify);
                     }
                     else{
@@ -268,7 +268,7 @@ public final class GameController {
                         nextAction = new ShowCardsAction(((SuggestAction) action).show, ((SuggestAction) action).player, ((SuggestAction) action).foundCards, gui, this);
                     }
                     else {
-                        if (gui != null){
+                        if (gui != null && !player.isAi()){
                             gui.notifyUser("No other player had to show a card due to your suggestion.");
                         }
                         else{
