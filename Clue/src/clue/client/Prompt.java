@@ -17,6 +17,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -32,6 +33,7 @@ public class Prompt extends Dialog {
     private Font avenirLarge;
     private Font avenirMedium;
     private VBox layout;
+    private Label title;
     
     /**
      * Makes and Styles the dialog box(prompt).
@@ -41,13 +43,13 @@ public class Prompt extends Dialog {
     public Prompt(String text) {
         initStyle(StageStyle.UNDECORATED);
         dialogPane = getDialogPane();
-        dialogPane.setBackground(new Background(new BackgroundFill(Color.rgb(160, 160, 160), CornerRadii.EMPTY, Insets.EMPTY)));
+        dialogPane.setBackground(new Background(new BackgroundFill(Color.rgb(56, 45, 40), CornerRadii.EMPTY, Insets.EMPTY)));
         
         initFonts();
         
         layout = new VBox();
         
-        Label title = new Label("Error:");
+        title = new Label("Error:");
         title.setTextFill(Color.WHITE);
         title.setFont(avenirLarge);
         
@@ -83,7 +85,17 @@ public class Prompt extends Dialog {
         }
     }
     
+    public void setLabelTitle(String title) {
+        this.title.setText(title);
+    }
+    
     public void setImage(ImageView  card) {
         layout.getChildren().add(2, card);
+    }
+    
+    public void setImage(ImageView[] cards) {
+        HBox cardsLayout = new HBox();
+        cardsLayout.getChildren().addAll(cards[0], cards[1], cards[2]);
+        layout.getChildren().add(2, cardsLayout);
     }
 }

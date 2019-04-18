@@ -52,7 +52,6 @@ public final class GameController {
     private final Random random;
     private List<Action> actionLog;
     private Queue<Action> actions;
-    private int turns = 0;
     private List<WeaponCard> weaponCards;
     private List<PersonCard> personCards;
     private List<RoomCard> roomCards;
@@ -160,7 +159,7 @@ public final class GameController {
                     state.endGame();
                     endGame();
                 } else {
-                    nextAction = new EndTurnAction(state.getCurrentPlayer());
+                    //nextAction = new EndTurnAction(state.getCurrentPlayer());//players now manually call end turn
                 }
                 actionLog.add(action);
                 break;
@@ -184,7 +183,7 @@ public final class GameController {
                 }
                 
                 moveActionLog();
-                turns++;
+                
                 
                 if (state.hasActive()){
                     int old = player.getId();
@@ -234,13 +233,6 @@ public final class GameController {
                 System.out.println("    CASE SHOWCARDS");
                 if (state.getAction().actionType != ActionType.ACCUSATION) {
                     
-                    int id = ((ShowCardsAction)action).getIdOfCardToShow();
-                    CardType type = ((ShowCardsAction)action).getCardTypeOfCardToShow();
-                    Player personToShow = ((ShowCardsAction)action).getSuggester();
-                    Card cardToShow = getCard(id, type);
-                    
-                   
-                    nextAction = new ShowCardAction(personToShow, cardToShow, gui, ((ShowCardsAction)action).getPlayer());
                 }
                 actionLog.add(action);
                 break;
@@ -267,8 +259,7 @@ public final class GameController {
                         nextAction = new ShowCardsAction(((SuggestAction) action).show, ((SuggestAction) action).player, ((SuggestAction) action).foundCards, gui);
                     }
                     else{
-                        //TODO
-                        //tell GUI that no one had one of those cards
+                        gui.notifyUser("No other player had to show a card due to your suggestion.");
                     }
                 }
                 actionLog.add(action);
@@ -564,7 +555,7 @@ public final class GameController {
      * @param person the character to accuse
      * @param room the crime scene to accuse
      * @param weapon the murder murderWeapon to accuse
-     * @return nothing if accusation was incorrect, if correct : list of Integers representing the ids of: the winner of the game, the murderPerson, murderRoom, murderWeapon
+     * @return the constructed (and executed) AccuseAction
      * @throws UnknownActionException
      * @throws InterruptedException
      * @throws clue.tile.TileOccupiedException
@@ -572,7 +563,7 @@ public final class GameController {
      */
     public AccuseAction accuse(PersonCard person, RoomCard room, WeaponCard weapon) throws UnknownActionException, InterruptedException, TileOccupiedException {
         
-        AccuseAction accuseAction = new AccuseAction(player, person, room, weapon, person == this.murderPerson && room == this.murderRoom && weapon == this.murderWeapon);
+        AccuseAction accuseAction = new AccuseAction(player, person, room, weapon, murderPerson, murderRoom, murderWeapon, gui);
         
         performAction(accuseAction);
         return accuseAction;
@@ -599,7 +590,7 @@ public final class GameController {
             System.err.println("unable to find 3 cards");
         }
         try {
-            accuse(person, room, weapon);
+            accuse(person, room, weapon);           
         } catch (UnknownActionException | InterruptedException | TileOccupiedException ex) {
             Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -625,7 +616,7 @@ public final class GameController {
         //TODO
         int pointer = player.getLogPointer();
         while (pointer != actionLog.size()) {
-            System.out.println("[GameController.moveActionLog] pointer: "+pointer +" turns: "+turns);
+            System.out.println("[GameController.moveActionLog] pointer: "+pointer);
             actions.offer(actionLog.get(pointer));
             pointer++;
         }
@@ -769,6 +760,23 @@ public final class GameController {
                 break;
         }
         return null;
+    }
+    
+    public void replyToShowCards (ShowCardsAction action){
+        System.out.println("[GameController.showCard]");
+        int id = action.getIdOfCardToShow();
+        CardType type = action.getCardTypeOfCardToShow();
+        Player personToShow = action.getSuggester();
+        Card cardToShow = getCard(id, type);
+                  
+                   
+        try {
+            performAction(new ShowCardAction(personToShow, cardToShow, gui, ((ShowCardsAction)action).getPlayer()));
+        } catch (UnknownActionException | InterruptedException | TileOccupiedException ex) {
+            Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    
+    
     }
     
     

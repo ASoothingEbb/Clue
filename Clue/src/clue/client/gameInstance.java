@@ -7,6 +7,7 @@ package clue.client;
 
 import clue.GameController;
 import clue.action.Action;
+import clue.action.ShowCardAction;
 import clue.action.ShowCardsAction;
 import clue.action.UnknownActionException;
 import clue.card.Card;
@@ -85,6 +86,8 @@ public class gameInstance {
     private GridPane cardsDisplay;
     
     private Scene prevScene;
+    
+    private Prompt showCardPrompt = null;
     
     private CardType selectedCardType;
     private int selectedCardId;
@@ -383,7 +386,6 @@ public class gameInstance {
      * @return 
      */
     private BorderPane createUI() {
-        curtainScene =  new Scene(createCurtain());
         BorderPane main = new BorderPane();
         main.setBackground(greenFill);
         
@@ -421,10 +423,9 @@ public class gameInstance {
                 showCards(action);
                 break;
             case SHOWCARD:
+                System.out.println("[gameInstance.actionResponse] case SHOWCARD");
+                System.out.println("------------------------------");
                 showCard(action);
-                break;
-            case MOVE:
-                System.out.println("[gameInstance.actionResponse] case MOVE");
                 break;
             case AVOIDSUGGESTIONCARD:
                 System.out.println("[gameInstance.actionResponse] case AVOIDSUGGESTIONCARD");
@@ -437,8 +438,10 @@ public class gameInstance {
                 break;
             case ACCUSATION:
                 System.out.println("[gameInstance.actionResponse] case ACCUSATION");
+                showAccusationResult(action);
                 break;
         }
+        System.out.println("return");
     }
     
     private Image getImage(int cardId, CardType cardType) {
@@ -465,12 +468,30 @@ public class gameInstance {
         return cardImage;
     }
     
+    public void showAccusationResult(Action action) {
+        if (((AccuseAction) action).isCorrect()) { //accusation correct
+            Prompt winnerPrompt = new Prompt("WINNER WINNER CHICKEN DINNER");
+            winnerPrompt.setLabelTitle("YOU WON");
+            winnerPrompt.show();
+        } else {
+            Prompt loserPrompt = new Prompt("HAHA YOU SUCK, THIS IS WHAT THE CARDS WERE XD. GET SMURFED ON");
+            loserPrompt.setLabelTitle("YOU LOSE");
+            ImageView[] cards = new ImageView[3];
+            loserPrompt.setImage(cards);
+            loserPrompt.show();
+        }
+    }
+    
     private void showCard(Action action) {
-        //String suggestee = CardNameMap.get("character" + ((ShowCardsAction) action).getPlayer().getId());
-        //Prompt showCard = new Prompt(suggestee + " showed");
-        //((ShowCard) action).
-        //ImageView cardViewer = new ImageView(getImage(((ShowCardsAction) action).getIdOfCardToShow(), ((ShowCardsAction) action).));
-        //showCard.setImage(selectedView);
+        ShowCardAction response = ((ShowCardAction) action);
+        String suggestee = CardNameMap.get("character" + ((ShowCardAction) action).getWhoShowedTheCard().getId());
+        showCardPrompt = new Prompt(suggestee + " showed");
+        showCardPrompt.setLabelTitle("Suggestion Response");
+        ImageView cardViewer = new ImageView(getImage(response.getCardToShow().getId(), response.getCardToShow().cardType));
+        showCardPrompt.setImage(cardViewer);
+        showCardPrompt.setOnCloseRequest(e -> {
+            showCardPrompt = null;
+        });
     }
     
     private void switchPlayerScene(int playerId, Scene next) {
@@ -481,12 +502,21 @@ public class gameInstance {
         MenuItem showButton = new MenuItem("Play", avenirTitle);
         showButton.setOnMouseClicked(e -> {
             gameStage.setScene(next);
+            if (showCardPrompt != null) {
+                showCardPrompt.show();
+            }
         });
         
         switchPlayer.getChildren().addAll(switchToLabel, showButton);
         
         Scene scene = new Scene(switchPlayer, 1736, 960);
         gameStage.setScene(scene);
+    }
+    
+    public void notifyUser(String message) {
+        Prompt notifyPrompt = new Prompt(message);
+        notifyPrompt.setLabelTitle("Notice");
+        notifyPrompt.show();
     }
     
     private void showCards(Action action) {
@@ -519,6 +549,7 @@ public class gameInstance {
             System.out.println(selectedCardId + " " + selectedCardType.toString());
             ((ShowCardsAction) action).setCardToShow(selectedCardId, selectedCardType);
             switchPlayerScene(((ShowCardsAction) action).getSuggester().getId(), prevScene);
+            gameInterface.replyToShowCards((ShowCardsAction) action);
         });
         
         showCardsDisplay.getChildren().addAll(showCardsLabel, cardDisplay, confirmCardButton);
@@ -561,7 +592,7 @@ public class gameInstance {
     }
     
     /**
-     * 
+     * Initialises the default graphics.
      */
     private void initDefaultGraphics() {
         ImagePathMap.put("board", "./resources/board.png");
@@ -592,7 +623,7 @@ public class gameInstance {
     }
     
     /**
-     * 
+     * Initialises the default names.
      */
     private void initDefaultNames() {
         CardNameMap.put("character0", "Miss Scarlet");
@@ -637,7 +668,7 @@ public class gameInstance {
     }
     
     /**
-     * 
+     * Initialises the graphics.
      */
     private void initGraphics() {
         try (InputStream input = new FileInputStream("resources/config.properties")) {
@@ -694,30 +725,39 @@ public class gameInstance {
      * 
      * @return 
      */
-    public VBox createCurtain(){
+    public Scene createCurtainScene(){
         VBox curtain = new VBox();
         
         curtain.setAlignment(Pos.CENTER);
         curtain.setBackground(blackFill);
-        
-        Label txt = new Label("IT'S PLAYER'S ------ TURN.");
-        Font titleFont = new Font(80);
-         
-        txt.setFont(titleFont);
-        txt.setTextFill(Color.WHITE);
-        
         curtain.setMinSize(1736, 960);
-        Button fadeSwitch = new Button("Unfade");
-        fadeSwitch.setOnAction(e -> switchToUi());
         
-        curtain.getChildren().addAll(txt, fadeSwitch);
-        return curtain;
+        //Label txt = new Label("IT'S PLAYER'S ------ TURN.");
+        //Font titleFont = new Font(80);
+         
+        //txt.setFont(titleFont);
+        //txt.setTextFill(Color.WHITE);
+        
+        //TODO fix transition to update
+        Label switchPlayerLabel = getLabel(CardNameMap.get("character"+gameInterface.getPlayer().getId()) + "'s Turn", avenirTitle);
+        
+        MenuItem fadeSwitch = new MenuItem("Start Turn", avenirTitle);
+        fadeSwitch.setOnMouseClicked(e -> {
+            switchToUi();
+        });
+        //Button fadeSwitch = new Button("Unfade");
+        //fadeSwitch.setOnAction(e -> switchToUi());
+        
+        curtain.getChildren().addAll(switchPlayerLabel, fadeSwitch);
+        curtainScene =  new Scene(curtain);
+        return curtainScene;
     }
+    
     /**
      * Switches the current scene to the Curtain scene.
      */
     public void switchToCurtain(){
-        gameStage.setScene(curtainScene);
+        gameStage.setScene(createCurtainScene());
         System.out.println(gameStage.getWidth() + "" + gameStage.getHeight());
     }
     

@@ -81,16 +81,21 @@ public class MenuItem extends Label {
     }
   
     /**
-     * Sets the background color of the label.
+     * Sets the Active and inactive colour.
      * 
-     * @param color Colour which you want the label to be.
+     * @param active the Colour for when the label is active.
+     * @param inactive the Colour for when the label is active.
      */
-    
     public void setColorScheme(Color active, Color inactive) {
         setActiveColor(active);
         setInactiveColor(inactive);
     }
     
+     /**
+     * Sets the background colour of the label.
+     * 
+     * @param color Colour which you want the label to be.
+     */
     public void setBackgroundColor(Color color) {
         setBackground(new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY)));
     }

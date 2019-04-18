@@ -50,7 +50,7 @@ public class SettingsMenuItem extends MenuItem {
     
     /**
      * 
-     * @param active 
+     * @param active true or false 
      */
     private void setBackgroundActive(boolean active) {
         setBackground(active ? backgroundActive : backgroundInactive);

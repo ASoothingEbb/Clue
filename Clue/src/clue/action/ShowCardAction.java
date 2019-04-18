@@ -41,6 +41,14 @@ public class ShowCardAction extends Action {
         this.whoShowedTheCard = shower;
     }
     
+    public Player getWhoShowedTheCard(){
+        return whoShowedTheCard;
+    }
+    
+    public Card getCardToShow(){
+        return card;
+    }
+    
     
 /**
  * Executes the ShowCardAction.
