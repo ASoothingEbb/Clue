@@ -259,16 +259,30 @@ public class ClueClient extends Application {
             String[] mapFiles = mapDirectory.list();
             String doorFile;
             String tileFile;
-            if (mapFiles[0].contains("Door")) {
-                doorFile = mapFiles[0];
-                tileFile = mapFiles[1];
+            Prompt fileErrorPrompt = new Prompt("");
+            if (mapFiles.length == 2) {
+                if (mapFiles[0].endsWith("Doors.csv") && mapFiles[1].endsWith("Tiles.csv")) {
+                    doorFile = mapDirPath + "/" + mapFiles[0];
+                    tileFile = mapDirPath + "/" + mapFiles[1];
+                } else if (mapFiles[0].endsWith("Tiles.csv") && mapFiles[1].endsWith("Doors.csv")) {
+                    doorFile = mapDirPath + "/" + mapFiles[1];
+                    tileFile = mapDirPath + "/" + mapFiles[0];
+                } else {
+                    fileErrorPrompt.setMessage("Door and Tile csv files not found. Loading default map.");
+                    fileErrorPrompt.showAndWait();
+                    doorFile = "resources/archersAvenueDoors.csv";
+                    tileFile = "resources/archersAvenueTiles.csv";
+                }
             } else {
-                doorFile = mapFiles[1];
-                tileFile = mapFiles[0];
+                fileErrorPrompt.setMessage("Error loading map too many file found. Loading default map.");
+                fileErrorPrompt.showAndWait();
+                doorFile = "resources/archersAvenueDoors.csv";
+                tileFile = "resources/archersAvenueTiles.csv";
             }
+
             try {
-                GameController gameController = new GameController(numberOfPlayers, numberOfAIs, mapDirPath + "/" + tileFile, mapDirPath + "/" + doorFile);
-                game.startGame(gameController, mapDirPath + "/" + tileFile);
+                GameController gameController = new GameController(numberOfPlayers, numberOfAIs, tileFile, doorFile);
+                game.startGame(gameController, tileFile);
             } catch(TooManyPlayersException | MissingRoomDuringCreationException | UnknownActionException | NoSuchRoomException | NoSuchTileException | TileOccupiedException | InterruptedException ex) {
                 System.out.println("Ice Cream Machine BROKE");
                 ex.printStackTrace();
