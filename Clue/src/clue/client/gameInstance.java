@@ -386,7 +386,6 @@ public class gameInstance {
      * @return 
      */
     private BorderPane createUI() {
-        curtainScene =  new Scene(createCurtain());
         BorderPane main = new BorderPane();
         main.setBackground(greenFill);
         
@@ -593,7 +592,7 @@ public class gameInstance {
     }
     
     /**
-     * 
+     * Initialises the default graphics.
      */
     private void initDefaultGraphics() {
         ImagePathMap.put("board", "./resources/board.png");
@@ -624,7 +623,7 @@ public class gameInstance {
     }
     
     /**
-     * 
+     * Initialises the default names.
      */
     private void initDefaultNames() {
         CardNameMap.put("character0", "Miss Scarlet");
@@ -669,7 +668,7 @@ public class gameInstance {
     }
     
     /**
-     * 
+     * Initialises the graphics.
      */
     private void initGraphics() {
         try (InputStream input = new FileInputStream("resources/config.properties")) {
@@ -726,7 +725,7 @@ public class gameInstance {
      * 
      * @return 
      */
-    public VBox createCurtain(){
+    public Scene createCurtainScene(){
         VBox curtain = new VBox();
         
         curtain.setAlignment(Pos.CENTER);
@@ -750,14 +749,15 @@ public class gameInstance {
         //fadeSwitch.setOnAction(e -> switchToUi());
         
         curtain.getChildren().addAll(switchPlayerLabel, fadeSwitch);
-        return curtain;
+        curtainScene =  new Scene(curtain);
+        return curtainScene;
     }
     
     /**
      * Switches the current scene to the Curtain scene.
      */
     public void switchToCurtain(){
-        gameStage.setScene(curtainScene);
+        gameStage.setScene(createCurtainScene());
         System.out.println(gameStage.getWidth() + "" + gameStage.getHeight());
     }
     
