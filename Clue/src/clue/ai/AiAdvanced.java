@@ -69,6 +69,16 @@ public class AiAdvanced extends Player{
         shownCards = new ArrayList<>();
         suggestionsLeft = 2;//rand.nextInt(15)+11;
         myTurn = false;
+        
+        knownCards = new ArrayList<>();
+        
+        ArrayList<Integer> c0 = new ArrayList<>();
+        ArrayList<Integer> c1 = new ArrayList<>();
+        ArrayList<Integer> c2 = new ArrayList<>();
+        
+        knownCards.add(c0);
+        knownCards.add(c1);
+        knownCards.add(c2);
     }
     
     public Card respondToShowCards(List<Card> cards){
