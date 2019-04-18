@@ -15,6 +15,7 @@ import clue.GameController;
 import clue.tile.NoSuchRoomException;
 import clue.action.*;
 import clue.card.Card;
+import clue.card.CardType;
 import clue.card.PersonCard;
 import clue.card.RoomCard;
 import clue.card.WeaponCard;
@@ -35,8 +36,6 @@ public class AiAdvanced extends Player{
     
     private int id;
     private GameController gameController;
-    private int targetY;//Y value of the closest room tile.
-    private int targetX;////Y value of the closest room tile.
     private int boardWidth;
     private int boardHeight;
     private Tile previousPosition;
@@ -44,10 +43,11 @@ public class AiAdvanced extends Player{
     private LinkedList<Tile> pathToRoom;
     private Random rand;
     private int suggestionsLeft;
+    ArrayList<ArrayList<Integer>> knownCards;
     
-    //AI Logic
     private ArrayList<ArrayList<Card>> cardLists;//List of each cards players have previously suggested
     private List<Card> shownCards;
+    private boolean myTurn;
     
     
     /** 
@@ -68,51 +68,7 @@ public class AiAdvanced extends Player{
         rand = new Random();
         shownCards = new ArrayList<>();
         suggestionsLeft = 2;//rand.nextInt(15)+11;
-    }
-    
-    /** 
-    * This method is run after every action that was sent to the GameController.
-    * @return the path to the closest room from the players current location
-    */
-    @Override
-    public void onUpdate(){
-        
-        //if(gameController.getLastAction() instanceof StartAction){//If the game has just started.
-        //    players = gameController.getPlayers();
-        //    makeLists();///TODO
-        //}
-        
-        //for(Tile t : pathToRoom){
-        //    if(t.isFull() || previousPosition != getPosition()){//If the Player has moved since last turn, or if anay of the tiles in the path have changed(occupied).
-        //        pathToRoom = BFS();
-        //    }
-        //}
-        
-        //Generating Random Cards (ids).
-        //PersonCard randPersonCard = new PersonCard(rand.nextInt(6) + 1);
-        //RoomCard randRoomCard = new RoomCard(rand.nextInt(6) + 1);
-        //WeaponCard randWeaponCard = new WeaponCard(rand.nextInt(9)+ 1);
-        
-        //if(gameController.getPlayer().getId() == getId()){//If I need to respond.
-        //    if(gameController.getLastAction() instanceof EndTurnAction){//If my turn, last action was end turn.
-                
-                
-        //    } 
-            
-            //else if (gameController.getLastAction() instanceof ShowCardsAction){//If I need to show a card 
-
-                //ShowCardsAction action = (ShowCardsAction) gameController.getLastAction();
-                ///Card card = action.getCardList().get(0);
-                //ShowCardAction newAction = new ShowCardAction(action.getSuggester(), card);//Shows one card to person who requested cards to be shown(suggested).
-                //shownCards.add(card);
-
-                //try {
-                //    sendAction(newAction);//Show Card.
-                //} catch (InterruptedException ex) {
-                //    Logger.getLogger(AIAdvanced.class.getName()).log(Level.SEVERE, null, ex);
-                //}
-            //}
-        //}
+        myTurn = false;
     }
     
     public Card respondToShowCards(List<Card> cards){
@@ -120,11 +76,206 @@ public class AiAdvanced extends Player{
         return cards.get(0);
     }
     
-   /** 
+   
+    
+    /**
+     * Sends an action to the game controller that will move the player towards/to a room.
+     */
+    private void moveToRoom(){
+        
+        gameController.roll();
+        System.out.println("[AiAdvanced.moveToRoom] id: "+id + "moves: "+getMoves());
+        LinkedList<Tile> path = BFS();
+        Tile target;
+        if (!path.isEmpty()){
+            if (getMoves() < path.size()){
+                target = path.get(getMoves()-1);
+            }   
+            else{
+                target = path.getLast();
+            }
+                
+            try {
+                gameController.move(target);
+            } catch (UnknownActionException | InterruptedException | GameController.MovementException | TileOccupiedException ex) {
+                Logger.getLogger(AiAdvanced.class.getName()).log(Level.SEVERE, null, ex);
+            } 
+        }
+        
+    }
+
+    /**
+     * Called by GameConstructor when the ai player turns begins
+     */
+    public void respondToStartTurn() {
+        System.out.println("[AiAdvanced.respondToStartTurn] id: "+id);
+        myTurn = true;
+        
+        if (knownCards.isEmpty()){//then it is the first turn
+            for (Card card : getCards()){
+                addCardToKnownCards(card);
+            }
+        }
+        if(getPosition().isRoom()){//if in room
+            suggestAccuse();
+        } 
+        else {
+            moveToRoom();
+            if (getPosition().isRoom()){
+                suggestAccuse();
+            }
+            
+        }
+        if (myTurn){
+            endTurn();
+        }   
+    }
+
+    /**
+     * Called by GameConstructor when the ai players is allowed to roll the dice again, 
+     */
+    public void respondToThrowAgain() {
+        System.out.println("[AiAdvanced.respondToThrowAgain] id: "+id);
+        if (!getPosition().isRoom()){
+            moveToRoom();
+        }
+        endTurn();
+    }
+    
+    /**
+     * Called by GameConstructor when the ai player is shown a card (from there suggestion)
+     * @param card the card being shown to ai player
+     * @param whoShowedTheCard the person who showed the card
+     */
+    public void revealCard(Card card, Player whoShowedTheCard) {//called when a player is showing a card to AI
+        System.out.println("[AiAdvanced.revealCard] id: "+id);
+        addCardToKnownCards(card);  
+    }
+
+    /**
+     * Adds a card to the know deck, these cards are cards which are seen by the ai player and are thus not part of the murder cards
+     * @param card the card shown to the ai player
+     */
+    private void addCardToKnownCards(Card card){
+        System.out.println("[AiAdvanced.addCardToKnownCards] id: "+id);
+        if (null != card.cardType)switch (card.cardType) {
+            case PERSON:
+                knownCards.get(0).add(card.getId());
+                break;
+                
+            case ROOM:
+                knownCards.get(1).add(card.getId());
+                break;
+                
+            case WEAPON:
+                knownCards.get(2).add(card.getId());
+                break;
+                
+            default:
+                break;
+        }
+    }
+
+    /**
+     * Submits suggestions until it reaches a suggestion limit, then it submits an accusation
+     */
+    private void suggestAccuse() {
+        System.out.println("[AiAdvanced.suggestAccuse] id: "+id);
+        int[] unknownIds;
+        if (suggestionsLeft > 0){
+            unknownIds = getNextUnknown();
+            suggestionsLeft--;
+            gameController.suggest(unknownIds[0], unknownIds[2]);
+        }
+        if (suggestionsLeft == 0){
+            unknownIds = getNextUnknown();
+            gameController.accuse(unknownIds[0], unknownIds[2], unknownIds[1]);
+        }
+    }
+ 
+    /**
+     * Selects 3 card ids to be used in suggestion/accusation that it knows is not part of the murder cards
+     * @return The three ids to be used in a suggestion/accusation ,index 0 = personid, index 1 = roomid, index 2 = weaponid
+     */
+    private int[] getNextUnknown(){
+
+        System.out.println("[AiAdvanced.getNextUnknown] id: "+id);
+        int[] result = new int[3]; 
+        result[0] = 0;
+        result[1] = 0;
+        result[2] = 0;
+
+        int randomInt;
+        boolean found = false;
+        int c = 0;
+        while (!found && c < 49){//pick a random int until the id is not known, stop after 50 random ints
+            randomInt = rand.nextInt(6);
+            if (!knownCards.get(0).contains(randomInt)){
+                result[0] = randomInt;
+                found = true;
+            }
+            c++;
+
+        }
+        
+        for (int i = 0; i < knownCards.get(1).size(); i++){//get the lowest unknown room id
+            if (!knownCards.get(1).contains(i)){
+                result[1] = i;
+                break;
+            }
+        }
+        
+        found = false;
+        c = 0;
+        while (!found && c < 49){// pick a random int until the id is not known
+            randomInt = rand.nextInt(6);
+            if (!knownCards.get(2).contains(randomInt)){
+                result[2] = randomInt;
+                found = true;
+            }
+            c++;
+        }
+
+        return result;        
+        
+        
+    }
+
+    /**
+     * Submits an endTurn action to the GameController
+     */
+    private void endTurn() {
+        System.out.println("[AiAdvanced.endTurn] id: "+id);
+        myTurn = false;
+        try {
+            gameController.endTurn();
+        } catch (UnknownActionException | InterruptedException | GameController.MovementException | TileOccupiedException ex) {
+            Logger.getLogger(AiAdvanced.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void respondToTeleport(Action action) {
+        System.out.println("[AiAdvanced.respondToTeleport] id: "+id);
+        LinkedList<Tile> path = BFS();
+        ((TeleportAction)action).setTarget(path.getLast());
+        suggestAccuse();
+        endTurn();
+    }
+    
+  /** 
+    * Returns the path to the closest room from the players current location
+    * @return The path to the closest Room from the player's current position.
+    * @depricated only used so that it can be tested
+    */
+    public LinkedList<Tile> BFStesting(){
+        return BFS();
+    }
+    
+    /** 
     * Returns the path to the closest room from the players current location
     *@return The path to the closest Room from the player's current position. 
     */
-    public LinkedList<Tile> BFS(){   
+    private LinkedList<Tile> BFS(){   
         System.out.println("[AiAdvanced.BFS] id: "+id);
         boolean visited[][] = new boolean[boardWidth][boardHeight];
         
@@ -169,14 +320,6 @@ public class AiAdvanced extends Player{
                 newPath.add(t);//add new path to pathList (current path + newly found tile)
                 
                 pathList.add(newPath);
-                
-//                System.out.println("current paths:");
-//                for (LinkedList<Tile> storedPath : pathList){
-//                    System.out.println("path:");
-//                    for (Tile ti: storedPath){
-//                        System.out.println("   "+ti.getX() +","+ ti.getY());
-//                    }
-//                }
            
                 visited[t.getX()][t.getY()] = true;//tile is now marked as visited    
             }
@@ -188,104 +331,4 @@ public class AiAdvanced extends Player{
         return solutionPath;  
     }
     
-    /**
-     * Creates the list of lists of cards of every player(including itself)
-     */
-    public void makeLists(){
-        for(int i=0; i<players.size(); i++){
-            cardLists.add(new ArrayList<>());//create a list for every player.
-            cardLists.set(id-1, (ArrayList<Card>) getCards());      
-            ///TODO
-        }
-    }
-    
-    /**
-     * Sends an action to the game controller that will move the player one move in the path towards the room.
-     */
-    public void moveToRoom(){
-        
-        gameController.roll();
-        System.out.println("[AiAdvanced.moveToRoom] id: "+id + "moves: "+getMoves());
-        LinkedList<Tile> path = BFS();
-        Tile target;
-        if (!path.isEmpty()){
-            if (getMoves() < path.size()){
-                target = path.get(getMoves()-1);
-            }   
-            else{
-                target = path.getLast();
-            }
-                
-            try {
-                gameController.move(target);
-            } catch (UnknownActionException | InterruptedException | GameController.MovementException | TileOccupiedException ex) {
-                Logger.getLogger(AiAdvanced.class.getName()).log(Level.SEVERE, null, ex);
-            } 
-        }
-        
-    }
-    
-    public ArrayList<ArrayList<Card>> getLists(){
-        return cardLists;
-    }
-    
-    public LinkedList<Tile> getPathToRoom(){
-        return pathToRoom;
-    }
-
-    public void respondToStartTurn() {
-        System.out.println("[AiAdvanced.respondToStartTurn] id: "+id);
-        if(getPosition().isRoom()){//If I'm in a room
-            suggestAccuse();
-        } 
-        else {
-            moveToRoom();
-            if (getPosition().isRoom()){
-                suggestAccuse();
-            }
-            
-        }
-        endTurn();
-        
-    }
-
-    public void respondToThrowAgain() {
-        System.out.println("[AiAdvanced.respondToThrowAgain] id: "+id);
-        if (!getPosition().isRoom()){
-            moveToRoom();
-        }
-        endTurn();
-    }
-    
-    public void revealCard(Card card, Player whoShowedTheCard) {//called when a player is showing a card to AI
-        System.out.println("[AiAdvanced.revealCard] id: "+id);
-        
-    }
-    private void suggestAccuse() {
-        System.out.println("[AiAdvanced.suggestAccuse] id: "+id);
-        if (suggestionsLeft > 0){
-            suggestionsLeft--;
-            gameController.suggest(0, 0);
-        }
-        if (suggestionsLeft == 0){
-            gameController.accuse(0, 0, 0);
-        }
-    }
-
-    private void endTurn() {
-        System.out.println("[AiAdvanced.endTurn] id: "+id);
-        try {
-            gameController.endTurn();
-        } catch (UnknownActionException | InterruptedException | GameController.MovementException | TileOccupiedException ex) {
-            Logger.getLogger(AiAdvanced.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    public void respondToTeleport(Action action) {
-        System.out.println("[AiAdvanced.respondToTeleport] id: "+id);
-        LinkedList<Tile> path = BFS();
-        ((TeleportAction)action).setTarget(path.getLast());
-        suggestAccuse();
-        endTurn();
-    }
 }
