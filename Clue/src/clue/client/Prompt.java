@@ -34,6 +34,7 @@ public class Prompt extends Dialog {
     private Font avenirMedium;
     private VBox layout;
     private Label title;
+    private Label message;
     
     /**
      * Makes and Styles the dialog box(prompt).
@@ -53,7 +54,7 @@ public class Prompt extends Dialog {
         title.setTextFill(Color.WHITE);
         title.setFont(avenirLarge);
         
-        Label message = new Label(text);
+        message = new Label(text);
         message.setTextFill(Color.WHITE);
         message.setFont(avenirMedium);
         
@@ -85,6 +86,10 @@ public class Prompt extends Dialog {
         }
     }
     
+    public void setMessage(String message) {
+        this.message.setText(message);
+    }
+    
     public void setLabelTitle(String title) {
         this.title.setText(title);
     }
@@ -95,6 +100,8 @@ public class Prompt extends Dialog {
     
     public void setImage(ImageView[] cards) {
         HBox cardsLayout = new HBox();
+        cardsLayout.setAlignment(Pos.CENTER);
+        cardsLayout.setSpacing(10);
         cardsLayout.getChildren().addAll(cards[0], cards[1], cards[2]);
         layout.getChildren().add(2, cardsLayout);
     }

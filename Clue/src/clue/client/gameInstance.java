@@ -6,6 +6,7 @@
 package clue.client;
 
 import clue.GameController;
+import clue.action.AccuseAction;
 import clue.action.Action;
 import clue.action.ShowCardAction;
 import clue.action.ShowCardsAction;
@@ -469,17 +470,22 @@ public class gameInstance {
     }
     
     public void showAccusationResult(Action action) {
-        if (((AccuseAction) action).isCorrect()) { //accusation correct
-            Prompt winnerPrompt = new Prompt("WINNER WINNER CHICKEN DINNER");
-            winnerPrompt.setLabelTitle("YOU WON");
-            winnerPrompt.show();
+        Prompt accusationResultPrompt = new Prompt("");
+        if (((AccuseAction) action).wasCorrect()) { //accusation correct
+            accusationResultPrompt.setMessage("WINNER WINNER CHICKHEN DINNER");
+            accusationResultPrompt.setLabelTitle("YOU WON");
         } else {
-            Prompt loserPrompt = new Prompt("HAHA YOU SUCK, THIS IS WHAT THE CARDS WERE XD. GET SMURFED ON");
-            loserPrompt.setLabelTitle("YOU LOSE");
-            ImageView[] cards = new ImageView[3];
-            loserPrompt.setImage(cards);
-            loserPrompt.show();
+            accusationResultPrompt.setMessage("HAHA YOU SUCK, THIS IS WHAT THE CARDS WERE XD. GET SMURFED ON KID");
+            accusationResultPrompt.setLabelTitle("YOU LOSE");
         }
+        
+        List<Card> murderCards = ((AccuseAction) action).getMurderCards();
+        ImageView[] cards = new ImageView[3];
+        for (int i=0; i < murderCards.size(); i++) {
+            cards[i] = new ImageView(getImage(murderCards.get(i).getId(), murderCards.get(i).cardType));
+        }
+        accusationResultPrompt.setImage(cards);
+        accusationResultPrompt.show();
     }
     
     private void showCard(Action action) {
