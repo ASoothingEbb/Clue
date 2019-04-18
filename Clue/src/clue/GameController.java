@@ -250,6 +250,10 @@ public final class GameController {
                     //System.out.println("b"+player.getId());
                     //state.nextTurn(player.getId());
                     //System.out.println("a"+player.getId());
+                    moveActionLog();
+                    LinkedList<Action> actionsToNotify = getActions();
+                    
+                    gui.showActionLog(actionsToNotify);
                 }
                 break;
             case SUGGEST:
@@ -615,6 +619,7 @@ public final class GameController {
     private void moveActionLog() {
         //TODO
         int pointer = player.getLogPointer();
+        actions = new LinkedList<>();
         while (pointer != actionLog.size()) {
             System.out.println("[GameController.moveActionLog] pointer: "+pointer);
             actions.offer(actionLog.get(pointer));
@@ -628,8 +633,8 @@ public final class GameController {
      *
      * @return action sublist
      */
-    public Queue<Action> getActions() {
-        return actions;
+    public LinkedList<Action> getActions() {
+        return (LinkedList<Action>) actions;
     }
 
     /**
