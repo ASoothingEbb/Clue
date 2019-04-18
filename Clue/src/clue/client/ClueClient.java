@@ -488,7 +488,8 @@ public class ClueClient extends Application {
         masterVolume.setMaxWidth(1000);
         masterVolume.setBlockIncrement(10);
         Label masterVolumeShow = getLabel("", avenirTitle);
-        masterVolumeShow.setText("100");
+        masterVolumeShow.setText("20");
+        masterVolume.setValue(20);
                 
         masterVolume.valueProperty().addListener(new ChangeListener() {
             @Override
