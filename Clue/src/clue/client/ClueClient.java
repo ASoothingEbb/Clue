@@ -16,19 +16,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
-import java.util.ResourceBundle;
-import java.util.stream.Stream;
-import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -37,11 +31,14 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
@@ -50,12 +47,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Path;
 import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 /**
  *
@@ -67,6 +62,9 @@ public class ClueClient extends Application {
     private Stage stage;
     
     Sound backgroundMusic;
+    
+    private Image volumeOn;
+    private Image volumeOff;
     
     private int width;
     private int height;
@@ -87,7 +85,7 @@ public class ClueClient extends Application {
     private final Background greenFill = new Background(new BackgroundFill(Color.rgb(7, 80, 2), CornerRadii.EMPTY, Insets.EMPTY));
     
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws FileNotFoundException {
         primaryStage.setTitle("Clue");
         
         width = 1280;
@@ -95,8 +93,11 @@ public class ClueClient extends Application {
         
         stage = primaryStage;
         
+        volumeOn = new Image(new FileInputStream(new File("./resources/Sprites/volumeOn.png")), 50, 50, false, false);
+        volumeOff = new Image(new FileInputStream(new File("./resources/Sprites/volumeOff.png")), 50, 50, false, false);
         backgroundMusic = new Sound("./resources/Music/backgroundMusic.wav");
-        backgroundMusic.play();
+        backgroundMusic.loop();
+        backgroundMusic.setvolume(0.2f);
         
         VBox menuOptions = new VBox();
         menuOptions.setPadding(new Insets(10));
@@ -478,18 +479,24 @@ public class ClueClient extends Application {
      */
     private GridPane audioSettingsScene(GridPane layout) {
         Label masterLabel = getLabel("Master Volume", avenirTitle);
+        Label toggleVolume = new Label("",new ImageView(volumeOn));
+        
+        toggleVolume.setOnMouseClicked(e -> backgroundMusic.toggleSound());
         
         Slider masterVolume = new Slider(0, 100, 100);
         masterVolume.setMaxWidth(1000);
         masterVolume.setBlockIncrement(10);
+        
         Label masterVolumeShow = getLabel("", avenirTitle);
-        masterVolumeShow.setText("100");
+        masterVolumeShow.setText("20");
+        masterVolume.setValue(20);
                 
         masterVolume.valueProperty().addListener(new ChangeListener() {
             @Override
             public void changed(ObservableValue observable, Object oldValue, Object newValue) {
                 masterVolumeShow.setText(String.valueOf((int) masterVolume.getValue()));
-                backgroundMusic.setvolume((float) ((float) masterVolume.getValue()*0.01));
+                backgroundMusic.setvolume((float) ((float)masterVolume.getValue()*0.01));
+                System.out.println(masterVolume.getValue());
             }
         });
         
@@ -497,6 +504,7 @@ public class ClueClient extends Application {
         GridPane.setMargin(masterLabel, new Insets(0, 10, 0, 0));
         layout.add(masterVolume, 1, 0);
         layout.add(masterVolumeShow, 2, 0);
+        layout.add(toggleVolume, 3, 0);
         GridPane.setMargin(masterVolumeShow, new Insets(0, 0, 0, 10));
         
         return layout;
