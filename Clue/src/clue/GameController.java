@@ -251,7 +251,9 @@ public final class GameController {
                     moveActionLog();
                     LinkedList<Action> actionsToNotify = getActions();
                     
-                    gui.newHumanPlayerTurn(player, actionsToNotify);
+                    if (gui != null){
+                        gui.newHumanPlayerTurn(player, actionsToNotify);
+                    }
                 }
                 break;
             case SUGGEST:
@@ -260,7 +262,7 @@ public final class GameController {
                     if (action.result){
                         nextAction = new ShowCardsAction(((SuggestAction) action).show, ((SuggestAction) action).player, ((SuggestAction) action).foundCards, gui);
                     }
-                    else{
+                    else if (gui!=null){
                         gui.notifyUser("No other player had to show a card due to your suggestion.");
                     }
                 }
