@@ -439,6 +439,7 @@ public class gameInstance {
                 break;
             case ACCUSATION:
                 System.out.println("[gameInstance.actionResponse] case ACCUSATION");
+                showAccusationResult(action);
                 break;
         }
         System.out.println("return");
@@ -466,6 +467,20 @@ public class gameInstance {
         }
         
         return cardImage;
+    }
+    
+    public void showAccusationResult(Action action) {
+        if (((AccuseAction) action).isCorrect()) { //accusation correct
+            Prompt winnerPrompt = new Prompt("WINNER WINNER CHICKEN DINNER");
+            winnerPrompt.setLabelTitle("YOU WON");
+            winnerPrompt.show();
+        } else {
+            Prompt loserPrompt = new Prompt("HAHA YOU SUCK, THIS IS WHAT THE CARDS WERE XD. GET SMURFED ON");
+            loserPrompt.setLabelTitle("YOU LOSE");
+            ImageView[] cards = new ImageView[3];
+            loserPrompt.setImage(cards);
+            loserPrompt.show();
+        }
     }
     
     private void showCard(Action action) {

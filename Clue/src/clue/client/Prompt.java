@@ -17,6 +17,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -90,5 +91,11 @@ public class Prompt extends Dialog {
     
     public void setImage(ImageView  card) {
         layout.getChildren().add(2, card);
+    }
+    
+    public void setImage(ImageView[] cards) {
+        HBox cardsLayout = new HBox();
+        cardsLayout.getChildren().addAll(cards[0], cards[1], cards[2]);
+        layout.getChildren().add(2, cardsLayout);
     }
 }
