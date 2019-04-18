@@ -165,7 +165,6 @@ public final class GameController {
                 break;
             case AVOIDSUGGESTIONCARD:
                 System.out.println("    CASE AVOIDSUGGESTIONCARD");
-                //TODO: maybe notify player they have a suggestion block
                 returnCard(((AvoidSuggestionAction) action).card);
                 break;
             case ENDTURN:
@@ -201,7 +200,6 @@ public final class GameController {
             case EXTRATURN:
                 System.out.println("    CASE EXTRATURN");
                 returnCard((IntrigueCard) action.card);
-                //does it also need to be physicalled removed from the player?
                 nextAction = new StartTurnAction(action.getPlayer());
                 break;
             case MOVE:
@@ -270,6 +268,7 @@ public final class GameController {
                 break;
             case TELEPORT:
                 System.out.println("    CASE TELEPORT");
+                returnCard((IntrigueCard)((TeleportAction) action).card);
 
                 Tile target = ((TeleportAction) action).getTarget();
                 boolean result = false;
@@ -288,6 +287,7 @@ public final class GameController {
                 break;
             case THROWAGAIN:
                 System.out.println("    CASE THROWAGAIN");
+                returnCard((IntrigueCard)((ThrowAgainAction) action).card);
                 
                 break;
         }
