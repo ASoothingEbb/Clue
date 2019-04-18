@@ -52,7 +52,6 @@ public final class GameController {
     private final Random random;
     private List<Action> actionLog;
     private Queue<Action> actions;
-    private int turns = 0;
     private List<WeaponCard> weaponCards;
     private List<PersonCard> personCards;
     private List<RoomCard> roomCards;
@@ -160,7 +159,7 @@ public final class GameController {
                     state.endGame();
                     endGame();
                 } else {
-                    //nextAction = new EndTurnAction(state.getCurrentPlayer());
+                    //nextAction = new EndTurnAction(state.getCurrentPlayer());//players now manually call end turn
                 }
                 actionLog.add(action);
                 break;
@@ -184,7 +183,7 @@ public final class GameController {
                 }
                 
                 moveActionLog();
-                turns++;
+                
                 
                 if (state.hasActive()){
                     int old = player.getId();
@@ -617,7 +616,7 @@ public final class GameController {
         //TODO
         int pointer = player.getLogPointer();
         while (pointer != actionLog.size()) {
-            System.out.println("[GameController.moveActionLog] pointer: "+pointer +" turns: "+turns);
+            System.out.println("[GameController.moveActionLog] pointer: "+pointer);
             actions.offer(actionLog.get(pointer));
             pointer++;
         }
