@@ -457,18 +457,12 @@ public class boardEditor {
                 }
                     
                 
-                System.out.print(board[y][x] + " ");
             }
-            System.out.println("");
         }
         
-        if(currentRoomInt > 10){
+        if(currentRoomInt != 10){
             ungrabRooms();
-            throw new CreationException("You can't have more than 9 rooms.");
-        }
-        if(currentRoomInt == 1){
-            ungrabRooms();
-            throw new CreationException("You must have at least 1 Room.");
+            throw new CreationException("You must have 9 Rooms Exactly.");
         }
         
         if(startTileCounter != 6){
@@ -531,7 +525,7 @@ public class boardEditor {
             }  
         }
         
-        File csvFile = new File("./Maps/"+mapName+"/"+mapName+"Door"+".csv");
+        File csvFile = new File("./Maps/"+mapName+"/"+mapName+"Door.csv");
         
         try (PrintWriter pw = new PrintWriter(csvFile)) {
             csv.stream().map(this::convertToCSV).forEach(pw::println);
@@ -557,7 +551,7 @@ public class boardEditor {
             csv.add(temp);
         }
         
-        File csvFile = new File("./Maps/" + mapName +"/" + mapName + ".csv");
+        File csvFile = new File("./Maps/" + mapName +"/" + mapName + "Tiles.csv");
         
         try (PrintWriter pw = new PrintWriter(csvFile)) {
             csv.stream().map(this::convertToCSV).forEach(pw::println);
