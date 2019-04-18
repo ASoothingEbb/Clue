@@ -42,13 +42,13 @@ public class Prompt extends Dialog {
     public Prompt(String text) {
         initStyle(StageStyle.UNDECORATED);
         dialogPane = getDialogPane();
-        dialogPane.setBackground(new Background(new BackgroundFill(Color.rgb(160, 160, 160), CornerRadii.EMPTY, Insets.EMPTY)));
+        dialogPane.setBackground(new Background(new BackgroundFill(Color.rgb(56, 45, 40), CornerRadii.EMPTY, Insets.EMPTY)));
         
         initFonts();
         
         layout = new VBox();
         
-        Label title = new Label("Error:");
+        title = new Label("Error:");
         title.setTextFill(Color.WHITE);
         title.setFont(avenirLarge);
         
