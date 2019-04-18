@@ -482,7 +482,7 @@ public class gameInstance {
     }
     
     /**
-     * 
+     * Initialises the default graphics.
      */
     private void initDefaultGraphics() {
         ImagePathMap.put("board", "./resources/board.png");
@@ -513,7 +513,7 @@ public class gameInstance {
     }
     
     /**
-     * 
+     * Initialises the default names.
      */
     private void initDefaultNames() {
         CardNameMap.put("character0", "Miss Scarlet");
@@ -558,7 +558,7 @@ public class gameInstance {
     }
     
     /**
-     * 
+     * Initialises the graphics.
      */
     private void initGraphics() {
         try (InputStream input = new FileInputStream("resources/config.properties")) {
