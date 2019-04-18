@@ -93,6 +93,9 @@ public class ClueClient extends Application {
         
         stage = primaryStage;
         
+        Sound backgroundMusic = new Sound("./resources/Music/backgroundMusic.wav");
+        backgroundMusic.play();
+        
         VBox menuOptions = new VBox();
         menuOptions.setPadding(new Insets(10));
         menuOptions.setSpacing(8);
