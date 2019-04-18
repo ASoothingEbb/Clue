@@ -160,7 +160,7 @@ public final class GameController {
                     state.endGame();
                     endGame();
                 } else {
-                    nextAction = new EndTurnAction(state.getCurrentPlayer());
+                    //nextAction = new EndTurnAction(state.getCurrentPlayer());
                 }
                 actionLog.add(action);
                 break;
@@ -556,7 +556,7 @@ public final class GameController {
      * @param person the character to accuse
      * @param room the crime scene to accuse
      * @param weapon the murder murderWeapon to accuse
-     * @return nothing if accusation was incorrect, if correct : list of Integers representing the ids of: the winner of the game, the murderPerson, murderRoom, murderWeapon
+     * @return the constructed (and executed) AccuseAction
      * @throws UnknownActionException
      * @throws InterruptedException
      * @throws clue.tile.TileOccupiedException
@@ -564,7 +564,7 @@ public final class GameController {
      */
     public AccuseAction accuse(PersonCard person, RoomCard room, WeaponCard weapon) throws UnknownActionException, InterruptedException, TileOccupiedException {
         
-        AccuseAction accuseAction = new AccuseAction(player, person, room, weapon, person == this.murderPerson && room == this.murderRoom && weapon == this.murderWeapon);
+        AccuseAction accuseAction = new AccuseAction(player, person, room, weapon, murderPerson, murderRoom, murderWeapon, gui);
         
         performAction(accuseAction);
         return accuseAction;
@@ -591,7 +591,7 @@ public final class GameController {
             System.err.println("unable to find 3 cards");
         }
         try {
-            accuse(person, room, weapon);
+            accuse(person, room, weapon);           
         } catch (UnknownActionException | InterruptedException | TileOccupiedException ex) {
             Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
         }
