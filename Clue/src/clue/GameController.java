@@ -267,9 +267,9 @@ public final class GameController {
                     if (action.result){
                         
                         try {
-                            System.out.println("[GameController.performAction] pulling player original position: "+((SuggestAction) action).getPlayer().getPosition() );
-                            ((SuggestAction) action).getPlayer().setPosition(bm.getRoom(((SuggestAction) action).getRoomCard().getId()));//move the person being suggested into the room of the suggestion
-                            System.out.println("[GameController.performAction] pulling player new position: "+((SuggestAction) action).getPlayer().getPosition() );
+                            System.out.println("[GameController.performAction] pulling player original position: "+players.get((((SuggestAction) action).getPersonCard().getId())).getPosition());
+                            players.get((((SuggestAction) action).getPersonCard().getId())).setPosition(bm.getRoom(((SuggestAction) action).getRoomCard().getId()));//move the person being suggested into the room of the suggestion
+                            System.out.println("[GameController.performAction] pulling player new position: "+players.get((((SuggestAction) action).getPersonCard().getId())).getPosition());
                         } catch (NoSuchRoomException ex) {
                             Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
                         }

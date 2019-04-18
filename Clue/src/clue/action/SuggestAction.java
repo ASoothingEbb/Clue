@@ -47,10 +47,18 @@ public class SuggestAction extends Action {
 
     /**
      * Gets the room card used in the suggestion
-     * @return 
+     * @return the room card used in the suggestion
      */
     public RoomCard getRoomCard(){
         return (RoomCard)cards[1];
+    }
+    
+    /**
+     * Gets the person card used in the suggestion
+     * @return the person card used in the suggestion
+     */
+    public PersonCard getPersonCard(){
+        return (PersonCard)cards[0];
     }
     
     
