@@ -165,7 +165,6 @@ public final class GameController {
                 break;
             case AVOIDSUGGESTIONCARD:
                 System.out.println("    CASE AVOIDSUGGESTIONCARD");
-                //TODO: maybe notify player they have a suggestion block
                 returnCard(((AvoidSuggestionAction) action).card);
                 break;
             case ENDTURN:
@@ -201,7 +200,6 @@ public final class GameController {
             case EXTRATURN:
                 System.out.println("    CASE EXTRATURN");
                 returnCard((IntrigueCard) action.card);
-                //does it also need to be physicalled removed from the player?
                 nextAction = new StartTurnAction(action.getPlayer());
                 break;
             case MOVE:
@@ -250,6 +248,15 @@ public final class GameController {
                     //System.out.println("b"+player.getId());
                     //state.nextTurn(player.getId());
                     //System.out.println("a"+player.getId());
+                    moveActionLog();
+                    LinkedList<Action> actionsToNotify = getActions();
+                    
+                    if (gui != null){
+                        gui.newHumanPlayerTurn(player, actionsToNotify);
+                    }
+                    else{
+                        System.out.println("[GameController.performAction] null gui -> gui.newHumanPlayerTurn(player, actionsToNotify)");
+                    }
                 }
                 break;
             case SUGGEST:
@@ -258,14 +265,21 @@ public final class GameController {
                     if (action.result){
                         nextAction = new ShowCardsAction(((SuggestAction) action).show, ((SuggestAction) action).player, ((SuggestAction) action).foundCards, gui);
                     }
-                    else{
-                        gui.notifyUser("No other player had to show a card due to your suggestion.");
+                    else {
+                        if (gui != null){
+                            gui.notifyUser("No other player had to show a card due to your suggestion.");
+                        }
+                        else{
+                            System.out.println("[GameController.performAction] null gui -> gui.notifyUser(No other player had to show a card due to your suggestion.");
+                        }
+                        
                     }
                 }
                 actionLog.add(action);
                 break;
             case TELEPORT:
                 System.out.println("    CASE TELEPORT");
+                returnCard((IntrigueCard)((TeleportAction) action).card);
 
                 Tile target = ((TeleportAction) action).getTarget();
                 boolean result = false;
@@ -284,6 +298,7 @@ public final class GameController {
                 break;
             case THROWAGAIN:
                 System.out.println("    CASE THROWAGAIN");
+                returnCard((IntrigueCard)((ThrowAgainAction) action).card);
                 
                 break;
         }
@@ -615,6 +630,7 @@ public final class GameController {
     private void moveActionLog() {
         //TODO
         int pointer = player.getLogPointer();
+        actions = new LinkedList<>();
         while (pointer != actionLog.size()) {
             System.out.println("[GameController.moveActionLog] pointer: "+pointer);
             actions.offer(actionLog.get(pointer));
@@ -628,8 +644,8 @@ public final class GameController {
      *
      * @return action sublist
      */
-    public Queue<Action> getActions() {
-        return actions;
+    public LinkedList<Action> getActions() {
+        return (LinkedList<Action>) actions;
     }
 
     /**

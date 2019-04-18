@@ -5,7 +5,9 @@
  */
 package clue.action;
 
+import clue.ai.AiAdvanced;
 import clue.card.AvoidSuggestionIntrigue;
+import clue.client.gameInstance;
 import clue.player.Player;
 
 /**
@@ -17,21 +19,47 @@ import clue.player.Player;
 public class AvoidSuggestionAction extends Action {
 
     public AvoidSuggestionIntrigue card;
+    private gameInstance gui;
 
     /**
      * Creates a new AvoidSuggestionAction
      *
      * @param player the Player to roll again
      * @param card the AvoidSuggestionIntrigue associated with this action
+     * @deprecated legacy version used for testing only
      */
     public AvoidSuggestionAction(Player player, AvoidSuggestionIntrigue card) {
         super(player,card);
         this.actionType = ActionType.AVOIDSUGGESTIONCARD;
+        gui = null;
+        
     }
 
+    /**
+     * Creates a new AvoidSuggestionAction
+     *
+     * @param player the Player to roll again
+     * @param card the AvoidSuggestionIntrigue associated with this action
+     * 
+     */
+    public AvoidSuggestionAction(Player player, AvoidSuggestionIntrigue card, gameInstance gui) {
+        super(player,card);
+        this.actionType = ActionType.AVOIDSUGGESTIONCARD;
+        this.gui = gui;
+    }
+    
     @Override
     public void execute() {
-        player.removeIntrigue(card);
-        super.execute();
+        player.removeCard(card);
+        if (player.isAi()){
+            //((AiAdvanced) player).notifyAvoidSuggestion();
+
+        }
+        else if (gui != null){
+            gui.actionResponse(this);
+        }
+        else{
+            System.out.println("[ThrowAgainAction.execute] no gui found");
+        }
     }
 }

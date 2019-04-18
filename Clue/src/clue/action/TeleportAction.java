@@ -35,8 +35,11 @@ public class TeleportAction extends Action {
             ((AiAdvanced) player).respondToTeleport(this);
 
         }
-        else{
+        else if (gui != null){
             gui.actionResponse(this);
+        }
+        else{
+            System.out.println("[TeleportAction.execute] no gui found");
         }
     }
     
