@@ -12,6 +12,8 @@ import clue.tile.NoSuchTileException;
 import clue.tile.TileOccupiedException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -30,8 +32,12 @@ public class Clue {
      * @throws clue.GameController.TooManyPlayersException
      */
     public static void main(String[] args) throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException, TileOccupiedException {
-        // TODO code application logic here
-        GameController game = new GameController(1,1,"testCsv/tiles1.csv", "testCsv/doors1.csv");
+        try {
+            // TODO code application logic here
+            GameController game = new GameController(1,1,"testCsv/tiles1.csv", "testCsv/doors1.csv");
+        } catch (NotEnoughPlayersException ex) {
+            Logger.getLogger(Clue.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
 }
