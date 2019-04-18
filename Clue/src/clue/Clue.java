@@ -31,7 +31,6 @@ public class Clue {
      * @throws clue.MissingRoomDuringCreationException
      * @throws clue.GameController.TooManyPlayersException
      */
-<<<<<<< HEAD
     public static void main(String[] args) throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException, TileOccupiedException {
         try {
             // TODO code application logic here
@@ -39,11 +38,6 @@ public class Clue {
         } catch (NotEnoughPlayersException ex) {
             Logger.getLogger(Clue.class.getName()).log(Level.SEVERE, null, ex);
         }
-=======
-    public static void main(String[] args) throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException, TileOccupiedException, NotEnoughPlayersException {
-        // TODO code application logic here
-        GameController game = new GameController(1,1,"testCsv/tiles1.csv", "testCsv/doors1.csv");
->>>>>>> c24c937e6d6c021c74b71249069aa45fd914aaea
     }
     
 }
