@@ -760,4 +760,10 @@ public class gameInstance {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         //TODO
     }
+
+    public void newHumanPlayerTurn(Player player, LinkedList<Action> actionsToNotify) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //TODO
+        //call showAction(actionsToNotify) after player turn has begun (after they click start turn and they fade in)
+    }
 }
