@@ -29,7 +29,7 @@ public class Clue {
      * @throws clue.MissingRoomDuringCreationException
      * @throws clue.GameController.TooManyPlayersException
      */
-    public static void main(String[] args) throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException, TileOccupiedException {
+    public static void main(String[] args) throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException, TileOccupiedException, NotEnoughPlayersException {
         // TODO code application logic here
         GameController game = new GameController(1,1,"testCsv/tiles1.csv", "testCsv/doors1.csv");
     }
