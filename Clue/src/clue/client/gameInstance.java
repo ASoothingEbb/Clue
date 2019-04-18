@@ -92,10 +92,13 @@ public class gameInstance {
     
     //JavaFX
     private GridPane cardsDisplay;
+    private TextArea notepad;
+    private Label remainingMovesLabel;
     
     private Scene prevScene;
     
     private Prompt showCardPrompt = null;
+    private boolean suggested = false;
     
     private CardType selectedCardType;
     private int selectedCardId;
@@ -285,8 +288,16 @@ public class gameInstance {
             int y = player.getPosition().getY();
             PlayerSprite playerSprite = new PlayerSprite(x, y, "PP"+player.getId());
             playerSprites[i] = playerSprite;
-            currentPlayer = playerSprite;
             board[y][x].getChildren().add(playerSprite);
+        }
+        currentPlayer = playerSprites[0];
+    }
+    
+    private void redrawPlayers() {
+        List<Player> players = gameInterface.getPlayers();
+        for (Player player: players) {
+            PlayerSprite sprite = playerSprites[player.getId()];
+            sprite.move(player.getDrawX(), player.getDrawY(), board, sprite);
         }
     }
     
@@ -301,7 +312,7 @@ public class gameInstance {
         // Notepad
         Label notepadLabel = getLabel("Notepad", avenirTitle);
         
-        TextArea notepad = new TextArea();
+        notepad = new TextArea();
         notepad.setPrefRowCount(20);
         notepad.setPrefColumnCount(20);
         notepad.setWrapText(true);
@@ -378,20 +389,27 @@ public class gameInstance {
         playerControlsLayout.setAlignment(Pos.CENTER);
         playerControlsLayout.setPadding(new Insets(0, 0, 5, 0));
         
-        Label remainingMovesLabel = getLabel("Roll Available", avenirTitle);
+        remainingMovesLabel = getLabel("Roll Available", avenirTitle);
 
         MenuItem suggestionButton = new MenuItem("Suggestion", avenirLarge);
         suggestionButton.setActiveColor(Color.ORANGE);
         suggestionButton.setInactiveColor(Color.DARKORANGE);
         suggestionButton.setActive(false); //refresh Colour
         suggestionButton.setOnMouseClicked(e -> {
-            if (gameInterface.getPlayer().getPosition().isRoom()) {
-                currentRoom = ((Room) gameInterface.getPlayer().getPosition()).getId();
-                createCardsWindow("Suggestion", Color.ORANGE);
+            if (suggested) {
+                Prompt errorPrompt = new Prompt("You have already suggsted");
+                errorPrompt.setLabelTitle("Invalid Game Move");
+                errorPrompt.showAndWait();
             } else {
-                Prompt suggestError = new Prompt("You are not in a room");
-                suggestError.show();
+                if (gameInterface.getPlayer().getPosition().isRoom()) {
+                    currentRoom = ((Room) gameInterface.getPlayer().getPosition()).getId();
+                    createCardsWindow("Suggestion", Color.ORANGE);
+                } else {
+                    Prompt suggestError = new Prompt("You are not in a room");
+                    suggestError.showAndWait();
+                }
             }
+
         });
         
         MenuItem accusationButton = new MenuItem("Accusation", avenirLarge);
@@ -414,7 +432,7 @@ public class gameInstance {
                 rolled = true;
             } else {
                 Prompt alreadyRolled = new Prompt("You cannot roll");
-                alreadyRolled.show();
+                alreadyRolled.showAndWait();
             }
         });
         
@@ -423,11 +441,6 @@ public class gameInstance {
             try {
                 gameInterface.endTurn();
                 gameInterface.getPlayer().setNotes(notes);
-                rolled = false;
-                currentPlayer = playerSprites[gameInterface.getPlayer().getId()];
-                remainingMovesLabel.setText("Roll Available");
-                switchToCurtain();
-                createCardsDisplay(cardsDisplay);
             } catch (UnknownActionException | InterruptedException | GameController.MovementException | TileOccupiedException ex) {
                 Logger.getLogger(gameInstance.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -471,7 +484,7 @@ public class gameInstance {
         
         
         //Fade Transition
-        uiToCurtain = new FadeTransition(Duration.millis(2500), main);
+        uiToCurtain = new FadeTransition(Duration.millis(1000), main);
         uiToCurtain.setNode(main);
         uiToCurtain.setFromValue(0);
         uiToCurtain.setToValue(1);
@@ -491,8 +504,16 @@ public class gameInstance {
                 break;
             case SHOWCARD:
                 System.out.println("[gameInstance.actionResponse] case SHOWCARD");
-                System.out.println("------------------------------");
                 showCard(action);
+                redrawPlayers();
+                for (Player player: gameInterface.getPlayers()) {
+                    System.out.println("Player " + player.getId() + " " + player.getPosition());
+                    System.out.println("Player " + player.getId() + " " + player.getDrawX() + " " +  player.getDrawY());
+                }
+                if (((ShowCardAction) action).getWhoShowedTheCard().isAi()) {
+                    showCardPrompt.show();
+                }
+                suggested = true;
                 break;
             case AVOIDSUGGESTIONCARD:
                 System.out.println("[gameInstance.actionResponse] case AVOIDSUGGESTIONCARD");
@@ -551,7 +572,7 @@ public class gameInstance {
             cards[i] = new ImageView(getImage(murderCards.get(i).getId(), murderCards.get(i).cardType));
         }
         accusationResultPrompt.setImage(cards);
-        accusationResultPrompt.show();
+        accusationResultPrompt.showAndWait();
     }
     
     private void showCard(Action action) {
@@ -625,7 +646,6 @@ public class gameInstance {
         });
         
         showCardsDisplay.getChildren().addAll(showCardsLabel, cardDisplay, confirmCardButton);
-        
         Scene scene = new Scene(showCardsDisplay, 1736, 960);
         prevScene = gameStage.getScene();
         switchPlayerScene(((ShowCardsAction) action).getPlayer().getId(), scene);
@@ -683,15 +703,15 @@ public class gameInstance {
         ImagePathMap.put("weapon4","./resources/Weapon/Rope.png");
         ImagePathMap.put("weapon5","./resources/Weapon/Wrench.png");
         
-        ImagePathMap.put("room0","./resources/Room/Ballroom.png");
-        ImagePathMap.put("room1","./resources/Room/BillardRoom.png");
-        ImagePathMap.put("room2","./resources/Room/Conservatory.png");
-        ImagePathMap.put("room3","./resources/Room/DiningRoom.png");
-        ImagePathMap.put("room4","./resources/Room/Hall.png");
-        ImagePathMap.put("room5","./resources/Room/Kitchen.png");
-        ImagePathMap.put("room6","./resources/Room/Library.png");
-        ImagePathMap.put("room7","./resources/Room/Lounge.png");
-        ImagePathMap.put("room8","./resources/Room/Study.png");
+        ImagePathMap.put("room0","./resources/Room/Study.png");
+        ImagePathMap.put("room1","./resources/Room/Hall.png");
+        ImagePathMap.put("room2","./resources/Room/Lounge.png");
+        ImagePathMap.put("room3","./resources/Room/Library.png");
+        ImagePathMap.put("room4","./resources/Room/BillardRoom.png");
+        ImagePathMap.put("room5","./resources/Room/DiningRoom.png");
+        ImagePathMap.put("room6","./resources/Room/Conservatory.png");
+        ImagePathMap.put("room7","./resources/Room/BallRoom.png");
+        ImagePathMap.put("room8","./resources/Room/Kitchen.png");
     }
     
     /**
@@ -712,15 +732,15 @@ public class gameInstance {
         CardNameMap.put("weapon4", "Rope");
         CardNameMap.put("weapon5", "Wrench");
         
-        CardNameMap.put("room0", "Ballroom");
-        CardNameMap.put("room1", "Billard Room");
-        CardNameMap.put("room2", "Conservatory");
-        CardNameMap.put("room3", "Dining Room");
-        CardNameMap.put("room4", "Hall");
-        CardNameMap.put("room5", "Kitchen");
-        CardNameMap.put("room6", "Library");
-        CardNameMap.put("room7", "Lounge");
-        CardNameMap.put("room8", "Study");
+        CardNameMap.put("room0", "Study");
+        CardNameMap.put("room1", "Hall");
+        CardNameMap.put("room2", "Lounge");
+        CardNameMap.put("room3", "Library");
+        CardNameMap.put("room4", "Billard Room");
+        CardNameMap.put("room5", "Dining Room");
+        CardNameMap.put("room6", "Conservatory");
+        CardNameMap.put("room7", "Ball Room");
+        CardNameMap.put("room8", "Kitchen");
     }
     
     /**
@@ -848,8 +868,18 @@ public class gameInstance {
     }
 
     public void newHumanPlayerTurn(Player player, LinkedList<Action> actionsToNotify) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        resetRoll();
+        suggested = false;
+        currentPlayer = playerSprites[gameInterface.getPlayer().getId()];
+        switchToCurtain();
+        redrawPlayers();
+        createCardsDisplay(cardsDisplay);
         //TODO
         //call showAction(actionsToNotify) after player turn has begun (after they click start turn and they fade in)
+    }
+    
+    private void resetRoll() {
+        remainingMovesLabel.setText("Roll Available");
+        rolled = false;
     }
 }

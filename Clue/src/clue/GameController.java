@@ -72,7 +72,7 @@ public final class GameController {
      * @throws clue.GameController.TooManyPlayersException thrown when player count exceeds 6 or the number of starting locations
      * @throws clue.tile.TileOccupiedException
      */
-    public GameController(int human, int ai, String tilePath, String doorPath) throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, TooManyPlayersException, TileOccupiedException {
+    public GameController(int human, int ai, String tilePath, String doorPath) throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, TooManyPlayersException, TileOccupiedException, NotEnoughPlayersException {
         //TODO
         bm = new BoardMappings(tilePath, doorPath);
         LinkedList<Tile> startingTiles = bm.getStartingTiles();
@@ -110,11 +110,13 @@ public final class GameController {
                     //System.out.println(p+" :"+startingTiles.peek());
                     p.setPosition(startingTiles.poll());
                 }
+                System.out.println(p);
             }
             performAction(new StartAction());
         } else {
             state.endGame();
             endGame();
+            throw new NotEnoughPlayersException();
         }
     }
 
@@ -251,7 +253,7 @@ public final class GameController {
                     moveActionLog();
                     LinkedList<Action> actionsToNotify = getActions();
                     
-                    if (gui != null){
+                    if (gui != null && !player.isAi()){
                         gui.newHumanPlayerTurn(player, actionsToNotify);
                     }
                     else{
@@ -263,10 +265,19 @@ public final class GameController {
                 System.out.println("    CASE SUGGEST "+player.getId() + " FROM: "+state.getAction().actionType);
                 if (state.getAction().actionType == ActionType.STARTTURN || state.getAction().actionType == ActionType.MOVE || state.getAction().actionType == ActionType.TELEPORT) {
                     if (action.result){
-                        nextAction = new ShowCardsAction(((SuggestAction) action).show, ((SuggestAction) action).player, ((SuggestAction) action).foundCards, gui);
+                        
+                        try {
+                            System.out.println("[GameController.performAction] pulling player original position: "+players.get((((SuggestAction) action).getPersonCard().getId())).getPosition());
+                            players.get((((SuggestAction) action).getPersonCard().getId())).setPosition(bm.getRoom(((SuggestAction) action).getRoomCard().getId()));//move the person being suggested into the room of the suggestion
+                            System.out.println("[GameController.performAction] pulling player new position: "+players.get((((SuggestAction) action).getPersonCard().getId())).getPosition());
+                        } catch (NoSuchRoomException ex) {
+                            Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        nextAction = new ShowCardsAction(((SuggestAction) action).show, ((SuggestAction) action).player, ((SuggestAction) action).foundCards, gui, this);
+                        
                     }
                     else {
-                        if (gui != null){
+                        if (gui != null && !player.isAi()){
                             gui.notifyUser("No other player had to show a card due to your suggestion.");
                         }
                         else{

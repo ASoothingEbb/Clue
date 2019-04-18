@@ -22,6 +22,7 @@ import clue.card.WeaponCard;
 import clue.player.Player;
 import clue.tile.Tile;
 import clue.tile.TileOccupiedException;
+import static java.lang.Thread.sleep;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -67,8 +68,18 @@ public class AiAdvanced extends Player{
         gameController = gc;
         rand = new Random();
         shownCards = new ArrayList<>();
-        suggestionsLeft = 2;//rand.nextInt(15)+11;
+        suggestionsLeft = 50;//rand.nextInt(15)+11;
         myTurn = false;
+        
+        knownCards = new ArrayList<>();
+        
+        ArrayList<Integer> c0 = new ArrayList<>();
+        ArrayList<Integer> c1 = new ArrayList<>();
+        ArrayList<Integer> c2 = new ArrayList<>();
+        
+        knownCards.add(c0);
+        knownCards.add(c1);
+        knownCards.add(c2);
     }
     
     public Card respondToShowCards(List<Card> cards){
