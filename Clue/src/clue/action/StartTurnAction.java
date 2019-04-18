@@ -8,6 +8,9 @@ package clue.action;
 import clue.ai.AiAdvanced;
 import clue.card.Card;
 import clue.player.Player;
+import static java.lang.Thread.sleep;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *Represents the start of the next turn.
@@ -27,6 +30,11 @@ public class StartTurnAction extends Action{
     @Override
     public void execute() {
         super.execute(); //To change body of generated methods, choose Tools | Templates.
+        try {
+            sleep(1000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(AiAdvanced.class.getName()).log(Level.SEVERE, null, ex);
+        }
         if (player.isAi()){
             ((AiAdvanced) player).respondToStartTurn();
         }
