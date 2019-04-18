@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.FadeTransition;
@@ -165,7 +166,8 @@ public class gameInstance {
                     } else if (cell.contains("S")) {
                         tileSprite.setColor(Color.rgb(55, 136, 4));
                     } else if (Integer.valueOf(cell) > 0) {
-                        tileSprite.setColor(Color.rgb(90, 76, 65));
+                        paintRoom(tileSprite, Integer.valueOf(cell));
+                        //tileSprite.setColor(Color.rgb(90, 76, 65));
                     }
                     
                     tilePane.getChildren().add(tileSprite);
@@ -207,6 +209,45 @@ public class gameInstance {
         
         root.getChildren().add(boardPane);
         return root;
+    }
+    
+    private void paintRoom(Tile tile, int id){
+        Random rand = new Random();
+        switch(id){
+            case 1:
+                tile.setColor(Color.CORAL);
+                break;
+            case 2:
+                tile.setColor(Color.CRIMSON);
+                break;
+            case 3:
+                tile.setColor(Color.DEEPPINK);
+                break;
+            case 4:
+                tile.setColor(Color.CRIMSON);
+                break;
+            case 5:
+                tile.setColor(Color.SALMON);
+                break;
+            case 6:
+                tile.setColor(Color.HONEYDEW);
+                break;
+            case 7:
+                tile.setColor(Color.THISTLE);
+                break;
+            case 8:
+                tile.setColor(Color.POWDERBLUE);
+                break;
+            case 9:
+                tile.setColor(Color.WHITE);
+                break;
+            default:
+                int r = rand.nextInt(255)+1;
+                int g = rand.nextInt(255)+1;
+                int b = rand.nextInt(255)+1;
+                tile.setColor(Color.rgb(r,g,b));
+                break;
+        }
     }
 
     private void spawnPlayers(StackPane[][] board) {
