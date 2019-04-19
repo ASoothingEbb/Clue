@@ -5,7 +5,6 @@
  */
 package clue.action;
 
-import clue.ai.AiAdvanced;
 import clue.card.AvoidSuggestionIntrigue;
 import clue.client.gameInstance;
 import clue.player.Player;

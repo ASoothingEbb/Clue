@@ -106,4 +106,16 @@ public class AccuseAction extends Action {
     public boolean wasCorrect(){
         return result;
     }
+    
+    /**
+     * Gets the accused card IDs
+     * @return the accused card IDs
+     */
+    public int[] getAccusationCards() {
+        int[] cards = new int[3];
+        cards[0] = person.getId();
+        cards[1] = weapon.getId();
+        cards[2] = room.getId();
+        return cards;
+    }
 }

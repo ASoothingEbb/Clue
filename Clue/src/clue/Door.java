@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package clue.tile;
+package clue;
 
 import clue.tile.Room;
 import clue.tile.Tile;

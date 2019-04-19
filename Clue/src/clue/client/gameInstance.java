@@ -10,6 +10,7 @@ import clue.action.AccuseAction;
 import clue.action.Action;
 import clue.action.ShowCardAction;
 import clue.action.ShowCardsAction;
+import clue.action.SuggestAction;
 import clue.action.UnknownActionException;
 import clue.card.Card;
 import clue.card.CardType;
@@ -94,6 +95,8 @@ public class gameInstance {
     
     
     //JavaFX
+    
+    private TextArea history;
     private GridPane cardsDisplay;
     private TextArea notepad;
     private Label remainingMovesLabel;
@@ -337,31 +340,18 @@ public class gameInstance {
         
         // suggestion accusation history
         Label historyLabel = getLabel("History", avenirTitle); 
-
-        StackPane history = new StackPane();
-                
-        ScrollPane historyPane = new ScrollPane();
-        //TODO make transparent or notepad yellow
-        //historyPane.setStyle("-fx-control-inner-background: #fff2ab;");
-        //historyPane.setBackground(new Background(new BackgroundFill(Color.GREY, CornerRadii.EMPTY, Insets.EMPTY)));
-        historyPane.setPannable(false);
-        historyPane.setPrefHeight(400);
-        historyPane.setContent(history);
         
-        leftPanelLayout.getChildren().addAll(notepadLabel, notepad, print, historyLabel, historyPane);
+        history = new TextArea();
+        history.setPrefRowCount(18);
+        history.setPrefColumnCount(20);
+        history.setWrapText(true);
+        history.setFont(avenirText);
+        history.setStyle("-fx-control-inner-background: #fff2ab;");
+        history.setEditable(false);
+        
+        leftPanelLayout.getChildren().addAll(notepadLabel, notepad, print, historyLabel, history);
         
         return leftPanelLayout;
-    }
-    
-    /**
-     * 
-     * @return 
-     */
-    private Label formatHistoryItem() {
-        // TODO String processing
-        // waiting for definite format from backend
-        Label historyItem = new Label();
-        return historyItem;
     }
     
     /**
@@ -431,20 +421,21 @@ public class gameInstance {
         suggestionButton.setInactiveColor(Color.DARKORANGE);
         suggestionButton.setActive(false); //refresh Colour
         suggestionButton.setOnMouseClicked(e -> {
-            if (suggested) {
-                Prompt errorPrompt = new Prompt("You have already suggsted");
-                errorPrompt.setLabelTitle("Invalid Game Move");
-                errorPrompt.showAndWait();
-            } else {
-                if (gameInterface.getPlayer().getPosition().isRoom()) {
-                    currentRoom = ((Room) gameInterface.getPlayer().getPosition()).getId();
-                    createCardsWindow("Suggestion", Color.ORANGE);
+            if (!accused) {
+                if (suggested) {
+                    Prompt errorPrompt = new Prompt("You have already suggsted");
+                    errorPrompt.setLabelTitle("Invalid Game Move");
+                    errorPrompt.showAndWait();
                 } else {
-                    Prompt suggestError = new Prompt("You are not in a room");
-                    suggestError.showAndWait();
+                    if (gameInterface.getPlayer().getPosition().isRoom()) {
+                        currentRoom = ((Room) gameInterface.getPlayer().getPosition()).getId();
+                        createCardsWindow("Suggestion", Color.ORANGE);
+                    } else {
+                        Prompt suggestError = new Prompt("You are not in a room");
+                        suggestError.showAndWait();
+                    }
                 }
             }
-
         });
         
         MenuItem accusationButton = new MenuItem("Accusation", avenirLarge);
@@ -526,7 +517,6 @@ public class gameInstance {
         rightPanel.setBottom(createPlayerControls());
         
         main.setRight(rightPanel);
-        
         
         //Fade Transition
         uiToCurtain = new FadeTransition(Duration.millis(500), main);
@@ -672,6 +662,7 @@ public class gameInstance {
         showCardsDisplay.setAlignment(Pos.CENTER);
         
         List<Card> cards = ((ShowCardsAction) action).getCardList();
+        System.out.println(cards.size());
         
         Label showCardsLabel = getLabel("Select a card to show", avenirTitle);
         
@@ -825,7 +816,7 @@ public class gameInstance {
     /**
      * Initialises the graphics.
      */
-    private void initGraphics() {
+    private void initCustomSettings() {
         try (InputStream input = new FileInputStream("resources/config.properties")) {
             Properties prop = new Properties();
             prop.load(input);
@@ -833,8 +824,15 @@ public class gameInstance {
             prop.keySet();
             
             for (Map.Entry entry: prop.entrySet()) {
-                System.out.println(entry.getKey());
-                System.out.println(entry.getValue());
+                String key = entry.getKey().toString();
+                String value = entry.getValue().toString();
+                if (key.contains("Name")) {
+                    CardNameMap.put(key.substring(0, key.length() - 4), value);
+                } else if (key.contains("Texture")) {
+                    ImagePathMap.put(key.substring(0, key.length() - 5), value);
+                } else if (key.contains("Token")) {
+                    TokenPathMap.put(key.substring(0, key.length() - 5), value);
+                }
             }
             System.out.println("here");
             input.close();
@@ -871,7 +869,7 @@ public class gameInstance {
         initDefaultTokens();
         initDefaultGraphics();
         initDefaultNames();
-        initGraphics();
+        initCustomSettings();
         
         uiScene = new Scene(createUI(), Color.BLACK);
         gameStage.setScene(uiScene);
@@ -962,18 +960,70 @@ public class gameInstance {
     
 
     public void showActionLog(LinkedList<Action> actionsToNotify) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        //TODO
+        System.out.println("show history called");
+        for (Action action: actionsToNotify) {
+            StringBuilder message = new StringBuilder();     
+            switch (action.actionType) {
+                case ACCUSATION:
+                    int accuser = ((AccuseAction) action).getPlayer().getId();
+                    final int[] cards = ((AccuseAction) action).getAccusationCards();
+                    message.append(CardNameMap.get("character" + accuser));
+                    message.append(" accused ");
+                    message.append(CardNameMap.get("character" + cards[0]));
+                    message.append(" of murder in the ");
+                    message.append(CardNameMap.get("room" + cards[2]));
+                    message.append(" using the ");
+                    message.append(CardNameMap.get("weapon" + cards[1]));
+                    message.append("\n");
+                    history.appendText("--------------------\n");
+                    history.appendText(message.toString());
+                    break;
+                case SHOWCARD:
+                    int suggestee = ((ShowCardAction) action).getWhoShowedTheCard().getId();
+                    int suggester = ((ShowCardAction) action).getPlayer().getId();
+                    message.append(CardNameMap.get("character" + suggestee));
+                    message.append(" showed a card to ");
+                    message.append(CardNameMap.get("character" + suggester));
+                    message.append("\n");
+                    history.appendText("--------------------\n");
+                    history.appendText(message.toString());
+                    break;
+                case SUGGEST:
+                    SuggestAction suggestedAction = ((SuggestAction) action);
+                    message.append(CardNameMap.get("character" + suggestedAction.getPlayer().getId()));
+                    message.append(" suggested ");
+                    message.append(CardNameMap.get("character" + suggestedAction.getPersonCard().getId()));
+                    message.append(" of the murder in the ");
+                    message.append(CardNameMap.get("room" + suggestedAction.getRoomCard().getId()));
+                    message.append(" using the ");
+                    message.append(CardNameMap.get("weapon" + suggestedAction.getWeaponCard().getId()));
+                    message.append("\n");
+                    history.appendText("--------------------\n");
+                    history.appendText(message.toString());
+                    break;
+                case SHOWCARDS:
+                    
+                    break;
+                default:
+                    int[] mathew = new int[1];
+                    System.out.println(mathew[-1]);
+                    break;
+            }
+        }
+        
     }
 
     public void newHumanPlayerTurn(Player player, LinkedList<Action> actionsToNotify) {
         resetRoll();
         suggested = false;
+        accused = false;
         currentPlayer = playerSprites[gameInterface.getPlayer().getId()];
         notepad.setText(gameInterface.getPlayer().getNotes());
+        history.clear();
         switchToCurtain();
         redrawPlayers();
         createCardsDisplay(cardsDisplay);
+        showActionLog(actionsToNotify);
         //TODO
         //call showAction(actionsToNotify) after player turn has begun (after they click start turn and they fade in)
     }

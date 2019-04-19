@@ -7,7 +7,6 @@ package clue;
 
 import clue.tile.NoSuchRoomException;
 import clue.tile.NoSuchTileException;
-import clue.tile.Door;
 import clue.tile.Room;
 import clue.tile.Tile;
 import java.util.ArrayList;

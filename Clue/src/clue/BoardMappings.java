@@ -7,13 +7,11 @@ package clue;
 
 import clue.tile.NoSuchRoomException;
 import clue.tile.NoSuchTileException;
-import clue.tile.Door;
 import clue.card.RoomCard;
 import clue.tile.Room;
 import clue.tile.SpecialTile;
 import clue.tile.Tile;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -21,8 +19,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 /**
@@ -31,21 +27,6 @@ import java.util.regex.Pattern;
  */
 public final class BoardMappings {
     
-    public static void main(String[] args){//TODO:              delete me final submission
-        System.out.println("[BoardMappings.main (temp, delete main later)] running example1 (BoardMappings.main)");
-        try {
-            BoardMappings boardMappings = new BoardMappings("resources/archersAvenueTiles.csv", "resources/archersAvenueDoors.csv");
-        } catch (NoSuchRoomException ex) {
-            System.out.println("oof");
-            Logger.getLogger(BoardMappings.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NoSuchTileException ex) {
-            System.out.println("oof2");
-            Logger.getLogger(BoardMappings.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (MissingRoomDuringCreationException ex) {
-            Logger.getLogger(BoardMappings.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    
-    }
     private Tile[][] mappings;
     private PriorityQueue<StartingTile> startingTilesPQ;
     private LinkedList<Tile> startTiles;

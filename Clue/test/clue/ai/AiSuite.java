@@ -30,9 +30,9 @@ public class AiSuite {
 
     
     @BeforeClass
-    public static void setUpClass() throws UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException, TileOccupiedException {
+    public static void setUpClass() throws Exception {
 
-        gc = new GameController(1,1,"testCsv/tiles1.csv", "testCsv/doors1.csv");
+        gc = new GameController(1,1,"resources/archersAvenueTiles.csv", "resources/archersAvenueDoors.csv");
     }
 
     @AfterClass
