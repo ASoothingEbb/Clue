@@ -198,8 +198,7 @@ public class gameInstance {
                         } else if (cell.contains("S")) {
                             tileSprite.setColor(Color.rgb(55, 136, 4));
                         } else if (Integer.valueOf(cell) > 0) {
-                            //paintRoom(tileSprite, Integer.valueOf(cell));
-                            tileSprite.setColor(Color.rgb(90, 76, 65));
+                            paintRoom(tileSprite, Integer.valueOf(cell));
                         }
                     }
 
@@ -250,6 +249,7 @@ public class gameInstance {
         switch(id){
             case 1:
                 tile.setColor(Color.CORAL);
+                tile.setMessage("LIBRARY");
                 break;
             case 2:
                 tile.setColor(Color.CRIMSON);
@@ -480,13 +480,9 @@ public class gameInstance {
         
         MenuItem endButton = new MenuItem("End Turn", avenirLarge);
         endButton.setOnMouseClicked(e -> {
-            try {
-                gameInterface.getPlayer().setNotes(notes);
-                gameInterface.endTurn();
-                endTurnSound.play();
-            } catch (UnknownActionException | InterruptedException | GameController.MovementException | TileOccupiedException ex) {
-                Logger.getLogger(gameInstance.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            gameInterface.getPlayer().setNotes(notes);
+            gameInterface.endTurn();
+            endTurnSound.play();
         });
         
         playerControlsLayout.getChildren().addAll(remainingMovesLabel, suggestionButton, accusationButton, rollButton, endButton);
