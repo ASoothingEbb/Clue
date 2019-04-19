@@ -42,7 +42,7 @@ public class ClueClientTest {
      * Test of start method, of class ClueClient.
      */
     @Test
-    public void testStart() {
+    public void testStart() throws Exception{
         System.out.println("start");
         Stage primaryStage = null;
         ClueClient instance = new ClueClient();
