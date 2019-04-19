@@ -626,13 +626,17 @@ public final class GameController {
      * 
      * @param personId the character to accuse
      * @param weaponId the murder murderWeapon to accuse
-     * @param roomId the murder location
      * 
     
      */
-    public void accuse(int personId, int weaponId, int roomId){
+    public void accuse(int personId, int weaponId){
         PersonCard person = getPersonCard(personId);
-        RoomCard room = getRoomCard(roomId);
+        RoomCard room = null;
+        try {
+            room = ((Room)player.getPosition()).getCard();
+        } catch (NoSuchRoomException ex) {
+            Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
+        }
         WeaponCard weapon = getWeaponCard(weaponId);
   
         

@@ -457,7 +457,13 @@ public class gameInstance {
                 errorPrompt.setLabelTitle("Invalid Game Move");
                 errorPrompt.showAndWait();
             } else {
-                createCardsWindow("Accusation", Color.RED);
+                if (gameInterface.getPlayer().getPosition().isRoom()) {
+                    currentRoom = ((Room) gameInterface.getPlayer().getPosition()).getId();
+                    createCardsWindow("Accusation", Color.RED);
+                } else {
+                    Prompt accuseError = new Prompt("You are not in a roomn");
+                    accuseError.showAndWait();
+                }
             }
             
         });
