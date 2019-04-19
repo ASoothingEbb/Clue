@@ -31,7 +31,10 @@ public class WeaponCard extends Card{
      */
     public void setPosition(Room t) {
         
-        position.unassignLocation(drawnLocation);//allow room to re assign location
+        if (position!= null){
+            position.unassignLocation(drawnLocation);//allow room to re assign location
+        }
+        
         position = t;
         drawnLocation = t.assignLocation();//get a location from the room
   
