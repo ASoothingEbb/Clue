@@ -82,6 +82,7 @@ public class gameInstance {
     
     private HashMap<String, String> ImagePathMap = new HashMap<>();
     private HashMap<String, String> CardNameMap = new HashMap<>();
+    private HashMap<String, String> TokenPathMap = new HashMap<>();
     
     private String boardTilePath;
     
@@ -287,7 +288,7 @@ public class gameInstance {
 
             int x = player.getDrawX();
             int y = player.getDrawY();
-            PlayerSprite playerSprite = new PlayerSprite(x, y, "resources/playerTokens/MissScarlet.png");
+            PlayerSprite playerSprite = new PlayerSprite(x, y, TokenPathMap.get("character" + player.getId()));
 
             playerSprites[i] = playerSprite;
             board[y][x].getChildren().add(playerSprite);
@@ -493,7 +494,7 @@ public class gameInstance {
         
         
         //Fade Transition
-        uiToCurtain = new FadeTransition(Duration.millis(1000), main);
+        uiToCurtain = new FadeTransition(Duration.millis(500), main);
         uiToCurtain.setNode(main);
         uiToCurtain.setFromValue(0);
         uiToCurtain.setToValue(1);
@@ -725,6 +726,15 @@ public class gameInstance {
         ImagePathMap.put("room8","resources/Room/Kitchen.png");
     }
     
+    private void initDefaultTokens() {
+        TokenPathMap.put("character0", "resources/characterToken/MissScarlet.png");
+        TokenPathMap.put("character1", "resources/characterToken/ColonelMustard.png");
+        TokenPathMap.put("character2", "resources/characterToken/MrsWhite.png");
+        TokenPathMap.put("character3", "resources/characterToken/MrGreen.png");
+        TokenPathMap.put("character4", "resources/characterToken/MrsPeacock.png");
+        TokenPathMap.put("character5", "resources/characterToken/ProfessorPlum.png");
+    }
+    
     /**
      * Initialises the default names.
      */
@@ -815,6 +825,7 @@ public class gameInstance {
         gameInterface.setGameInstance(this);
         
         initFonts();
+        initDefaultTokens();
         initDefaultGraphics();
         initDefaultNames();
         initGraphics();
