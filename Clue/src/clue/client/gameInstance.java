@@ -593,7 +593,7 @@ public class gameInstance {
     public void showAccusationResult(Action action) {
         Prompt accusationResultPrompt = new Prompt("");
         if (((AccuseAction) action).wasCorrect()) { //accusation correct
-            accusationResultPrompt.setMessage("WINNER WINNER CHICKHEN DINNER");
+            accusationResultPrompt.setMessage("CONGRATULATIONS");
             accusationResultPrompt.setLabelTitle("YOU WON");
         } else {
             accusationResultPrompt.setMessage("BETTER LUCK NEXT TIME!");

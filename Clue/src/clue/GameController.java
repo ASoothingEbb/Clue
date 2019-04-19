@@ -441,7 +441,7 @@ public final class GameController {
         int numberOfPersons = 6;
                 
         ArrayList<Card> cardDeck = new ArrayList<>();
-        Random rand = new Random();
+        Random rand = new Random(Calendar.getInstance().getTimeInMillis());
         int randInt = -1;
               
         Room[] rooms = bm.getRooms();
