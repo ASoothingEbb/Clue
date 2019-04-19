@@ -179,7 +179,7 @@ public class gameInstance {
                                 Prompt moveError = new Prompt("Invalid Move");
                                 moveError.show();
                             }
-                        } catch (NoSuchRoomException | UnknownActionException | InterruptedException | GameController.MovementException | TileOccupiedException ex) {
+                        } catch (NoSuchRoomException | TileOccupiedException ex) {
                             Logger.getLogger(gameInstance.class.getName()).log(Level.SEVERE, null, ex);
                         } catch (NullPointerException ex) {
                             Prompt rollError = new Prompt("Roll First");
@@ -447,13 +447,11 @@ public class gameInstance {
         
         MenuItem endButton = new MenuItem("End Turn", avenirLarge);
         endButton.setOnMouseClicked(e -> {
-            try {
-                gameInterface.endTurn();
-                gameInterface.getPlayer().setNotes(notes);
-                endTurnSound.play();
-            } catch (UnknownActionException | InterruptedException | GameController.MovementException | TileOccupiedException ex) {
-                Logger.getLogger(gameInstance.class.getName()).log(Level.SEVERE, null, ex);
-            }
+
+            gameInterface.endTurn();
+            gameInterface.getPlayer().setNotes(notes);
+            endTurnSound.play();
+            
         });
         
         playerControlsLayout.getChildren().addAll(remainingMovesLabel, suggestionButton, accusationButton, rollButton, endButton);
