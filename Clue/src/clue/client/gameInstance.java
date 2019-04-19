@@ -544,12 +544,12 @@ public class gameInstance {
     public void actionResponse(Action action) {
         switch (action.actionType) {
             case SHOWCARDS:
-                System.out.println("[gameInstance.actionResponse] case SHOWCARDS");
+                System.out.println("[gameInstance.actionResponse] case SHOWCARDS ----");
                 endTurnSound.play();
                 showCards(action);
                 break;
             case SHOWCARD:
-                System.out.println("[gameInstance.actionResponse] case SHOWCARD");
+                System.out.println("[gameInstance.actionResponse] case SHOWCARD ----");
                 endTurnSound.play();
                 showCard(action);
                 redrawPlayers();
@@ -563,16 +563,16 @@ public class gameInstance {
                 suggested = true;
                 break;
             case AVOIDSUGGESTIONCARD:
-                System.out.println("[gameInstance.actionResponse] case AVOIDSUGGESTIONCARD");
+                System.out.println("[gameInstance.actionResponse] case AVOIDSUGGESTIONCARD ----");
                 break;
             case THROWAGAIN:
-                System.out.println("[gameInstance.actionResponse] case THROWAGAIN");
+                System.out.println("[gameInstance.actionResponse] case THROWAGAIN ----");
                 break;
             case STARTTURN:
-                System.out.println("[gameInstance.actionResponse] case STARTTURN");
+                System.out.println("[gameInstance.actionResponse] case STARTTURN ----");
                 break;
             case ACCUSATION:
-                System.out.println("[gameInstance.actionResponse] case ACCUSATION");
+                System.out.println("[gameInstance.actionResponse] case ACCUSATION ----");
                 showAccusationResult(action);
                 break;
         }
@@ -945,6 +945,21 @@ public class gameInstance {
         gameStage.setScene(uiScene);
         System.out.println(gameStage.getWidth() + "" + gameStage.getHeight());
     }
+    
+    /**
+     * Each time this is called, one future ShowCardsAction will be queued, the queue will be dequeued once the gui recived a StartTurnAction
+     * Switches the current scene to the uiScene and fade animation plays.
+     */
+    public void aiShowCardsRequests(){
+        System.out.println("--------------------------------------------------------------------------------------------------------------");
+        throw new UnsupportedOperationException("not yet implemented");
+        
+        //TODO
+        //if this is called, the next recived showCardsAction (through actionResponse) should be added to a queue 
+        //when you recived a StartTurnAction (through actionResponse) , if the queue is not empty, first display the queued ShowCardsActions, then process the StartTurnAction
+    }
+    
+    
 
     public void showActionLog(LinkedList<Action> actionsToNotify) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
