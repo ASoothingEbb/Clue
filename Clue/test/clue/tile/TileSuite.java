@@ -17,7 +17,7 @@ import org.junit.runners.Suite;
  * @author steve
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({TileTest.class, DoorTest.class, SpecialTileTest.class, RoomTest.class})
+@Suite.SuiteClasses({TileTest.class, SpecialTileTest.class, RoomTest.class})
 public class TileSuite {
 
     @BeforeClass

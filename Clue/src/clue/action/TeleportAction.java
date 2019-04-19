@@ -20,7 +20,6 @@ import clue.tile.TileOccupiedException;
  */
 public class TeleportAction extends Action {
 
-    private gameInstance gui;
     private Tile target;
 
     /**
@@ -30,7 +29,7 @@ public class TeleportAction extends Action {
      * @param card  the intrigue card.
      * @param gui a instance of the game.
      */
-    public TeleportAction(Player p, TeleportIntrigue card, gameInstance gui) {
+    public TeleportAction(Player p, TeleportIntrigue card) {
         super(p, card);
         this.actionType = ActionType.TELEPORT;
     }
@@ -44,12 +43,6 @@ public class TeleportAction extends Action {
         if (player.isAi()){
             ((AiAdvanced) player).respondToTeleport(this);
 
-        }
-        else if (gui != null){
-            gui.actionResponse(this);
-        }
-        else{
-            System.out.println("[TeleportAction.execute] no gui found");
         }
     }
     
