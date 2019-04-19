@@ -117,8 +117,8 @@ public final class BoardMappings {
         addDoorsToTileAdjacencies(doorLocations);
         
         if (tileRoomLayoutPath.equals("Maps/archersAvenue/archersAvenueTiles.csv")){
-            //addShortcut();
-            //addShortcut();
+            addShortcut(0,8);
+            addShortcut(6,2);
         }
         
 
