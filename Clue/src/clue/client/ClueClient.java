@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -290,7 +292,7 @@ public class ClueClient extends Application {
             } catch(NotEnoughPlayersException ex) {
                 Prompt playerPrompt = new Prompt("Not Enough Players");
                 playerPrompt.setLabelTitle("Start Game Error");
-                playerPrompt.showAndWait();
+                playerPrompt.showAndWait();    
             }
             
         });

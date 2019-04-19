@@ -596,7 +596,7 @@ public class gameInstance {
             accusationResultPrompt.setMessage("WINNER WINNER CHICKHEN DINNER");
             accusationResultPrompt.setLabelTitle("YOU WON");
         } else {
-            accusationResultPrompt.setMessage("HAHA YOU SUCK, THIS IS WHAT THE CARDS WERE XD. GET SMURFED ON KID");
+            accusationResultPrompt.setMessage("BETTER LUCK NEXT TIME!");
             accusationResultPrompt.setLabelTitle("YOU LOSE");
         }
         

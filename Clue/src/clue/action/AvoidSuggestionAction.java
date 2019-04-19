@@ -48,6 +48,9 @@ public class AvoidSuggestionAction extends Action {
         this.gui = gui;
     }
     
+    /**
+     * Run by the gameController when it is executed.
+     */
     @Override
     public void execute() {
         player.removeCard(card);
