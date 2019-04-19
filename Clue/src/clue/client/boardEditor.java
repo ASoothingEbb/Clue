@@ -460,6 +460,7 @@ public class boardEditor {
             }
         }
         
+        //Checking Leglity of the board.
         if(currentRoomInt != 10){
             ungrabRooms();
             throw new CreationException("You must have 9 Rooms Exactly.");
@@ -470,6 +471,7 @@ public class boardEditor {
             throw new CreationException("There must be 6 starting Tiles");
         }
         
+        //Making CSV files.
         String newName = mapName.replaceAll(" ", "");
         File tempFile = new File("./Maps/" +newName);
         if(!tempFile.exists()){

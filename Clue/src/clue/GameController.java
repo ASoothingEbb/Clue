@@ -54,6 +54,7 @@ public final class GameController {
     private List<PersonCard> personCards;
     private List<RoomCard> roomCards;
     private gameInstance gui;
+    //private LinkedList<ShowCardsAction> queuedGuiActions;
 
     /**
      * Creates a new GameController which provides the backend logic and calls
@@ -81,6 +82,7 @@ public final class GameController {
         roomCards = new ArrayList<>();
         players = new ArrayList();
         actions = new LinkedList<>();
+        //queuedGuiActions = new LinkedList<>();
 
         //initalise all the players
         for (int i = 0; i < human; i++) {
@@ -225,9 +227,9 @@ public final class GameController {
                     System.out.println("    CASE MOVE "+player.getId() + "FROM: "+state.getAction().getActionType());
                     if (action.result && (state.getAction().getActionType() == ActionType.STARTTURN || state.getAction().getActionType() == ActionType.MOVE || state.getAction().getActionType() == ActionType.THROWAGAIN || state.getAction().getActionType() == ActionType.ENDTURN || state.getAction().getActionType() == ActionType.START)) {
                         Tile loc = ((MoveAction) action).getTile();    
-                        player.getPosition().setOccupied(false);  
+                        //player.getPosition().setOccupied(false);  
                         player.setPosition(loc); 
-                        loc.setOccupied(true);                    
+                        //loc.setOccupied(true);                    
                         if (loc.special) {
                             getSpecial(loc);
                         }
@@ -296,14 +298,25 @@ public final class GameController {
                                 System.out.println("[GameController.performAction] pulling player original position: "+players.get((((SuggestAction) action).getPersonCard().getId())).getPosition());
                                 players.get((((SuggestAction) action).getPersonCard().getId())).setPosition(bm.getRoom(((SuggestAction) action).getRoomCard().getId()));//move the person being suggested into the room of the suggestion
                                 System.out.println("[GameController.performAction] pulling player new position: "+players.get((((SuggestAction) action).getPersonCard().getId())).getPosition());
-                                
+  
                                 ((SuggestAction) action).getWeaponCard().setPosition(bm.getRoom(((SuggestAction) action).getRoomCard().getId()));//move the weapon token for the weaponCard to the room of the suggestion
+
                                 
                             } catch (NoSuchRoomException ex) {
                                 Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
                             }
                             nextAction = new ShowCardsAction(((SuggestAction) action).getShower(), ((SuggestAction) action).getPlayer(), ((SuggestAction) action).getFoundCards());
 
+                            
+                            if (player.isAi()){
+                                //queuedGuiActions.add((ShowCardsAction)nextAction);
+                                //gui.switchToUi();
+                                gui.aiShowCardsRequests();
+                            
+                                
+                                //nextAction = null;
+                            }
+                            
                         }
                         else {
                             if (gui != null && !player.isAi()){
@@ -327,9 +340,9 @@ public final class GameController {
                     boolean result = false;
                     if (!target.isFull()){
                         result = true;
-                        player.getPosition().setOccupied(false);  
+                        //player.getPosition().setOccupied(false);  
                         player.setPosition(target); 
-                        target.setOccupied(true);                    
+                        //target.setOccupied(true);                    
                         if (target.special) {
                             getSpecial(target);
                         }
@@ -880,6 +893,7 @@ public final class GameController {
     
     
     }
+    
     
     
 }

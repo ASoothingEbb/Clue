@@ -201,8 +201,7 @@ public class gameInstance {
                         } else if (cell.contains("S")) {
                             tileSprite.setColor(Color.rgb(55, 136, 4));
                         } else if (Integer.valueOf(cell) > 0) {
-                            //paintRoom(tileSprite, Integer.valueOf(cell));
-                            tileSprite.setColor(Color.rgb(90, 76, 65));
+                            paintRoom(tileSprite, Integer.valueOf(cell));
                         }
                     }
 
@@ -253,6 +252,7 @@ public class gameInstance {
         switch(id){
             case 1:
                 tile.setColor(Color.CORAL);
+                tile.setMessage("LIBRARY");
                 break;
             case 2:
                 tile.setColor(Color.CRIMSON);
@@ -421,20 +421,21 @@ public class gameInstance {
         suggestionButton.setInactiveColor(Color.DARKORANGE);
         suggestionButton.setActive(false); //refresh Colour
         suggestionButton.setOnMouseClicked(e -> {
-            if (suggested) {
-                Prompt errorPrompt = new Prompt("You have already suggsted");
-                errorPrompt.setLabelTitle("Invalid Game Move");
-                errorPrompt.showAndWait();
-            } else {
-                if (gameInterface.getPlayer().getPosition().isRoom()) {
-                    currentRoom = ((Room) gameInterface.getPlayer().getPosition()).getId();
-                    createCardsWindow("Suggestion", Color.ORANGE);
+            if (!accused) {
+                if (suggested) {
+                    Prompt errorPrompt = new Prompt("You have already suggsted");
+                    errorPrompt.setLabelTitle("Invalid Game Move");
+                    errorPrompt.showAndWait();
                 } else {
-                    Prompt suggestError = new Prompt("You are not in a room");
-                    suggestError.showAndWait();
+                    if (gameInterface.getPlayer().getPosition().isRoom()) {
+                        currentRoom = ((Room) gameInterface.getPlayer().getPosition()).getId();
+                        createCardsWindow("Suggestion", Color.ORANGE);
+                    } else {
+                        Prompt suggestError = new Prompt("You are not in a room");
+                        suggestError.showAndWait();
+                    }
                 }
             }
-
         });
         
         MenuItem accusationButton = new MenuItem("Accusation", avenirLarge);
@@ -517,7 +518,6 @@ public class gameInstance {
         
         main.setRight(rightPanel);
         
-        
         //Fade Transition
         uiToCurtain = new FadeTransition(Duration.millis(500), main);
         uiToCurtain.setNode(main);
@@ -534,12 +534,12 @@ public class gameInstance {
     public void actionResponse(Action action) {
         switch (action.getActionType()) {
             case SHOWCARDS:
-                System.out.println("[gameInstance.actionResponse] case SHOWCARDS");
+                System.out.println("[gameInstance.actionResponse] case SHOWCARDS ----");
                 endTurnSound.play();
                 showCards(action);
                 break;
             case SHOWCARD:
-                System.out.println("[gameInstance.actionResponse] case SHOWCARD");
+                System.out.println("[gameInstance.actionResponse] case SHOWCARD ----");
                 endTurnSound.play();
                 showCard(action);
                 redrawPlayers();
@@ -553,16 +553,16 @@ public class gameInstance {
                 suggested = true;
                 break;
             case AVOIDSUGGESTIONCARD:
-                System.out.println("[gameInstance.actionResponse] case AVOIDSUGGESTIONCARD");
+                System.out.println("[gameInstance.actionResponse] case AVOIDSUGGESTIONCARD ----");
                 break;
             case THROWAGAIN:
-                System.out.println("[gameInstance.actionResponse] case THROWAGAIN");
+                System.out.println("[gameInstance.actionResponse] case THROWAGAIN ----");
                 break;
             case STARTTURN:
-                System.out.println("[gameInstance.actionResponse] case STARTTURN");
+                System.out.println("[gameInstance.actionResponse] case STARTTURN ----");
                 break;
             case ACCUSATION:
-                System.out.println("[gameInstance.actionResponse] case ACCUSATION");
+                System.out.println("[gameInstance.actionResponse] case ACCUSATION ----");
                 showAccusationResult(action);
                 break;
         }
@@ -816,7 +816,7 @@ public class gameInstance {
     /**
      * Initialises the graphics.
      */
-    private void initGraphics() {
+    private void initCustomSettings() {
         try (InputStream input = new FileInputStream("resources/config.properties")) {
             Properties prop = new Properties();
             prop.load(input);
@@ -824,8 +824,15 @@ public class gameInstance {
             prop.keySet();
             
             for (Map.Entry entry: prop.entrySet()) {
-                System.out.println(entry.getKey());
-                System.out.println(entry.getValue());
+                String key = entry.getKey().toString();
+                String value = entry.getValue().toString();
+                if (key.contains("Name")) {
+                    CardNameMap.put(key.substring(0, key.length() - 4), value);
+                } else if (key.contains("Texture")) {
+                    ImagePathMap.put(key.substring(0, key.length() - 5), value);
+                } else if (key.contains("Token")) {
+                    TokenPathMap.put(key.substring(0, key.length() - 5), value);
+                }
             }
             System.out.println("here");
             input.close();
@@ -862,7 +869,7 @@ public class gameInstance {
         initDefaultTokens();
         initDefaultGraphics();
         initDefaultNames();
-        initGraphics();
+        initCustomSettings();
         
         uiScene = new Scene(createUI(), Color.BLACK);
         gameStage.setScene(uiScene);
@@ -936,6 +943,21 @@ public class gameInstance {
         gameStage.setScene(uiScene);
         System.out.println(gameStage.getWidth() + "" + gameStage.getHeight());
     }
+    
+    /**
+     * Each time this is called, one future ShowCardsAction will be queued, the queue will be dequeued once the gui recived a StartTurnAction
+     * Switches the current scene to the uiScene and fade animation plays.
+     */
+    public void aiShowCardsRequests(){
+        System.out.println("--------------------------------------------------------------------------------------------------------------");
+        throw new UnsupportedOperationException("not yet implemented");
+        
+        //TODO
+        //if this is called, the next recived showCardsAction (through actionResponse) should be added to a queue 
+        //when you recived a StartTurnAction (through actionResponse) , if the queue is not empty, first display the queued ShowCardsActions, then process the StartTurnAction
+    }
+    
+    
 
     public void showActionLog(LinkedList<Action> actionsToNotify) {
         System.out.println("show history called");

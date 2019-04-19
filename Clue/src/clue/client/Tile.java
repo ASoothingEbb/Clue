@@ -48,4 +48,9 @@ public class Tile extends Label {
     public void setColor(Color color) {
         setBackground(new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY)));
     }
+
+  
+    public void setMessage(String s){
+        this.setText(s);
+    }
 }

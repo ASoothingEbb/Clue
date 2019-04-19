@@ -458,6 +458,7 @@ public class ClueClient extends Application {
     }
     
     /**
+     * Creates the JavaFX component which will be used to display the credit information in a scene
      * 
      * @param layout
      * @return 
@@ -465,16 +466,15 @@ public class ClueClient extends Application {
     private GridPane creditsScene(GridPane layout) {      
         LinkedHashMap <String, String> credits = new LinkedHashMap<>();
         credits.put("Produced By", "Big Sage Productions");
-        credits.put("Project Manager", "Jak and Whip");
+        credits.put("Project Manager", "Jak");
         credits.put("AI", "Jose");
-        credits.put("Lead Programmer", "Steve");
-        credits.put("Programmer", "Mathew");
-        credits.put(" ", "Jak");
-        credits.put("  ", "Jose");
+        credits.put("Programmer", "Steve");
+        credits.put(" ", "Steve");
+        credits.put("  ", "Jak");
+        credits.put("   ", "Jose");
         credits.put("Artist", "Hung");
         credits.put("UX Design","Hung");
         credits.put("Background Music", "Investigations by Kevin Macleod");
-        credits.put("Tester", "Your Nan");
         credits.put("Board & Card Assets", "Hasbro Cluedo Board Game(2000)");
         credits.put("Special Thanks to", "Big Sage");
         
@@ -500,34 +500,35 @@ public class ClueClient extends Application {
      * @return 
      */
     private GridPane audioSettingsScene(GridPane layout) {
-        Label masterLabel = getLabel("Master Volume", avenirTitle);
+        Label backgroundMusicLabel = getLabel("Background Music Volume", avenirTitle);
         Label toggleVolume = new Label("",new ImageView(volumeOn));
+       
         
         toggleVolume.setOnMouseClicked(e -> backgroundMusic.toggleSound());
         
-        Slider masterVolume = new Slider(0, 100, 100);
-        masterVolume.setMaxWidth(1000);
-        masterVolume.setBlockIncrement(10);
+        Slider backgroundMusicVolume = new Slider(0, 100, 100);
+        backgroundMusicVolume.setMaxWidth(1000);
+        backgroundMusicVolume.setBlockIncrement(10);
         
-        Label masterVolumeShow = getLabel("", avenirTitle);
-        masterVolumeShow.setText("60");
-        masterVolume.setValue(60);
+        Label backgroundMusicVolumeShow = getLabel("", avenirTitle);
+        backgroundMusicVolumeShow.setText("60");
+        backgroundMusicVolume.setValue(60);
                 
-        masterVolume.valueProperty().addListener(new ChangeListener() {
+        backgroundMusicVolume.valueProperty().addListener(new ChangeListener() {
             @Override
             public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-                masterVolumeShow.setText(String.valueOf((int) masterVolume.getValue()));
-                backgroundMusic.setVolume((float) ((float)masterVolume.getValue()*0.01));
-                System.out.println(masterVolume.getValue());
+                backgroundMusicVolumeShow.setText(String.valueOf((int) backgroundMusicVolume.getValue()));
+                backgroundMusic.setVolume((float) ((float)backgroundMusicVolume.getValue()*0.01));
+                System.out.println(backgroundMusicVolume.getValue());
             }
         });
         
-        layout.add(masterLabel, 0, 0);
-        GridPane.setMargin(masterLabel, new Insets(0, 10, 0, 0));
-        layout.add(masterVolume, 1, 0);
-        layout.add(masterVolumeShow, 2, 0);
+        layout.add(backgroundMusicLabel, 0, 0);
+        GridPane.setMargin(backgroundMusicLabel, new Insets(0, 10, 0, 0));
+        layout.add(backgroundMusicVolume, 1, 0);
+        layout.add(backgroundMusicVolumeShow, 2, 0);
         layout.add(toggleVolume, 3, 0);
-        GridPane.setMargin(masterVolumeShow, new Insets(0, 0, 0, 10));
+        GridPane.setMargin(backgroundMusicVolumeShow, new Insets(0, 0, 0, 10));
         
         return layout;
     }
@@ -554,8 +555,8 @@ public class ClueClient extends Application {
             Label characterFile = getLabel("File", avenirTitle);
             TextField characterFilePath = getTextField(40, false);
             
-            final String propertiesCharacterName = "Character"+(i-1)+"Name";
-            final String propertiesCharacter = "Character"+(i-1)+"Texture";
+            final String propertiesCharacterName = "character"+(i-1)+"Name";
+            final String propertiesCharacter = "character"+(i-1)+"Texture";
             
             MenuItem selectCharacterFile = new MenuItem("Choose", avenirTitle);
             selectCharacterFile.setOnMouseClicked(e -> {
@@ -582,8 +583,8 @@ public class ClueClient extends Application {
             Label weaponFile = getLabel("File", avenirTitle);
             TextField weaponFilePath = getTextField(40, false);
             
-            final String propertiesWeapon = "Weapon"+(i-1)+"Texture";
-            final String propertiesWeaponName = "Weapon"+(i-1)+"Name";
+            final String propertiesWeapon = "weapon"+(i-1)+"Texture";
+            final String propertiesWeaponName = "weapon"+(i-1)+"Name";
             
             MenuItem selectWeaponFile = new MenuItem("Choose", avenirTitle);
             selectWeaponFile.setOnMouseClicked(e -> {
