@@ -194,7 +194,7 @@ public class AiAdvanced extends Player{
         }
         if (suggestionsLeft == 0){
             unknownIds = getNextUnknown();
-            gameController.accuse(unknownIds[0], unknownIds[2], unknownIds[1]);
+            gameController.accuse(unknownIds[0], unknownIds[2]);
         }
     }
  
