@@ -470,8 +470,8 @@ public class gameInstance {
         MenuItem endButton = new MenuItem("End Turn", avenirLarge);
         endButton.setOnMouseClicked(e -> {
             try {
-                gameInterface.endTurn();
                 gameInterface.getPlayer().setNotes(notes);
+                gameInterface.endTurn();
                 endTurnSound.play();
             } catch (UnknownActionException | InterruptedException | GameController.MovementException | TileOccupiedException ex) {
                 Logger.getLogger(gameInstance.class.getName()).log(Level.SEVERE, null, ex);
@@ -934,6 +934,7 @@ public class gameInstance {
         resetRoll();
         suggested = false;
         currentPlayer = playerSprites[gameInterface.getPlayer().getId()];
+        notepad.setText(gameInterface.getPlayer().getNotes());
         switchToCurtain();
         redrawPlayers();
         createCardsDisplay(cardsDisplay);
