@@ -421,20 +421,21 @@ public class gameInstance {
         suggestionButton.setInactiveColor(Color.DARKORANGE);
         suggestionButton.setActive(false); //refresh Colour
         suggestionButton.setOnMouseClicked(e -> {
-            if (suggested) {
-                Prompt errorPrompt = new Prompt("You have already suggsted");
-                errorPrompt.setLabelTitle("Invalid Game Move");
-                errorPrompt.showAndWait();
-            } else {
-                if (gameInterface.getPlayer().getPosition().isRoom()) {
-                    currentRoom = ((Room) gameInterface.getPlayer().getPosition()).getId();
-                    createCardsWindow("Suggestion", Color.ORANGE);
+            if (!accused) {
+                if (suggested) {
+                    Prompt errorPrompt = new Prompt("You have already suggsted");
+                    errorPrompt.setLabelTitle("Invalid Game Move");
+                    errorPrompt.showAndWait();
                 } else {
-                    Prompt suggestError = new Prompt("You are not in a room");
-                    suggestError.showAndWait();
+                    if (gameInterface.getPlayer().getPosition().isRoom()) {
+                        currentRoom = ((Room) gameInterface.getPlayer().getPosition()).getId();
+                        createCardsWindow("Suggestion", Color.ORANGE);
+                    } else {
+                        Prompt suggestError = new Prompt("You are not in a room");
+                        suggestError.showAndWait();
+                    }
                 }
             }
-
         });
         
         MenuItem accusationButton = new MenuItem("Accusation", avenirLarge);
@@ -516,7 +517,6 @@ public class gameInstance {
         rightPanel.setBottom(createPlayerControls());
         
         main.setRight(rightPanel);
-        
         
         //Fade Transition
         uiToCurtain = new FadeTransition(Duration.millis(500), main);
@@ -816,7 +816,7 @@ public class gameInstance {
     /**
      * Initialises the graphics.
      */
-    private void initGraphics() {
+    private void initCustomSettings() {
         try (InputStream input = new FileInputStream("resources/config.properties")) {
             Properties prop = new Properties();
             prop.load(input);
@@ -824,8 +824,15 @@ public class gameInstance {
             prop.keySet();
             
             for (Map.Entry entry: prop.entrySet()) {
-                System.out.println(entry.getKey());
-                System.out.println(entry.getValue());
+                String key = entry.getKey().toString();
+                String value = entry.getValue().toString();
+                if (key.contains("Name")) {
+                    CardNameMap.put(key.substring(0, key.length() - 4), value);
+                } else if (key.contains("Texture")) {
+                    ImagePathMap.put(key.substring(0, key.length() - 5), value);
+                } else if (key.contains("Token")) {
+                    TokenPathMap.put(key.substring(0, key.length() - 5), value);
+                }
             }
             System.out.println("here");
             input.close();
@@ -862,7 +869,7 @@ public class gameInstance {
         initDefaultTokens();
         initDefaultGraphics();
         initDefaultNames();
-        initGraphics();
+        initCustomSettings();
         
         uiScene = new Scene(createUI(), Color.BLACK);
         gameStage.setScene(uiScene);
