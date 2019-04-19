@@ -46,7 +46,7 @@ public class StartTurnActionTest {
     }
 
     @Test
-    public void testExecute() throws UnknownActionException, InterruptedException, TileOccupiedException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException {
+    public void testExecute() throws UnknownActionException, TileOccupiedException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException {
         GameController gc = null;
         gc = new GameController(1, 1, "testCsv/tiles1.csv", "testCsv/doors1.csv");
 

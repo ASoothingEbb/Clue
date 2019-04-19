@@ -7,6 +7,7 @@ package clue.player;
 
 import clue.GameController;
 import clue.MissingRoomDuringCreationException;
+import clue.NotEnoughPlayersException;
 import clue.action.Action;
 import clue.action.UnknownActionException;
 import clue.card.Card;
@@ -36,7 +37,7 @@ public class PlayerTest {
 
     
     @BeforeClass
-    public static void setUpClass() throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException, TileOccupiedException {
+    public static void setUpClass() throws UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException, TileOccupiedException, NotEnoughPlayersException {
 
         gc = new GameController(1,1,"testCsv/tiles1.csv", "testCsv/doors1.csv");
     }

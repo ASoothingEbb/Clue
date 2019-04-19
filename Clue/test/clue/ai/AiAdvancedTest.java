@@ -81,7 +81,7 @@ public class AiAdvancedTest {
 //    }
     
     //@Test
-    public void testMakeLists() throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException, TileOccupiedException{
+    public void testMakeLists() throws UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException, TileOccupiedException{
         System.out.println("makeListTest");
         Player p1 = new AiAdvanced(1, gc, 0, 0);
         Player p2 = new AiAdvanced(2, gc, 0 ,0);
@@ -157,7 +157,7 @@ public class AiAdvancedTest {
      * Test of BFS method, of class AiAdvanced.
      */
     @Test
-    public void testBFS() throws InterruptedException{//Trying to find a room.
+    public void testBFS() {//Trying to find a room.
         System.out.println("BFS trying to find a room");
         //--Layout of map--
         // t1 t2 t3
@@ -212,7 +212,7 @@ public class AiAdvancedTest {
 
 
     @Test
-    public void testBFS2() throws InterruptedException{//Testing it on a board with no room.
+    public void testBFS2() {//Testing it on a board with no room.
         System.out.println("BFS (no room)");
         //Board Layout
         //t1 t2 t3 t4 
@@ -249,7 +249,7 @@ public class AiAdvancedTest {
     }    
     
     @Test
-    public void testBFS3() throws InterruptedException{//testing bfs with players as obstacles w/valid route
+    public void testBFS3() {//testing bfs with players as obstacles w/valid route
         System.out.println("BFS (with room, with valid path, with players)");
         //Board Layout
         //t1 t2 t3 t4
@@ -296,7 +296,7 @@ public class AiAdvancedTest {
     }   
 
     @Test
-    public void testBFS4() throws InterruptedException{//testing bfs with multiple rooms
+    public void testBFS4() {//testing bfs with multiple rooms
         System.out.println("BFS (many rooms)");
         //Board Layout 
         //t1 t2 t3 r4

@@ -51,7 +51,7 @@ public class AccuseActionTest {
      * Test of execute method, of class AccuseAction.
      */
     @Test
-    public void testExecute() throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException, TileOccupiedException {
+    public void testExecute() throws UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException, TileOccupiedException {
         System.out.println("execute");
         PersonCard person = new PersonCard(1);
         RoomCard room = new RoomCard(1);
