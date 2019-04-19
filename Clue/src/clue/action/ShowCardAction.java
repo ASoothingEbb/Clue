@@ -17,7 +17,6 @@ import java.util.List;
  */
 public class ShowCardAction extends Action {
     private final Card card;
-    private gameInstance gui;
     private Player whoShowedTheCard;
     
     /**
@@ -27,24 +26,11 @@ public class ShowCardAction extends Action {
      * @param gui the gameInstance to be prompted
      * @param whoShowedTheCard the player who revealed the card
      */
-    public ShowCardAction(Player player,Card card, gameInstance gui, Player whoShowedTheCard) {
+    public ShowCardAction(Player player,Card card, Player whoShowedTheCard) {
         super(player);
         this.actionType = ActionType.SHOWCARD;
         this.card = card;
-        this.gui = gui;
         this.whoShowedTheCard = whoShowedTheCard;
-    }
-
-    /**
-     * 
-     * @param player the player to show the card to
-     * @param card the card to be shown
-     * @param shower the player to show the card to
-     */
-    public ShowCardAction(Player player, Card card, Player shower) {
-        super(player);
-        this.card = card;
-        this.whoShowedTheCard = shower;
     }
     
     /**
@@ -70,12 +56,5 @@ public class ShowCardAction extends Action {
         if (player.isAi()){
             ((AiAdvanced) player).revealCard(card, whoShowedTheCard);
         }
-        else if (gui!=null){
-            gui.actionResponse(this);
-        }
-        else{
-            System.out.println("[ShowCardAction.execute] no gui found");
-        }
     }
-
 }

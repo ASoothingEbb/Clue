@@ -154,6 +154,7 @@ public class Room extends Tile{
         for (int loc[] : locations){
             if (loc[0] == location[0] && loc[1] == location[1]){//only accept the drawn location if room has this location
                 nonOccupiedLocations.add(location);
+                System.out.println("[Room.unassignLocation]"+location[0] +","+location[1]+" being assigned to room: "+getId());
                 break;
             }
         }
