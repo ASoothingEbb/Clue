@@ -102,6 +102,7 @@ public class gameInstance {
     
     private Prompt showCardPrompt = null;
     private boolean suggested = false;
+    private boolean accused = false;
     
     Label playerCardsLabel;
     private CardType selectedCardType;
@@ -451,7 +452,14 @@ public class gameInstance {
         accusationButton.setInactiveColor(Color.rgb(239, 43, 43));
         accusationButton.setActive(false);
         accusationButton.setOnMouseClicked(e -> {
-            createCardsWindow("Accusation", Color.RED);
+            if (accused) {
+                Prompt errorPrompt = new Prompt("You have already accused");
+                errorPrompt.setLabelTitle("Invalid Game Move");
+                errorPrompt.showAndWait();
+            } else {
+                createCardsWindow("Accusation", Color.RED);
+            }
+            
         });
 
         MenuItem rollButton = new MenuItem("Roll", avenirLarge);
@@ -611,10 +619,10 @@ public class gameInstance {
         accusationResultPrompt.setImage(cards);
         accusationResultPrompt.setOnCloseRequest(e -> {
             if (((AccuseAction) action).wasCorrect()) {
-                
                 client.show();
                 gameStage.close();
             }
+            accused = true;
         });
         accusationResultPrompt.showAndWait();
     }
