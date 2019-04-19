@@ -45,7 +45,7 @@ public class ClueTest {
      * Test of main method, of class Clue.
      */
     @Test
-    public void testMain() throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException, TileOccupiedException {
+    public void testMain() throws UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException, TileOccupiedException {
         System.out.println("main");
         String[] args = null;
         Clue.main(args);
