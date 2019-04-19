@@ -61,6 +61,15 @@ public class SuggestAction extends Action {
         return (PersonCard)cards[0];
     }
     
+    /**
+     * Gets the weapon card used in the suggestion
+     * @return the weapon card used in the suggestion
+     */
+    public WeaponCard getWeaponCard(){
+        return (WeaponCard)cards[2];
+    }
+    
+    
     
     /**
      * Executes the SuggestAction. Result stores if another player has any of
@@ -80,7 +89,7 @@ public class SuggestAction extends Action {
             }
             check = players.get(i);
             playersLeftToCheck--;
-            if (check.isActive() && player.getId() != i) {
+            if (player.getId() != i) {
                 if (!check.hasIntrigue(CardType.AVOIDSUGGESTION)){
                     for (Card c : cards) {
                         if (check.hasCard(c)) {

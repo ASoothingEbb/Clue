@@ -283,8 +283,8 @@ public class gameInstance {
         playerSprites = new PlayerSprite[players.size()];
         for(int i = players.size()-1; i>= 0; i--) {
             Player player = players.get(i);
-            int x = player.getPosition().getX();
-            int y = player.getPosition().getY();
+            int x = player.getDrawX();
+            int y = player.getDrawY();
             PlayerSprite playerSprite = new PlayerSprite(x, y, "PP"+player.getId());
             playerSprites[i] = playerSprite;
             board[y][x].getChildren().add(playerSprite);
@@ -886,5 +886,13 @@ public class gameInstance {
     private void resetRoll() {
         remainingMovesLabel.setText("Roll Available");
         rolled = false;
+    }
+
+    /**
+     * Called by GameController when the game has finished, player is the winning player, player is null if there is no winner
+     * @param player 
+     */
+    public void gameOver(Player player) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
