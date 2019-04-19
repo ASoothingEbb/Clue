@@ -377,7 +377,7 @@ public class gameInstance {
             case 2://Mrs White
                 playerCardsLabel.setTextFill(Color.WHITE);
                 break; 
-            case 3://Reverand green
+            case 3://Reverend green
                 playerCardsLabel.setStyle("-fx-text-fill: #00FF00;");
                 break;
             case 4://Mrs PeaCOCK
@@ -764,7 +764,7 @@ public class gameInstance {
         CardNameMap.put("character0", "Miss Scarlet");
         CardNameMap.put("character1", "Colonel Mustard");
         CardNameMap.put("character2", "Mrs White");
-        CardNameMap.put("character3", "Reverand Green");
+        CardNameMap.put("character3", "Reverend Green");
         CardNameMap.put("character4", "Mrs Peacock");
         CardNameMap.put("character5", "Professor Plum");
         
@@ -882,7 +882,7 @@ public class gameInstance {
             case 2://Mrs White
                 switchPlayerLabel.setTextFill(Color.WHITE);
                 break; 
-            case 3://Reverand green
+            case 3://Reverend green
                 switchPlayerLabel.setStyle("-fx-text-fill: #00FF00;");
                 break;
             case 4://Mrs PeaCOCK
