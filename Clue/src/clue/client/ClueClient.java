@@ -284,7 +284,7 @@ public class ClueClient extends Application {
             try {
                 GameController gameController = new GameController(numberOfPlayers, numberOfAIs, tileFile, doorFile);
                 game.startGame(gameController, tileFile);
-            } catch(TooManyPlayersException | MissingRoomDuringCreationException | UnknownActionException | NoSuchRoomException | NoSuchTileException | TileOccupiedException | InterruptedException ex) {
+            } catch(TooManyPlayersException | MissingRoomDuringCreationException | NoSuchRoomException | NoSuchTileException ex) {
                 System.out.println("Ice Cream Machine BROKE");
                 ex.printStackTrace();
             } catch(NotEnoughPlayersException ex) {
