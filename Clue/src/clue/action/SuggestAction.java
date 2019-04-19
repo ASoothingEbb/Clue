@@ -61,6 +61,15 @@ public class SuggestAction extends Action {
         return (PersonCard)cards[0];
     }
     
+    /**
+     * Gets the weapon card used in the suggestion
+     * @return the weapon card used in the suggestion
+     */
+    public WeaponCard getWeaponCard(){
+        return (WeaponCard)cards[2];
+    }
+    
+    
     
     /**
      * Executes the SuggestAction. Result stores if another player has any of
