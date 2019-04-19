@@ -49,7 +49,7 @@ public class AvoidSuggestionAction extends Action {
     }
     
     /**
-     * Run by the gameController when it is executed.
+     * Executes the AvoidSuggestionAction. Means that the player had no cards to show.
      */
     @Override
     public void execute() {

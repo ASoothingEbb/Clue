@@ -23,7 +23,7 @@ public class EndTurnAction extends Action{
     }
 
     /**
-     * Run by the gameController when this action is meant to be executed.
+     * Executes the EndTurnAction. Ends the turn for the current player.
      */
     @Override
     public void execute() {

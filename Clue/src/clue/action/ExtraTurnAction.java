@@ -26,6 +26,9 @@ public class ExtraTurnAction extends Action {
         this.actionType = ActionType.EXTRATURN;
     }
 
+    /**
+     * Executes StartAction. Allows player to roll again.
+     */
     @Override
     public void execute() {
         player.removeIntrigue((ExtraTurnIntrigue)card);
