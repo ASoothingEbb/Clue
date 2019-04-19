@@ -10,26 +10,17 @@ package clue.ai;
  * @author zemig
  */  
 
-import clue.BoardMappings;
 import clue.GameController;
-import clue.tile.NoSuchRoomException;
 import clue.action.*;
 import clue.card.Card;
-import clue.card.CardType;
-import clue.card.PersonCard;
-import clue.card.RoomCard;
-import clue.card.WeaponCard;
 import clue.player.Player;
 import clue.tile.Tile;
 import clue.tile.TileOccupiedException;
-import static java.lang.Thread.sleep;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -68,7 +59,7 @@ public class AiAdvanced extends Player{
         gameController = gc;
         rand = new Random();
         shownCards = new ArrayList<>();
-        suggestionsLeft = 50;//rand.nextInt(15)+11;
+        suggestionsLeft = rand.nextInt(15)+15;
         myTurn = false;
         
         knownCards = new ArrayList<>();
@@ -92,7 +83,7 @@ public class AiAdvanced extends Player{
     /**
      * Sends an action to the game controller that will move the player towards/to a room.
      */
-    private void moveToRoom(){
+    public void moveToRoom(){
         
         gameController.roll();
         System.out.println("[AiAdvanced.moveToRoom] id: "+id + "moves: "+getMoves());
@@ -287,7 +278,7 @@ public class AiAdvanced extends Player{
     * Returns the path to the closest room from the players current location
     *@return The path to the closest Room from the player's current position. 
     */
-    private LinkedList<Tile> BFS(){   
+    public LinkedList<Tile> BFS(){   
         System.out.println("[AiAdvanced.BFS] id: "+id);
         boolean visited[][] = new boolean[boardWidth][boardHeight];
         
