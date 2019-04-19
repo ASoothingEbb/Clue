@@ -24,20 +24,14 @@ public class Clue {
     /**
      * Initialise the main GameController instance with the GameState instance.
      * @param args the command line arguments
-     * @throws java.lang.InterruptedException
      * @throws clue.action.UnknownActionException
      * @throws clue.tile.NoSuchRoomException
      * @throws clue.tile.NoSuchTileException
      * @throws clue.MissingRoomDuringCreationException
      * @throws clue.GameController.TooManyPlayersException
      */
-    public static void main(String[] args) throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException, TileOccupiedException {
-        try {
-            // TODO code application logic here
-            GameController game = new GameController(1,1,"testCsv/tiles1.csv", "testCsv/doors1.csv");
-        } catch (NotEnoughPlayersException ex) {
-            Logger.getLogger(Clue.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public static void main(String[] args) throws UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException, TileOccupiedException {
+        //TODO
     }
     
 }
