@@ -304,7 +304,7 @@ public final class BoardMappings {
         if (roomId < rooms.length && roomId >= 0){
             return rooms[roomId];
         }
-        throw new NoSuchRoomException("" +roomId);
+        throw new NoSuchRoomException("roomId: "+roomId);
 
     }
     /**

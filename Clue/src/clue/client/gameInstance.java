@@ -138,9 +138,8 @@ public class gameInstance {
 
         Image image = null;
         try {
-            image = new Image(new FileInputStream(new File("Resources/cluedoBoard.png")));
+            image = new Image(new FileInputStream(new File(ImagePathMap.get("board"))));
         } catch(FileNotFoundException ex) {
-            
         }
         
         ImageView boardview = new ImageView(image);
@@ -162,6 +161,7 @@ public class gameInstance {
                     String tile = tiles[i];
                     String cell = tile.replaceAll("[^0-9A-Z-]+", "");
                     StackPane tilePane = new StackPane();
+                    tilePane.setAlignment(Pos.CENTER);
                     Tile tileSprite = new Tile(TILE_SIZE);
                     if (!boardTilePath.contains("archersAvenue")) {
                         tileSprite.setStyle("-fx-border-width: 1px 1px 1px 1px; -fx-border-style: solid; -fx-border-color: black;");
@@ -284,9 +284,11 @@ public class gameInstance {
         playerSprites = new PlayerSprite[players.size()];
         for(int i = players.size()-1; i>= 0; i--) {
             Player player = players.get(i);
+
             int x = player.getDrawX();
             int y = player.getDrawY();
-            PlayerSprite playerSprite = new PlayerSprite(x, y, "PP"+player.getId());
+            PlayerSprite playerSprite = new PlayerSprite(x, y, "resources/playerTokens/MissScarlet.png");
+
             playerSprites[i] = playerSprite;
             board[y][x].getChildren().add(playerSprite);
         }
@@ -696,7 +698,7 @@ public class gameInstance {
      * Initialises the default graphics.
      */
     private void initDefaultGraphics() {
-        ImagePathMap.put("board", "resources/board.png");
+        ImagePathMap.put("board", "resources/boardFinal.png");
         
         ImagePathMap.put("character0", "resources/Character/MissScarlet.png");
         ImagePathMap.put("character1", "resources/Character/ColonelMustard.png");
