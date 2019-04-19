@@ -16,7 +16,7 @@ public abstract class Action {
     /**
      * the Player initiating the Action
      */
-    public Player player;
+    protected Player player;
     /**
      * Provides access to the type of action being taken.
      */
@@ -28,7 +28,7 @@ public abstract class Action {
     /**
      * 
      */
-    public Card card;
+    protected Card card;
     /**
      * Creates an instance of the Action
      * @param player the player taking the action
@@ -63,4 +63,7 @@ public abstract class Action {
         return actionType + ","+ player.getId() + "," +  result;
     }
     
+    public Card getCard(){
+        return card;
+    }
 }

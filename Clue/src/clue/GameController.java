@@ -218,7 +218,7 @@ public final class GameController {
                     break;
                 case EXTRATURN:
                     System.out.println("    CASE EXTRATURN");
-                    returnCard((IntrigueCard) action.card);
+                    returnCard((IntrigueCard) action.getCard());
                     nextAction = new StartTurnAction(action.getPlayer());
                     break;
                 case MOVE:
@@ -293,7 +293,7 @@ public final class GameController {
                             } catch (NoSuchRoomException ex) {
                                 Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
                             }
-                            nextAction = new ShowCardsAction(((SuggestAction) action).show, ((SuggestAction) action).player, ((SuggestAction) action).foundCards, gui, this);
+                            nextAction = new ShowCardsAction(((SuggestAction) action).getShower(), ((SuggestAction) action).getPlayer(), ((SuggestAction) action).getFoundCards(), gui, this);
 
                         }
                         else {
@@ -310,7 +310,7 @@ public final class GameController {
                     break;
                 case TELEPORT:
                     System.out.println("    CASE TELEPORT");
-                    returnCard((IntrigueCard)((TeleportAction) action).card);
+                    returnCard((IntrigueCard)((TeleportAction) action).getCard());
 
                     Tile target = ((TeleportAction) action).getTarget();
                     boolean result = false;
@@ -329,7 +329,7 @@ public final class GameController {
                     break;
                 case THROWAGAIN:
                     System.out.println("    CASE THROWAGAIN");
-                    returnCard((IntrigueCard)((ThrowAgainAction) action).card);
+                    returnCard((IntrigueCard)((ThrowAgainAction) action).getCard());
 
                     break;
             }

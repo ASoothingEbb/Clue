@@ -22,8 +22,8 @@ import java.util.List;
  */
 public class SuggestAction extends Action {
 
-    public Player show;
-    public List<Card> foundCards;
+    private Player show;
+    private List<Card> foundCards;
     private final Card[] cards;
     private List<Player> players;
 
@@ -127,5 +127,11 @@ public class SuggestAction extends Action {
         return super.toString() + cards;
     }
 
+    public Player getShower(){
+        return show;
+    }
     
+    public List<Card> getFoundCards(){
+        return foundCards;
+    }
 }
