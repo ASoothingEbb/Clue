@@ -457,7 +457,13 @@ public class gameInstance {
                 errorPrompt.setLabelTitle("Invalid Game Move");
                 errorPrompt.showAndWait();
             } else {
-                createCardsWindow("Accusation", Color.RED);
+                if (gameInterface.getPlayer().getPosition().isRoom()) {
+                    currentRoom = ((Room) gameInterface.getPlayer().getPosition()).getId();
+                    createCardsWindow("Accusation", Color.RED);
+                } else {
+                    Prompt accuseError = new Prompt("You are not in a roomn");
+                    accuseError.showAndWait();
+                }
             }
             
         });
@@ -480,13 +486,9 @@ public class gameInstance {
         
         MenuItem endButton = new MenuItem("End Turn", avenirLarge);
         endButton.setOnMouseClicked(e -> {
-            try {
-                gameInterface.getPlayer().setNotes(notes);
-                gameInterface.endTurn();
-                endTurnSound.play();
-            } catch (UnknownActionException | InterruptedException | GameController.MovementException | TileOccupiedException ex) {
-                Logger.getLogger(gameInstance.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            gameInterface.getPlayer().setNotes(notes);
+            gameInterface.endTurn();
+            endTurnSound.play();
         });
         
         playerControlsLayout.getChildren().addAll(remainingMovesLabel, suggestionButton, accusationButton, rollButton, endButton);
