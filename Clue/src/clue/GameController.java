@@ -242,12 +242,20 @@ public final class GameController {
                     break;
                 case SHOWCARD:
                     System.out.println("    CASE SHOWCARD");
+                    if(gui != null && !player.isAi()){
+                        gui.actionResponse(action);
+                    }
                     if (state.getAction().actionType == ActionType.SHOWCARDS) {
 
                     }
                     break;
                 case SHOWCARDS:
                     System.out.println("    CASE SHOWCARDS");
+                    if(gui != null && !player.isAi()){
+                        gui.actionResponse(action);
+                    }
+                    else{
+                    replyToShowCards((ShowCardsAction)action);}
                     if (state.getAction().actionType != ActionType.ACCUSATION) {
 
                     }
@@ -293,7 +301,7 @@ public final class GameController {
                             } catch (NoSuchRoomException ex) {
                                 Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
                             }
-                            nextAction = new ShowCardsAction(((SuggestAction) action).getShower(), ((SuggestAction) action).getPlayer(), ((SuggestAction) action).getFoundCards(), gui, this);
+                            nextAction = new ShowCardsAction(((SuggestAction) action).getShower(), ((SuggestAction) action).getPlayer(), ((SuggestAction) action).getFoundCards());
 
                         }
                         else {
@@ -310,6 +318,8 @@ public final class GameController {
                     break;
                 case TELEPORT:
                     System.out.println("    CASE TELEPORT");
+                    if(gui != null && !player.isAi()){
+                    gui.actionResponse(action);}
                     returnCard((IntrigueCard)((TeleportAction) action).getCard());
 
                     Tile target = ((TeleportAction) action).getTarget();
@@ -329,6 +339,8 @@ public final class GameController {
                     break;
                 case THROWAGAIN:
                     System.out.println("    CASE THROWAGAIN");
+                    if(gui != null && !player.isAi()){
+                    gui.actionResponse(action);}
                     returnCard((IntrigueCard)((ThrowAgainAction) action).getCard());
 
                     break;
@@ -710,10 +722,10 @@ public final class GameController {
                     performAction(new ExtraTurnAction(player, (ExtraTurnIntrigue) card));
                     break;
                 case TELEPORT:
-                    performAction(new TeleportAction(player, (TeleportIntrigue) card, gui));
+                    performAction(new TeleportAction(player, (TeleportIntrigue) card));
                     break;
                 case THROWAGAIN:
-                    performAction(new ThrowAgainAction(player, (ThrowAgainIntrigue) card, gui));
+                    performAction(new ThrowAgainAction(player, (ThrowAgainIntrigue) card));
                     break;
             }
         } catch (UnknownActionException | TileOccupiedException ex){
@@ -860,7 +872,7 @@ public final class GameController {
                   
                    
         try {
-            performAction(new ShowCardAction(personToShow, cardToShow, gui, ((ShowCardsAction)action).getPlayer()));
+            performAction(new ShowCardAction(personToShow, cardToShow, ((ShowCardsAction)action).getPlayer()));
         } catch (UnknownActionException  | TileOccupiedException ex) {
             Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
         }
