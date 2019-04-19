@@ -7,6 +7,7 @@ package clue.client;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.BooleanControl;
@@ -24,19 +25,19 @@ public class Sound {
    private FloatControl volume;
    private BooleanControl muteControl;
    private boolean muted;
+   private float range;
    
-    public static Sound sound1 = new Sound("/resources/music/backgroundMusic.wav");
-    //public static Sound sound2 = new Sound("/sound1.wav");
-    //public static Sound sound3 = new Sound("/sound1.wav");
 
     public Sound(String fileName) {
         try{
-            AudioInputStream ais = AudioSystem.getAudioInputStream(new File(fileName));
+            File sound = new File(fileName);
+            AudioInputStream ais = AudioSystem.getAudioInputStream(sound);
             clip = AudioSystem.getClip();
             clip.open(ais);
             volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            range = volume.getMaximum() - volume.getMinimum();
             muteControl = (BooleanControl) clip.getControl(BooleanControl.Type.MUTE);
-            muteControl.setValue(true);
+            muteControl.setValue(false);
             muted = false;
         } catch (IOException | LineUnavailableException | UnsupportedAudioFileException e){
         }
@@ -57,6 +58,7 @@ public class Sound {
            }.start();
            
        } catch(Exception e){
+           System.out.println("ASD");
             e.printStackTrace();
        }
    }
@@ -89,15 +91,14 @@ public class Sound {
        return clip.isActive();
     }
    
-    public void setvolume(float f){
+    public void setVolume(float f){
         if(f == 0.0){
-            System.out.println("VOLUME:0");
             muteControl.setValue(true);
             muted = true;
             return;
         }
         muted = false;
-        float range = volume.getMaximum() - volume.getMinimum();
+        
         float gain = (range * f) + volume.getMinimum();
         muteControl.setValue(false);
         volume.setValue(gain);

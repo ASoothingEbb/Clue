@@ -49,10 +49,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
@@ -88,6 +84,9 @@ public class gameInstance {
     private HashMap<String, String> CardNameMap = new HashMap<>();
     
     private String boardTilePath;
+    
+    //Sounds
+    private Sound endTurnSound;
     
     
     //JavaFX
@@ -384,7 +383,12 @@ public class gameInstance {
      * 
      * @return 
      */
-    private VBox createPlayerControls() {        
+    private VBox createPlayerControls() {    
+        //Sounds
+        endTurnSound = new Sound("resources/Sounds/endTurnSound.wav");
+        endTurnSound.setVolume(0.75f);
+        
+        
         VBox playerControlsLayout = new VBox();
         playerControlsLayout.setAlignment(Pos.CENTER);
         playerControlsLayout.setPadding(new Insets(0, 0, 5, 0));
@@ -441,6 +445,7 @@ public class gameInstance {
             try {
                 gameInterface.endTurn();
                 gameInterface.getPlayer().setNotes(notes);
+                endTurnSound.play();
             } catch (UnknownActionException | InterruptedException | GameController.MovementException | TileOccupiedException ex) {
                 Logger.getLogger(gameInstance.class.getName()).log(Level.SEVERE, null, ex);
             }

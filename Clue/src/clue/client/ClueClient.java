@@ -94,12 +94,11 @@ public class ClueClient extends Application {
         
         stage = primaryStage;
         
-        volumeOn = new Image(new FileInputStream(new File("./resources/Sprites/volumeOn.png")), 50, 50, false, false);
-        volumeOff = new Image(new FileInputStream(new File("./resources/Sprites/volumeOff.png")), 50, 50, false, false);
-        backgroundMusic = new Sound("./resources/Music/backgroundMusic.wav");
+        volumeOn = new Image(new FileInputStream(new File("resources/Sprites/volumeOn.png")), 50, 50, false, false);
+        volumeOff = new Image(new FileInputStream(new File("resources/Sprites/volumeOff.png")), 50, 50, false, false);
+        backgroundMusic = new Sound("resources/Music/backgroundMusic.wav");
         backgroundMusic.loop();
-        backgroundMusic.toggleSound();
-        backgroundMusic.setvolume(0.2f);
+        backgroundMusic.setVolume(0.6f);
         
         VBox menuOptions = new VBox();
         menuOptions.setPadding(new Insets(10));
@@ -471,9 +470,9 @@ public class ClueClient extends Application {
         credits.put("  ", "Jose");
         credits.put("Artist", "Hung");
         credits.put("UX Design","Hung");
-        credits.put("Composer", "What Music XD");
+        credits.put("Background Music", "Investigations by Kevin Macleod");
         credits.put("Tester", "Your Nan");
-        credits.put("Yasuo", "DAB");
+        credits.put("Board & Card Assets", "Hasbro Cluedo Board Game(2000)");
         credits.put("Special Thanks to", "Big Sage");
         
         int index = 1;
@@ -508,14 +507,14 @@ public class ClueClient extends Application {
         masterVolume.setBlockIncrement(10);
         
         Label masterVolumeShow = getLabel("", avenirTitle);
-        masterVolumeShow.setText("20");
-        masterVolume.setValue(20);
+        masterVolumeShow.setText("60");
+        masterVolume.setValue(60);
                 
         masterVolume.valueProperty().addListener(new ChangeListener() {
             @Override
             public void changed(ObservableValue observable, Object oldValue, Object newValue) {
                 masterVolumeShow.setText(String.valueOf((int) masterVolume.getValue()));
-                backgroundMusic.setvolume((float) ((float)masterVolume.getValue()*0.01));
+                backgroundMusic.setVolume((float) ((float)masterVolume.getValue()*0.01));
                 System.out.println(masterVolume.getValue());
             }
         });

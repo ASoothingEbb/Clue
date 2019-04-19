@@ -391,7 +391,9 @@ public final class GameController {
      * @return new movement limit
      */
     public int roll() {
-        player.setMoves(random.nextInt(10) + 2);
+        int roll = random.nextInt(10) + 2;
+        player.setMoves(roll);
+        System.out.println("Player id:" + player.getId() + " rolls a "+ roll);
         return player.getMoves();
     }
 
