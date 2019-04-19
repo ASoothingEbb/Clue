@@ -79,15 +79,27 @@ public class ShowCardsAction extends Action{
 
     }
     
+    /**
+     * Sets the card to be shown 
+     * 
+     * @param i the id of the card.
+     * @param type the type of the card to show  
+     */
     public void setCardToShow(int i, CardType type){
         idOfCardToShow = i;
         typeOfCardToShow = type;
     }
     
+    /**
+     * @return the ID of the card to be shown. 
+     */
     public int getIdOfCardToShow(){
         return idOfCardToShow;
     }
     
+    /**
+     * @return the TYPE of card the be shown.
+     */
     public CardType getCardTypeOfCardToShow(){
         return typeOfCardToShow;
     }

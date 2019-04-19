@@ -18,6 +18,9 @@ public class StartAction extends Action{
         this.actionType = ActionType.START;
     }
 
+    /**
+     * Executes 
+     */
     @Override
     public void execute() {
         super.execute(); //To change body of generated methods, choose Tools | Templates.

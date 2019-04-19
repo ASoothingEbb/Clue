@@ -23,11 +23,21 @@ public class TeleportAction extends Action {
     private gameInstance gui;
     private Tile target;
 
+    /**
+     * Creates a TeleportAction
+     * 
+     * @param p the player to be teleported.
+     * @param card  the intrigue card.
+     * @param gui a instance of the game.
+     */
     public TeleportAction(Player p, TeleportIntrigue card, gameInstance gui) {
         super(p, card);
         this.actionType = ActionType.TELEPORT;
     }
 
+    /**
+     * Executes the TeleportAction.
+     */
     @Override
     public void execute() {
         player.removeCard(card);
@@ -43,10 +53,17 @@ public class TeleportAction extends Action {
         }
     }
     
+    /**
+     * Sets the tile for the player to teleport to.
+     * @param t the tile to teleport to
+     */
     public void setTarget(Tile t){
         target = t;
     }
     
+    /**
+     * @return the tile where the player will teleport to.
+     */
     public Tile getTarget(){
         return target;
     }
