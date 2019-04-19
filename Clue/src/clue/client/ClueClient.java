@@ -98,6 +98,7 @@ public class ClueClient extends Application {
         volumeOff = new Image(new FileInputStream(new File("./resources/Sprites/volumeOff.png")), 50, 50, false, false);
         backgroundMusic = new Sound("./resources/Music/backgroundMusic.wav");
         backgroundMusic.loop();
+        backgroundMusic.toggleSound();
         backgroundMusic.setvolume(0.2f);
         
         VBox menuOptions = new VBox();
