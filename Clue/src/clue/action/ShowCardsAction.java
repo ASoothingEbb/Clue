@@ -46,7 +46,6 @@ public class ShowCardsAction extends Action{
     }
 
     /**
-     * 
      * @deprecated Test purposes only
      * @param player
      * @param suggester

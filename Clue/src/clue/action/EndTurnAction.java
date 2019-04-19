@@ -14,7 +14,7 @@ import clue.player.Player;
 public class EndTurnAction extends Action{
 
     /**
-     *
+     * Creates a new End Turn Action .
      * @param player
      */
     public EndTurnAction(Player player) {
@@ -22,6 +22,9 @@ public class EndTurnAction extends Action{
         this.actionType = ActionType.ENDTURN;
     }
 
+    /**
+     * Run by the gameController when this action is meant to be executed.
+     */
     @Override
     public void execute() {
         super.execute(); //To change body of generated methods, choose Tools | Templates.

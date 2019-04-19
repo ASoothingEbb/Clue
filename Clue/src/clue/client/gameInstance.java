@@ -25,6 +25,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -244,7 +245,7 @@ public class gameInstance {
     }
     
     private void paintRoom(Tile tile, int id){
-        Random rand = new Random();
+        Random rand = new Random(Calendar.getInstance().getTimeInMillis());
         switch(id){
             case 1:
                 tile.setColor(Color.CORAL);
@@ -595,10 +596,10 @@ public class gameInstance {
     public void showAccusationResult(Action action) {
         Prompt accusationResultPrompt = new Prompt("");
         if (((AccuseAction) action).wasCorrect()) { //accusation correct
-            accusationResultPrompt.setMessage("WINNER WINNER CHICKHEN DINNER. Game will return to menu");
+            accusationResultPrompt.setMessage("CONGRATULATIONS");
             accusationResultPrompt.setLabelTitle("YOU WON");
         } else {
-            accusationResultPrompt.setMessage("HAHA YOU SUCK, THIS IS WHAT THE CARDS WERE XD. GET SMURFED ON KID. You will no longer have a turn");
+            accusationResultPrompt.setMessage("BETTER LUCK NEXT TIME!");
             accusationResultPrompt.setLabelTitle("YOU LOSE");
         }
         
