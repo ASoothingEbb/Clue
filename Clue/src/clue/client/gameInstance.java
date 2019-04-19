@@ -138,7 +138,7 @@ public class gameInstance {
 
         Image image = null;
         try {
-            image = new Image(new FileInputStream(new File("./Resources/cluedoBoard.png")));
+            image = new Image(new FileInputStream(new File("Resources/cluedoBoard.png")));
         } catch(FileNotFoundException ex) {
             
         }
@@ -687,31 +687,31 @@ public class gameInstance {
      * Initialises the default graphics.
      */
     private void initDefaultGraphics() {
-        ImagePathMap.put("board", "./resources/board.png");
+        ImagePathMap.put("board", "resources/board.png");
         
-        ImagePathMap.put("character0", "./resources/Character/MissScarlet.png");
-        ImagePathMap.put("character1", "./resources/Character/ColonelMustard.png");
-        ImagePathMap.put("character2", "./resources/Character/MrsWhite.png");
-        ImagePathMap.put("character3", "./resources/Character/MrGreen.png");
-        ImagePathMap.put("character4", "./resources/Character/MrsPeacock.png");
-        ImagePathMap.put("character5", "./resources/Character/ProfessorPlum.png");
+        ImagePathMap.put("character0", "resources/Character/MissScarlet.png");
+        ImagePathMap.put("character1", "resources/Character/ColonelMustard.png");
+        ImagePathMap.put("character2", "resources/Character/MrsWhite.png");
+        ImagePathMap.put("character3", "resources/Character/MrGreen.png");
+        ImagePathMap.put("character4", "resources/Character/MrsPeacock.png");
+        ImagePathMap.put("character5", "resources/Character/ProfessorPlum.png");
         
-        ImagePathMap.put("weapon0","./resources/Weapon/Candlestick.png");
-        ImagePathMap.put("weapon1","./resources/Weapon/Dagger.png");
-        ImagePathMap.put("weapon2","./resources/Weapon/LeadPipe.png");
-        ImagePathMap.put("weapon3","./resources/Weapon/Revolver.png");
-        ImagePathMap.put("weapon4","./resources/Weapon/Rope.png");
-        ImagePathMap.put("weapon5","./resources/Weapon/Wrench.png");
+        ImagePathMap.put("weapon0","resources/Weapon/Candlestick.png");
+        ImagePathMap.put("weapon1","resources/Weapon/Dagger.png");
+        ImagePathMap.put("weapon2","resources/Weapon/LeadPipe.png");
+        ImagePathMap.put("weapon3","resources/Weapon/Revolver.png");
+        ImagePathMap.put("weapon4","resources/Weapon/Rope.png");
+        ImagePathMap.put("weapon5","resources/Weapon/Wrench.png");
         
-        ImagePathMap.put("room0","./resources/Room/Study.png");
-        ImagePathMap.put("room1","./resources/Room/Hall.png");
-        ImagePathMap.put("room2","./resources/Room/Lounge.png");
-        ImagePathMap.put("room3","./resources/Room/Library.png");
-        ImagePathMap.put("room4","./resources/Room/BillardRoom.png");
-        ImagePathMap.put("room5","./resources/Room/DiningRoom.png");
-        ImagePathMap.put("room6","./resources/Room/Conservatory.png");
-        ImagePathMap.put("room7","./resources/Room/BallRoom.png");
-        ImagePathMap.put("room8","./resources/Room/Kitchen.png");
+        ImagePathMap.put("room0","resources/Room/Study.png");
+        ImagePathMap.put("room1","resources/Room/Hall.png");
+        ImagePathMap.put("room2","resources/Room/Lounge.png");
+        ImagePathMap.put("room3","resources/Room/Library.png");
+        ImagePathMap.put("room4","resources/Room/BillardRoom.png");
+        ImagePathMap.put("room5","resources/Room/DiningRoom.png");
+        ImagePathMap.put("room6","resources/Room/Conservatory.png");
+        ImagePathMap.put("room7","resources/Room/BallRoom.png");
+        ImagePathMap.put("room8","resources/Room/Kitchen.png");
     }
     
     /**
@@ -751,9 +751,9 @@ public class gameInstance {
         avenirTitle = new Font(20);
         avenirText = new Font(15);
         try {
-            avenirLarge = Font.loadFont(new FileInputStream(new File("./resources/fonts/Avenir-Book.ttf")), 30);
-            avenirTitle = Font.loadFont(new FileInputStream(new File("./resources/fonts/Avenir-Book.ttf")), 20);
-            avenirText = Font.loadFont(new FileInputStream(new File("./resources/fonts/Avenir-Book.ttf")), 15);
+            avenirLarge = Font.loadFont(new FileInputStream(new File("resources/fonts/Avenir-Book.ttf")), 30);
+            avenirTitle = Font.loadFont(new FileInputStream(new File("resources/fonts/Avenir-Book.ttf")), 20);
+            avenirText = Font.loadFont(new FileInputStream(new File("resources/fonts/Avenir-Book.ttf")), 15);
         } catch(FileNotFoundException e) {
             
         }

@@ -525,7 +525,7 @@ public class boardEditor {
             }  
         }
         
-        File csvFile = new File("./Maps/"+mapName+"/"+mapName+"Door.csv");
+        File csvFile = new File("./Maps/"+mapName+"/"+mapName+"Doors.csv");
         
         try (PrintWriter pw = new PrintWriter(csvFile)) {
             csv.stream().map(this::convertToCSV).forEach(pw::println);
