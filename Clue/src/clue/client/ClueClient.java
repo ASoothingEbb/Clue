@@ -553,8 +553,8 @@ public class ClueClient extends Application {
             Label characterFile = getLabel("File", avenirTitle);
             TextField characterFilePath = getTextField(40, false);
             
-            final String propertiesCharacterName = "Character"+(i-1)+"Name";
-            final String propertiesCharacter = "Character"+(i-1)+"Texture";
+            final String propertiesCharacterName = "character"+(i-1)+"Name";
+            final String propertiesCharacter = "character"+(i-1)+"Texture";
             
             MenuItem selectCharacterFile = new MenuItem("Choose", avenirTitle);
             selectCharacterFile.setOnMouseClicked(e -> {
@@ -581,8 +581,8 @@ public class ClueClient extends Application {
             Label weaponFile = getLabel("File", avenirTitle);
             TextField weaponFilePath = getTextField(40, false);
             
-            final String propertiesWeapon = "Weapon"+(i-1)+"Texture";
-            final String propertiesWeaponName = "Weapon"+(i-1)+"Name";
+            final String propertiesWeapon = "weapon"+(i-1)+"Texture";
+            final String propertiesWeaponName = "weapon"+(i-1)+"Name";
             
             MenuItem selectWeaponFile = new MenuItem("Choose", avenirTitle);
             selectWeaponFile.setOnMouseClicked(e -> {
