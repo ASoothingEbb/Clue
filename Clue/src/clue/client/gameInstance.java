@@ -68,6 +68,8 @@ import javafx.util.Duration;
  */
 public class gameInstance {
     
+    private Stage client;
+    
     private static final int TILE_SIZE = 38;
     private int currentRoom;
     private boolean rolled;
@@ -369,22 +371,22 @@ public class gameInstance {
         playerCardsLabel = getLabel(CardNameMap.get("character"+gameInterface.getPlayer().getId()) + "'s Turn", avenirLarge);
         switch(gameInterface.getPlayer().getId()){
             case 0://Scarlet
-                playerCardsLabel.setTextFill(Color.RED);
+                playerCardsLabel.setTextFill(Color.rgb(232, 53, 53));
                 break;
             case 1://Mustard
-                playerCardsLabel.setStyle("-fx-text-fill: #ffdb58");
+                playerCardsLabel.setTextFill(Color.rgb(253,188,0));
                 break;
             case 2://Mrs White
                 playerCardsLabel.setTextFill(Color.WHITE);
                 break; 
             case 3://Reverend green
-                playerCardsLabel.setStyle("-fx-text-fill: #00FF00;");
+                playerCardsLabel.setTextFill(Color.rgb(38, 242, 99));
                 break;
-            case 4://Mrs PeaCOCK
-                playerCardsLabel.setTextFill(Color.BLUE);
+            case 4://Mrs Peacock
+                playerCardsLabel.setTextFill(Color.rgb(66, 190, 244));
                 break;
             case 5://Professor Plum
-                playerCardsLabel.setStyle("-fx-text-fill: #DDA0DD;");
+                playerCardsLabel.setTextFill(Color.rgb(216, 64, 237));
                 break;
             default:
                 break;
@@ -444,8 +446,8 @@ public class gameInstance {
         });
         
         MenuItem accusationButton = new MenuItem("Accusation", avenirLarge);
-        accusationButton.setActiveColor(Color.RED);
-        accusationButton.setInactiveColor(Color.SALMON);
+        accusationButton.setActiveColor(Color.rgb(200, 0, 0));
+        accusationButton.setInactiveColor(Color.rgb(239, 43, 43));
         accusationButton.setActive(false);
         accusationButton.setOnMouseClicked(e -> {
             createCardsWindow("Accusation", Color.RED);
@@ -593,10 +595,10 @@ public class gameInstance {
     public void showAccusationResult(Action action) {
         Prompt accusationResultPrompt = new Prompt("");
         if (((AccuseAction) action).wasCorrect()) { //accusation correct
-            accusationResultPrompt.setMessage("WINNER WINNER CHICKHEN DINNER");
+            accusationResultPrompt.setMessage("WINNER WINNER CHICKHEN DINNER. Game will return to menu");
             accusationResultPrompt.setLabelTitle("YOU WON");
         } else {
-            accusationResultPrompt.setMessage("HAHA YOU SUCK, THIS IS WHAT THE CARDS WERE XD. GET SMURFED ON KID");
+            accusationResultPrompt.setMessage("HAHA YOU SUCK, THIS IS WHAT THE CARDS WERE XD. GET SMURFED ON KID. You will no longer have a turn");
             accusationResultPrompt.setLabelTitle("YOU LOSE");
         }
         
@@ -606,6 +608,13 @@ public class gameInstance {
             cards[i] = new ImageView(getImage(murderCards.get(i).getId(), murderCards.get(i).cardType));
         }
         accusationResultPrompt.setImage(cards);
+        accusationResultPrompt.setOnCloseRequest(e -> {
+            if (((AccuseAction) action).wasCorrect()) {
+                
+                client.show();
+                gameStage.close();
+            }
+        });
         accusationResultPrompt.showAndWait();
     }
     
@@ -828,13 +837,14 @@ public class gameInstance {
      * @param gameController
      * @param tilePath 
      */
-    public void startGame(GameController gameController, String tilePath) {
+    public void startGame(GameController gameController, Stage client,String tilePath) {
         gameStage = new Stage();
         
         gameStage.initModality(Modality.APPLICATION_MODAL);
         gameStage.setTitle("Clue");
         gameStage.setResizable(false);
         
+        this.client = client;
         this.boardTilePath = tilePath;
 
         // Temp return button
@@ -952,6 +962,12 @@ public class gameInstance {
      * @param player 
      */
     public void gameOver(Player player) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Prompt gameOverPrompt = new Prompt("No one was able to guess the murder cards");
+        gameOverPrompt.setTitle("GAME OVER");
+        gameOverPrompt.setOnCloseRequest(e -> {
+            client.show();
+            gameStage.close();
+        });
+        gameOverPrompt.showAndWait();
     }
 }
