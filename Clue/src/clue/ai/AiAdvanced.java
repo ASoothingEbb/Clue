@@ -97,11 +97,13 @@ public class AiAdvanced extends Player{
                 target = path.getLast();
             }
                 
+
             try {
                 gameController.move(target);
-            } catch (UnknownActionException | InterruptedException | GameController.MovementException | TileOccupiedException ex) {
+            } catch (TileOccupiedException ex) {
                 Logger.getLogger(AiAdvanced.class.getName()).log(Level.SEVERE, null, ex);
-            } 
+            }
+
         }
         
     }
@@ -249,11 +251,8 @@ public class AiAdvanced extends Player{
     private void endTurn() {
         System.out.println("[AiAdvanced.endTurn] id: "+id);
         myTurn = false;
-        try {
-            gameController.endTurn();
-        } catch (UnknownActionException | InterruptedException | GameController.MovementException | TileOccupiedException ex) {
-            Logger.getLogger(AiAdvanced.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        gameController.endTurn();
+
     }
 
     public void respondToTeleport(Action action) {
