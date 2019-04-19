@@ -94,9 +94,7 @@ public final class GameController {
         if (players.size() > 6 || players.size() > startingTiles.size()) {
             throw new TooManyPlayersException();
         }
-        if (players.size() < 3){
-            
-        }
+        
         
         random = new Random(Calendar.getInstance().getTimeInMillis());
         actionLog = new ArrayList();
@@ -114,15 +112,23 @@ public final class GameController {
             }
             performAction(new StartAction());
         } else {
-            state.endGame();
             endGame();
             throw new NotEnoughPlayersException();
+        }
+        Player nonActive;
+        int roomIdToBePlacedIn = 0;
+        while (players.size() < 6){
+            nonActive = new Player(players.size(), this);
+            nonActive.removeFromPlay();
+            nonActive.setPosition(bm.getRoom(roomIdToBePlacedIn));
+            players.add(nonActive);
+            roomIdToBePlacedIn++;
         }
     }
 
     /** 
      * Add gameInstance reference to backend so that it can make GUI calls
-     * @param gs 
+     * @param gui 
      */
     public void setGameInstance(gameInstance gui){
         this.gui = gui;
@@ -155,10 +161,8 @@ public final class GameController {
             case ACCUSATION:
                 System.out.println("    CASE ACCUSATION");
                 if (action.result) {
-                    winner = state.endGame();
-                    endGame();
+                    endGame(player);
                 } else if (!state.hasActive()) {
-                    state.endGame();
                     endGame();
                 } else {
                     //nextAction = new EndTurnAction(state.getCurrentPlayer());//players now manually call end turn
@@ -194,7 +198,6 @@ public final class GameController {
                 }
                 else{
                     System.out.println("[GameController.performAction] case end turn no more active players");
-                    state.endGame();
                     endGame();
                 }
                 
@@ -364,14 +367,24 @@ public final class GameController {
     }
 
     /**
-     * Terminates the game instance and declares a winner.
+     * Terminates the game instance , tells the gui the game is over, without a winner
      */
     private void endGame() {
-        //TODO notify GUI
-        if (winner == null) {
-        } else {
-
-        }
+        state.endGame();
+        if (gui!=null){
+            gui.gameOver(null);
+        } 
+    }
+    
+    /**
+     * Terminates the game instance , tells the gui the game is over, with a winner
+     * @param winner the Player who won the game
+     */
+    private void endGame(Player winner) {
+        state.endGame();
+        if (gui!=null){
+            gui.gameOver(winner);
+        } 
     }
     
     /**
