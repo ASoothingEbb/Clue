@@ -115,21 +115,22 @@ public class Player {
      * @param t destination
      */
     public void setPosition(Tile t) {
-        position = t;
+        
         t.setOccupied(true);
-        
+        position.setOccupied(false);   
         if (position.isRoom()){
-            ((Room) position).unassignLocation(drawnLocation);//allow room to re assign location
+            ((Room) position).unassignLocation(drawnLocation);//allow room to re assign location 
         }
-        
+
         if (t.isRoom()){
             drawnLocation = ((Room)t).assignLocation();//get a location from the room
-        }
+        } 
         else{
             drawnLocation[0] = t.getX();
-            drawnLocation[1] = t.getY();
-           
-        }
+            drawnLocation[1] = t.getY();    
+        }   
+        
+        position = t;
     }
 
     /**
