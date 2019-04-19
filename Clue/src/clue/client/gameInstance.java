@@ -25,6 +25,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -67,6 +68,8 @@ import javafx.util.Duration;
  * @author hungb
  */
 public class gameInstance {
+    
+    private Stage client;
     
     private static final int TILE_SIZE = 38;
     private int currentRoom;
@@ -242,7 +245,7 @@ public class gameInstance {
     }
     
     private void paintRoom(Tile tile, int id){
-        Random rand = new Random();
+        Random rand = new Random(Calendar.getInstance().getTimeInMillis());
         switch(id){
             case 1:
                 tile.setColor(Color.CORAL);
@@ -367,6 +370,28 @@ public class gameInstance {
     private void createCardsDisplay(GridPane cardsLayout) {
         cardsLayout.getChildren().remove(playerCardsLabel);
         playerCardsLabel = getLabel(CardNameMap.get("character"+gameInterface.getPlayer().getId()) + "'s Turn", avenirLarge);
+        switch(gameInterface.getPlayer().getId()){
+            case 0://Scarlet
+                playerCardsLabel.setTextFill(Color.rgb(232, 53, 53));
+                break;
+            case 1://Mustard
+                playerCardsLabel.setTextFill(Color.rgb(253,188,0));
+                break;
+            case 2://Mrs White
+                playerCardsLabel.setTextFill(Color.WHITE);
+                break; 
+            case 3://Reverend green
+                playerCardsLabel.setTextFill(Color.rgb(38, 242, 99));
+                break;
+            case 4://Mrs Peacock
+                playerCardsLabel.setTextFill(Color.rgb(66, 190, 244));
+                break;
+            case 5://Professor Plum
+                playerCardsLabel.setTextFill(Color.rgb(216, 64, 237));
+                break;
+            default:
+                break;
+        }
         int x = 1;
         int y = 0;
         for (Card card: gameInterface.getPlayer().getCards()) {
@@ -422,8 +447,8 @@ public class gameInstance {
         });
         
         MenuItem accusationButton = new MenuItem("Accusation", avenirLarge);
-        accusationButton.setActiveColor(Color.RED);
-        accusationButton.setInactiveColor(Color.DARKRED);
+        accusationButton.setActiveColor(Color.rgb(200, 0, 0));
+        accusationButton.setInactiveColor(Color.rgb(239, 43, 43));
         accusationButton.setActive(false);
         accusationButton.setOnMouseClicked(e -> {
             createCardsWindow("Accusation", Color.RED);
@@ -447,11 +472,13 @@ public class gameInstance {
         
         MenuItem endButton = new MenuItem("End Turn", avenirLarge);
         endButton.setOnMouseClicked(e -> {
-
-            gameInterface.endTurn();
-            gameInterface.getPlayer().setNotes(notes);
-            endTurnSound.play();
-            
+            try {
+                gameInterface.getPlayer().setNotes(notes);
+                gameInterface.endTurn();
+                endTurnSound.play();
+            } catch (UnknownActionException | InterruptedException | GameController.MovementException | TileOccupiedException ex) {
+                Logger.getLogger(gameInstance.class.getName()).log(Level.SEVERE, null, ex);
+            }
         });
         
         playerControlsLayout.getChildren().addAll(remainingMovesLabel, suggestionButton, accusationButton, rollButton, endButton);
@@ -569,10 +596,10 @@ public class gameInstance {
     public void showAccusationResult(Action action) {
         Prompt accusationResultPrompt = new Prompt("");
         if (((AccuseAction) action).wasCorrect()) { //accusation correct
-            accusationResultPrompt.setMessage("WINNER WINNER CHICKHEN DINNER");
+            accusationResultPrompt.setMessage("CONGRATULATIONS");
             accusationResultPrompt.setLabelTitle("YOU WON");
         } else {
-            accusationResultPrompt.setMessage("HAHA YOU SUCK, THIS IS WHAT THE CARDS WERE XD. GET SMURFED ON KID");
+            accusationResultPrompt.setMessage("BETTER LUCK NEXT TIME!");
             accusationResultPrompt.setLabelTitle("YOU LOSE");
         }
         
@@ -582,6 +609,13 @@ public class gameInstance {
             cards[i] = new ImageView(getImage(murderCards.get(i).getId(), murderCards.get(i).cardType));
         }
         accusationResultPrompt.setImage(cards);
+        accusationResultPrompt.setOnCloseRequest(e -> {
+            if (((AccuseAction) action).wasCorrect()) {
+                
+                client.show();
+                gameStage.close();
+            }
+        });
         accusationResultPrompt.showAndWait();
     }
     
@@ -740,7 +774,7 @@ public class gameInstance {
         CardNameMap.put("character0", "Miss Scarlet");
         CardNameMap.put("character1", "Colonel Mustard");
         CardNameMap.put("character2", "Mrs White");
-        CardNameMap.put("character3", "Mr Green");
+        CardNameMap.put("character3", "Reverend Green");
         CardNameMap.put("character4", "Mrs Peacock");
         CardNameMap.put("character5", "Professor Plum");
         
@@ -804,13 +838,14 @@ public class gameInstance {
      * @param gameController
      * @param tilePath 
      */
-    public void startGame(GameController gameController, String tilePath) {
+    public void startGame(GameController gameController, Stage client,String tilePath) {
         gameStage = new Stage();
         
         gameStage.initModality(Modality.APPLICATION_MODAL);
         gameStage.setTitle("Clue");
         gameStage.setResizable(false);
         
+        this.client = client;
         this.boardTilePath = tilePath;
 
         // Temp return button
@@ -846,7 +881,30 @@ public class gameInstance {
         
         
         //TODO fix transition to update
-        Label switchPlayerLabel = getLabel(CardNameMap.get("character"+gameInterface.getPlayer().getId()) + "'s Turn", avenirTitle);
+        Label switchPlayerLabel = getLabel(CardNameMap.get("character"+gameInterface.getPlayer().getId()) + "'s Turn", avenirLarge);
+        
+         switch(gameInterface.getPlayer().getId()){
+            case 0://Scarlet
+                switchPlayerLabel.setTextFill(Color.RED);
+                break;
+            case 1://Mustard
+                switchPlayerLabel.setStyle("-fx-text-fill: #ffdb58");
+                break;
+            case 2://Mrs White
+                switchPlayerLabel.setTextFill(Color.WHITE);
+                break; 
+            case 3://Reverend green
+                switchPlayerLabel.setStyle("-fx-text-fill: #00FF00;");
+                break;
+            case 4://Mrs PeaCOCK
+                switchPlayerLabel.setTextFill(Color.BLUE);
+                break;
+            case 5://Professor Plum
+                switchPlayerLabel.setStyle("-fx-text-fill: #DDA0DD;");
+                break;
+            default:
+                break;
+        }
         
         MenuItem fadeSwitch = new MenuItem("Start Turn", avenirTitle);
         fadeSwitch.setOnMouseClicked(e -> {
@@ -887,6 +945,7 @@ public class gameInstance {
         resetRoll();
         suggested = false;
         currentPlayer = playerSprites[gameInterface.getPlayer().getId()];
+        notepad.setText(gameInterface.getPlayer().getNotes());
         switchToCurtain();
         redrawPlayers();
         createCardsDisplay(cardsDisplay);
@@ -904,6 +963,12 @@ public class gameInstance {
      * @param player 
      */
     public void gameOver(Player player) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Prompt gameOverPrompt = new Prompt("No one was able to guess the murder cards");
+        gameOverPrompt.setTitle("GAME OVER");
+        gameOverPrompt.setOnCloseRequest(e -> {
+            client.show();
+            gameStage.close();
+        });
+        gameOverPrompt.showAndWait();
     }
 }

@@ -48,6 +48,9 @@ public class AvoidSuggestionAction extends Action {
         this.gui = gui;
     }
     
+    /**
+     * Executes the AvoidSuggestionAction. Means that the player had no cards to show.
+     */
     @Override
     public void execute() {
         player.removeCard(card);

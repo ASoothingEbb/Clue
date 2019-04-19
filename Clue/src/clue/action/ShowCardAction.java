@@ -35,16 +35,28 @@ public class ShowCardAction extends Action {
         this.whoShowedTheCard = whoShowedTheCard;
     }
 
+    /**
+     * 
+     * @param player the player to show the card to
+     * @param card the card to be shown
+     * @param shower the player to show the card to
+     */
     public ShowCardAction(Player player, Card card, Player shower) {
         super(player);
         this.card = card;
         this.whoShowedTheCard = shower;
     }
     
+    /**
+     * @return the player who showed the card.
+     */
     public Player getWhoShowedTheCard(){
         return whoShowedTheCard;
     }
     
+    /**
+     * @return the card to be shown
+     */
     public Card getCardToShow(){
         return card;
     }

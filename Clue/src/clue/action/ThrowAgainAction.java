@@ -28,7 +28,10 @@ public class ThrowAgainAction extends Action{
         this.actionType = ActionType.THROWAGAIN;
         this.gui = gui;
     }
-
+    /**
+     * Executes the ThrowAgainAction.
+     * Allows user to roll again.
+     */
     @Override
     public void execute() {
         player.removeCard(card);

@@ -21,6 +21,7 @@ import clue.player.Player;
 import clue.tile.Tile;
 import clue.tile.TileOccupiedException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
@@ -45,7 +46,7 @@ public class AiBasic extends Player{
         super(id, gc);
         
         gameController = gc;
-        rand = new Random();
+        rand = new Random(Calendar.getInstance().getTimeInMillis());
     }
     
     @Override

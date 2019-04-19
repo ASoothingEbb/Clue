@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -254,7 +256,6 @@ public class ClueClient extends Application {
         
         MenuItem startGameButton = new MenuItem("Start Game", avenirTitle);
         startGameButton.setOnMouseClicked(e -> {
-            stage.hide();
             String mapDirPath = "Maps/" + maps.getValue();
             File mapDirectory = new File(mapDirPath);
             String[] mapFiles = mapDirectory.list();
@@ -283,14 +284,16 @@ public class ClueClient extends Application {
 
             try {
                 GameController gameController = new GameController(numberOfPlayers, numberOfAIs, tileFile, doorFile);
-                game.startGame(gameController, tileFile);
+                game.startGame(gameController, stage, tileFile);
+                stage.hide();
+                stage.setScene(prevScene);
             } catch(TooManyPlayersException | MissingRoomDuringCreationException | NoSuchRoomException | NoSuchTileException ex) {
                 System.out.println("Ice Cream Machine BROKE");
                 ex.printStackTrace();
             } catch(NotEnoughPlayersException ex) {
                 Prompt playerPrompt = new Prompt("Not Enough Players");
                 playerPrompt.setLabelTitle("Start Game Error");
-                playerPrompt.showAndWait();
+                playerPrompt.showAndWait();    
             }
             
         });
