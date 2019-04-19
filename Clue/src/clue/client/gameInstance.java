@@ -386,7 +386,7 @@ public class gameInstance {
         int x = 1;
         int y = 0;
         for (Card card: gameInterface.getPlayer().getCards()) {
-            ImageView view = new ImageView(getImage(card.getId(), card.cardType));
+            ImageView view = new ImageView(getImage(card.getId(), card.getCardType()));
             cardsLayout.add(view, y, x);
             GridPane.setMargin(view, new Insets(0, 10, 10, 0));
             if (y == 2) {
@@ -532,7 +532,7 @@ public class gameInstance {
      * @param action 
      */
     public void actionResponse(Action action) {
-        switch (action.actionType) {
+        switch (action.getActionType()) {
             case SHOWCARDS:
                 System.out.println("[gameInstance.actionResponse] case SHOWCARDS");
                 endTurnSound.play();
@@ -606,7 +606,7 @@ public class gameInstance {
         List<Card> murderCards = ((AccuseAction) action).getMurderCards();
         ImageView[] cards = new ImageView[3];
         for (int i=0; i < murderCards.size(); i++) {
-            cards[i] = new ImageView(getImage(murderCards.get(i).getId(), murderCards.get(i).cardType));
+            cards[i] = new ImageView(getImage(murderCards.get(i).getId(), murderCards.get(i).getCardType()));
         }
         accusationResultPrompt.setImage(cards);
         accusationResultPrompt.setOnCloseRequest(e -> {
@@ -624,7 +624,7 @@ public class gameInstance {
         String suggestee = CardNameMap.get("character" + ((ShowCardAction) action).getWhoShowedTheCard().getId());
         showCardPrompt = new Prompt(suggestee + " showed");
         showCardPrompt.setLabelTitle("Suggestion Response");
-        ImageView cardViewer = new ImageView(getImage(response.getCardToShow().getId(), response.getCardToShow().cardType));
+        ImageView cardViewer = new ImageView(getImage(response.getCardToShow().getId(), response.getCardToShow().getCardType()));
         showCardPrompt.setImage(cardViewer);
         showCardPrompt.setOnCloseRequest(e -> {
             showCardPrompt = null;
@@ -673,9 +673,9 @@ public class gameInstance {
                 
         for (Card card: cards) {
             final int cardId = card.getId();
-            final CardType cardType = card.cardType;
+            final CardType cardType = card.getCardType();
 
-            ImageView view = new ImageView(getImage(card.getId(), card.cardType));
+            ImageView view = new ImageView(getImage(card.getId(), card.getCardType()));
             view.setOnMouseClicked(e -> {
                 setSelectedCard(cardId, cardType, view);
             });
@@ -941,7 +941,7 @@ public class gameInstance {
         System.out.println("show history called");
         for (Action action: actionsToNotify) {
             StringBuilder message = new StringBuilder();     
-            switch (action.actionType) {
+            switch (action.getActionType()) {
                 case ACCUSATION:
                     int accuser = ((AccuseAction) action).getPlayer().getId();
                     final int[] cards = ((AccuseAction) action).getAccusationCards();
