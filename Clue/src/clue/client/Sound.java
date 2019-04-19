@@ -107,4 +107,9 @@ public class Sound {
     public void toggleSound(){
         if(!muted) muteControl.setValue(!muteControl.getValue());
     }
+    
+    public void reset(){
+        stop();
+        clip.setFramePosition(1000);
+    }
 }

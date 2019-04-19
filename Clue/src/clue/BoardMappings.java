@@ -117,8 +117,8 @@ public final class BoardMappings {
         addDoorsToTileAdjacencies(doorLocations);
         
         if (tileRoomLayoutPath.equals("Maps/archersAvenue/archersAvenueTiles.csv")){
-            //addShortcut();
-            //addShortcut();
+            addShortcut(0,8);
+            addShortcut(6,2);
         }
         
 
@@ -304,7 +304,7 @@ public final class BoardMappings {
         if (roomId < rooms.length && roomId >= 0){
             return rooms[roomId];
         }
-        throw new NoSuchRoomException("roomId");
+        throw new NoSuchRoomException("roomId: "+roomId);
 
     }
     /**

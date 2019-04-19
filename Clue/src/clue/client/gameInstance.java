@@ -100,6 +100,7 @@ public class gameInstance {
     private Prompt showCardPrompt = null;
     private boolean suggested = false;
     
+    Label playerCardsLabel;
     private CardType selectedCardType;
     private int selectedCardId;
     private ImageView selectedView = null;
@@ -364,7 +365,8 @@ public class gameInstance {
      * @param cardsLayout 
      */
     private void createCardsDisplay(GridPane cardsLayout) {
-        Label playerCardsLabel = getLabel("Cards", avenirTitle);
+        cardsLayout.getChildren().remove(playerCardsLabel);
+        playerCardsLabel = getLabel(CardNameMap.get("character"+gameInterface.getPlayer().getId()) + "'s Turn", avenirLarge);
         int x = 1;
         int y = 0;
         for (Card card: gameInterface.getPlayer().getCards()) {
@@ -508,10 +510,12 @@ public class gameInstance {
         switch (action.actionType) {
             case SHOWCARDS:
                 System.out.println("[gameInstance.actionResponse] case SHOWCARDS");
+                endTurnSound.play();
                 showCards(action);
                 break;
             case SHOWCARD:
                 System.out.println("[gameInstance.actionResponse] case SHOWCARD");
+                endTurnSound.play();
                 showCard(action);
                 redrawPlayers();
                 for (Player player: gameInterface.getPlayers()) {
@@ -842,11 +846,6 @@ public class gameInstance {
         curtain.setBackground(blackFill);
         curtain.setMinSize(1736, 960);
         
-        //Label txt = new Label("IT'S PLAYER'S ------ TURN.");
-        //Font titleFont = new Font(80);
-         
-        //txt.setFont(titleFont);
-        //txt.setTextFill(Color.WHITE);
         
         //TODO fix transition to update
         Label switchPlayerLabel = getLabel(CardNameMap.get("character"+gameInterface.getPlayer().getId()) + "'s Turn", avenirTitle);
@@ -854,6 +853,7 @@ public class gameInstance {
         MenuItem fadeSwitch = new MenuItem("Start Turn", avenirTitle);
         fadeSwitch.setOnMouseClicked(e -> {
             switchToUi();
+            endTurnSound.reset();
         });
         //Button fadeSwitch = new Button("Unfade");
         //fadeSwitch.setOnAction(e -> switchToUi());

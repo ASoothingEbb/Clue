@@ -118,16 +118,24 @@ public final class GameController {
         }
         Player nonActive;
         int roomIdToBePlacedIn = 0;
+        int numRooms = bm.getRooms().length;
         while (players.size() < 6){
             nonActive = new Player(players.size(), this);
             nonActive.removeFromPlay();
             nonActive.setPosition(bm.getRoom(roomIdToBePlacedIn));
             players.add(nonActive);
             roomIdToBePlacedIn++;
+            
+            if (roomIdToBePlacedIn >= numRooms){
+                roomIdToBePlacedIn = 0;
+            }
         }
         for (WeaponCard c : weaponCards){
             c.setPosition(bm.getRoom(roomIdToBePlacedIn));
             roomIdToBePlacedIn++;
+            if (roomIdToBePlacedIn >= numRooms){
+                roomIdToBePlacedIn = 0;
+            }
         
         }
     }
