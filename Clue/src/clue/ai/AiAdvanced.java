@@ -18,6 +18,7 @@ import clue.tile.Tile;
 import clue.tile.TileOccupiedException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -57,7 +58,7 @@ public class AiAdvanced extends Player{
         this.boardHeight = height;
         this.id = id;
         gameController = gc;
-        rand = new Random();
+        rand = new Random(Calendar.getInstance().getTimeInMillis());
         shownCards = new ArrayList<>();
         suggestionsLeft = rand.nextInt(15)+15;
         myTurn = false;

@@ -25,6 +25,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -242,7 +243,7 @@ public class gameInstance {
     }
     
     private void paintRoom(Tile tile, int id){
-        Random rand = new Random();
+        Random rand = new Random(Calendar.getInstance().getTimeInMillis());
         switch(id){
             case 1:
                 tile.setColor(Color.CORAL);
