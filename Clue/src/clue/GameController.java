@@ -245,6 +245,7 @@ public final class GameController {
                     if (state.getAction().actionType == ActionType.SHOWCARDS) {
 
                     }
+                    actionLog.add(action);
                     break;
                 case SHOWCARDS:
                     System.out.println("    CASE SHOWCARDS");
