@@ -465,16 +465,15 @@ public class ClueClient extends Application {
     private GridPane creditsScene(GridPane layout) {      
         LinkedHashMap <String, String> credits = new LinkedHashMap<>();
         credits.put("Produced By", "Big Sage Productions");
-        credits.put("Project Manager", "Jak and Whip");
+        credits.put("Project Manager", "Jak");
         credits.put("AI", "Jose");
-        credits.put("Lead Programmer", "Steve");
-        credits.put("Programmer", "Mathew");
-        credits.put(" ", "Jak");
-        credits.put("  ", "Jose");
+        credits.put("Programmer", "Steve");
+        credits.put(" ", "Steve");
+        credits.put("  ", "Jak");
+        credits.put("   ", "Jose");
         credits.put("Artist", "Hung");
         credits.put("UX Design","Hung");
         credits.put("Background Music", "Investigations by Kevin Macleod");
-        credits.put("Tester", "Your Nan");
         credits.put("Board & Card Assets", "Hasbro Cluedo Board Game(2000)");
         credits.put("Special Thanks to", "Big Sage");
         
