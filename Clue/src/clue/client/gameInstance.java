@@ -366,6 +366,28 @@ public class gameInstance {
     private void createCardsDisplay(GridPane cardsLayout) {
         cardsLayout.getChildren().remove(playerCardsLabel);
         playerCardsLabel = getLabel(CardNameMap.get("character"+gameInterface.getPlayer().getId()) + "'s Turn", avenirLarge);
+        switch(gameInterface.getPlayer().getId()){
+            case 0://Scarlet
+                playerCardsLabel.setTextFill(Color.RED);
+                break;
+            case 1://Mustard
+                playerCardsLabel.setStyle("-fx-text-fill: #ffdb58");
+                break;
+            case 2://Mrs White
+                playerCardsLabel.setTextFill(Color.WHITE);
+                break; 
+            case 3://Reverand green
+                playerCardsLabel.setStyle("-fx-text-fill: #00FF00;");
+                break;
+            case 4://Mrs PeaCOCK
+                playerCardsLabel.setTextFill(Color.BLUE);
+                break;
+            case 5://Professor Plum
+                playerCardsLabel.setStyle("-fx-text-fill: #DDA0DD;");
+                break;
+            default:
+                break;
+        }
         int x = 1;
         int y = 0;
         for (Card card: gameInterface.getPlayer().getCards()) {
@@ -422,7 +444,7 @@ public class gameInstance {
         
         MenuItem accusationButton = new MenuItem("Accusation", avenirLarge);
         accusationButton.setActiveColor(Color.RED);
-        accusationButton.setInactiveColor(Color.DARKRED);
+        accusationButton.setInactiveColor(Color.SALMON);
         accusationButton.setActive(false);
         accusationButton.setOnMouseClicked(e -> {
             createCardsWindow("Accusation", Color.RED);
@@ -732,7 +754,7 @@ public class gameInstance {
         CardNameMap.put("character0", "Miss Scarlet");
         CardNameMap.put("character1", "Colonel Mustard");
         CardNameMap.put("character2", "Mrs White");
-        CardNameMap.put("character3", "Mr Green");
+        CardNameMap.put("character3", "Reverand Green");
         CardNameMap.put("character4", "Mrs Peacock");
         CardNameMap.put("character5", "Professor Plum");
         
@@ -837,7 +859,30 @@ public class gameInstance {
         
         
         //TODO fix transition to update
-        Label switchPlayerLabel = getLabel(CardNameMap.get("character"+gameInterface.getPlayer().getId()) + "'s Turn", avenirTitle);
+        Label switchPlayerLabel = getLabel(CardNameMap.get("character"+gameInterface.getPlayer().getId()) + "'s Turn", avenirLarge);
+        
+         switch(gameInterface.getPlayer().getId()){
+            case 0://Scarlet
+                switchPlayerLabel.setTextFill(Color.RED);
+                break;
+            case 1://Mustard
+                switchPlayerLabel.setStyle("-fx-text-fill: #ffdb58");
+                break;
+            case 2://Mrs White
+                switchPlayerLabel.setTextFill(Color.WHITE);
+                break; 
+            case 3://Reverand green
+                switchPlayerLabel.setStyle("-fx-text-fill: #00FF00;");
+                break;
+            case 4://Mrs PeaCOCK
+                switchPlayerLabel.setTextFill(Color.BLUE);
+                break;
+            case 5://Professor Plum
+                switchPlayerLabel.setStyle("-fx-text-fill: #DDA0DD;");
+                break;
+            default:
+                break;
+        }
         
         MenuItem fadeSwitch = new MenuItem("Start Turn", avenirTitle);
         fadeSwitch.setOnMouseClicked(e -> {
