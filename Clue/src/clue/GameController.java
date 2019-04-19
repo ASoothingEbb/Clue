@@ -125,6 +125,11 @@ public final class GameController {
             players.add(nonActive);
             roomIdToBePlacedIn++;
         }
+        for (WeaponCard c : weaponCards){
+            c.setPosition(bm.getRoom(roomIdToBePlacedIn));
+            roomIdToBePlacedIn++;
+        
+        }
     }
 
     /** 
