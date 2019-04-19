@@ -256,7 +256,6 @@ public class ClueClient extends Application {
         
         MenuItem startGameButton = new MenuItem("Start Game", avenirTitle);
         startGameButton.setOnMouseClicked(e -> {
-            stage.hide();
             String mapDirPath = "Maps/" + maps.getValue();
             File mapDirectory = new File(mapDirPath);
             String[] mapFiles = mapDirectory.list();
@@ -286,6 +285,7 @@ public class ClueClient extends Application {
             try {
                 GameController gameController = new GameController(numberOfPlayers, numberOfAIs, tileFile, doorFile);
                 game.startGame(gameController, tileFile);
+                stage.hide();
             } catch(TooManyPlayersException | MissingRoomDuringCreationException | UnknownActionException | NoSuchRoomException | NoSuchTileException | TileOccupiedException | InterruptedException ex) {
                 System.out.println("Ice Cream Machine BROKE");
                 ex.printStackTrace();
