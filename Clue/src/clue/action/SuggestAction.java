@@ -80,7 +80,7 @@ public class SuggestAction extends Action {
             }
             check = players.get(i);
             playersLeftToCheck--;
-            if (check.isActive() && player.getId() != i) {
+            if (player.getId() != i) {
                 if (!check.hasIntrigue(CardType.AVOIDSUGGESTION)){
                     for (Card c : cards) {
                         if (check.hasCard(c)) {
