@@ -5,8 +5,12 @@
  */
 package clue.client;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
@@ -18,6 +22,7 @@ public class PlayerSprite extends Label {
     private int positionX;
     private int positionY;
     private String character;
+    private ImageView characterView;
     
     /**
      * 
@@ -26,11 +31,21 @@ public class PlayerSprite extends Label {
      * @param character the name of the character shown on the board.
      */
     public PlayerSprite(int positionX, int positionY, String character) {
-        setText(character);
-        setTextFill(Color.WHITE);
+        //setText(character);
+        //setTextFill(Color.WHITE);
         this.positionX = positionX;
         this.positionY = positionY;
         this.character = character;
+        Image image = null;
+        try {
+            image = new Image(new FileInputStream(new File(character)));
+        } catch(FileNotFoundException ex) {
+            
+        }
+        characterView = new ImageView(image);
+        characterView.setFitHeight(32);
+        characterView.setFitWidth(32);
+        setGraphic(characterView);
     }
     
     /**
