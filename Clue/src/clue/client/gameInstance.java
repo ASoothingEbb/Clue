@@ -352,14 +352,12 @@ public class gameInstance {
             notes = newValue;
         });
         
-        // Test
-        MenuItem print = new MenuItem("Print", avenirTitle);
-        print.setOnMouseClicked(e -> {
-            System.out.println(notepad.getText());
-        });
-        
         // suggestion accusation history
+        
+        BorderPane hiddenLayout = new BorderPane();
+        
         Label historyLabel = getLabel("History", avenirTitle); 
+        hiddenLayout.setLeft(historyLabel);
         
         history = new TextArea();
         history.setPrefRowCount(18);
@@ -369,7 +367,14 @@ public class gameInstance {
         history.setStyle("-fx-control-inner-background: #fff2ab;");
         history.setEditable(false);
         
-        leftPanelLayout.getChildren().addAll(notepadLabel, notepad, print, historyLabel, history);
+        leftPanelLayout.getChildren().addAll(notepadLabel, notepad, hiddenLayout, history);
+        
+        if (!boardTilePath.contains("archersAvenue")) {
+            MenuItem showRoomKeys = new MenuItem("Room Keys", avenirTitle);
+            showRoomKeys.setAlignment(Pos.CENTER);
+            showRoomKeys.setOnMouseClicked(e -> openRoomKeyWindow());
+            hiddenLayout.setRight(showRoomKeys);
+        }
         
         return leftPanelLayout;
     }
@@ -497,14 +502,7 @@ public class gameInstance {
                 alreadyRolled.showAndWait();
             }
         });
-        
-        //Hbox player controlls
-        HBox topControls = new HBox();
-        Button roomKeys = new Button("Room Key");
-        roomKeys.setOnMouseClicked(e ->  openRoomKeyWindow());
-        topControls.getChildren().addAll(roomKeys, remainingMovesLabel);
-        
-        
+
         MenuItem endButton = new MenuItem("End Turn", avenirLarge);
         endButton.setOnMouseClicked(e -> {
             gameInterface.getPlayer().setNotes(notes);
@@ -512,7 +510,7 @@ public class gameInstance {
             endTurnSound.play();
         });
         
-        playerControlsLayout.getChildren().addAll(topControls, suggestionButton, accusationButton, rollButton, endButton);
+        playerControlsLayout.getChildren().addAll(remainingMovesLabel, suggestionButton, accusationButton, rollButton, endButton);
         
         return playerControlsLayout;
     }
