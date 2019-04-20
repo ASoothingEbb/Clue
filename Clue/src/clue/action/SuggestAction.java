@@ -34,13 +34,15 @@ public class SuggestAction extends Action {
      * @param room the room to suggest
      * @param weapon the weapon to suggest
      * @param player the player making the suggestion
+     * @param players the list of players in the game
      * 
      */
-    public SuggestAction(PersonCard person, RoomCard room, WeaponCard weapon, Player player) {
+    public SuggestAction(PersonCard person, RoomCard room, WeaponCard weapon, Player player, List<Player> players) {
         super(player);
         this.actionType = ActionType.SUGGEST;
         this.cards = new Card[]{person, room, weapon};
         this.foundCards = new ArrayList();
+        this.players = players;
         player.setMoves(0);
     }
 
