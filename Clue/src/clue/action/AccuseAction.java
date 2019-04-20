@@ -22,7 +22,6 @@ public class AccuseAction extends Action {
     private final PersonCard person;
     public RoomCard room;
     public WeaponCard weapon;
-    private gameInstance gui;
     private ArrayList<Card> murderCards;
     
      /**
@@ -38,7 +37,7 @@ public class AccuseAction extends Action {
      * 
      */
     public AccuseAction(Player player, PersonCard person, RoomCard room, WeaponCard weapon,
-                                       PersonCard murderPerson, RoomCard murderRoom, WeaponCard murderWeapon, gameInstance gui) {
+                                       PersonCard murderPerson, RoomCard murderRoom, WeaponCard murderWeapon) {
         
         super(player);
         this.actionType = ActionType.ACCUSATION;
@@ -51,7 +50,6 @@ public class AccuseAction extends Action {
         murderCards.add(murderPerson);
         murderCards.add(murderRoom);
         murderCards.add(murderWeapon);
-        this.gui = gui;
         
         result = murderPerson == person && murderRoom == room && murderWeapon == weapon;
     }
@@ -74,7 +72,6 @@ public class AccuseAction extends Action {
         this.weapon = weapon;
         this.player = player;
         this.result = result;
-        this.gui = null;
     }
     
     
@@ -85,9 +82,6 @@ public class AccuseAction extends Action {
     @Override
     public void execute() {
         player.removeFromPlay();
-        if (!player.isAi()){
-            gui.actionResponse(this);
-        }
     }
     
     

@@ -176,6 +176,9 @@ public final class GameController {
                     throw new UnknownActionException();
                 case ACCUSATION:
                     System.out.println("    CASE ACCUSATION");
+                    if(!player.isAi()){
+                        gui.actionResponse(action);
+                    }
                     if (action.result) {
                         endGame(player);
                     } else if (!state.hasActive()) {
@@ -635,7 +638,7 @@ public final class GameController {
      */
     public AccuseAction accuse(PersonCard person, RoomCard room, WeaponCard weapon) {
         
-        AccuseAction accuseAction = new AccuseAction(player, person, room, weapon, murderPerson, murderRoom, murderWeapon, gui);
+        AccuseAction accuseAction = new AccuseAction(player, person, room, weapon, murderPerson, murderRoom, murderWeapon);
         
         try {
             performAction(accuseAction);
