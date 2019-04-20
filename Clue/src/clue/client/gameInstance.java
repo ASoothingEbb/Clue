@@ -15,6 +15,7 @@ import clue.action.UnknownActionException;
 import clue.card.Card;
 import clue.card.CardType;
 import clue.player.AiAdvanced;
+import clue.card.WeaponCard;
 import clue.player.Player;
 import clue.tile.NoSuchRoomException;
 import clue.tile.Room;
@@ -60,6 +61,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -84,6 +86,7 @@ public class gameInstance {
    
     private PlayerSprite currentPlayer;
     private PlayerSprite[] playerSprites;
+    private WeaponSprite[] weaponSprites;
     
     private HashMap<String, String> ImagePathMap = new HashMap<>();
     private HashMap<String, String> CardNameMap = new HashMap<>();
@@ -201,9 +204,11 @@ public class gameInstance {
                             tileSprite.setColor(Color.rgb(222, 151,  29));
                         } else if (cell.contains("S")) {
                             tileSprite.setColor(Color.rgb(55, 136, 4));
+                        }else if (cell.contains("I")){
+                            tileSprite.setColor(Color.ALICEBLUE);
                         } else if (Integer.valueOf(cell) > 0) {
                             paintRoom(tileSprite, Integer.valueOf(cell));
-                        }
+                        } 
                     }
 
                     tilePane.getChildren().add(tileSprite);
@@ -240,9 +245,9 @@ public class gameInstance {
                 board[coords[1]][coords[0]].getChildren().add(doorSprite);
             });
         }
-
- 
+        
         spawnPlayers(board);
+        spawnWeapons(board);
         
         rolled = false;
         return root;
@@ -251,33 +256,32 @@ public class gameInstance {
     private void paintRoom(Tile tile, int id){
         Random rand = new Random(Calendar.getInstance().getTimeInMillis());
         switch(id){
-            case 1:
-                tile.setColor(Color.CORAL);
-                tile.setMessage("LIBRARY");
+            case 1://Study
+                tile.setStyle("-fx-background-color: #696969;");
                 break;
-            case 2:
-                tile.setColor(Color.CRIMSON);
+            case 2://Hall
+                tile.setStyle("-fx-background-color: #42d4f4;");
                 break;
-            case 3:
-                tile.setColor(Color.DEEPPINK);
+            case 3://Lounge
+                tile.setStyle("-fx-background-color: #000075;");
                 break;
-            case 4:
-                tile.setColor(Color.CRIMSON);
+            case 4://Library
+                tile.setStyle("-fx-background-color: #f58231;");
                 break;
-            case 5:
-                tile.setColor(Color.SALMON);
+            case 5://Billiard Room
+                tile.setStyle("-fx-background-color: #911eb4;");
                 break;
-            case 6:
-                tile.setColor(Color.HONEYDEW);
+            case 6://Dining room
+                tile.setStyle("-fx-background-color: #800000;");
                 break;
-            case 7:
-                tile.setColor(Color.THISTLE);
+            case 7://Convervatory
+                tile.setStyle("-fx-background-color: #808000;");
                 break;
-            case 8:
-                tile.setColor(Color.POWDERBLUE);
+            case 8://Ballroom
+                tile.setStyle("-fx-background-color: #fffac8;");
                 break;
-            case 9:
-                tile.setColor(Color.WHITE);
+            case 9://Kitchen
+                tile.setStyle("-fx-background-color: #fabebe;");
                 break;
             default:
                 int r = rand.nextInt(255)+1;
@@ -292,24 +296,39 @@ public class gameInstance {
         List<Player> players = gameInterface.getPlayers();
         playerSprites = new PlayerSprite[players.size()];
         for(int i = players.size()-1; i>= 0; i--) {
-            Player player = players.get(i);
+            int x = players.get(i).getDrawX();
+            int y = players.get(i).getDrawY();
 
-            int x = player.getDrawX();
-            int y = player.getDrawY();
-            PlayerSprite playerSprite = new PlayerSprite(x, y, TokenPathMap.get("character" + player.getId()));
-
-            playerSprites[i] = playerSprite;
-            board[y][x].getChildren().add(playerSprite);
+            playerSprites[i] = new PlayerSprite(x, y, TokenPathMap.get("character" + players.get(i).getId()));
+            board[y][x].getChildren().add(playerSprites[i]);
         }
         currentPlayer = playerSprites[0];
     }
     
+    private void spawnWeapons(StackPane[][] board) {
+        List<WeaponCard> weapons = gameInterface.getWeaponCards();
+        System.out.println(weapons.size());
+        weaponSprites = new WeaponSprite[weapons.size()];
+        for (int i=0; i < weapons.size(); i++) {
+            int x = weapons.get(i).getDrawX();
+            int y = weapons.get(i).getDrawY();
+            weaponSprites[i] = new WeaponSprite(x, y, TokenPathMap.get("weapon" + weapons.get(i).getId()));
+            board[y][x].getChildren().add(weaponSprites[i]);
+        }
+    }
+    
     private void redrawPlayers() {
-        List<Player> players = gameInterface.getPlayers();
-        for (Player player: players) {
+        gameInterface.getPlayers().forEach((player) -> {
             PlayerSprite sprite = playerSprites[player.getId()];
             sprite.move(player.getDrawX(), player.getDrawY(), board, sprite);
-        }
+        });
+    }
+    
+    private void redrawWeapons() {
+        gameInterface.getWeaponCards().forEach((weapon) -> {
+            WeaponSprite sprite = weaponSprites[weapon.getId()];
+            sprite.move(weapon.getDrawX(), weapon.getDrawY(), board, sprite);
+        });
     }
     
    /**
@@ -386,6 +405,7 @@ public class gameInstance {
         }
         int x = 1;
         int y = 0;
+        cardsDisplay.getChildren().clear();
         for (Card card: gameInterface.getPlayer().getCards()) {
             ImageView view = new ImageView(getImage(card.getId(), card.getCardType()));
             cardsLayout.add(view, y, x);
@@ -476,6 +496,13 @@ public class gameInstance {
             }
         });
         
+        //Hbox player controlls
+        HBox topControls = new HBox();
+        Button roomKeys = new Button("Room Key");
+        roomKeys.setOnMouseClicked(e ->  openRoomKeyWindow());
+        topControls.getChildren().addAll(roomKeys, remainingMovesLabel);
+        
+        
         MenuItem endButton = new MenuItem("End Turn", avenirLarge);
         endButton.setOnMouseClicked(e -> {
             gameInterface.getPlayer().setNotes(notes);
@@ -483,7 +510,7 @@ public class gameInstance {
             endTurnSound.play();
         });
         
-        playerControlsLayout.getChildren().addAll(remainingMovesLabel, suggestionButton, accusationButton, rollButton, endButton);
+        playerControlsLayout.getChildren().addAll(topControls, suggestionButton, accusationButton, rollButton, endButton);
         
         return playerControlsLayout;
     }
@@ -544,6 +571,7 @@ public class gameInstance {
                 endTurnSound.play();
                 showCard(action);
                 redrawPlayers();
+                redrawWeapons();
                 for (Player player: gameInterface.getPlayers()) {
                     System.out.println("Player " + player.getId() + " " + player.getPosition());
                     System.out.println("Player " + player.getId() + " " + player.getDrawX() + " " +  player.getDrawY());
@@ -767,9 +795,17 @@ public class gameInstance {
         TokenPathMap.put("character3", "resources/characterToken/MrGreen.png");
         TokenPathMap.put("character4", "resources/characterToken/MrsPeacock.png");
         TokenPathMap.put("character5", "resources/characterToken/ProfessorPlum.png");
+        
+        TokenPathMap.put("weapon0", "resources/weaponToken/Candlestick.png");
+        TokenPathMap.put("weapon1", "resources/weaponToken/Dagger.png");
+        TokenPathMap.put("weapon2", "resources/weaponToken/LeadPipe.png");
+        TokenPathMap.put("weapon3", "resources/weaponToken/Revolver.png");
+        TokenPathMap.put("weapon4", "resources/weaponToken/Rope.png");
+        TokenPathMap.put("weapon5", "resources/weaponToken/Wrench.png");
     }
     
     /**
+     * .
      * Initialises the default names.
      */
     private void initDefaultNames() {
@@ -1023,6 +1059,7 @@ public class gameInstance {
         history.clear();
         switchToCurtain();
         redrawPlayers();
+        redrawWeapons();
         createCardsDisplay(cardsDisplay);
         showActionLog(actionsToNotify);
         //TODO
@@ -1038,7 +1075,7 @@ public class gameInstance {
      * Called by GameController when the game has finished, player is the winning player, player is null if there is no winner
      * @param player 
      */
-    public void gameOver(Player player) {
+    public void gameOver() {
         Prompt gameOverPrompt = new Prompt("No one was able to guess the murder cards");
         gameOverPrompt.setTitle("GAME OVER");
         gameOverPrompt.setOnCloseRequest(e -> {
@@ -1047,4 +1084,76 @@ public class gameInstance {
         });
         gameOverPrompt.showAndWait();
     }
+    
+    public void openRoomKeyWindow(){
+        Stage roomKeyStage = new Stage();
+        roomKeyStage.setTitle("Room Key Legend");
+        
+        HBox column = new HBox();
+        VBox colours = new VBox();
+        VBox legend = new VBox();
+        
+        for(int i= 0; i < 9; i++){
+            Label temp = new Label();
+            switch(i){
+                case 0:
+                    temp.setStyle("-fx-background-color: #696969;");
+                    break;
+                case 1:
+                    temp.setStyle("-fx-background-color: #42d4f4;");
+                    break;
+                case 2:
+                    temp.setStyle("-fx-background-color: #000075");
+                    break;
+                case 3:
+                    temp.setStyle("-fx-background-color: #f58231;");
+                    break;
+                case 4:
+                    temp.setStyle("-fx-background-color: #911eb4;");
+                    break;
+                case 5:
+                    temp.setStyle("-fx-background-color: #800000");
+                    break;
+                case 6:
+                    temp.setStyle("-fx-background-color: #808000");
+                    break;
+                case 7:
+                    temp.setStyle("-fx-background-color: #fffac8;");
+                    break;
+                case 8:
+                    temp.setStyle("-fx-background-color: #fabebe");
+                    break;
+                default:
+                    break;
+            }
+            temp.setMinSize(100, 20);
+            colours.getChildren().add(temp);
+            
+        }
+        Button goBack = new Button("Back");
+        goBack.setOnMouseClicked(e -> roomKeyStage.hide());
+        colours.getChildren().add(goBack);
+        
+        
+        Label study = new Label("Study"); 
+        Label hall = new Label("Hall"); 
+        Label lounge = new Label("Lounge"); 
+        Label library = new Label("Library"); 
+        Label billiardRoom = new Label("Billiard Room"); 
+        Label diningRoom = new Label("Dining Room"); 
+        Label conservatory = new Label("Conservatory"); 
+        Label ballRoom = new Label("Ball Room"); 
+        Label kitchen = new Label("Kitchen"); 
+        
+        legend.getChildren().addAll(study, hall, lounge, library, billiardRoom, diningRoom, conservatory, ballRoom, kitchen);
+        
+        column.getChildren().addAll(colours, legend);
+        
+        roomKeyStage.setScene(new Scene(column, 200, 220));
+        roomKeyStage.setResizable(false);
+        roomKeyStage.show();
+        
+        
+    }
+    
 }

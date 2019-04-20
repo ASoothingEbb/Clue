@@ -177,7 +177,7 @@ public final class GameController {
                 case ACCUSATION:
                     System.out.println("    CASE ACCUSATION");
                     if (action.result) {
-                        endGame(player);
+                        //endGame(player);
                     } else if (!state.hasActive()) {
                         endGame();
                     } else {
@@ -421,19 +421,7 @@ public final class GameController {
     private void endGame() {
         state.endGame();
         if (gui!=null){
-            gui.gameOver(null);
-        } 
-    }
-    
-    /**
-     * Terminates the game instance , tells the gui the game is over, with a winner
-     * @param winner the Player who won the game
-     */
-    private void endGame(Player winner) {
-        this.winner = winner;
-        state.endGame();
-        if (gui!=null){
-            gui.gameOver(winner);
+            gui.gameOver();
         } 
     }
     
@@ -891,10 +879,14 @@ public final class GameController {
         } catch (UnknownActionException  | TileOccupiedException ex) {
             Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
         }
-    
-    
     }
     
-    
+    /**
+     * Gets the list of weapon cards
+     * @return List of WeaponCard
+     */
+    public List<WeaponCard> getWeaponCards() {
+        return weaponCards;
+    }
     
 }
