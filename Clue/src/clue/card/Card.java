@@ -13,7 +13,7 @@ package clue.card;
 public abstract class Card {
 
     private int id;
-    public CardType cardType = CardType.CARD;
+    protected CardType cardType = CardType.CARD;
 
     public Card(int id) {
         this.id = id;
@@ -26,5 +26,8 @@ public abstract class Card {
      */
     public int getId() {
         return id;
+    }
+    public CardType getCardType(){
+        return cardType;
     }
 }
