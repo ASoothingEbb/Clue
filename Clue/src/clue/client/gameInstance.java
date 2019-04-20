@@ -71,53 +71,59 @@ import javafx.util.Duration;
  */
 public class gameInstance {
     
+    // Stages
+    private Stage gameStage;
     private Stage client;
     
+    // Data for constructing the game
     private static final int TILE_SIZE = 38;
-    private int currentRoom;
-    private boolean rolled;
-    private String notes;
-   
-    private IntegerProperty remainingMoves;
-     
+    private String boardTilePath;
+    
+    private final HashMap<String, String> ImagePathMap = new HashMap<>();
+    private final HashMap<String, String> CardNameMap = new HashMap<>();
+    private final HashMap<String, String> TokenPathMap = new HashMap<>();
+    
+    // Game board
+    private StackPane[][] board;
+    
+    // Backend Interface
     private GameController gameInterface;
-   
+    
+    // Game Sprites
     private PlayerSprite currentPlayer;
     private PlayerSprite[] playerSprites;
     private WeaponSprite[] weaponSprites;
     
-    private HashMap<String, String> ImagePathMap = new HashMap<>();
-    private HashMap<String, String> CardNameMap = new HashMap<>();
-    private HashMap<String, String> TokenPathMap = new HashMap<>();
+    // Player Data
+    private int currentRoom;
+    private boolean rolled;
+    private String notes;
+    private IntegerProperty remainingMoves;
+    private boolean suggested = false;
+    private boolean accused = false;
     
-    private String boardTilePath;
-    
-    //Sounds
-    private Sound endTurnSound;
-    
-    
-    //JavaFX
-    
+    // Player Data JavaFX Nodes
+    Label playerCardsLabel;
     private TextArea history;
     private GridPane cardsDisplay;
     private TextArea notepad;
     private Label remainingMovesLabel;
+    private Prompt showCardPrompt = null;
     
+    // Sounds
+    private Sound endTurnSound;
+    
+    //JavaFX
     private Scene prevScene;
     
-    private Prompt showCardPrompt = null;
-    private boolean suggested = false;
-    private boolean accused = false;
-    
-    Label playerCardsLabel;
+    // Data for suggestion scene
     private CardType selectedCardType;
     private int selectedCardId;
     private ImageView selectedView = null;
-            
-    private Stage gameStage;
+
+    // Transition
     private Scene uiScene;
     private Scene curtainScene;
-    private StackPane[][] board;
     private FadeTransition uiToCurtain;
     
     //Fonts
@@ -126,14 +132,13 @@ public class gameInstance {
     private Font avenirText;
     
     //Backgrounds
-    private final Background blackFill = new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY));
     private final Background greenFill = new Background(new BackgroundFill(Color.rgb(7, 80, 2), CornerRadii.EMPTY, Insets.EMPTY));
-    
+    private final Background blackFill = new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY));
     
     /**
      * Creates the Tile board in the form of a GridPane and adds it to a StackPane.
      * 
-     * @return Stackpane object 
+     * @return StackPane object
      */
     private StackPane createBoard() {
         StackPane root = new StackPane();
@@ -412,6 +417,7 @@ public class gameInstance {
     }
     
     /**
+     * Renders the cards the player has.
      * 
      * @param cardsLayout 
      */
@@ -461,7 +467,7 @@ public class gameInstance {
     }
     
     /**
-     * Creates the Roll, suggest, accuse, etc buttons.
+     * Creates the Roll, suggest, accuse, end turn buttons and a label displaying roll count/status.
      * 
      * @return VBox containing all the buttons. 
      */
@@ -549,9 +555,10 @@ public class gameInstance {
     }
     
     /**
+     * Initialises the cardsWindow for accusation or suggestion.
      * 
-     * @param title
-     * @param color 
+     * @param title title of the window, either suggest or accuse
+     * @param color colour corresponding to suggest or accuse
      */
     private void createCardsWindow(String title, Color color) {
         selectCards cardsWindow = new selectCards();
@@ -562,7 +569,7 @@ public class gameInstance {
      * Creates The main component to be used in the Scene that is shown when people are playing the game.
      * This will include board, player controls, history/notes, etc.
      * 
-     * @return 
+     * @return BorderPane containing the UI elements
      */
     private BorderPane createUI() {
         BorderPane main = new BorderPane();
@@ -634,10 +641,10 @@ public class gameInstance {
         System.out.println("return");
     }
     /**
-     * 
-     * @param cardId
-     * @param cardType
-     * @return 
+     * Gets the image for the corresponding card.
+     * @param cardId the ID of the card
+     * @param cardType the type of card (Character, Weapon, or Room)
+     * @return an Image object of the card
      */
     private Image getImage(int cardId, CardType cardType) {
         Image cardImage = null;
@@ -664,7 +671,7 @@ public class gameInstance {
     }
     
     /**
-     * Alerts the player of whether his accusation was correct or incorrect.
+     * Alerts the player of whether their accusation was correct or incorrect.
      * 
      * @param action a type of action
      */
@@ -711,9 +718,9 @@ public class gameInstance {
         });
     }
     /**
-     * 
-     * @param playerId
-     * @param next 
+     * Changes the scene to a waiting scene which notifies the current player whose attention is required
+     * @param playerId ID of the player whose attention is required
+     * @param next the scene to change after the players have switched
      */
     private void switchPlayerScene(int playerId, Scene next) {
         VBox switchPlayer = new VBox();
@@ -882,7 +889,7 @@ public class gameInstance {
     }
     
     /**
-     * Initialises the default names. This is used as a hashmap.
+     * Initialises the default names. This is used as a HashMap.
      */
     private void initDefaultNames() {
         CardNameMap.put("character0", "Miss Scarlet");
@@ -927,7 +934,7 @@ public class gameInstance {
     }
     
     /**
-     * Initialises the graphics.
+     * Initialises the custom graphics.
      */
     private void initCustomSettings() {
         try (InputStream input = new FileInputStream("resources/config.properties")) {
@@ -955,7 +962,7 @@ public class gameInstance {
     }
        
     /**
-     * Starts the game instance, initialises everything, spawns players, etc.
+     * Starts the game instance, initialises the UI elements.
      * 
      * @param gameController a reference to the gameController class (backend)
      * @param client the main window which started gameInstance
