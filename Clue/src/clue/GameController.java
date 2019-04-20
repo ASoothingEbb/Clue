@@ -220,7 +220,7 @@ public final class GameController {
                     break;
                 case MOVE:
                     System.out.println("    CASE MOVE "+player.getId() + "FROM: "+state.getAction().getActionType());
-                    if (action.result && (state.getAction().getActionType() == ActionType.STARTTURN || state.getAction().getActionType() == ActionType.MOVE || state.getAction().getActionType() == ActionType.THROWAGAIN || state.getAction().getActionType() == ActionType.ENDTURN || state.getAction().getActionType() == ActionType.START)) {
+                    if (action.result) {
                         Tile loc = ((MoveAction) action).getTile();    
                         //player.getPosition().setOccupied(false);  
                         player.setPosition(loc); 
@@ -269,7 +269,7 @@ public final class GameController {
                     break;
                 case STARTTURN:
                     System.out.println("    CASE STARTTURN "+player.getId() + " FROM: "+state.getAction().getActionType());
-                    if (state.getAction().getActionType() == ActionType.ENDTURN || state.getAction().getActionType() == ActionType.EXTRATURN || state.getAction().getActionType() == ActionType.START&&state.isRunning()) {
+                    
                         //System.out.println("b"+player.getId());
                         //state.nextTurn(player.getId());
                         //System.out.println("a"+player.getId());
@@ -285,7 +285,7 @@ public final class GameController {
                         else{
                             System.out.println("[GameController.performAction] null gui -> gui.newHumanPlayerTurn(player, actionsToNotify)");
                         }
-                    }
+                    
                     break;
                 case SUGGEST:
                     System.out.println("    CASE SUGGEST "+player.getId() + " FROM: "+state.getAction().getActionType());
@@ -441,9 +441,23 @@ public final class GameController {
     }
     
     /**
-     * Ends the turn of the current player
+     * Ends the turn of the current player, called by GUI
      */
     public void endTurn() {
+        try {
+            if (!(player instanceof AiAdvanced)){//prevents player from clicking end turn multiple times quickly to end turn of ai player
+                performAction(new EndTurnAction(player));
+            }
+            
+        } catch (UnknownActionException | TileOccupiedException ex) {
+            Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+   /**
+     * Ends the turn of the current player, called by Ai
+     */
+    public void endTurnAi() {
         try {
             performAction(new EndTurnAction(player));
         } catch (UnknownActionException | TileOccupiedException ex) {
