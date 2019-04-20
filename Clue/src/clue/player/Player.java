@@ -165,8 +165,8 @@ public class Player {
     }
 
     /**
-     * 
-     * @return 
+     * Adds an intrigue card (drawn from the GameController) to the players intrigue card list
+     * @return the selected intrigue card
      */
     public IntrigueCard addIntrigue() {
         IntrigueCard card = (IntrigueCard) game.drawCard();
@@ -175,26 +175,22 @@ public class Player {
     }
     
     /**
+     * Adds a given intrigue card to the players intrigue card list
+     * @return the intrigue card added to players intrigue card list
      * @deprecated this is a test method
-     * @param card 
+     * @param card the intrigue card to be added
      */
     public IntrigueCard addIntrigue(IntrigueCard card){
         intrigues.add(card);
         return card;
     }
 
+    /**
+     * Removes a given intrigue card from the players intrigue card list
+     * @param card the intrigue card to be removed
+     */
     public void removeIntrigue(IntrigueCard card){
         intrigues.remove(card);
-    }
-    /**
-     * Removes a card from this player.
-     *
-     * @param card the card to remove
-     * @throws NullPointerException
-     */
-    public Card removeCard(Card card) throws NullPointerException {
-        cards.remove(card);
-        return card;
     }
 
     /**
@@ -207,10 +203,19 @@ public class Player {
         return cards.contains(card);
     }
 
+    /**
+     * Gets whether or not the player has the intrigue card
+     * @param card the intrigue card to search for
+     * @return true if player had card, false otherwise
+     */
     public boolean hasIntrigue(IntrigueCard card){
         return intrigues.contains(card);
     }
 
+    /**
+     * Gets the list of intrigue cards held by the player
+     * @return the list of intrigue cards
+     */
     public List<IntrigueCard> getIntrigue() {
         return intrigues;
     }
@@ -262,35 +267,66 @@ public class Player {
         return game;
     }
     
+    /**
+     * Gets all the cards held by the player
+     * @return the list of held cards
+     */
     public List<Card> getCards(){
         return cards;
     }
 
+    /**
+     * Gets the index of the last entry it saw in the action log
+     * @return the index of the last seen index
+     */
     public int getLogPointer() {
         return lastSeen;
     }
 
+    /**
+     * Sets the index of the last entry it saw in the action log
+     * @param pointer the index to set the pointer to
+     */
     public void setLogPointer(int pointer) {
         lastSeen = pointer;
     }
     
+    /**
+     * Gets the players detective notes
+     * @return 
+     */
     public String getNotes(){
         return notes;
     }
     
+    /**
+     * Sets the players detective notes
+     * @param notes the new detective notes of the player
+     */
     public void setNotes(String notes){
         this.notes = notes;
     }
     
-    //TODO move to AiAdvanced constructor
+    /**
+     * Called by Ai players to indicate that they are an Ai player
+     */
     public void setAi(){
         isAi = true;
     }
     
+    /**
+     * Gets whether or not the player is an Ai player
+     * @return true if player is an Ai player, false otherwise
+     */
     public boolean isAi(){
         return isAi;
     }
     
+    /**
+     * Converts player object to string form for debugging
+     * @return 
+     */
+    @Override
     public String toString(){
         String result = "";
         result += "Player id: "+id;
@@ -300,66 +336,4 @@ public class Player {
         
         return result;
     }
-    
-//    /**
-//     * Executes a sequence of moves
-//     *
-//     * @param tiles a queue of destination tiles
-//     * @throws clue.player.Player.MovementException when the player makes an
-//     * invalid move
-//     */
-//    private void doMove(Queue<Tile> tiles) throws MovementException, InterruptedException {
-//        if (tiles.size() <= movements) {
-//            sendAction(move(tiles));
-//        } else {
-//            throw new MovementException();
-//        }
-//    }
-//    /**
-//     * Attempts to move from the current position to a new tile.
-//     *
-//     * @param t the destination tile.
-//     * @return new MoveAction
-//     */
-//    private Action move(Queue<Tile> t) {
-//        return new MoveAction(t, this);
-//    }
-//    /**
-//     * Suggests a set of cards as the murder details
-//     *
-//     * @param person suspect
-//     * @param room crime scene
-//     * @param weapon murder weapon
-//     * @return new SuggestAction
-//     */
-//    private void suggest(PersonCard person, RoomCard room, WeaponCard weapon) throws InterruptedException {
-//        sendAction(game.suggest(person, room, weapon, this));
-//    }
-//    /**
-//     * Accuses a set of cards, resulting in this player becoming removed from
-//     * the game. If the accusation is correct, the game ends and this Player is
-//     * the winner.
-//     *
-//     * @param person suspect
-//     * @param room crime scene
-//     * @param weapon murder weapon
-//     * @return new AccuseAction
-//     */
-//    public Action Accuse(PersonCard person, RoomCard room, WeaponCard weapon) {
-//        return new AccuseAction(this, person, room, weapon, game.CheckAccuse(person, room, weapon));
-//    }
-//    /**
-//     * sends an action to the GameController to be executed.
-//     *
-//     * @param action the action to be executed
-//     */
-//    public void sendAction(Action action) throws InterruptedException {
-//        if (active) {
-//            try {
-//                game.performAction(action);
-//            } catch (UnknownActionException ex) {
-//                Logger.getLogger(Player.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//        }
-//    }
 }
