@@ -402,6 +402,7 @@ public class gameInstance {
         }
         int x = 1;
         int y = 0;
+        cardsDisplay.getChildren().clear();
         for (Card card: gameInterface.getPlayer().getCards()) {
             ImageView view = new ImageView(getImage(card.getId(), card.getCardType()));
             cardsLayout.add(view, y, x);
