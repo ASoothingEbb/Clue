@@ -5,7 +5,7 @@
  */
 package clue.action;
 
-import clue.ai.AiAdvanced;
+import clue.player.AiAdvanced;
 import clue.card.ThrowAgainIntrigue;
 import clue.client.gameInstance;
 import clue.player.Player;
@@ -35,7 +35,7 @@ public class ThrowAgainAction extends Action {
      */
     @Override
     public void execute() {
-        player.removeCard(card);
+        player.removeIntrigue((ThrowAgainIntrigue)card);
         if (player.isAi()) {
             ((AiAdvanced) player).respondToThrowAgain();
         }

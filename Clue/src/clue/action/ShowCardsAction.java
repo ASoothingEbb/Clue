@@ -6,7 +6,7 @@
 package clue.action;
 
 import clue.GameController;
-import clue.ai.AiAdvanced;
+import clue.player.AiAdvanced;
 import clue.card.Card;
 import clue.card.CardType;
 import clue.client.gameInstance;

@@ -36,8 +36,8 @@ public class Player {
 
     /**
      * Creates a new player.
-     * @param id
-     * @param gc
+     * @param id the id of the player instance
+     * @param gc the GameController of the running game
      */
     public Player(int id, GameController gc) {
         this.game = gc;
@@ -53,7 +53,7 @@ public class Player {
     /**
      * Creates a new Player
      * @deprecated for test use only - please instantiate a GameController
-     * @param id 
+     * @param id the id of the player instance
      */
     public Player(int id){
         this.id = id;
@@ -196,8 +196,8 @@ public class Player {
     /**
      * Gets whether or not the player has the card
      *
-     * @param card
-     * @return
+     * @param card the card to check
+     * @return true if they have the card, false otherwise
      */
     public boolean hasCard(Card card) {
         return cards.contains(card);
@@ -293,7 +293,7 @@ public class Player {
     
     /**
      * Gets the players detective notes
-     * @return 
+     * @return the players notes
      */
     public String getNotes(){
         return notes;
@@ -324,7 +324,7 @@ public class Player {
     
     /**
      * Converts player object to string form for debugging
-     * @return 
+     * @return string format of player instance
      */
     @Override
     public String toString(){

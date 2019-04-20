@@ -270,7 +270,7 @@ public class AiAdvanced extends Player{
   /** 
     * Returns the path to the closest room from the players current location
     * @return The path to the closest Room from the player's current position.
-    * @depricated only used so that it can be tested
+    * @deprecated only used so that it can be tested
     */
     public LinkedList<Tile> BFStesting(){
         return BFS();
