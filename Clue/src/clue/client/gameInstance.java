@@ -31,7 +31,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
 import java.util.logging.Level;
@@ -39,6 +38,7 @@ import java.util.logging.Logger;
 import javafx.animation.FadeTransition;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.geometry.Bounds;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -66,57 +66,63 @@ import javafx.util.Duration;
 
 /**
  *
- * @author hungb
+ * @author Hung Bui Quang
  */
 public class gameInstance {
     
+    // Stages
+    private Stage gameStage;
     private Stage client;
     
+    // Data for constructing the game
     private static final int TILE_SIZE = 38;
-    private int currentRoom;
-    private boolean rolled;
-    private String notes;
-   
-    private IntegerProperty remainingMoves;
-     
+    private String boardTilePath;
+    
+    private final HashMap<String, String> ImagePathMap = new HashMap<>();
+    private final HashMap<String, String> CardNameMap = new HashMap<>();
+    private final HashMap<String, String> TokenPathMap = new HashMap<>();
+    
+    // Game board
+    private StackPane[][] board;
+    
+    // Backend Interface
     private GameController gameInterface;
-   
+    
+    // Game Sprites
     private PlayerSprite currentPlayer;
     private PlayerSprite[] playerSprites;
     private WeaponSprite[] weaponSprites;
     
-    private HashMap<String, String> ImagePathMap = new HashMap<>();
-    private HashMap<String, String> CardNameMap = new HashMap<>();
-    private HashMap<String, String> TokenPathMap = new HashMap<>();
+    // Player Data
+    private int currentRoom;
+    private boolean rolled;
+    private String notes;
+    private IntegerProperty remainingMoves;
+    private boolean suggested = false;
+    private boolean accused = false;
     
-    private String boardTilePath;
-    
-    //Sounds
-    private Sound endTurnSound;
-    
-    
-    //JavaFX
-    
+    // Player Data JavaFX Nodes
+    Label playerCardsLabel;
     private TextArea history;
     private GridPane cardsDisplay;
     private TextArea notepad;
     private Label remainingMovesLabel;
+    private Prompt showCardPrompt = null;
     
+    // Sounds
+    private Sound endTurnSound;
+    
+    //JavaFX
     private Scene prevScene;
     
-    private Prompt showCardPrompt = null;
-    private boolean suggested = false;
-    private boolean accused = false;
-    
-    Label playerCardsLabel;
+    // Data for suggestion scene
     private CardType selectedCardType;
     private int selectedCardId;
     private ImageView selectedView = null;
-            
-    private Stage gameStage;
+
+    // Transition
     private Scene uiScene;
     private Scene curtainScene;
-    private StackPane[][] board;
     private FadeTransition uiToCurtain;
     
     //Fonts
@@ -125,14 +131,13 @@ public class gameInstance {
     private Font avenirText;
     
     //Backgrounds
-    private final Background blackFill = new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY));
     private final Background greenFill = new Background(new BackgroundFill(Color.rgb(7, 80, 2), CornerRadii.EMPTY, Insets.EMPTY));
-    
+    private final Background blackFill = new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY));
     
     /**
      * Creates the Tile board in the form of a GridPane and adds it to a StackPane.
      * 
-     * @return Stackpane object 
+     * @return StackPane object
      */
     private StackPane createBoard() {
         StackPane root = new StackPane();
@@ -159,7 +164,7 @@ public class gameInstance {
         alignment.getChildren().addAll(boardview, boardPane);
         
         root.getChildren().add(alignment);
-        String line = "";
+        String line;
         
         try (BufferedReader br = new BufferedReader(new FileReader(boardTilePath))) {
             int y = 0;
@@ -320,7 +325,6 @@ public class gameInstance {
      */
     private void spawnWeapons(StackPane[][] board) {
         List<WeaponCard> weapons = gameInterface.getWeaponCards();
-        System.out.println(weapons.size());
         weaponSprites = new WeaponSprite[weapons.size()];
         for (int i=0; i < weapons.size(); i++) {
             int x = weapons.get(i).getDrawX();
@@ -391,7 +395,16 @@ public class gameInstance {
         if (!boardTilePath.contains("archersAvenue")) {
             MenuItem showRoomKeys = new MenuItem("Room Keys", avenirTitle);
             showRoomKeys.setAlignment(Pos.CENTER);
-            showRoomKeys.setOnMouseClicked(e -> openRoomKeyWindow());
+            RoomKeys roomKeys = new RoomKeys(gameStage);
+            showRoomKeys.hoverProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue) {
+                    Bounds coordinates = showRoomKeys.localToScene(showRoomKeys.getBoundsInLocal());
+                    roomKeys.setLocation(coordinates.getMaxX() - 20, coordinates.getMaxY() + coordinates.getHeight() + 6);
+                    roomKeys.show();
+                } else {
+                    roomKeys.hide();
+                }
+            });
             hiddenLayout.setRight(showRoomKeys);
         }
         
@@ -399,6 +412,7 @@ public class gameInstance {
     }
     
     /**
+     * Renders the cards the player has.
      * 
      * @param cardsLayout 
      */
@@ -448,7 +462,7 @@ public class gameInstance {
     }
     
     /**
-     * Creates the Roll, suggest, accuse, etc buttons.
+     * Creates the Roll, suggest, accuse, end turn buttons and a label displaying roll count/status.
      * 
      * @return VBox containing all the buttons. 
      */
@@ -536,9 +550,10 @@ public class gameInstance {
     }
     
     /**
+     * Initialises the cardsWindow for accusation or suggestion.
      * 
-     * @param title
-     * @param color 
+     * @param title title of the window, either suggest or accuse
+     * @param color colour corresponding to suggest or accuse
      */
     private void createCardsWindow(String title, Color color) {
         selectCards cardsWindow = new selectCards();
@@ -549,7 +564,7 @@ public class gameInstance {
      * Creates The main component to be used in the Scene that is shown when people are playing the game.
      * This will include board, player controls, history/notes, etc.
      * 
-     * @return 
+     * @return BorderPane containing the UI elements
      */
     private BorderPane createUI() {
         BorderPane main = new BorderPane();
@@ -595,10 +610,6 @@ public class gameInstance {
                 showCard(action);
                 redrawPlayers();
                 redrawWeapons();
-                for (Player player: gameInterface.getPlayers()) {
-                    System.out.println("Player " + player.getId() + " " + player.getPosition());
-                    System.out.println("Player " + player.getId() + " " + player.getDrawX() + " " +  player.getDrawY());
-                }
                 if (((ShowCardAction) action).getWhoShowedTheCard() instanceof AiAdvanced) {
                     showCardPrompt.show();
                 }
@@ -621,10 +632,10 @@ public class gameInstance {
         System.out.println("return");
     }
     /**
-     * 
-     * @param cardId
-     * @param cardType
-     * @return 
+     * Gets the image for the corresponding card.
+     * @param cardId the ID of the card
+     * @param cardType the type of card (Character, Weapon, or Room)
+     * @return an Image object of the card
      */
     private Image getImage(int cardId, CardType cardType) {
         Image cardImage = null;
@@ -651,7 +662,7 @@ public class gameInstance {
     }
     
     /**
-     * Alerts the player of whether his accusation was correct or incorrect.
+     * Alerts the player of whether their accusation was correct or incorrect.
      * 
      * @param action a type of action
      */
@@ -698,9 +709,9 @@ public class gameInstance {
         });
     }
     /**
-     * 
-     * @param playerId
-     * @param next 
+     * Changes the scene to a waiting scene which notifies the current player whose attention is required
+     * @param playerId ID of the player whose attention is required
+     * @param next the scene to change after the players have switched
      */
     private void switchPlayerScene(int playerId, Scene next) {
         VBox switchPlayer = new VBox();
@@ -743,7 +754,6 @@ public class gameInstance {
         showCardsDisplay.setAlignment(Pos.CENTER);
         
         List<Card> cards = ((ShowCardsAction) action).getCardList();
-        System.out.println(cards.size());
         
         Label showCardsLabel = getLabel("Select a card to show", avenirTitle);
         
@@ -752,20 +762,20 @@ public class gameInstance {
         cardDisplay.setSpacing(10);
         cardDisplay.setAlignment(Pos.CENTER);
                 
-        for (Card card: cards) {
+        cards.stream().map((card) -> {
             final int cardId = card.getId();
             final CardType cardType = card.getCardType();
-
             ImageView view = new ImageView(getImage(card.getId(), card.getCardType()));
             view.setOnMouseClicked(e -> {
                 setSelectedCard(cardId, cardType, view);
             });
+            return view;
+        }).forEachOrdered((view) -> {
             cardDisplay.getChildren().add(view);
-        }
+        });
         
         MenuItem confirmCardButton = new MenuItem("Confirm Selection", avenirTitle);
         confirmCardButton.setOnMouseClicked(e -> {
-            System.out.println(selectedCardId + " " + selectedCardType.toString());
             ((ShowCardsAction) action).setCardToShow(selectedCardId, selectedCardType);
             switchPlayerScene(((ShowCardsAction) action).getSuggester().getId(), prevScene);
             gameInterface.replyToShowCards((ShowCardsAction) action);
@@ -869,7 +879,7 @@ public class gameInstance {
     }
     
     /**
-     * Initialises the default names. This is used as a hashmap.
+     * Initialises the default names. This is used as a HashMap.
      */
     private void initDefaultNames() {
         CardNameMap.put("character0", "Miss Scarlet");
@@ -914,7 +924,7 @@ public class gameInstance {
     }
     
     /**
-     * Initialises the graphics.
+     * Initialises the custom graphics.
      */
     private void initCustomSettings() {
         try (InputStream input = new FileInputStream("resources/config.properties")) {
@@ -923,7 +933,7 @@ public class gameInstance {
             
             prop.keySet();
             
-            for (Map.Entry entry: prop.entrySet()) {
+            prop.entrySet().forEach((entry) -> {
                 String key = entry.getKey().toString();
                 String value = entry.getValue().toString();
                 if (key.contains("Name")) {
@@ -933,16 +943,14 @@ public class gameInstance {
                 } else if (key.contains("Token")) {
                     TokenPathMap.put(key.substring(0, key.length() - 5), value);
                 }
-            }
-            System.out.println("here");
+            });
             input.close();
         } catch (IOException ex) {
-            System.out.println("there");
         }
     }
        
     /**
-     * Starts the game instance, initialises everything, spawns players, etc.
+     * Starts the game instance, initialises the UI elements.
      * 
      * @param gameController a reference to the gameController class (backend)
      * @param client the main window which started gameInstance
@@ -1033,7 +1041,6 @@ public class gameInstance {
      */
     public void switchToCurtain(){
         gameStage.setScene(createCurtainScene());
-        System.out.println(gameStage.getWidth() + "" + gameStage.getHeight());
     }
     
     /**
@@ -1042,21 +1049,8 @@ public class gameInstance {
     public void switchToUi(){
         uiToCurtain.play();
         gameStage.setScene(uiScene);
-        System.out.println(gameStage.getWidth() + "" + gameStage.getHeight());
     }
     
-    /**
-     * Each time this is called, one future ShowCardsAction will be queued, the queue will be dequeued once the GUI received a StartTurnAction
-     * Switches the current scene to the uiScene and fade animation plays.
-     */
-    public void aiShowCardsRequests(){
-        System.out.println("--------------------------------------------------------------------------------------------------------------");
-        //throw new UnsupportedOperationException("not yet implemented");
-        
-        //TODO
-        //if this is called, the next recived showCardsAction (through actionResponse) should be added to a queue 
-        //when you recived a StartTurnAction (through actionResponse) , if the queue is not empty, first display the queued ShowCardsActions, then process the StartTurnAction
-    }
     
     
     /**
@@ -1065,7 +1059,6 @@ public class gameInstance {
      * @param actionsToNotify the list of actions to be turned into human readable strings.
      */
     public void showActionLog(LinkedList<Action> actionsToNotify) {
-        System.out.println("show history called");
         for (Action action: actionsToNotify) {
             StringBuilder message = new StringBuilder();     
             switch (action.getActionType()) {
@@ -1110,7 +1103,7 @@ public class gameInstance {
                     
                     break;
                 default:
-                    int[] mathew = new int[1];
+                    final int[] mathew = new int[1];
                     System.out.println(mathew[-1]);
                     break;
             }
@@ -1159,78 +1152,4 @@ public class gameInstance {
         });
         gameOverPrompt.showAndWait();
     }
-    
-    /**
-     * Creates a new window which shows which colour of a room(custom map) corresponds to which room.
-     */
-    public void openRoomKeyWindow(){
-        Stage roomKeyStage = new Stage();
-        
-        HBox column = new HBox();
-        VBox colours = new VBox();
-        VBox legend = new VBox();
-        
-        for(int i= 0; i < 9; i++){
-            Label temp = new Label();
-            switch(i){
-                case 0:
-                    temp.setStyle("-fx-background-color: #696969;");
-                    break;
-                case 1:
-                    temp.setStyle("-fx-background-color: #42d4f4;");
-                    break;
-                case 2:
-                    temp.setStyle("-fx-background-color: #000075");
-                    break;
-                case 3:
-                    temp.setStyle("-fx-background-color: #f58231;");
-                    break;
-                case 4:
-                    temp.setStyle("-fx-background-color: #911eb4;");
-                    break;
-                case 5:
-                    temp.setStyle("-fx-background-color: #800000");
-                    break;
-                case 6:
-                    temp.setStyle("-fx-background-color: #808000");
-                    break;
-                case 7:
-                    temp.setStyle("-fx-background-color: #fffac8;");
-                    break;
-                case 8:
-                    temp.setStyle("-fx-background-color: #fabebe");
-                    break;
-                default:
-                    break;
-            }
-            temp.setMinSize(100, 20);
-            colours.getChildren().add(temp);
-            
-        }
-        Button goBack = new Button("Back");
-        goBack.setOnMouseClicked(e -> roomKeyStage.hide());
-        colours.getChildren().add(goBack);
-        
-        
-        Label study = new Label("Study"); 
-        Label hall = new Label("Hall"); 
-        Label lounge = new Label("Lounge"); 
-        Label library = new Label("Library"); 
-        Label billiardRoom = new Label("Billiard Room"); 
-        Label diningRoom = new Label("Dining Room"); 
-        Label conservatory = new Label("Conservatory"); 
-        Label ballRoom = new Label("Ball Room"); 
-        Label kitchen = new Label("Kitchen"); 
-        
-        legend.getChildren().addAll(study, hall, lounge, library, billiardRoom, diningRoom, conservatory, ballRoom, kitchen);
-        
-        column.getChildren().addAll(colours, legend);
-        
-        roomKeyStage.setScene(new Scene(column, 200, 220));
-        roomKeyStage.setResizable(false);
-        roomKeyStage.show();
-        
-        
-    }
-    
 }

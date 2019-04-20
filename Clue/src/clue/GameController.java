@@ -54,7 +54,8 @@ public final class GameController {
     private List<PersonCard> personCards;
     private List<RoomCard> roomCards;
     private gameInstance gui;
-    //private LinkedList<ShowCardsAction> queuedGuiActions;
+    private boolean aiWaitingForHumanResponse;
+    private EndTurnAction queuedEndTurn;
 
     /**
      * Creates a new GameController which provides the backend logic and calls
@@ -76,13 +77,13 @@ public final class GameController {
         
         gui = null;
         winner = null;
+        aiWaitingForHumanResponse = false;
         
         weaponCards = new ArrayList<>();
         personCards = new ArrayList<>();
         roomCards = new ArrayList<>();
         players = new ArrayList();
         actions = new LinkedList<>();
-        //queuedGuiActions = new LinkedList<>();
 
         //initalise all the players
         for (int i = 0; i < human; i++) {
@@ -191,32 +192,37 @@ public final class GameController {
                     break;
                 case ENDTURN:
                     System.out.println("    CASE ENDTURN");
-                    player.setMoves(0);
-
-
-                    int j = player.getId();
-
-                    for (Player p : players){
-                        if (p.isActive() && p.getId() !=j){
-                            state.getPlayer(j).removeIntrigueOnce(CardType.AVOIDSUGGESTION);//remove any suggestion blocks players may have 
-
-                        }    
-                    }
-
-                    moveActionLog();
-
-
-                    if (state.hasActive()){
-                        int old = player.getId();
-                        state.nextTurn(state.nextPlayer());
-                        System.out.println("[GameController.performAction] case end turn transitioning to next player turn: "+old+"->"+player.getId());
-                        nextAction = new StartTurnAction(state.getCurrentPlayer());    
+                    if (aiWaitingForHumanResponse){//if ai is waiting, do not end the ai players turn yet
+                        queuedEndTurn = (EndTurnAction)action;
                     }
                     else{
-                        System.out.println("[GameController.performAction] case end turn no more active players");
-                        endGame();
-                    }
+                        player.setMoves(0);
 
+
+                        int j = player.getId();
+
+                        for (Player p : players){
+                            if (p.isActive() && p.getId() !=j){
+                                state.getPlayer(j).removeIntrigueOnce(CardType.AVOIDSUGGESTION);//remove any suggestion blocks players may have 
+
+                            }    
+                        }
+
+                        moveActionLog();
+
+
+                        if (state.hasActive()){
+                            int old = player.getId();
+                            state.nextTurn(state.nextPlayer());
+                            System.out.println("[GameController.performAction] case end turn transitioning to next player turn: "+old+"->"+player.getId());
+                            nextAction = new StartTurnAction(state.getCurrentPlayer());    
+                        }
+                        else{
+                            System.out.println("[GameController.performAction] case end turn no more active players");
+                            endGame();
+                        }
+                    }
+                    
                     break;
                 case MOVE:
                     System.out.println("    CASE MOVE "+player.getId() + "FROM: "+state.getAction().getActionType());
@@ -248,17 +254,26 @@ public final class GameController {
                     actionLog.add(action);
                     break;
                 case SHOWCARDS:
-                    System.out.println("    CASE SHOWCARDS");
-                    if(gui != null && !(player instanceof AiAdvanced)){
-                        gui.actionResponse(action);
+                     System.out.println("    CASE SHOWCARDS");
+                    if(gui != null){//if there is a gui
+                        if (player instanceof AiAdvanced){
+                            aiWaitingForHumanResponse = true;
+                        }
+                        
+                        if (action.getPlayer() instanceof AiAdvanced){//if player is Ai, process the reply
+                            replyToShowCards((ShowCardsAction)action);
+                        }
+                        else{//else wait for the gui to set the reply before processing it
+                            
+                            gui.actionResponse(action);
+                        }
+                          
                     }
                     else{
-                    replyToShowCards((ShowCardsAction)action);}
-                    if (state.getAction().getActionType() != ActionType.ACCUSATION) {
-
+                        replyToShowCards((ShowCardsAction)action);
                     }
                     actionLog.add(action);
-                    break;
+                    break;                 
                 case START:
                     System.out.println("    CASE START "+player.getId());
                     nextAction = new StartTurnAction(player);
@@ -270,22 +285,20 @@ public final class GameController {
                 case STARTTURN:
                     System.out.println("    CASE STARTTURN "+player.getId() + " FROM: "+state.getAction().getActionType());
                     
-                        //System.out.println("b"+player.getId());
-                        //state.nextTurn(player.getId());
-                        //System.out.println("a"+player.getId());
-                        moveActionLog();
-                        LinkedList<Action> actionsToNotify = getActions();
+                       
+                            moveActionLog();
+                            LinkedList<Action> actionsToNotify = getActions();
 
 
-                        if (gui != null && !(player instanceof AiAdvanced)){
-                            System.out.println("--------------------------prompting gui for player+"+player.getId());
-                            gui.newHumanPlayerTurn(actionsToNotify);
+                            if (gui != null && !(player instanceof AiAdvanced)){
+                                System.out.println("--------------------------prompting gui for player+"+player.getId());
+                                gui.newHumanPlayerTurn(actionsToNotify);
 
-                        }
-                        else{
-                            System.out.println("[GameController.performAction] null gui -> gui.newHumanPlayerTurn(player, actionsToNotify)");
-                        }
-                    
+                            }
+                            else{
+                                System.out.println("[GameController.performAction] null gui -> gui.newHumanPlayerTurn(player, actionsToNotify)");
+                            }
+                                            
                     break;
                 case SUGGEST:
                     System.out.println("    CASE SUGGEST "+player.getId() + " FROM: "+state.getAction().getActionType());
@@ -306,14 +319,6 @@ public final class GameController {
                             nextAction = new ShowCardsAction(((SuggestAction) action).getShower(), ((SuggestAction) action).getPlayer(), ((SuggestAction) action).getFoundCards());
 
                             
-                            if (player instanceof AiAdvanced){
-                                //queuedGuiActions.add((ShowCardsAction)nextAction);
-                                //gui.switchToUi();
-                                gui.aiShowCardsRequests();
-                            
-                                
-                                //nextAction = null;
-                            }
                             
                         }
                         else {
@@ -904,11 +909,20 @@ public final class GameController {
         Player personToShow = action.getSuggester();
         Card cardToShow = getCard(id, type);
                   
-                   
+                  
         try {
             performAction(new ShowCardAction(personToShow, cardToShow, ((ShowCardsAction)action).getPlayer()));
         } catch (UnknownActionException  | TileOccupiedException ex) {
             Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if (queuedEndTurn!= null){
+            try {
+                aiWaitingForHumanResponse = false;
+                performAction(queuedEndTurn);
+                queuedEndTurn = null;
+            } catch (UnknownActionException | TileOccupiedException ex) {
+                Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
     
