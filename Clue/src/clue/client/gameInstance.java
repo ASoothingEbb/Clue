@@ -40,6 +40,7 @@ import java.util.logging.Logger;
 import javafx.animation.FadeTransition;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.geometry.Bounds;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -65,6 +66,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 /**
@@ -394,7 +396,19 @@ public class gameInstance {
         if (!boardTilePath.contains("archersAvenue")) {
             MenuItem showRoomKeys = new MenuItem("Room Keys", avenirTitle);
             showRoomKeys.setAlignment(Pos.CENTER);
-            showRoomKeys.setOnMouseClicked(e -> openRoomKeyWindow());
+            RoomKeys roomKeys = new RoomKeys(gameStage);
+            
+            //System.out.println(coordinates.getMinX() + " " + coordinates.getMinY());
+            //roomKeys.setLocation(coordinates.getMinX(), coordinates.getMinY());
+            showRoomKeys.hoverProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue) {
+                    Bounds coordinates = showRoomKeys.localToScene(showRoomKeys.getBoundsInLocal());
+                    roomKeys.setLocation(coordinates.getMaxX() - 20, coordinates.getMaxY() + coordinates.getHeight() + 6);
+                    roomKeys.show();
+                } else {
+                    roomKeys.hide();
+                }
+            });
             hiddenLayout.setRight(showRoomKeys);
         }
         
@@ -1162,78 +1176,4 @@ public class gameInstance {
         });
         gameOverPrompt.showAndWait();
     }
-    
-    /**
-     * Creates a new window which shows which colour of a room(custom map) corresponds to which room.
-     */
-    public void openRoomKeyWindow(){
-        Stage roomKeyStage = new Stage();
-        
-        HBox column = new HBox();
-        VBox colours = new VBox();
-        VBox legend = new VBox();
-        
-        for(int i= 0; i < 9; i++){
-            Label temp = new Label();
-            switch(i){
-                case 0:
-                    temp.setStyle("-fx-background-color: #696969;");
-                    break;
-                case 1:
-                    temp.setStyle("-fx-background-color: #42d4f4;");
-                    break;
-                case 2:
-                    temp.setStyle("-fx-background-color: #000075");
-                    break;
-                case 3:
-                    temp.setStyle("-fx-background-color: #f58231;");
-                    break;
-                case 4:
-                    temp.setStyle("-fx-background-color: #911eb4;");
-                    break;
-                case 5:
-                    temp.setStyle("-fx-background-color: #800000");
-                    break;
-                case 6:
-                    temp.setStyle("-fx-background-color: #808000");
-                    break;
-                case 7:
-                    temp.setStyle("-fx-background-color: #fffac8;");
-                    break;
-                case 8:
-                    temp.setStyle("-fx-background-color: #fabebe");
-                    break;
-                default:
-                    break;
-            }
-            temp.setMinSize(100, 20);
-            colours.getChildren().add(temp);
-            
-        }
-        Button goBack = new Button("Back");
-        goBack.setOnMouseClicked(e -> roomKeyStage.hide());
-        colours.getChildren().add(goBack);
-        
-        
-        Label study = new Label("Study"); 
-        Label hall = new Label("Hall"); 
-        Label lounge = new Label("Lounge"); 
-        Label library = new Label("Library"); 
-        Label billiardRoom = new Label("Billiard Room"); 
-        Label diningRoom = new Label("Dining Room"); 
-        Label conservatory = new Label("Conservatory"); 
-        Label ballRoom = new Label("Ball Room"); 
-        Label kitchen = new Label("Kitchen"); 
-        
-        legend.getChildren().addAll(study, hall, lounge, library, billiardRoom, diningRoom, conservatory, ballRoom, kitchen);
-        
-        column.getChildren().addAll(colours, legend);
-        
-        roomKeyStage.setScene(new Scene(column, 200, 220));
-        roomKeyStage.setResizable(false);
-        roomKeyStage.show();
-        
-        
-    }
-    
 }
