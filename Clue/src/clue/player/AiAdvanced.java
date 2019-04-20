@@ -252,7 +252,7 @@ public class AiAdvanced extends Player{
     private void endTurn() {
         System.out.println("[AiAdvanced.endTurn] id: "+id);
         myTurn = false;
-        gameController.endTurn();
+        gameController.endTurnAi();
 
     }
 
