@@ -282,7 +282,7 @@ public final class GameController {
                         LinkedList<Action> actionsToNotify = getActions();
 
                         if (gui != null && !player.isAi()){
-                            gui.newHumanPlayerTurn(player, actionsToNotify);
+                            gui.newHumanPlayerTurn(actionsToNotify);
                         }
                         else{
                             System.out.println("[GameController.performAction] null gui -> gui.newHumanPlayerTurn(player, actionsToNotify)");

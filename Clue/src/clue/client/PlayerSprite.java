@@ -23,13 +23,13 @@ public class PlayerSprite extends Label {
     private int positionY;
     
     /**
+     * Creates a PlayerSprite with specific position x, y and image.
      * 
      * @param positionX the x coordinate of where it is in the board StackPane[][] from gameInstance.
      * @param positionY the y coordinate of where it is in the board StackPane[][] from gameInstance.
+     * @param sprite the path to a PNG.
      */
     public PlayerSprite(int positionX, int positionY, String sprite) {
-        //setText(character);
-        //setTextFill(Color.WHITE);
         this.positionX = positionX;
         this.positionY = positionY;
         Image image = null;
@@ -45,6 +45,7 @@ public class PlayerSprite extends Label {
     }
     
     /**
+     * Re-renders the player into a new position on the board.
      * 
      * @param x the x coordinate of where to move the sprite to.
      * @param y the y coordinate of where to move the sprite to.
