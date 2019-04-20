@@ -70,6 +70,8 @@ public class selectCards {
             System.out.println("File not found");
         }
         ImageView characterView = new ImageView(character);
+        characterView.setFitHeight(230);
+        characterView.setFitWidth(150);
         
         ComboBox characterOptions = new ComboBox();
         characterOptions.getItems().addAll(characters);
@@ -85,6 +87,8 @@ public class selectCards {
             System.out.println("File not found");
         }
         ImageView weaponView = new ImageView(weapon);
+        weaponView.setFitHeight(230);
+        weaponView.setFitWidth(150);
         
         ComboBox weaponOptions = new ComboBox();
         weaponOptions.getItems().addAll(weapons);
@@ -94,7 +98,6 @@ public class selectCards {
         });
         
         Image room = null;
-        ImageView roomView;
         ComboBox roomOptions = new ComboBox();
         
         try {
@@ -104,7 +107,9 @@ public class selectCards {
         }
         roomOptions.getItems().add(CardNameMap.get("room"+currentRoom));
         roomOptions.setValue(CardNameMap.get("room"+currentRoom));
-        roomView = new ImageView(room);
+        ImageView roomView = new ImageView(room);
+        roomView.setFitHeight(230);
+        roomView.setFitWidth(150);
         
         MenuItem sendCards = new MenuItem(actionType, avenir);
         sendCards.setActiveColor(color);

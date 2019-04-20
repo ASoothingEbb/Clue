@@ -218,19 +218,14 @@ public final class GameController {
                     }
 
                     break;
-                case EXTRATURN:
-                    System.out.println("    CASE EXTRATURN");
-                    returnCard((IntrigueCard) action.getCard());
-                    nextAction = new StartTurnAction(action.getPlayer());
-                    break;
                 case MOVE:
                     System.out.println("    CASE MOVE "+player.getId() + "FROM: "+state.getAction().getActionType());
-                    if (action.result && (state.getAction().getActionType() == ActionType.STARTTURN || state.getAction().getActionType() == ActionType.MOVE || state.getAction().getActionType() == ActionType.THROWAGAIN || state.getAction().getActionType() == ActionType.ENDTURN || state.getAction().getActionType() == ActionType.START)) {
+                    if (action.result) {
                         Tile loc = ((MoveAction) action).getTile();    
                         //player.getPosition().setOccupied(false);  
                         player.setPosition(loc); 
                         //loc.setOccupied(true);                    
-                        if (loc.special) {
+                        if (loc.special && player.getMoves() == 0) {
                             getSpecial(loc);
                         }
                         System.out.println("playerId: "+player.getId()+", move attempt result: "+action.result);    
@@ -274,7 +269,7 @@ public final class GameController {
                     break;
                 case STARTTURN:
                     System.out.println("    CASE STARTTURN "+player.getId() + " FROM: "+state.getAction().getActionType());
-                    if (state.getAction().getActionType() == ActionType.ENDTURN || state.getAction().getActionType() == ActionType.EXTRATURN || state.getAction().getActionType() == ActionType.START&&state.isRunning()) {
+                    
                         //System.out.println("b"+player.getId());
                         //state.nextTurn(player.getId());
                         //System.out.println("a"+player.getId());
@@ -290,7 +285,7 @@ public final class GameController {
                         else{
                             System.out.println("[GameController.performAction] null gui -> gui.newHumanPlayerTurn(player, actionsToNotify)");
                         }
-                    }
+                    
                     break;
                 case SUGGEST:
                     System.out.println("    CASE SUGGEST "+player.getId() + " FROM: "+state.getAction().getActionType());
@@ -336,7 +331,8 @@ public final class GameController {
                 case TELEPORT:
                     System.out.println("    CASE TELEPORT");
                     if(gui != null && !(player instanceof AiAdvanced)){
-                    gui.actionResponse(action);}
+                        gui.actionResponse(action);
+                    }
                     returnCard((IntrigueCard)((TeleportAction) action).getCard());
 
                     Tile target = ((TeleportAction) action).getTarget();
@@ -357,9 +353,15 @@ public final class GameController {
                 case THROWAGAIN:
                     System.out.println("    CASE THROWAGAIN");
                     if(gui != null && !(player instanceof AiAdvanced)){
-                    gui.actionResponse(action);}
+                        gui.actionResponse(action);
+                    }
                     returnCard((IntrigueCard)((ThrowAgainAction) action).getCard());
 
+                    break;
+                case EXTRATURN:
+                    System.out.println("    CASE EXTRATURN");
+                    returnCard((IntrigueCard) action.getCard());
+                    nextAction = new StartTurnAction(action.getPlayer());
                     break;
             }
             //update game state
@@ -392,6 +394,17 @@ public final class GameController {
     public Player getPlayer() {
         return player;
     }
+    
+    /**
+     * Called by GUI when the player is on an intrigue tile and they wish to end there movement turn to receive an intrigue card.
+     */
+    public void endMovementTurn(){
+        if (player.getPosition().isSpecial()){
+            CardType type = getSpecial(player.getPosition()).getCardType();
+            gui.notifyUser("You received an intrigue card: "+type.toString());
+        }    
+    }
+    
 
     /**
      * Returns the player object with the given id.
@@ -428,9 +441,23 @@ public final class GameController {
     }
     
     /**
-     * Ends the turn of the current player
+     * Ends the turn of the current player, called by GUI
      */
     public void endTurn() {
+        try {
+            if (!(player instanceof AiAdvanced)){//prevents player from clicking end turn multiple times quickly to end turn of ai player
+                performAction(new EndTurnAction(player));
+            }
+            
+        } catch (UnknownActionException | TileOccupiedException ex) {
+            Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+   /**
+     * Ends the turn of the current player, called by Ai
+     */
+    public void endTurnAi() {
         try {
             performAction(new EndTurnAction(player));
         } catch (UnknownActionException | TileOccupiedException ex) {
@@ -713,9 +740,10 @@ public final class GameController {
      * Resolves special tile functionality
      *
      * @param loc special tile
+     * @return returns the picked Intrigue card
      * 
      */
-    private void getSpecial(Tile loc) {
+    private Card getSpecial(Tile loc) {
         IntrigueCard card = ((SpecialTile) loc).getIntrigue(player);
         try{
             switch (card.getCardType()) {
@@ -736,6 +764,7 @@ public final class GameController {
         } catch (UnknownActionException | TileOccupiedException ex){
             Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
         } 
+        return card;
         
     }
     
