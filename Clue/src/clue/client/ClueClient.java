@@ -292,7 +292,6 @@ public class ClueClient extends Application {
                 stage.setScene(prevScene);
             } catch(TooManyPlayersException | MissingRoomDuringCreationException | NoSuchRoomException | NoSuchTileException ex) {
                 System.out.println("Ice Cream Machine BROKE");
-                ex.printStackTrace();
             } catch(NotEnoughPlayersException ex) {
                 Prompt playerPrompt = new Prompt("Not Enough Players");
                 playerPrompt.setLabelTitle("Start Game Error");
@@ -532,7 +531,6 @@ public class ClueClient extends Application {
             public void changed(ObservableValue observable, Object oldValue, Object newValue) {
                 backgroundMusicVolumeShow.setText(String.valueOf((int) backgroundMusicVolume.getValue()));
                 backgroundMusic.setVolume((float) ((float)backgroundMusicVolume.getValue()*0.01));
-                System.out.println(backgroundMusicVolume.getValue());
             }
         });
         
