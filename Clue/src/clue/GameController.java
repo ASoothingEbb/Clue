@@ -230,7 +230,7 @@ public final class GameController {
                         //player.getPosition().setOccupied(false);  
                         player.setPosition(loc); 
                         //loc.setOccupied(true);                    
-                        if (loc.special) {
+                        if (loc.isSpecial()) {
                             getSpecial(loc);
                         }
                         System.out.println("playerId: "+player.getId()+", move attempt result: "+action.result);    
@@ -343,7 +343,7 @@ public final class GameController {
                         //player.getPosition().setOccupied(false);  
                         player.setPosition(target); 
                         //target.setOccupied(true);                    
-                        if (target.special) {
+                        if (target.isSpecial()) {
                             getSpecial(target);
                         }
 
