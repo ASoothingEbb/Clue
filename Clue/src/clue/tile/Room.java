@@ -159,18 +159,11 @@ public class Room extends Tile{
                 }  
             }
             
-            //add a 1 tile margin to the lows/highs
-            xLow +=1;
-            yLow +=1;
-            
-            xHigh-=1;            
-            yHigh-=1;
             
             //select the first location that can fit within the 1 tile margin
             for (int[] loc : nonOccupiedLocations){
                 if (loc[0] < xHigh && loc[0] > xLow && loc[1] > yLow && loc[1] < yHigh){
-                    location[0] = loc[0];
-                    location[1] = loc[1];
+                    location = loc;
                     break;
                 }
             }
@@ -179,8 +172,11 @@ public class Room extends Tile{
             
             
         }
-        
-        return location;
+        nonOccupiedLocations.remove(location);
+        int[] result = new int[2];
+        result[0] = location[0];
+        result[1] = location[1];
+        return result;
 
     
     }
