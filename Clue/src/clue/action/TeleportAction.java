@@ -5,7 +5,7 @@
  */
 package clue.action;
 
-import clue.ai.AiAdvanced;
+import clue.player.AiAdvanced;
 import clue.player.Player;
 import clue.card.TeleportIntrigue;
 import clue.client.gameInstance;
@@ -39,7 +39,7 @@ public class TeleportAction extends Action {
      */
     @Override
     public void execute() {
-        player.removeCard(card);
+        player.removeIntrigue((TeleportIntrigue)card);
         if (player.isAi()){
             ((AiAdvanced) player).respondToTeleport(this);
 

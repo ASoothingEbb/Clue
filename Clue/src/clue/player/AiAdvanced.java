@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package clue.ai;
+package clue.player;
 
 /**
  *
@@ -31,8 +31,6 @@ public class AiAdvanced extends Player{
     private GameController gameController;
     private int boardWidth;
     private int boardHeight;
-    private Tile previousPosition;
-    private List<Player> players;
     private LinkedList<Tile> pathToRoom;
     private Random rand;
     private int suggestionsLeft;
@@ -53,7 +51,7 @@ public class AiAdvanced extends Player{
     
     public AiAdvanced(int id, GameController gc ,int width, int height){
         super(id, gc);
-        setAi();
+        isAi();
         this.boardWidth = width;
         this.boardHeight = height;
         this.id = id;
@@ -192,7 +190,7 @@ public class AiAdvanced extends Player{
             suggestionsLeft--;
             gameController.suggest(unknownIds[0], unknownIds[2]);
         }
-        if (suggestionsLeft == 0){
+        else {
             unknownIds = getNextUnknown();
             gameController.accuse(unknownIds[0], unknownIds[2]);
         }
@@ -256,7 +254,11 @@ public class AiAdvanced extends Player{
 
     }
 
-    public void respondToTeleport(Action action) {
+    /**
+     * Called by the GameConstructor when the Ai player needs to respond to a teleport action
+     * @param action the teleport action the Ai player needs to respond to
+     */
+    public void respondToTeleport(TeleportAction action) {
         //TODO change type casting and parameters
         System.out.println("[AiAdvanced.respondToTeleport] id: "+id);
         LinkedList<Tile> path = BFS();
@@ -268,7 +270,7 @@ public class AiAdvanced extends Player{
   /** 
     * Returns the path to the closest room from the players current location
     * @return The path to the closest Room from the player's current position.
-    * @depricated only used so that it can be tested
+    * @deprecated only used so that it can be tested
     */
     public LinkedList<Tile> BFStesting(){
         return BFS();
@@ -291,6 +293,7 @@ public class AiAdvanced extends Player{
         LinkedList<Tile> solutionPath = new LinkedList<>();        
         LinkedList<Tile> newPath = new LinkedList<>();
         LinkedList<Tile> currentPath;
+        Tile previousPosition;
         
         newPath.add(getPosition());
         pathList.add(newPath);

@@ -6,7 +6,7 @@
 package clue;
 
 import clue.action.*;
-import clue.ai.AiAdvanced;
+import clue.player.AiAdvanced;
 import clue.card.*;
 import clue.player.Player;
 import clue.tile.NoSuchRoomException;

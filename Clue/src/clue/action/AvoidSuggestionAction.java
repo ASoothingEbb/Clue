@@ -52,7 +52,7 @@ public class AvoidSuggestionAction extends Action {
      */
     @Override
     public void execute() {
-        player.removeCard(card);
+        player.removeIntrigue((AvoidSuggestionIntrigue)card);
         if (player.isAi()){
             //((AiAdvanced) player).notifyAvoidSuggestion();
 
