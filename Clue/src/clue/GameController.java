@@ -322,7 +322,7 @@ public final class GameController {
                             
                         }
                         else {
-                            if (gui != null && (player instanceof AiAdvanced)){
+                            if (gui != null && !(player instanceof AiAdvanced)){
                                 gui.notifyUser("No other player had to show a card due to your suggestion.");
                             }
                             else{
