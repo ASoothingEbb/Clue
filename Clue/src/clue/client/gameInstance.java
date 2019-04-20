@@ -14,6 +14,7 @@ import clue.action.SuggestAction;
 import clue.action.UnknownActionException;
 import clue.card.Card;
 import clue.card.CardType;
+import clue.card.WeaponCard;
 import clue.player.Player;
 import clue.tile.NoSuchRoomException;
 import clue.tile.Room;
@@ -83,6 +84,7 @@ public class gameInstance {
    
     private PlayerSprite currentPlayer;
     private PlayerSprite[] playerSprites;
+    private WeaponSprite[] weaponSprites;
     
     private HashMap<String, String> ImagePathMap = new HashMap<>();
     private HashMap<String, String> CardNameMap = new HashMap<>();
@@ -240,9 +242,9 @@ public class gameInstance {
                 board[coords[1]][coords[0]].getChildren().add(doorSprite);
             });
         }
-
- 
+        
         spawnPlayers(board);
+        spawnWeapons(board);
         
         rolled = false;
         return root;
@@ -291,24 +293,39 @@ public class gameInstance {
         List<Player> players = gameInterface.getPlayers();
         playerSprites = new PlayerSprite[players.size()];
         for(int i = players.size()-1; i>= 0; i--) {
-            Player player = players.get(i);
+            int x = players.get(i).getDrawX();
+            int y = players.get(i).getDrawY();
 
-            int x = player.getDrawX();
-            int y = player.getDrawY();
-            PlayerSprite playerSprite = new PlayerSprite(x, y, TokenPathMap.get("character" + player.getId()));
-
-            playerSprites[i] = playerSprite;
-            board[y][x].getChildren().add(playerSprite);
+            playerSprites[i] = new PlayerSprite(x, y, TokenPathMap.get("character" + players.get(i).getId()));
+            board[y][x].getChildren().add(playerSprites[i]);
         }
         currentPlayer = playerSprites[0];
     }
     
+    private void spawnWeapons(StackPane[][] board) {
+        List<WeaponCard> weapons = gameInterface.getWeaponCards();
+        System.out.println(weapons.size());
+        weaponSprites = new WeaponSprite[weapons.size()];
+        for (int i=0; i < weapons.size(); i++) {
+            int x = weapons.get(i).getDrawX();
+            int y = weapons.get(i).getDrawY();
+            weaponSprites[i] = new WeaponSprite(x, y, CardNameMap.get("weapon" + weapons.get(i).getId()).substring(0,1));
+            board[y][x].getChildren().add(weaponSprites[i]);
+        }
+    }
+    
     private void redrawPlayers() {
-        List<Player> players = gameInterface.getPlayers();
-        for (Player player: players) {
+        gameInterface.getPlayers().forEach((player) -> {
             PlayerSprite sprite = playerSprites[player.getId()];
             sprite.move(player.getDrawX(), player.getDrawY(), board, sprite);
-        }
+        });
+    }
+    
+    private void redrawWeapons() {
+        gameInterface.getWeaponCards().forEach((weapon) -> {
+            WeaponSprite sprite = weaponSprites[weapon.getId()];
+            sprite.move(weapon.getDrawX(), weapon.getDrawY(), board, sprite);
+        });
     }
     
    /**
@@ -543,6 +560,7 @@ public class gameInstance {
                 endTurnSound.play();
                 showCard(action);
                 redrawPlayers();
+                redrawWeapons();
                 for (Player player: gameInterface.getPlayers()) {
                     System.out.println("Player " + player.getId() + " " + player.getPosition());
                     System.out.println("Player " + player.getId() + " " + player.getDrawX() + " " +  player.getDrawY());
@@ -769,6 +787,7 @@ public class gameInstance {
     }
     
     /**
+     * .
      * Initialises the default names.
      */
     private void initDefaultNames() {
@@ -1022,6 +1041,7 @@ public class gameInstance {
         history.clear();
         switchToCurtain();
         redrawPlayers();
+        redrawWeapons();
         createCardsDisplay(cardsDisplay);
         showActionLog(actionsToNotify);
         //TODO
