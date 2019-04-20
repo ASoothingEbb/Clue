@@ -1056,7 +1056,7 @@ public class gameInstance {
      */
     public void aiShowCardsRequests(){
         System.out.println("--------------------------------------------------------------------------------------------------------------");
-        throw new UnsupportedOperationException("not yet implemented");
+        //throw new UnsupportedOperationException("not yet implemented");
         
         //TODO
         //if this is called, the next recived showCardsAction (through actionResponse) should be added to a queue 
