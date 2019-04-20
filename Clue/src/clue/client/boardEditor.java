@@ -357,7 +357,7 @@ public class boardEditor {
                         throw new CreationException("Doors must be placed facing either a Walkable tile or a Starting Tile");
                     }
                     if (y>0) {
-                        if (board[y-1][x].getS().equals("S") || board[y-1][x].getS().equals("0")) {
+                        if (board[y-1][x].getS().equals("S") || board[y-1][x].getS().equals("0") || board[y+1][x].getS().equals("I")) {
                             board[y][x].setDoorDirection("up");
                             l.setStyle("-fx-background-color: #5a4c41; -fx-border-width: 5px 0px 0px 0px; -fx-border-style: solid; -fx-border-color: #A36200;");
                         } else {
@@ -375,7 +375,7 @@ public class boardEditor {
                         throw new CreationException("Doors must be placed facing either a Walkable tile or a Starting Tile");
                     }
                     if (y<board.length) {
-                        if (board[y+1][x].getS().equals("S") || board[y+1][x].getS().equals("0")) {
+                        if (board[y+1][x].getS().equals("S") || board[y+1][x].getS().equals("0") || board[y+1][x].getS().equals("I")) {
                             board[y][x].setDoorDirection("down");
                             l.setStyle("-fx-background-color: #5a4c41; -fx-border-width: 0px 0px 5px 0px; -fx-border-style: solid; -fx-border-color: #A36200;");
                         } else {
@@ -392,7 +392,7 @@ public class boardEditor {
                     if (x==0) {
                         throw new CreationException("Doors must be placed facing either a Walkable tile or a Starting Tile");
                     } else if (x>0) {
-                        if (board[y][x-1].getS().equals("S") || board[y][x-1].getS().equals("0")){
+                        if (board[y][x-1].getS().equals("S") || board[y][x-1].getS().equals("0") || board[y+1][x].getS().equals("I")){
                             board[y][x].setDoorDirection("left");
                             l.setStyle("-fx-background-color: #5a4c41; -fx-border-width: 0px 0px 0px 5px; -fx-border-style: solid; -fx-border-color: #A36200;");
                         } else {
@@ -410,7 +410,7 @@ public class boardEditor {
                         throw new CreationException("Doors must be placed facing either a Walkable tile or a Starting Tile");
                     }
                     if (x<board[0].length-1) {
-                        if (board[y][x+1].getS().equals("S") || board[y][x+1].getS().equals("0")) {
+                        if (board[y][x+1].getS().equals("S") || board[y][x+1].getS().equals("0") || board[y+1][x].getS().equals("I")) {
                             board[y][x].setDoorDirection("right");
                             l.setStyle("-fx-background-color: #5a4c41; -fx-border-width: 0px 5px 0px 0px; -fx-border-style: solid; -fx-border-color: #A36200;");
                         } else {
