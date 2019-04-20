@@ -6,7 +6,7 @@
 package clue.action;
 
 import clue.GameController;
-import clue.ai.AiAdvanced;
+import clue.player.AiAdvanced;
 import clue.card.Card;
 import clue.card.CardType;
 import clue.client.gameInstance;
@@ -49,7 +49,7 @@ public class ShowCardsAction extends Action{
         if (player.isAi()){
             Card responseCard = ((AiAdvanced) player).respondToShowCards(cards);
             idOfCardToShow = responseCard.getId();
-            typeOfCardToShow = responseCard.cardType;
+            typeOfCardToShow = responseCard.getCardType();
         }
     }
     

@@ -5,6 +5,7 @@
  */
 package clue.ai;
 
+import clue.player.AiAdvanced;
 import clue.card.Card;
 import clue.GameController;
 import clue.MissingRoomDuringCreationException;

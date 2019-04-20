@@ -21,28 +21,24 @@ import javafx.scene.paint.Color;
 public class PlayerSprite extends Label {
     private int positionX;
     private int positionY;
-    private String character;
-    private ImageView characterView;
     
     /**
      * 
      * @param positionX the x coordinate of where it is in the board StackPane[][] from gameInstance.
-     * @param positionY the y coordinate of where it is in the board StackPane[][] from gameInstance. 
-     * @param character the name of the character shown on the board.
+     * @param positionY the y coordinate of where it is in the board StackPane[][] from gameInstance.
      */
-    public PlayerSprite(int positionX, int positionY, String character) {
+    public PlayerSprite(int positionX, int positionY, String sprite) {
         //setText(character);
         //setTextFill(Color.WHITE);
         this.positionX = positionX;
         this.positionY = positionY;
-        this.character = character;
         Image image = null;
         try {
-            image = new Image(new FileInputStream(new File(character)));
+            image = new Image(new FileInputStream(new File(sprite)));
         } catch(FileNotFoundException ex) {
             
         }
-        characterView = new ImageView(image);
+        ImageView characterView = new ImageView(image);
         characterView.setFitHeight(32);
         characterView.setFitWidth(32);
         setGraphic(characterView);

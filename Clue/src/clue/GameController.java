@@ -6,7 +6,7 @@
 package clue;
 
 import clue.action.*;
-import clue.ai.AiAdvanced;
+import clue.player.AiAdvanced;
 import clue.card.*;
 import clue.player.Player;
 import clue.tile.NoSuchRoomException;
@@ -166,10 +166,10 @@ public final class GameController {
 
             player = players.get(state.getPlayerTurn());
 
-            System.out.println("[GameController.performAction] ----"+action.actionType + " executing---- player turn: "+player.getId());
+            System.out.println("[GameController.performAction] ----"+action.getActionType() + " executing---- player turn: "+player.getId());
             action.execute();//action.execute() handles a lot of the logic behind execution of an action
             //Action specific lplayersogic
-            switch (action.actionType) {
+            switch (action.getActionType()) {
                 default:
                     throw new UnknownActionException();
                 case DEFAULT:
@@ -177,7 +177,7 @@ public final class GameController {
                 case ACCUSATION:
                     System.out.println("    CASE ACCUSATION");
                     if (action.result) {
-                        endGame(player);
+                        //endGame(player);
                     } else if (!state.hasActive()) {
                         endGame();
                     } else {
@@ -224,8 +224,8 @@ public final class GameController {
                     nextAction = new StartTurnAction(action.getPlayer());
                     break;
                 case MOVE:
-                    System.out.println("    CASE MOVE "+player.getId() + "FROM: "+state.getAction().actionType);
-                    if (action.result && (state.getAction().actionType == ActionType.STARTTURN || state.getAction().actionType == ActionType.MOVE || state.getAction().actionType == ActionType.THROWAGAIN || state.getAction().actionType == ActionType.ENDTURN || state.getAction().actionType == ActionType.START)) {
+                    System.out.println("    CASE MOVE "+player.getId() + "FROM: "+state.getAction().getActionType());
+                    if (action.result && (state.getAction().getActionType() == ActionType.STARTTURN || state.getAction().getActionType() == ActionType.MOVE || state.getAction().getActionType() == ActionType.THROWAGAIN || state.getAction().getActionType() == ActionType.ENDTURN || state.getAction().getActionType() == ActionType.START)) {
                         Tile loc = ((MoveAction) action).getTile();    
                         //player.getPosition().setOccupied(false);  
                         player.setPosition(loc); 
@@ -247,7 +247,7 @@ public final class GameController {
                     if(gui != null && !player.isAi()){
                         gui.actionResponse(action);
                     }
-                    if (state.getAction().actionType == ActionType.SHOWCARDS) {
+                    if (state.getAction().getActionType() == ActionType.SHOWCARDS) {
 
                     }
                     actionLog.add(action);
@@ -259,7 +259,7 @@ public final class GameController {
                     }
                     else{
                     replyToShowCards((ShowCardsAction)action);}
-                    if (state.getAction().actionType != ActionType.ACCUSATION) {
+                    if (state.getAction().getActionType() != ActionType.ACCUSATION) {
 
                     }
                     actionLog.add(action);
@@ -273,8 +273,8 @@ public final class GameController {
 
                     break;
                 case STARTTURN:
-                    System.out.println("    CASE STARTTURN "+player.getId() + " FROM: "+state.getAction().actionType);
-                    if (state.getAction().actionType == ActionType.ENDTURN || state.getAction().actionType == ActionType.EXTRATURN || state.getAction().actionType == ActionType.START&&state.isRunning()) {
+                    System.out.println("    CASE STARTTURN "+player.getId() + " FROM: "+state.getAction().getActionType());
+                    if (state.getAction().getActionType() == ActionType.ENDTURN || state.getAction().getActionType() == ActionType.EXTRATURN || state.getAction().getActionType() == ActionType.START&&state.isRunning()) {
                         //System.out.println("b"+player.getId());
                         //state.nextTurn(player.getId());
                         //System.out.println("a"+player.getId());
@@ -290,8 +290,8 @@ public final class GameController {
                     }
                     break;
                 case SUGGEST:
-                    System.out.println("    CASE SUGGEST "+player.getId() + " FROM: "+state.getAction().actionType);
-                    if (!(state.getAction().actionType == ActionType.SUGGEST || state.getAction().actionType == ActionType.ACCUSATION)) {
+                    System.out.println("    CASE SUGGEST "+player.getId() + " FROM: "+state.getAction().getActionType());
+                    if (!(state.getAction().getActionType() == ActionType.SUGGEST || state.getAction().getActionType() == ActionType.ACCUSATION)) {
                         if (action.result){
 
                             try {
@@ -420,19 +420,7 @@ public final class GameController {
     private void endGame() {
         state.endGame();
         if (gui!=null){
-            gui.gameOver(null);
-        } 
-    }
-    
-    /**
-     * Terminates the game instance , tells the gui the game is over, with a winner
-     * @param winner the Player who won the game
-     */
-    private void endGame(Player winner) {
-        this.winner = winner;
-        state.endGame();
-        if (gui!=null){
-            gui.gameOver(winner);
+            gui.gameOver();
         } 
     }
     
@@ -727,7 +715,7 @@ public final class GameController {
     private void getSpecial(Tile loc) {
         IntrigueCard card = ((SpecialTile) loc).getIntrigue(player);
         try{
-            switch (card.cardType) {
+            switch (card.getCardType()) {
                 case AVOIDSUGGESTION:
                     //handled by suggestion
                     break;
@@ -890,10 +878,14 @@ public final class GameController {
         } catch (UnknownActionException  | TileOccupiedException ex) {
             Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
         }
-    
-    
     }
     
-    
+    /**
+     * Gets the list of weapon cards
+     * @return List of WeaponCard
+     */
+    public List<WeaponCard> getWeaponCards() {
+        return weaponCards;
+    }
     
 }

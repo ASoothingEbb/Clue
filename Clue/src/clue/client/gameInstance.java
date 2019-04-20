@@ -14,6 +14,7 @@ import clue.action.SuggestAction;
 import clue.action.UnknownActionException;
 import clue.card.Card;
 import clue.card.CardType;
+import clue.card.WeaponCard;
 import clue.player.Player;
 import clue.tile.NoSuchRoomException;
 import clue.tile.Room;
@@ -84,6 +85,7 @@ public class gameInstance {
    
     private PlayerSprite currentPlayer;
     private PlayerSprite[] playerSprites;
+    private WeaponSprite[] weaponSprites;
     
     private HashMap<String, String> ImagePathMap = new HashMap<>();
     private HashMap<String, String> CardNameMap = new HashMap<>();
@@ -242,9 +244,9 @@ public class gameInstance {
                 board[coords[1]][coords[0]].getChildren().add(doorSprite);
             });
         }
-
- 
+        
         spawnPlayers(board);
+        spawnWeapons(board);
         
         rolled = false;
         return root;
@@ -293,24 +295,39 @@ public class gameInstance {
         List<Player> players = gameInterface.getPlayers();
         playerSprites = new PlayerSprite[players.size()];
         for(int i = players.size()-1; i>= 0; i--) {
-            Player player = players.get(i);
+            int x = players.get(i).getDrawX();
+            int y = players.get(i).getDrawY();
 
-            int x = player.getDrawX();
-            int y = player.getDrawY();
-            PlayerSprite playerSprite = new PlayerSprite(x, y, TokenPathMap.get("character" + player.getId()));
-
-            playerSprites[i] = playerSprite;
-            board[y][x].getChildren().add(playerSprite);
+            playerSprites[i] = new PlayerSprite(x, y, TokenPathMap.get("character" + players.get(i).getId()));
+            board[y][x].getChildren().add(playerSprites[i]);
         }
         currentPlayer = playerSprites[0];
     }
     
+    private void spawnWeapons(StackPane[][] board) {
+        List<WeaponCard> weapons = gameInterface.getWeaponCards();
+        System.out.println(weapons.size());
+        weaponSprites = new WeaponSprite[weapons.size()];
+        for (int i=0; i < weapons.size(); i++) {
+            int x = weapons.get(i).getDrawX();
+            int y = weapons.get(i).getDrawY();
+            weaponSprites[i] = new WeaponSprite(x, y, TokenPathMap.get("weapon" + weapons.get(i).getId()));
+            board[y][x].getChildren().add(weaponSprites[i]);
+        }
+    }
+    
     private void redrawPlayers() {
-        List<Player> players = gameInterface.getPlayers();
-        for (Player player: players) {
+        gameInterface.getPlayers().forEach((player) -> {
             PlayerSprite sprite = playerSprites[player.getId()];
             sprite.move(player.getDrawX(), player.getDrawY(), board, sprite);
-        }
+        });
+    }
+    
+    private void redrawWeapons() {
+        gameInterface.getWeaponCards().forEach((weapon) -> {
+            WeaponSprite sprite = weaponSprites[weapon.getId()];
+            sprite.move(weapon.getDrawX(), weapon.getDrawY(), board, sprite);
+        });
     }
     
    /**
@@ -387,8 +404,9 @@ public class gameInstance {
         }
         int x = 1;
         int y = 0;
+        cardsDisplay.getChildren().clear();
         for (Card card: gameInterface.getPlayer().getCards()) {
-            ImageView view = new ImageView(getImage(card.getId(), card.cardType));
+            ImageView view = new ImageView(getImage(card.getId(), card.getCardType()));
             cardsLayout.add(view, y, x);
             GridPane.setMargin(view, new Insets(0, 10, 10, 0));
             if (y == 2) {
@@ -541,7 +559,7 @@ public class gameInstance {
      * @param action 
      */
     public void actionResponse(Action action) {
-        switch (action.actionType) {
+        switch (action.getActionType()) {
             case SHOWCARDS:
                 System.out.println("[gameInstance.actionResponse] case SHOWCARDS ----");
                 endTurnSound.play();
@@ -552,6 +570,7 @@ public class gameInstance {
                 endTurnSound.play();
                 showCard(action);
                 redrawPlayers();
+                redrawWeapons();
                 for (Player player: gameInterface.getPlayers()) {
                     System.out.println("Player " + player.getId() + " " + player.getPosition());
                     System.out.println("Player " + player.getId() + " " + player.getDrawX() + " " +  player.getDrawY());
@@ -615,7 +634,7 @@ public class gameInstance {
         List<Card> murderCards = ((AccuseAction) action).getMurderCards();
         ImageView[] cards = new ImageView[3];
         for (int i=0; i < murderCards.size(); i++) {
-            cards[i] = new ImageView(getImage(murderCards.get(i).getId(), murderCards.get(i).cardType));
+            cards[i] = new ImageView(getImage(murderCards.get(i).getId(), murderCards.get(i).getCardType()));
         }
         accusationResultPrompt.setImage(cards);
         accusationResultPrompt.setOnCloseRequest(e -> {
@@ -633,7 +652,7 @@ public class gameInstance {
         String suggestee = CardNameMap.get("character" + ((ShowCardAction) action).getWhoShowedTheCard().getId());
         showCardPrompt = new Prompt(suggestee + " showed");
         showCardPrompt.setLabelTitle("Suggestion Response");
-        ImageView cardViewer = new ImageView(getImage(response.getCardToShow().getId(), response.getCardToShow().cardType));
+        ImageView cardViewer = new ImageView(getImage(response.getCardToShow().getId(), response.getCardToShow().getCardType()));
         showCardPrompt.setImage(cardViewer);
         showCardPrompt.setOnCloseRequest(e -> {
             showCardPrompt = null;
@@ -682,9 +701,9 @@ public class gameInstance {
                 
         for (Card card: cards) {
             final int cardId = card.getId();
-            final CardType cardType = card.cardType;
+            final CardType cardType = card.getCardType();
 
-            ImageView view = new ImageView(getImage(card.getId(), card.cardType));
+            ImageView view = new ImageView(getImage(card.getId(), card.getCardType()));
             view.setOnMouseClicked(e -> {
                 setSelectedCard(cardId, cardType, view);
             });
@@ -775,9 +794,17 @@ public class gameInstance {
         TokenPathMap.put("character3", "resources/characterToken/MrGreen.png");
         TokenPathMap.put("character4", "resources/characterToken/MrsPeacock.png");
         TokenPathMap.put("character5", "resources/characterToken/ProfessorPlum.png");
+        
+        TokenPathMap.put("weapon0", "resources/weaponToken/Candlestick.png");
+        TokenPathMap.put("weapon1", "resources/weaponToken/Dagger.png");
+        TokenPathMap.put("weapon2", "resources/weaponToken/LeadPipe.png");
+        TokenPathMap.put("weapon3", "resources/weaponToken/Revolver.png");
+        TokenPathMap.put("weapon4", "resources/weaponToken/Rope.png");
+        TokenPathMap.put("weapon5", "resources/weaponToken/Wrench.png");
     }
     
     /**
+     * .
      * Initialises the default names.
      */
     private void initDefaultNames() {
@@ -972,7 +999,7 @@ public class gameInstance {
         System.out.println("show history called");
         for (Action action: actionsToNotify) {
             StringBuilder message = new StringBuilder();     
-            switch (action.actionType) {
+            switch (action.getActionType()) {
                 case ACCUSATION:
                     int accuser = ((AccuseAction) action).getPlayer().getId();
                     final int[] cards = ((AccuseAction) action).getAccusationCards();
@@ -1031,6 +1058,7 @@ public class gameInstance {
         history.clear();
         switchToCurtain();
         redrawPlayers();
+        redrawWeapons();
         createCardsDisplay(cardsDisplay);
         showActionLog(actionsToNotify);
         //TODO
@@ -1046,7 +1074,7 @@ public class gameInstance {
      * Called by GameController when the game has finished, player is the winning player, player is null if there is no winner
      * @param player 
      */
-    public void gameOver(Player player) {
+    public void gameOver() {
         Prompt gameOverPrompt = new Prompt("No one was able to guess the murder cards");
         gameOverPrompt.setTitle("GAME OVER");
         gameOverPrompt.setOnCloseRequest(e -> {

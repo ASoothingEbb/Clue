@@ -20,7 +20,7 @@ public abstract class Action {
     /**
      * Provides access to the type of action being taken.
      */
-    public ActionType actionType;
+    protected ActionType actionType;
     /**
      * Stores whether or not the execute() method was permitted in the game rules.
      */
@@ -42,6 +42,9 @@ public abstract class Action {
         this.card = card;
     }
 
+    public ActionType getActionType(){
+        return actionType;
+    }
     /**
      * gets the Player object associated with this Action
      * @return the Player taking the action

@@ -130,7 +130,7 @@ public class GameControllerTest {
         System.out.println("getLastAction");
         Card card = new CardImpl();
         gc.move(0, 0);
-        assertEquals(ActionType.MOVE,gc.getLastAction().actionType);
+        assertEquals(ActionType.MOVE,gc.getLastAction().getActionType());
     }
 
     /**
@@ -393,7 +393,7 @@ public class GameControllerTest {
         expResult.add(gc.getLastAction());
         gc.endTurn();
         Queue<Action> result = gc.getActions();
-        assertEquals(expResult.element().actionType, result.element().actionType);
+        assertEquals(expResult.element().getActionType(), result.element().getActionType());
     }
 
     /**
