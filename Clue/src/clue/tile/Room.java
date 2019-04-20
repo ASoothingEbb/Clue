@@ -136,13 +136,53 @@ public class Room extends Tile{
      */
     public int[] assignLocation(){
         int [] location = locations.get(0);
-        if (nonOccupiedLocations.size() > 0){
-            int selected = 0;
-            location = nonOccupiedLocations.get(selected);
-            nonOccupiedLocations.remove(selected);
+        boolean assignedToMiddle = false;
+        if (nonOccupiedLocations.size() >= 9){
+            int xLow = Integer.MAX_VALUE;
+            int xHigh = 0;
+            int yLow = Integer.MAX_VALUE;
+            int yHigh = 0;
+            
+            //calculate the lowest and highest 
+            for (int[] loc : nonOccupiedLocations){
+                if (loc[0] > xHigh){
+                    xHigh = loc[0];
+                }
+                if (loc[0] < xLow){
+                    xLow = loc[0];
+                }
+                
+                if (loc[1] > yHigh){
+                    yHigh = loc[1];
+                }
+                if (loc[1] < yLow){
+                    yLow = loc[1];
+                }  
+            }
+            
+            
+            //select the first location that can fit within the 1 tile margin
+            for (int[] loc : nonOccupiedLocations){
+                if (loc[0] < xHigh && loc[0] > xLow && loc[1] > yLow && loc[1] < yHigh){
+                    location = loc;
+                    assignedToMiddle = true;
+                    break;
+                }
+            }
+            
+            
+            
+            nonOccupiedLocations.remove(location);    
+        }
+        if (!nonOccupiedLocations.isEmpty() && !assignedToMiddle){
+            location = nonOccupiedLocations.get(0);
+            nonOccupiedLocations.remove(location);   
         }
         
-        return location;
+        int[] result = new int[2];
+        result[0] = location[0];
+        result[1] = location[1];
+        return result;
 
     
     }

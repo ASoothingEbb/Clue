@@ -10,6 +10,7 @@ import clue.card.PersonCard;
 import clue.card.RoomCard;
 import clue.card.WeaponCard;
 import clue.client.gameInstance;
+import clue.player.AiAdvanced;
 import clue.player.Player;
 import java.util.ArrayList;
 
@@ -85,7 +86,7 @@ public class AccuseAction extends Action {
     @Override
     public void execute() {
         player.removeFromPlay();
-        if (!player.isAi()){
+        if (!(player instanceof AiAdvanced)){
             gui.actionResponse(this);
         }
     }

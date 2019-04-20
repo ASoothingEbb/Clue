@@ -40,7 +40,7 @@ public class TeleportAction extends Action {
     @Override
     public void execute() {
         player.removeIntrigue((TeleportIntrigue)card);
-        if (player.isAi()){
+        if (player instanceof AiAdvanced){
             ((AiAdvanced) player).respondToTeleport(this);
 
         }

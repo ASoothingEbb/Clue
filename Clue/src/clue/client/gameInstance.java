@@ -14,6 +14,7 @@ import clue.action.SuggestAction;
 import clue.action.UnknownActionException;
 import clue.card.Card;
 import clue.card.CardType;
+import clue.player.AiAdvanced;
 import clue.card.WeaponCard;
 import clue.player.Player;
 import clue.tile.NoSuchRoomException;
@@ -60,6 +61,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -202,9 +204,11 @@ public class gameInstance {
                             tileSprite.setColor(Color.rgb(222, 151,  29));
                         } else if (cell.contains("S")) {
                             tileSprite.setColor(Color.rgb(55, 136, 4));
+                        }else if (cell.contains("I")){
+                            tileSprite.setColor(Color.ALICEBLUE);
                         } else if (Integer.valueOf(cell) > 0) {
                             paintRoom(tileSprite, Integer.valueOf(cell));
-                        }
+                        } 
                     }
 
                     tilePane.getChildren().add(tileSprite);
@@ -252,33 +256,32 @@ public class gameInstance {
     private void paintRoom(Tile tile, int id){
         Random rand = new Random(Calendar.getInstance().getTimeInMillis());
         switch(id){
-            case 1:
-                tile.setColor(Color.CORAL);
-                tile.setMessage("LIBRARY");
+            case 1://Study
+                tile.setStyle("-fx-background-color: #696969;");
                 break;
-            case 2:
-                tile.setColor(Color.CRIMSON);
+            case 2://Hall
+                tile.setStyle("-fx-background-color: #42d4f4;");
                 break;
-            case 3:
-                tile.setColor(Color.DEEPPINK);
+            case 3://Lounge
+                tile.setStyle("-fx-background-color: #000075;");
                 break;
-            case 4:
-                tile.setColor(Color.CRIMSON);
+            case 4://Library
+                tile.setStyle("-fx-background-color: #f58231;");
                 break;
-            case 5:
-                tile.setColor(Color.SALMON);
+            case 5://Billiard Room
+                tile.setStyle("-fx-background-color: #911eb4;");
                 break;
-            case 6:
-                tile.setColor(Color.HONEYDEW);
+            case 6://Dining room
+                tile.setStyle("-fx-background-color: #800000;");
                 break;
-            case 7:
-                tile.setColor(Color.THISTLE);
+            case 7://Convervatory
+                tile.setStyle("-fx-background-color: #808000;");
                 break;
-            case 8:
-                tile.setColor(Color.POWDERBLUE);
+            case 8://Ballroom
+                tile.setStyle("-fx-background-color: #fffac8;");
                 break;
-            case 9:
-                tile.setColor(Color.WHITE);
+            case 9://Kitchen
+                tile.setStyle("-fx-background-color: #fabebe;");
                 break;
             default:
                 int r = rand.nextInt(255)+1;
@@ -495,6 +498,13 @@ public class gameInstance {
             }
         });
         
+        //Hbox player controlls
+        HBox topControls = new HBox();
+        Button roomKeys = new Button("Room Key");
+        roomKeys.setOnMouseClicked(e ->  openRoomKeyWindow());
+        topControls.getChildren().addAll(roomKeys, remainingMovesLabel);
+        
+        
         MenuItem endButton = new MenuItem("End Turn", avenirLarge);
         endButton.setOnMouseClicked(e -> {
             gameInterface.getPlayer().setNotes(notes);
@@ -502,7 +512,7 @@ public class gameInstance {
             endTurnSound.play();
         });
         
-        playerControlsLayout.getChildren().addAll(remainingMovesLabel, suggestionButton, accusationButton, rollButton, endButton);
+        playerControlsLayout.getChildren().addAll(topControls, suggestionButton, accusationButton, rollButton, endButton);
         
         return playerControlsLayout;
     }
@@ -568,7 +578,7 @@ public class gameInstance {
                     System.out.println("Player " + player.getId() + " " + player.getPosition());
                     System.out.println("Player " + player.getId() + " " + player.getDrawX() + " " +  player.getDrawY());
                 }
-                if (((ShowCardAction) action).getWhoShowedTheCard().isAi()) {
+                if (((ShowCardAction) action).getWhoShowedTheCard() instanceof AiAdvanced) {
                     showCardPrompt.show();
                 }
                 suggested = true;
@@ -1076,4 +1086,76 @@ public class gameInstance {
         });
         gameOverPrompt.showAndWait();
     }
+    
+    public void openRoomKeyWindow(){
+        Stage roomKeyStage = new Stage();
+        roomKeyStage.setTitle("Room Key Legend");
+        
+        HBox column = new HBox();
+        VBox colours = new VBox();
+        VBox legend = new VBox();
+        
+        for(int i= 0; i < 9; i++){
+            Label temp = new Label();
+            switch(i){
+                case 0:
+                    temp.setStyle("-fx-background-color: #696969;");
+                    break;
+                case 1:
+                    temp.setStyle("-fx-background-color: #42d4f4;");
+                    break;
+                case 2:
+                    temp.setStyle("-fx-background-color: #000075");
+                    break;
+                case 3:
+                    temp.setStyle("-fx-background-color: #f58231;");
+                    break;
+                case 4:
+                    temp.setStyle("-fx-background-color: #911eb4;");
+                    break;
+                case 5:
+                    temp.setStyle("-fx-background-color: #800000");
+                    break;
+                case 6:
+                    temp.setStyle("-fx-background-color: #808000");
+                    break;
+                case 7:
+                    temp.setStyle("-fx-background-color: #fffac8;");
+                    break;
+                case 8:
+                    temp.setStyle("-fx-background-color: #fabebe");
+                    break;
+                default:
+                    break;
+            }
+            temp.setMinSize(100, 20);
+            colours.getChildren().add(temp);
+            
+        }
+        Button goBack = new Button("Back");
+        goBack.setOnMouseClicked(e -> roomKeyStage.hide());
+        colours.getChildren().add(goBack);
+        
+        
+        Label study = new Label("Study"); 
+        Label hall = new Label("Hall"); 
+        Label lounge = new Label("Lounge"); 
+        Label library = new Label("Library"); 
+        Label billiardRoom = new Label("Billiard Room"); 
+        Label diningRoom = new Label("Dining Room"); 
+        Label conservatory = new Label("Conservatory"); 
+        Label ballRoom = new Label("Ball Room"); 
+        Label kitchen = new Label("Kitchen"); 
+        
+        legend.getChildren().addAll(study, hall, lounge, library, billiardRoom, diningRoom, conservatory, ballRoom, kitchen);
+        
+        column.getChildren().addAll(colours, legend);
+        
+        roomKeyStage.setScene(new Scene(column, 200, 220));
+        roomKeyStage.setResizable(false);
+        roomKeyStage.show();
+        
+        
+    }
+    
 }

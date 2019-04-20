@@ -46,7 +46,7 @@ public class ShowCardsAction extends Action{
      */
     @Override
     public void execute() {
-        if (player.isAi()){
+        if (player instanceof AiAdvanced){
             Card responseCard = ((AiAdvanced) player).respondToShowCards(cards);
             idOfCardToShow = responseCard.getId();
             typeOfCardToShow = responseCard.getCardType();
