@@ -9,7 +9,9 @@ import clue.GameController;
 import clue.MissingRoomDuringCreationException;
 import clue.NotEnoughPlayersException;
 import clue.action.Action;
+import clue.action.StartTurnAction;
 import clue.action.UnknownActionException;
+import clue.card.AvoidSuggestionIntrigue;
 import clue.card.Card;
 import clue.card.IntrigueCard;
 import clue.card.PersonCard;
@@ -17,6 +19,7 @@ import clue.tile.NoSuchRoomException;
 import clue.tile.NoSuchTileException;
 import clue.tile.Tile;
 import clue.tile.TileOccupiedException;
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -124,12 +127,10 @@ public class PlayerTest {
     @Test
     public void testGetMoves() {
         System.out.println("getMoves");
-        Player instance = null;
+        Player instance = new PlayerImpl(0, gc);
         int expResult = 0;
         int result = instance.getMoves();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -138,11 +139,10 @@ public class PlayerTest {
     @Test
     public void testSetMoves() {
         System.out.println("setMoves");
-        int moves = 0;
-        Player instance = null;
+        int moves = 10;
+        Player instance = new PlayerImpl(moves, gc);
         instance.setMoves(moves);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(moves,instance.getMoves());
     }
 
     /**
@@ -151,12 +151,12 @@ public class PlayerTest {
     @Test
     public void testAddIntrigue() {
         System.out.println("addIntrigue");
-        Player instance = null;
-        IntrigueCard expResult = null;
-        IntrigueCard result = instance.addIntrigue();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Player instance = new PlayerImpl(0, gc);
+        IntrigueCard expResult = new AvoidSuggestionIntrigue(0);
+        assertFalse(instance.hasIntrigue(expResult));
+        instance.addIntrigue(expResult);
+        assertTrue(instance.hasIntrigue(expResult));
+        
     }
 
     /**
@@ -165,12 +165,10 @@ public class PlayerTest {
     @Test
     public void testGetIntrigue() {
         System.out.println("getIntrigue");
-        Player instance = null;
-        List<IntrigueCard> expResult = null;
+        Player instance = new Player(0,gc);
+        List<IntrigueCard> expResult = new ArrayList<IntrigueCard>();
         List<IntrigueCard> result = instance.getIntrigue();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -179,12 +177,10 @@ public class PlayerTest {
     @Test
     public void testGetCards() {
         System.out.println("getCards");
-        Player instance = null;
-        List<Card> expResult = null;
+        Player instance = new Player(0,gc);
+        List<Card> expResult = new ArrayList<Card>();
         List<Card> result = instance.getCards();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -193,12 +189,10 @@ public class PlayerTest {
     @Test
     public void testGetLogPointer() {
         System.out.println("getLogPointer");
-        Player instance = null;
+        Player instance = new Player(0,gc);
         int expResult = 0;
         int result = instance.getLogPointer();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -207,38 +201,24 @@ public class PlayerTest {
     @Test
     public void testSetLogPointer() {
         System.out.println("setLogPointer");
-        int pointer = 0;
-        Player instance = null;
+        int pointer = 10;
+        Player instance = new Player(0,gc);
         instance.setLogPointer(pointer);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(pointer,instance.getLogPointer());
     }
 
     /**
-     * Test of getNotes method, of class Player.
+     * Test of getNotes and setNotes method, of class Player.
      */
     @Test
-    public void testGetNotes() {
+    public void testNotes() {
         System.out.println("getNotes");
-        Player instance = null;
-        String expResult = "";
+        Player instance = new Player(0,gc);
+        assertEquals("",instance.getNotes());
+        String expResult = "abcd";
+        instance.setNotes(expResult);
         String result = instance.getNotes();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of setNotes method, of class Player.
-     */
-    @Test
-    public void testSetNotes() {
-        System.out.println("setNotes");
-        String notes = "";
-        Player instance = null;
-        instance.setNotes(notes);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
 }
