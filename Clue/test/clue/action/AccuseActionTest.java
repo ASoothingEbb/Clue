@@ -63,7 +63,7 @@ public class AccuseActionTest {
         
         GameController game = new GameController(1,1,"resources/archersAvenueTiles.csv", "resources/archersAvenueDoors.csv");
         
-        Player player = new Player(1, game);
+        Player player = new Player(1);
         players.add(player);
         AccuseAction instance = new AccuseAction(player, person, room, weapon, true);
         instance.execute();

@@ -43,7 +43,7 @@ public class AiBasic extends Player{
     
     
     public AiBasic(int id, GameController gc) {
-        super(id, gc);
+        super(id);
         
         gameController = gc;
         rand = new Random(Calendar.getInstance().getTimeInMillis());

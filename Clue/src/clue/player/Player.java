@@ -39,8 +39,7 @@ public class Player {
      * @param id
      * @param gc
      */
-    public Player(int id, GameController gc) {
-        this.game = gc;
+    public Player(int id) {
         this.id = id;
         notes = "";
         active = true;
@@ -50,18 +49,18 @@ public class Player {
         isAi = false;
     }
 
-    /**
-     * Creates a new Player
-     * @deprecated for test use only - please instantiate a GameController
-     * @param id 
-     */
-    public Player(int id){
-        this.id = id;
-        notes = "";
-        active = true;
-        cards = new ArrayList();
-        intrigues = new ArrayList();
-    }
+//    /**
+//     * Creates a new Player
+//     * @deprecated for test use only - please instantiate a GameController
+//     * @param id 
+//     */
+//    public Player(int id){
+//        this.id = id;
+//        notes = "";
+//        active = true;
+//        cards = new ArrayList();
+//        intrigues = new ArrayList();
+//    }
 
     public void onUpdate() {
     }

@@ -19,7 +19,7 @@ import java.util.List;
 public class AIPlayer extends Player {
 
     public AIPlayer(int id, GameController gc) {
-        super(id, gc);
+        super(id);
     }
 
     /**

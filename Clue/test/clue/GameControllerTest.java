@@ -425,8 +425,8 @@ public class GameControllerTest {
     public void testGetPlayers() {
         System.out.println("getPlayers");
         List<Player> expResult = new ArrayList();
-        expResult.add(new Player(0,gc));
-        expResult.add(new AIPlayer(1,gc));
+        expResult.add(new Player(0));
+        expResult.add(new Player(1));
         List<Player> result = gc.getPlayers();
         for(Player p: expResult){
             assertTrue(gc.getPlayer(p.getId()).isActive());
