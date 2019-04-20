@@ -122,7 +122,7 @@ public class SuggestAction extends Action {
     public String toString() {
         String cards = "";
         for(Card c : this.cards){
-            cards += c.cardType+ ":" + c.getId() + " ";
+            cards += c.getCardType()+ ":" + c.getId() + " ";
         }
         return super.toString() + cards;
     }

@@ -161,7 +161,7 @@ public class AiAdvanced extends Player{
      */
     private void addCardToKnownCards(Card card){
         System.out.println("[AiAdvanced.addCardToKnownCards] id: "+id);
-        if (null != card.cardType)switch (card.cardType) {
+        if (null != card.getCardType())switch (card.getCardType()) {
             case PERSON:
                 knownCards.get(0).add(card.getId());
                 break;

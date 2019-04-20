@@ -49,7 +49,7 @@ public class ShowCardsAction extends Action{
         if (player.isAi()){
             Card responseCard = ((AiAdvanced) player).respondToShowCards(cards);
             idOfCardToShow = responseCard.getId();
-            typeOfCardToShow = responseCard.cardType;
+            typeOfCardToShow = responseCard.getCardType();
         }
     }
     

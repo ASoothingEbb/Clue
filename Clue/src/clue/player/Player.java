@@ -229,7 +229,7 @@ public class Player {
      */
     public boolean hasIntrigue(CardType type) {
         for (IntrigueCard intrigue: intrigues){
-            if (intrigue.cardType == type){
+            if (intrigue.getCardType() == type){
                 return true;
             }
         }
@@ -244,7 +244,7 @@ public class Player {
         IntrigueCard toRemove = null;
         
         for (IntrigueCard intrigue: intrigues){
-            if (intrigue.cardType == type){
+            if (intrigue.getCardType() == type){
                 toRemove = intrigue;
                 break;
             }
