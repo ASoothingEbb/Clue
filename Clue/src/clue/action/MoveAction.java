@@ -30,8 +30,8 @@ public class MoveAction extends Action {
      *
      * 
      * @param t destination Tile
-     * @param boardWidth
-     * @param boardHeight
+     * @param boardWidth the width of the board
+     * @param boardHeight the hight of the board
      * @param player Player to move
      */
     public MoveAction(Player player, Tile t, int boardWidth, int boardHeight) {

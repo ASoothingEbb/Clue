@@ -67,7 +67,7 @@ public final class GameController {
      * @throws clue.tile.NoSuchTileException thrown when a door in doorPath csv points to a tile that was not found
      * @throws clue.MissingRoomDuringCreationException thrown when the tilePath csv is missing a room, if the max room id is N, you must have 1-N in the csv
      * @throws clue.GameController.TooManyPlayersException thrown when player count exceeds 6 or the number of starting locations
-     * @throws clue.NotEnoughPlayersException
+     * @throws clue.NotEnoughPlayersException thrown when game is created with less then 2 players
      */
     public GameController(int human, int ai, String tilePath, String doorPath) throws NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, TooManyPlayersException, NotEnoughPlayersException {
         //TODO
@@ -146,7 +146,7 @@ public final class GameController {
 
     /** 
      * Add gameInstance reference to backend so that it can make GUI calls
-     * @param gui 
+     * @param gui the GUI to make the call to
      */
     public void setGameInstance(gameInstance gui){
         this.gui = gui;
@@ -156,8 +156,8 @@ public final class GameController {
      * Executes a given action.
      *
      * @param action the action to be executed
-     * @throws UnknownActionException
-     * @throws clue.tile.TileOccupiedException
+     * @throws UnknownActionException thrown when it was given an action that it didn't know how to handle
+     * @throws clue.tile.TileOccupiedException thrown when a move attempt was unsuccessful because the target tile was full
      */
     public void performAction(Action action) throws UnknownActionException, TileOccupiedException {
         
@@ -524,7 +524,7 @@ public final class GameController {
      * Attempts to move the player to the target tile
      *
      * @param target the target tile to go to
-     * @return 
+     * @return true if move was successful, false otherwise
      * @throws clue.tile.TileOccupiedException thrown when the target tile of a move is occupied
      */
     public boolean move(Tile target) throws TileOccupiedException {
@@ -544,11 +544,11 @@ public final class GameController {
     
     /**
      * Try to move current player to tile at x,y
-     * @param x
-     * @param y
+     * @param x the x coordinate of the target tile
+     * @param y the y coordinate of the target tile
      * @return true if move was successful, false otherwise
      * @throws NoSuchRoomException thrown when target x = -1 and y = room id but room with that room id wasnet found
-     * @throws TileOccupiedException 
+     * @throws TileOccupiedException when the target tile of a move is occupied
      */
     public boolean move(int x, int y) throws NoSuchRoomException, TileOccupiedException{
         Tile target = getTile(x,y);
@@ -864,7 +864,7 @@ public final class GameController {
     
     /**
      * Is called by gui/ai player when they respond to a show cards action
-     * @param action 
+     * @param action the action the gui is responding to, the action also contains the gui response (formulated from the player decision)
      */
     public void replyToShowCards (ShowCardsAction action){
         System.out.println("[GameController.showCard]");

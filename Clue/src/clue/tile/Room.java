@@ -31,8 +31,6 @@ public class Room extends Tile{
     }
     /**
      * Creates a new Room
-     * @param x
-     * @param y
      */
     public Room(){
         super(-1,-1);
@@ -92,7 +90,7 @@ public class Room extends Tile{
     
     /**
      * Returns the physical locations (x,y coordinates) of the room
-     * @return 
+     * @return returns the list of (x,y) coordinate locations
      */
     public ArrayList<int[]> getLocations(){
         return locations;
@@ -113,6 +111,7 @@ public class Room extends Tile{
     /**
      * Placeholder method from legacy version, currently still here so it is not re implemented without notice to mw434
      * 
+     * @param card the room card associated with the room
      */
     final public void setCard(RoomCard card){
         System.err.println("[Room.setCard] //DO NOT IMPLEMENT, IF YOU MUST SPEAK TO MW434"); 
@@ -132,7 +131,7 @@ public class Room extends Tile{
     
     /**
      * Gives a location resource to the caller
-     * @return 
+     * @return a (x,y) location for the token to be drawn at
      */
     public int[] assignLocation(){
         int [] location = locations.get(0);

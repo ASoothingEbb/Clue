@@ -22,8 +22,7 @@ public class ThrowAgainAction extends Action {
      * Creates a new ThrowAgainAction
      *
      * @param player the Player to roll again
-     * @param card
-     * @param gui
+     * @param card the intrigue card
      */
     public ThrowAgainAction(Player player, ThrowAgainIntrigue card) {
         super(player, card);

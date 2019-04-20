@@ -40,13 +40,4 @@ public class SpecialTile extends Tile {
         return player.addIntrigue();
     }
     
-    /**
-     * @deprecated this is a test method
-     * @param player
-     * @param bool
-     * @return 
-     */
-    public IntrigueCard getIntrigue(Player player,boolean bool){
-        return player.addIntrigue(new AvoidSuggestionIntrigue(0));
-    }
 }
