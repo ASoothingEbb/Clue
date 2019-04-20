@@ -10,6 +10,7 @@ import clue.card.PersonCard;
 import clue.card.RoomCard;
 import clue.card.WeaponCard;
 import clue.client.gameInstance;
+import clue.player.AiAdvanced;
 import clue.player.Player;
 import java.util.ArrayList;
 
@@ -34,7 +35,7 @@ public class AccuseAction extends Action {
      * @param murderPerson the person who conducted the murder
      * @param murderRoom the room which the murder took place
      * @param murderWeapon the weapon used in the murder
-     * @param gui
+     * @param gui the gameInstance (GUI) that may need to be prompted
      * 
      */
     public AccuseAction(Player player, PersonCard person, RoomCard room, WeaponCard weapon,
@@ -85,7 +86,7 @@ public class AccuseAction extends Action {
     @Override
     public void execute() {
         player.removeFromPlay();
-        if (!player.isAi()){
+        if (!(player instanceof AiAdvanced)){
             gui.actionResponse(this);
         }
     }

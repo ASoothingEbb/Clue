@@ -7,6 +7,7 @@ package clue.action;
 
 import clue.card.AvoidSuggestionIntrigue;
 import clue.client.gameInstance;
+import clue.player.AiAdvanced;
 import clue.player.Player;
 
 /**
@@ -39,6 +40,7 @@ public class AvoidSuggestionAction extends Action {
      *
      * @param player the Player to roll again
      * @param card the AvoidSuggestionIntrigue associated with this action
+     * @param gui the gameInstance GUI that may need to be prompted
      * 
      */
     public AvoidSuggestionAction(Player player, AvoidSuggestionIntrigue card, gameInstance gui) {
@@ -53,7 +55,7 @@ public class AvoidSuggestionAction extends Action {
     @Override
     public void execute() {
         player.removeIntrigue((AvoidSuggestionIntrigue)card);
-        if (player.isAi()){
+        if (player instanceof AiAdvanced){
             //((AiAdvanced) player).notifyAvoidSuggestion();
 
         }

@@ -14,6 +14,7 @@ import clue.action.SuggestAction;
 import clue.action.UnknownActionException;
 import clue.card.Card;
 import clue.card.CardType;
+import clue.player.AiAdvanced;
 import clue.card.WeaponCard;
 import clue.player.Player;
 import clue.tile.NoSuchRoomException;
@@ -429,6 +430,8 @@ public class gameInstance {
         cardsDisplay.getChildren().clear();
         for (Card card: gameInterface.getPlayer().getCards()) {
             ImageView view = new ImageView(getImage(card.getId(), card.getCardType()));
+            view.setFitHeight(230);
+            view.setFitWidth(150);
             cardsLayout.add(view, y, x);
             GridPane.setMargin(view, new Insets(0, 10, 10, 0));
             if (y == 2) {
@@ -601,7 +604,7 @@ public class gameInstance {
                     System.out.println("Player " + player.getId() + " " + player.getPosition());
                     System.out.println("Player " + player.getId() + " " + player.getDrawX() + " " +  player.getDrawY());
                 }
-                if (((ShowCardAction) action).getWhoShowedTheCard().isAi()) {
+                if (((ShowCardAction) action).getWhoShowedTheCard() instanceof AiAdvanced) {
                     showCardPrompt.show();
                 }
                 suggested = true;
@@ -828,7 +831,7 @@ public class gameInstance {
         ImagePathMap.put("character0", "resources/Character/MissScarlet.png");
         ImagePathMap.put("character1", "resources/Character/ColonelMustard.png");
         ImagePathMap.put("character2", "resources/Character/MrsWhite.png");
-        ImagePathMap.put("character3", "resources/Character/MrGreen.png");
+        ImagePathMap.put("character3", "resources/Character/ReverendGreen.png");
         ImagePathMap.put("character4", "resources/Character/MrsPeacock.png");
         ImagePathMap.put("character5", "resources/Character/ProfessorPlum.png");
         
@@ -837,7 +840,7 @@ public class gameInstance {
         ImagePathMap.put("weapon2","resources/Weapon/LeadPipe.png");
         ImagePathMap.put("weapon3","resources/Weapon/Revolver.png");
         ImagePathMap.put("weapon4","resources/Weapon/Rope.png");
-        ImagePathMap.put("weapon5","resources/Weapon/Wrench.png");
+        ImagePathMap.put("weapon5","resources/Weapon/Spanner.png");
         
         ImagePathMap.put("room0","resources/Room/Study.png");
         ImagePathMap.put("room1","resources/Room/Hall.png");
@@ -858,7 +861,7 @@ public class gameInstance {
         TokenPathMap.put("character0", "resources/characterToken/MissScarlet.png");
         TokenPathMap.put("character1", "resources/characterToken/ColonelMustard.png");
         TokenPathMap.put("character2", "resources/characterToken/MrsWhite.png");
-        TokenPathMap.put("character3", "resources/characterToken/MrGreen.png");
+        TokenPathMap.put("character3", "resources/characterToken/ReverendGreen.png");
         TokenPathMap.put("character4", "resources/characterToken/MrsPeacock.png");
         TokenPathMap.put("character5", "resources/characterToken/ProfessorPlum.png");
         
@@ -867,7 +870,7 @@ public class gameInstance {
         TokenPathMap.put("weapon2", "resources/weaponToken/LeadPipe.png");
         TokenPathMap.put("weapon3", "resources/weaponToken/Revolver.png");
         TokenPathMap.put("weapon4", "resources/weaponToken/Rope.png");
-        TokenPathMap.put("weapon5", "resources/weaponToken/Wrench.png");
+        TokenPathMap.put("weapon5", "resources/weaponToken/Spanner.png");
     }
     
     /**
@@ -886,7 +889,7 @@ public class gameInstance {
         CardNameMap.put("weapon2", "Lead Pipe");
         CardNameMap.put("weapon3", "Revolver");
         CardNameMap.put("weapon4", "Rope");
-        CardNameMap.put("weapon5", "Wrench");
+        CardNameMap.put("weapon5", "Spanner");
         
         CardNameMap.put("room0", "Study");
         CardNameMap.put("room1", "Hall");

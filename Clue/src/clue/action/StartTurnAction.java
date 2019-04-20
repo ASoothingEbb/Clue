@@ -26,7 +26,8 @@ public class StartTurnAction extends Action{
     @Override
     public void execute() {
         super.execute(); //To change body of generated methods, choose Tools | Templates.
-        if (player.isAi()){
+        if (player instanceof AiAdvanced){
+            System.out.println("--------------------------prompting ai for player+"+player.getId());
             ((AiAdvanced) player).respondToStartTurn();
         }
         //TODO prompt GUI

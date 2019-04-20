@@ -23,7 +23,6 @@ public class ShowCardAction extends Action {
      * Creates a new ShowCardAction
      * @param player the Player to show the Card to
      * @param card the Card to be shown.
-     * @param gui the gameInstance to be prompted
      * @param whoShowedTheCard the player who revealed the card
      */
     public ShowCardAction(Player player,Card card, Player whoShowedTheCard) {
@@ -53,7 +52,7 @@ public class ShowCardAction extends Action {
  */
     @Override
     public void execute() {
-        if (player.isAi()){
+        if (player instanceof AiAdvanced){
             ((AiAdvanced) player).revealCard(card, whoShowedTheCard);
         }
     }
