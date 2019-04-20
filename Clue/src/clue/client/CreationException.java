@@ -12,6 +12,10 @@ package clue.client;
 public class CreationException extends Exception {
     public String message;
     
+    /**
+     * Creates a Creation Exception
+     * @param message the exception message
+     */
     public CreationException(String message) {
         super(message);
         this.message = message;

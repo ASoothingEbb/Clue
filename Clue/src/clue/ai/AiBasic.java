@@ -5,27 +5,10 @@
  */
 package clue.ai;
 
-import clue.BoardMappings;
 import clue.GameController;
-import clue.action.AccuseAction;
-import clue.action.Action;
-import clue.action.EndTurnAction;
-import clue.action.ShowCardAction;
-import clue.action.ShowCardsAction;
-import clue.action.UnknownActionException;
-import clue.card.Card;
-import clue.card.PersonCard;
-import clue.card.RoomCard;
-import clue.card.WeaponCard;
 import clue.player.Player;
-import clue.tile.Tile;
-import clue.tile.TileOccupiedException;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *

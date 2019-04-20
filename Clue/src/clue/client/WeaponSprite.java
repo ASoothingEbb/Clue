@@ -22,6 +22,12 @@ public class WeaponSprite extends Label {
     private int positionX;
     private int positionY;    
     
+    /**
+     * Creates a WeaponSprite
+     * @param x the x coordinate where the weapon sprite is
+     * @param y the y coordinate where the weapon sprite is
+     * @param sprite the path to the image of the weapon sprite
+     */
     public WeaponSprite(int x, int y, String sprite) {
         this.positionX = x;
         this.positionY = y;
@@ -39,6 +45,13 @@ public class WeaponSprite extends Label {
         setGraphic(weapon);
     }
     
+    /**
+     * Changes where the weapon sprite is being rendered.
+     * @param x the new x coordinate of where to render the weapon sprite
+     * @param y the new x coordinate of where to render the weapon sprite
+     * @param board the board where the weapon sprite is 
+     * @param weapon the weapon sprite to be moved
+     */
     public void move(int x, int y, StackPane[][] board, WeaponSprite weapon) {
         board[positionY][positionX].getChildren().remove(weapon);
         board[y][x].getChildren().add(weapon);

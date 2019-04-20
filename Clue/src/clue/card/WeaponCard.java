@@ -16,6 +16,10 @@ public class WeaponCard extends Card{
     private Room position;
     private int[] drawnLocation;
     
+    /**
+     * Creates a Weapon Card
+     * @param id the id of the weapon card
+     */
     public WeaponCard(int id) {
         super(id);
         cardType = CardType.WEAPON;

@@ -59,6 +59,10 @@ public class Door {
         return yTile;
     }
     
+    /**
+     * gets the direction the door is facing.
+     * @return up, down, left or right
+     */
     public String getDir(){
         return dir;
     }

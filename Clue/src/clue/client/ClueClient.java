@@ -9,23 +9,18 @@ import clue.GameController;
 import clue.GameController.TooManyPlayersException;
 import clue.MissingRoomDuringCreationException;
 import clue.NotEnoughPlayersException;
-import clue.action.UnknownActionException;
 import clue.tile.NoSuchRoomException;
 import clue.tile.NoSuchTileException;
-import clue.tile.TileOccupiedException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -34,12 +29,10 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -87,6 +80,12 @@ public class ClueClient extends Application {
     private final Background blackFill = new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY));
     private final Background greenFill = new Background(new BackgroundFill(Color.rgb(7, 80, 2), CornerRadii.EMPTY, Insets.EMPTY));
     
+    
+    /**
+     * 
+     * @param primaryStage
+     * @throws FileNotFoundException 
+     */
     @Override
     public void start(Stage primaryStage) throws FileNotFoundException {
         primaryStage.setTitle("Clue");
@@ -171,6 +170,11 @@ public class ClueClient extends Application {
         editor.startEditor(stage);
     }
     
+    
+    /**
+     * 
+     * @param stage 
+     */
     private void startGameScene(Stage stage) {
         numberOfPlayers = 1;
         
@@ -334,6 +338,11 @@ public class ClueClient extends Application {
         stage.setScene(scene);
     }
     
+    /**
+     * 
+     * @param increase
+     * @param label 
+     */
     private void updateNumberOfAIs(boolean increase, MenuItem label) {
         if (increase) {
             numberOfAIs++;
@@ -343,6 +352,11 @@ public class ClueClient extends Application {
         label.setText(String.valueOf(numberOfAIs));
     }
     
+    /**
+     * 
+     * @param increase
+     * @param label 
+     */
     private void updateNumberOfPlayers(boolean increase, MenuItem label) {
         if (increase) {
             numberOfPlayers++;
@@ -624,6 +638,10 @@ public class ClueClient extends Application {
         return layout;
     }
     
+    /**
+     * 
+     * @return 
+     */
     private boolean saveProperties() {
         try (OutputStream output = new FileOutputStream("./resources/config.properties")) {
             Properties prop = new Properties();

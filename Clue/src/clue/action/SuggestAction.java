@@ -128,10 +128,18 @@ public class SuggestAction extends Action {
         return super.toString() + cards;
     }
 
+    /**
+     * Gets the person who needs to show their card.
+     * @return player who needs to show card
+     */
     public Player getShower(){
         return show;
     }
     
+    /**
+     * Gets the cards which the player has which match the cards that were suggested.
+     * @return list of cards of the player that match the suggested 
+     */
     public List<Card> getFoundCards(){
         return foundCards;
     }

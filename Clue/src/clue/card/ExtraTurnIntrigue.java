@@ -5,8 +5,6 @@
  */
 package clue.card;
 
-import clue.action.Action;
-
 /**
  * Represents an IntrigueCard that allows players to take an extra turn.
  *
@@ -14,6 +12,10 @@ import clue.action.Action;
  */
 public class ExtraTurnIntrigue extends IntrigueCard {
 
+    /**
+     * Creates an ExtraTurnIntrigue Card.
+     * @param id the id of the card
+     */
     public ExtraTurnIntrigue(int id) {
         super(id);
         cardType = CardType.EXTRATURN;

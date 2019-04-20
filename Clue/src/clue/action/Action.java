@@ -37,11 +37,19 @@ public abstract class Action {
         this.actionType = ActionType.DEFAULT;
         this.player = player;
     }
+    /**
+     * Creates an instance of the Action
+     * @param player the player taking the action
+     * @param card the card/action type.
+     */
     public Action(Player player, Card card){
         this.player = player;
         this.card = card;
     }
 
+    /**
+     * @return the action type 
+     */
     public ActionType getActionType(){
         return actionType;
     }
@@ -66,6 +74,9 @@ public abstract class Action {
         return actionType + ","+ player.getId() + "," +  result;
     }
     
+    /**
+     * @return the card object
+     */
     public Card getCard(){
         return card;
     }

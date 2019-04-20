@@ -24,33 +24,38 @@ public class Tile extends Label {
     
     private PlayerSprite player;
     
+    /**
+     * Creates a Tile as a label
+     * @param size the size of the tile in pixels
+     */
     public Tile(int size) {
         setPrefWidth(size);
         setPrefHeight(size);
-        
-        
-        
-        //setStroke(Color.BLACK);
-        //setStrokeType(StrokeType.INSIDE);
-        //setFill(Color.BROWN);
-        
-        //setFill(Color.rgb(200, 200, 200, 0.0));   
+
     }
     
+    /**
+     * Sets a player in this tile.
+     * @param player 
+     */
     public void setPlayer(PlayerSprite player) {
         this.player = player;
     }
     
+    /**
+     * Removes a player from this tile
+     * @param player the player  to remove from the tile
+     */
     public void removePlayer(PlayerSprite player) {
         this.player = null;
     }
     
+    /**
+     * Sets the colour of the tile
+     * @param color the colour to change the tile to
+     */
     public void setColor(Color color) {
         setBackground(new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY)));
     }
 
-  
-    public void setMessage(String s){
-        this.setText(s);
-    }
 }

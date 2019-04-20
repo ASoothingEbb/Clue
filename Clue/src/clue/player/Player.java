@@ -75,10 +75,18 @@ public class Player {
         return this.id;
     }
 
+    /**
+     * gets how many tiles this player can move
+     * @return number of moves 
+     */
     public int getMoves() {
         return movements;
     }
 
+    /**
+     * Sets the amount of tiles this player can move
+     * @param moves the number of moves
+     */
     public void setMoves(int moves) {
         movements = moves;
     }
