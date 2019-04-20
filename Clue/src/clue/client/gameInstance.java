@@ -309,7 +309,7 @@ public class gameInstance {
         for (int i=0; i < weapons.size(); i++) {
             int x = weapons.get(i).getDrawX();
             int y = weapons.get(i).getDrawY();
-            weaponSprites[i] = new WeaponSprite(x, y, CardNameMap.get("weapon" + weapons.get(i).getId()).substring(0,1));
+            weaponSprites[i] = new WeaponSprite(x, y, TokenPathMap.get("weapon" + weapons.get(i).getId()));
             board[y][x].getChildren().add(weaponSprites[i]);
         }
     }
@@ -784,6 +784,13 @@ public class gameInstance {
         TokenPathMap.put("character3", "resources/characterToken/MrGreen.png");
         TokenPathMap.put("character4", "resources/characterToken/MrsPeacock.png");
         TokenPathMap.put("character5", "resources/characterToken/ProfessorPlum.png");
+        
+        TokenPathMap.put("weapon0", "resources/weaponToken/Candlestick.png");
+        TokenPathMap.put("weapon1", "resources/weaponToken/Dagger.png");
+        TokenPathMap.put("weapon2", "resources/weaponToken/LeadPipe.png");
+        TokenPathMap.put("weapon3", "resources/weaponToken/Revolver.png");
+        TokenPathMap.put("weapon4", "resources/weaponToken/Rope.png");
+        TokenPathMap.put("weapon5", "resources/weaponToken/Wrench.png");
     }
     
     /**
