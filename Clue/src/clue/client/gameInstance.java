@@ -1051,18 +1051,6 @@ public class gameInstance {
         gameStage.setScene(uiScene);
     }
     
-    /**
-     * Each time this is called, one future ShowCardsAction will be queued, the queue will be dequeued once the GUI received a StartTurnAction
-     * Switches the current scene to the uiScene and fade animation plays.
-     */
-    public void aiShowCardsRequests(){
-        System.out.println("--------------------------------------------------------------------------------------------------------------");
-        //throw new UnsupportedOperationException("not yet implemented");
-        
-        //TODO
-        //if this is called, the next recived showCardsAction (through actionResponse) should be added to a queue 
-        //when you recived a StartTurnAction (through actionResponse) , if the queue is not empty, first display the queued ShowCardsActions, then process the StartTurnAction
-    }
     
     
     /**
