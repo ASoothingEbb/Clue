@@ -86,7 +86,7 @@ public final class GameController {
 
         //initalise all the players
         for (int i = 0; i < human; i++) {
-            players.add(new Player(i));
+            players.add(new Player(i, this));
         }
         for (int i = human; i < human + ai; i++) {
             players.add(new AiAdvanced(i, this, getBoardWidth(), getBoardHeight()));
@@ -122,7 +122,7 @@ public final class GameController {
         Player nonActive;
         
         while (players.size() < 6){
-            nonActive = new Player(players.size());
+            nonActive = new Player(players.size(), this);
             nonActive.removeFromPlay();
             nonActive.setPosition(startingTiles.poll());
             players.add(nonActive);

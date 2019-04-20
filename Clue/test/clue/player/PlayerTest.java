@@ -137,7 +137,7 @@ public class PlayerTest {
     public class PlayerImpl extends Player {
 
         public PlayerImpl(int id, GameController gc) {
-            super(id);
+            super(id, gc);
         }
         
     }
