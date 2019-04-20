@@ -51,7 +51,6 @@ public class AiAdvanced extends Player{
     
     public AiAdvanced(int id, GameController gc ,int width, int height){
         super(id, gc);
-        isAi();
         this.boardWidth = width;
         this.boardHeight = height;
         this.id = id;
