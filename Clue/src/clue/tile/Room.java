@@ -136,6 +136,7 @@ public class Room extends Tile{
      */
     public int[] assignLocation(){
         int [] location = locations.get(0);
+        boolean assignedToMiddle = false;
         if (nonOccupiedLocations.size() >= 9){
             int xLow = Integer.MAX_VALUE;
             int xHigh = 0;
@@ -164,15 +165,20 @@ public class Room extends Tile{
             for (int[] loc : nonOccupiedLocations){
                 if (loc[0] < xHigh && loc[0] > xLow && loc[1] > yLow && loc[1] < yHigh){
                     location = loc;
+                    assignedToMiddle = true;
                     break;
                 }
             }
             
             
             
-            
+            nonOccupiedLocations.remove(location);    
         }
-        nonOccupiedLocations.remove(location);
+        if (!nonOccupiedLocations.isEmpty() && !assignedToMiddle){
+            location = nonOccupiedLocations.get(0);
+            nonOccupiedLocations.remove(location);   
+        }
+        
         int[] result = new int[2];
         result[0] = location[0];
         result[1] = location[1];
