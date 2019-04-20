@@ -138,6 +138,10 @@ public class Tile {
         return res;
     }
     
+    /**
+     * Gets the x coordinate of this tile
+     * @return the x coordinate
+     */
     public int getX(){
         return x;
     }
@@ -156,8 +160,6 @@ public class Tile {
     public List<Tile> getAdjacent(){
         return adjacentTiles;
     }
-    
-
     
     /**
      * gets the special flag from the tile

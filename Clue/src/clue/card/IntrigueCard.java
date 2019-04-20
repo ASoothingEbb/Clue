@@ -5,8 +5,6 @@
  */
 package clue.card;
 
-import clue.action.Action;
-
 /**
  * Represents an intrigue card.
  *
@@ -14,6 +12,10 @@ import clue.action.Action;
  */
 public abstract class IntrigueCard extends Card {
 
+    /**
+     * Creates an IntregueCard
+     * @param id the id of the card
+     */
     public IntrigueCard(int id) {
         super(id);
     }
@@ -34,6 +36,11 @@ public abstract class IntrigueCard extends Card {
         return cardType;
     }
     
+    /**
+     * Checks if two card types are the same
+     * @param c the card to compare to
+     * @return true if same enum type false otherwise
+     */
     public boolean equals(Card c){
         return (cardType == c.cardType);
     }

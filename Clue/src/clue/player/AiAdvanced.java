@@ -71,6 +71,11 @@ public class AiAdvanced extends Player{
         knownCards.add(c2);
     }
     
+    /**
+     * Shows a card as a response to a suggestion
+     * @param cards the cards which the AI can pick from to show
+     * @return the card that is shown
+     */
     public Card respondToShowCards(List<Card> cards){
         System.out.println("[AiAdvanced.respondToShowCards] id: "+id);
         return cards.get(0);

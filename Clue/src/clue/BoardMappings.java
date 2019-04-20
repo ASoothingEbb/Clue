@@ -36,8 +36,15 @@ public final class BoardMappings {
     
     class StartingTile implements Comparable<StartingTile>{
 
+        
         public Tile t;
         public int i;
+        
+        /**
+         * Creates a starting tile
+         * @param t the tile 
+         * @param i the id of the starting tile
+         */
         StartingTile(Tile t, int i){
             this.t = t;
             this.i = i;

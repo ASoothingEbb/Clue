@@ -19,7 +19,7 @@ public class StartAction extends Action{
     }
 
     /**
-     * Executes 
+     * Executes this action.
      */
     @Override
     public void execute() {

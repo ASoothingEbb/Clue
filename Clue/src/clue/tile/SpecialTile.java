@@ -25,6 +25,11 @@ public class SpecialTile extends Tile {
 
     private ActionType action;
 
+    /**
+     * Creates a Special Tile 
+     * @param x the x coordinate of the tile 
+     * @param y the y coordinate of the tiles
+     */
     public SpecialTile(int x, int y) {
         super(x,y);
         special = true;

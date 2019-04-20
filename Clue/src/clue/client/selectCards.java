@@ -44,6 +44,10 @@ public class selectCards {
     
     private final Background greenFill = new Background(new BackgroundFill(Color.rgb(7, 80, 2), CornerRadii.EMPTY, Insets.EMPTY));
     
+    /**
+     * Creates 
+     * @return 
+     */
     private GridPane createCardsUI() {
         GridPane cards = new GridPane();
         cards.setBackground(greenFill);
@@ -152,6 +156,11 @@ public class selectCards {
         return cards;
     }
     
+    /**
+     * 
+     * @param key
+     * @return 
+     */
     private Image getImage(String key) {
         try {
             Image image = new Image(new FileInputStream(new File(ImagePathMap.get(getKey(CardNameMap, key)))));
@@ -162,6 +171,12 @@ public class selectCards {
         return null;
     }
     
+    /**
+     * 
+     * @param map
+     * @param value
+     * @return 
+     */
     private String getKey(HashMap<String, String> map, String value) {
         for (HashMap.Entry entry: map.entrySet()) {
             if (entry.getValue().toString().equals(value)) {
@@ -171,6 +186,9 @@ public class selectCards {
         return "";
     }
     
+    /**
+     * 
+     */
     private void initFonts() {
         avenir = new Font(30);
         try {
@@ -179,7 +197,16 @@ public class selectCards {
             System.out.println("Font not found");
         }
     }
-    
+   
+    /**
+     * 
+     * @param name
+     * @param color
+     * @param room
+     * @param ImagePathMap
+     * @param CardNameMap
+     * @param gameController 
+     */
     public void show(String name, Color color, int room, HashMap<String,String> ImagePathMap, HashMap<String, String> CardNameMap, GameController gameController) {
         stage = new Stage();
     
