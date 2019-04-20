@@ -25,9 +25,8 @@ public class TeleportAction extends Action {
     /**
      * Creates a TeleportAction
      * 
-     * @param p the player to be teleported.
+     * @param p the player to be teleported
      * @param card  the intrigue card.
-     * @param gui a instance of the game.
      */
     public TeleportAction(Player p, TeleportIntrigue card) {
         super(p, card);

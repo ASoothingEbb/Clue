@@ -160,22 +160,25 @@ public class AiAdvanced extends Player{
      */
     private void addCardToKnownCards(Card card){
         System.out.println("[AiAdvanced.addCardToKnownCards] id: "+id);
-        if (null != card.getCardType())switch (card.getCardType()) {
-            case PERSON:
-                knownCards.get(0).add(card.getId());
-                break;
-                
-            case ROOM:
-                knownCards.get(1).add(card.getId());
-                break;
-                
-            case WEAPON:
-                knownCards.get(2).add(card.getId());
-                break;
-                
-            default:
-                break;
+        if (card != null){
+            if (null != card.getCardType())switch (card.getCardType()) {
+                case PERSON:
+                    knownCards.get(0).add(card.getId());
+                    break;
+
+                case ROOM:
+                    knownCards.get(1).add(card.getId());
+                    break;
+
+                case WEAPON:
+                    knownCards.get(2).add(card.getId());
+                    break;
+
+                default:
+                    break;
+            }
         }
+        
     }
 
     /**
@@ -249,7 +252,7 @@ public class AiAdvanced extends Player{
     private void endTurn() {
         System.out.println("[AiAdvanced.endTurn] id: "+id);
         myTurn = false;
-        gameController.endTurn();
+        gameController.endTurnAi();
 
     }
 
@@ -292,7 +295,6 @@ public class AiAdvanced extends Player{
         LinkedList<Tile> solutionPath = new LinkedList<>();        
         LinkedList<Tile> newPath = new LinkedList<>();
         LinkedList<Tile> currentPath;
-        Tile previousPosition;
         
         newPath.add(getPosition());
         pathList.add(newPath);
@@ -331,8 +333,8 @@ public class AiAdvanced extends Player{
             pathList.remove(currentPath);
   
         }
-        previousPosition = getPosition();
         pathToRoom = solutionPath;
+        pathToRoom.remove(getPosition());
         return solutionPath;  
     }
     

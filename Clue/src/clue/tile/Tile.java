@@ -78,7 +78,7 @@ public class Tile {
     
     
     /**
-     * @returns false if the tile is a non room tile and someone is already in the tile;
+     * @return false if the tile is a non room tile and someone is already in the tile;
      * 
      */
     public boolean isFull(){

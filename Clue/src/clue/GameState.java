@@ -180,7 +180,7 @@ public class GameState {
     /**
      * Ends the current game instance.
      *
-     * @return
+     * @return the final player of the game
      */
     public Player endGame() {
         running = false;
@@ -197,8 +197,8 @@ public class GameState {
     }
 
     /**
-     * Gets the current player whos turn it is
-     * @return 
+     * Gets the current player who's turn it is
+     * @return the current player who's turn it is
      */
     public Player getCurrentPlayer() {
         return currentPlayer;

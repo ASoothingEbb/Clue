@@ -253,6 +253,12 @@ public class gameInstance {
         return root;
     }
     
+    /**
+     * Changes each rooms appearance to be different by changing their colour on the board(custom maps only).
+     * 
+     * @param tile  the Tile(Label) to change appearance
+     * @param id the id of the room 1 to 9.
+     */
     private void paintRoom(Tile tile, int id){
         Random rand = new Random(Calendar.getInstance().getTimeInMillis());
         switch(id){
@@ -292,6 +298,11 @@ public class gameInstance {
         }
     }
 
+    /**
+     * Called at the beginning of a game. Renders the players in a spawn tile.
+     * 
+     * @param board the GUI representation of the board
+     */
     private void spawnPlayers(StackPane[][] board) {
         List<Player> players = gameInterface.getPlayers();
         playerSprites = new PlayerSprite[players.size()];
@@ -305,6 +316,11 @@ public class gameInstance {
         currentPlayer = playerSprites[0];
     }
     
+    /**
+     * Called at the beginning of a game. Renders the weapons in a separate room.
+     * 
+     * @param board the GUI representation of the board
+     */
     private void spawnWeapons(StackPane[][] board) {
         List<WeaponCard> weapons = gameInterface.getWeaponCards();
         System.out.println(weapons.size());
@@ -317,13 +333,18 @@ public class gameInstance {
         }
     }
     
+    /**
+     * Re-renders where the player tokens are on the board
+     */
     private void redrawPlayers() {
         gameInterface.getPlayers().forEach((player) -> {
             PlayerSprite sprite = playerSprites[player.getId()];
             sprite.move(player.getDrawX(), player.getDrawY(), board, sprite);
         });
     }
-    
+    /**
+     * Re-renders where the weapon tokens are on the board
+     */
     private void redrawWeapons() {
         gameInterface.getWeaponCards().forEach((weapon) -> {
             WeaponSprite sprite = weaponSprites[weapon.getId()];
@@ -332,8 +353,9 @@ public class gameInstance {
     }
     
    /**
+    * Creates the left panel where the player notes and the history for each respective player are shown.
     * 
-    * @return 
+    * @return Notes and History boxes
     */
     private VBox createLeftPanel() {
         VBox leftPanelLayout = new VBox();
@@ -429,8 +451,9 @@ public class gameInstance {
     }
     
     /**
+     * Creates the Roll, suggest, accuse, etc buttons.
      * 
-     * @return 
+     * @return VBox containing all the buttons. 
      */
     private VBox createPlayerControls() {    
         //Sounds
@@ -526,6 +549,8 @@ public class gameInstance {
     }
     
     /**
+     * Creates The main component to be used in the Scene that is shown when people are playing the game.
+     * This will include board, player controls, history/notes, etc.
      * 
      * @return 
      */
@@ -556,8 +581,9 @@ public class gameInstance {
     }
     
     /**
+     * Used by the backend to communicate with the GUI.
      * 
-     * @param action 
+     * @param action a type of action
      */
     public void actionResponse(Action action) {
         switch (action.getActionType()) {
@@ -597,7 +623,12 @@ public class gameInstance {
         }
         System.out.println("return");
     }
-    
+    /**
+     * 
+     * @param cardId
+     * @param cardType
+     * @return 
+     */
     private Image getImage(int cardId, CardType cardType) {
         Image cardImage = null;
         try {
@@ -622,6 +653,11 @@ public class gameInstance {
         return cardImage;
     }
     
+    /**
+     * Alerts the player of whether his accusation was correct or incorrect.
+     * 
+     * @param action a type of action
+     */
     public void showAccusationResult(Action action) {
         Prompt accusationResultPrompt = new Prompt("");
         if (((AccuseAction) action).wasCorrect()) { //accusation correct
@@ -648,6 +684,11 @@ public class gameInstance {
         accusationResultPrompt.showAndWait();
     }
     
+    /**
+     * Prompts the player with a Card which he suggested IF any of the players have said card. Prompts nothing otherwise.
+     * 
+     * @param action the showCardAction
+     */
     private void showCard(Action action) {
         ShowCardAction response = ((ShowCardAction) action);
         String suggestee = CardNameMap.get("character" + ((ShowCardAction) action).getWhoShowedTheCard().getId());
@@ -659,7 +700,11 @@ public class gameInstance {
             showCardPrompt = null;
         });
     }
-    
+    /**
+     * 
+     * @param playerId
+     * @param next 
+     */
     private void switchPlayerScene(int playerId, Scene next) {
         VBox switchPlayer = new VBox();
         switchPlayer.setBackground(blackFill);
@@ -678,13 +723,23 @@ public class gameInstance {
         Scene scene = new Scene(switchPlayer, 1736, 960);
         gameStage.setScene(scene);
     }
-    
+    /**
+     * Brings up a prompt(window) which displays a message to the player.
+     * 
+     * @param message the message to show the user
+     */
     public void notifyUser(String message) {
         Prompt notifyPrompt = new Prompt(message);
         notifyPrompt.setLabelTitle("Notice");
         notifyPrompt.show();
     }
     
+    /**
+     * This is prompted if the player has 1 or more cards that were suggested.
+     * The user will be asked to pick one of those cards.
+     * 
+     * @param action the showCardsAction
+     */
     private void showCards(Action action) {
         VBox showCardsDisplay = new VBox();
         showCardsDisplay.setBackground(greenFill);
@@ -725,6 +780,13 @@ public class gameInstance {
         switchPlayerScene(((ShowCardsAction) action).getPlayer().getId(), scene);
     }
     
+    /**
+     * Makes a card glow in the "showCards" prompt. This will mark it as selected and will be shown to the person who suggested.
+     * 
+     * @param id the id of the card  that is selected
+     * @param type the type of card that is selected
+     * @param view  the render of the card 
+     */
     private void setSelectedCard(int id, CardType type, ImageView view) {
         this.selectedCardId = id;
         this.selectedCardType = type;
@@ -745,10 +807,11 @@ public class gameInstance {
     }
 
     /**
+     * Creates a label with text and font of choosing.
      * 
-     * @param text
-     * @param font
-     * @return 
+     * @param text the text to be displayed on the label
+     * @param font the type of font to be used for the text
+     * @return a label object with message "text" and font "font".
      */
     private Label getLabel(String text, Font font) {
         Label label = new Label(text);
@@ -758,7 +821,7 @@ public class gameInstance {
     }
     
     /**
-     * Initialises the default graphics.
+     * Initialises the default graphics. The board and the cards.
      */
     private void initDefaultGraphics() {
         ImagePathMap.put("board", "resources/boardFinal.png");
@@ -788,6 +851,10 @@ public class gameInstance {
         ImagePathMap.put("room8","resources/Room/Kitchen.png");
     }
     
+    /**
+     * Initialises the default graphical assets for the characters and weapons.
+     * These are the player tokens ie:the images rendered ON the board.
+     */
     private void initDefaultTokens() {
         TokenPathMap.put("character0", "resources/characterToken/MissScarlet.png");
         TokenPathMap.put("character1", "resources/characterToken/ColonelMustard.png");
@@ -805,8 +872,7 @@ public class gameInstance {
     }
     
     /**
-     * .
-     * Initialises the default names.
+     * Initialises the default names. This is used as a hashmap.
      */
     private void initDefaultNames() {
         CardNameMap.put("character0", "Miss Scarlet");
@@ -835,7 +901,7 @@ public class gameInstance {
     }
     
     /**
-     * 
+     * Initialises the Fonts.
      */
     private void initFonts() {
         avenirLarge = new Font(30);
@@ -879,9 +945,11 @@ public class gameInstance {
     }
        
     /**
+     * Starts the game instance, initialises everything, spawns players, etc.
      * 
-     * @param gameController
-     * @param tilePath 
+     * @param gameController a reference to the gameController class (backend)
+     * @param client the main window which started gameInstance
+     * @param tilePath CSV representation of the board
      */
     public void startGame(GameController gameController, Stage client,String tilePath) {
         gameStage = new Stage();
@@ -914,8 +982,9 @@ public class gameInstance {
     }
     
     /**
+     * This creates the black Scene for when human players are meant to switch who's looking at the screen.
      * 
-     * @return 
+     * @return the switch turn scene
      */
     public Scene createCurtainScene(){
         VBox curtain = new VBox();
@@ -956,8 +1025,6 @@ public class gameInstance {
             switchToUi();
             endTurnSound.reset();
         });
-        //Button fadeSwitch = new Button("Unfade");
-        //fadeSwitch.setOnAction(e -> switchToUi());
         
         curtain.getChildren().addAll(switchPlayerLabel, fadeSwitch);
         curtainScene =  new Scene(curtain);
@@ -982,12 +1049,12 @@ public class gameInstance {
     }
     
     /**
-     * Each time this is called, one future ShowCardsAction will be queued, the queue will be dequeued once the gui recived a StartTurnAction
+     * Each time this is called, one future ShowCardsAction will be queued, the queue will be dequeued once the GUI received a StartTurnAction
      * Switches the current scene to the uiScene and fade animation plays.
      */
     public void aiShowCardsRequests(){
         System.out.println("--------------------------------------------------------------------------------------------------------------");
-        throw new UnsupportedOperationException("not yet implemented");
+        //throw new UnsupportedOperationException("not yet implemented");
         
         //TODO
         //if this is called, the next recived showCardsAction (through actionResponse) should be added to a queue 
@@ -995,7 +1062,11 @@ public class gameInstance {
     }
     
     
-
+    /**
+     * Creates the "history" to be displayed in the GUI in the form of strings. These Strings are descriptions of the actions.
+     * 
+     * @param actionsToNotify the list of actions to be turned into human readable strings.
+     */
     public void showActionLog(LinkedList<Action> actionsToNotify) {
         System.out.println("show history called");
         for (Action action: actionsToNotify) {
@@ -1050,7 +1121,12 @@ public class gameInstance {
         
     }
 
-    public void newHumanPlayerTurn(Player player, LinkedList<Action> actionsToNotify) {
+    /**
+     * Starts a new human turn in the GUI This includes rendering new cards(for the next player) an switches it to a black(curtain) scene.
+     * 
+     * @param actionsToNotify the actions that have happened previously.
+     */
+    public void newHumanPlayerTurn(LinkedList<Action> actionsToNotify) {
         resetRoll();
         suggested = false;
         accused = false;
@@ -1066,14 +1142,16 @@ public class gameInstance {
         //call showAction(actionsToNotify) after player turn has begun (after they click start turn and they fade in)
     }
     
+  /**
+    * Resets the Roll label which displays how many moves you have.
+    */
     private void resetRoll() {
         remainingMovesLabel.setText("Roll Available");
         rolled = false;
     }
 
     /**
-     * Called by GameController when the game has finished, player is the winning player, player is null if there is no winner
-     * @param player 
+     * Called by GameController when the game has finished, player is the winning player, player is null if there is no winner.
      */
     public void gameOver() {
         Prompt gameOverPrompt = new Prompt("No one was able to guess the murder cards");
@@ -1085,9 +1163,11 @@ public class gameInstance {
         gameOverPrompt.showAndWait();
     }
     
+    /**
+     * Creates a new window which shows which colour of a room(custom map) corresponds to which room.
+     */
     public void openRoomKeyWindow(){
         Stage roomKeyStage = new Stage();
-        roomKeyStage.setTitle("Room Key Legend");
         
         HBox column = new HBox();
         VBox colours = new VBox();

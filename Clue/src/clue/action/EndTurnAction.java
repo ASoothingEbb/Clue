@@ -15,7 +15,7 @@ public class EndTurnAction extends Action{
 
     /**
      * Creates a new End Turn Action .
-     * @param player
+     * @param player the player who is ending there turn
      */
     public EndTurnAction(Player player) {
         super(player);
