@@ -36,7 +36,7 @@ public class ThrowAgainAction extends Action {
     @Override
     public void execute() {
         player.removeIntrigue((ThrowAgainIntrigue)card);
-        if (player.isAi()) {
+        if (player instanceof AiAdvanced) {
             ((AiAdvanced) player).respondToThrowAgain();
         }
     }

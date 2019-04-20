@@ -53,7 +53,7 @@ public class ShowCardAction extends Action {
  */
     @Override
     public void execute() {
-        if (player.isAi()){
+        if (player instanceof AiAdvanced){
             ((AiAdvanced) player).revealCard(card, whoShowedTheCard);
         }
     }

@@ -136,10 +136,47 @@ public class Room extends Tile{
      */
     public int[] assignLocation(){
         int [] location = locations.get(0);
-        if (nonOccupiedLocations.size() > 0){
-            int selected = 0;
-            location = nonOccupiedLocations.get(selected);
-            nonOccupiedLocations.remove(selected);
+        if (nonOccupiedLocations.size() >= 9){
+            int xLow = Integer.MAX_VALUE;
+            int xHigh = 0;
+            int yLow = Integer.MAX_VALUE;
+            int yHigh = 0;
+            
+            //calculate the lowest and highest 
+            for (int[] loc : nonOccupiedLocations){
+                if (loc[0] > xHigh){
+                    xHigh = loc[0];
+                }
+                if (loc[0] < xLow){
+                    xLow = loc[0];
+                }
+                
+                if (loc[1] > yHigh){
+                    yHigh = loc[1];
+                }
+                if (loc[1] < yLow){
+                    yLow = loc[1];
+                }  
+            }
+            
+            //add a 1 tile border to the lows/highs
+            xLow +=1;
+            yLow +=1;
+            
+            xHigh-=1;            
+            yHigh-=1;
+            
+            for (int[] loc : nonOccupiedLocations){
+                if (loc[0] < xHigh && loc[0] > xLow && loc[1] > yLow && loc[1] < yHigh){
+                    location[0] = loc[0];
+                    location[1] = loc[1];
+                    break;
+                }
+            }
+            
+            
+            
+            
         }
         
         return location;

@@ -244,7 +244,7 @@ public final class GameController {
                     break;
                 case SHOWCARD:
                     System.out.println("    CASE SHOWCARD");
-                    if(gui != null && !player.isAi()){
+                    if(gui != null && !(player instanceof AiAdvanced)){
                         gui.actionResponse(action);
                     }
                     if (state.getAction().getActionType() == ActionType.SHOWCARDS) {
@@ -254,7 +254,7 @@ public final class GameController {
                     break;
                 case SHOWCARDS:
                     System.out.println("    CASE SHOWCARDS");
-                    if(gui != null && !player.isAi()){
+                    if(gui != null && !(player instanceof AiAdvanced)){
                         gui.actionResponse(action);
                     }
                     else{
@@ -281,7 +281,8 @@ public final class GameController {
                         moveActionLog();
                         LinkedList<Action> actionsToNotify = getActions();
 
-                        if (gui != null && !player.isAi()){
+                        if (gui != null && !(player instanceof AiAdvanced)){
+                            System.out.println("--------------------------prompting gui for player+"+player.getId());
                             gui.newHumanPlayerTurn(player, actionsToNotify);
                         }
                         else{
@@ -308,7 +309,7 @@ public final class GameController {
                             nextAction = new ShowCardsAction(((SuggestAction) action).getShower(), ((SuggestAction) action).getPlayer(), ((SuggestAction) action).getFoundCards());
 
                             
-                            if (player.isAi()){
+                            if (player instanceof AiAdvanced){
                                 //queuedGuiActions.add((ShowCardsAction)nextAction);
                                 //gui.switchToUi();
                                 gui.aiShowCardsRequests();
@@ -319,7 +320,7 @@ public final class GameController {
                             
                         }
                         else {
-                            if (gui != null && !player.isAi()){
+                            if (gui != null && (player instanceof AiAdvanced)){
                                 gui.notifyUser("No other player had to show a card due to your suggestion.");
                             }
                             else{
@@ -332,7 +333,7 @@ public final class GameController {
                     break;
                 case TELEPORT:
                     System.out.println("    CASE TELEPORT");
-                    if(gui != null && !player.isAi()){
+                    if(gui != null && !(player instanceof AiAdvanced)){
                     gui.actionResponse(action);}
                     returnCard((IntrigueCard)((TeleportAction) action).getCard());
 
@@ -353,7 +354,7 @@ public final class GameController {
                     break;
                 case THROWAGAIN:
                     System.out.println("    CASE THROWAGAIN");
-                    if(gui != null && !player.isAi()){
+                    if(gui != null && !(player instanceof AiAdvanced)){
                     gui.actionResponse(action);}
                     returnCard((IntrigueCard)((ThrowAgainAction) action).getCard());
 
@@ -501,7 +502,7 @@ public final class GameController {
             }
             
         }
-        randInt = rand.nextInt(numberOfWeapons);   
+        randInt = rand.nextInt(numberOfPersons);   
         
         PersonCard personCard;
         for (int i = 0; i < numberOfPersons; i++){

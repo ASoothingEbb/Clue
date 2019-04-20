@@ -7,6 +7,7 @@ package clue.action;
 
 import clue.card.AvoidSuggestionIntrigue;
 import clue.client.gameInstance;
+import clue.player.AiAdvanced;
 import clue.player.Player;
 
 /**
@@ -53,7 +54,7 @@ public class AvoidSuggestionAction extends Action {
     @Override
     public void execute() {
         player.removeIntrigue((AvoidSuggestionIntrigue)card);
-        if (player.isAi()){
+        if (player instanceof AiAdvanced){
             //((AiAdvanced) player).notifyAvoidSuggestion();
 
         }

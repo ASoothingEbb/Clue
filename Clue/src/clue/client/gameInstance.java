@@ -14,6 +14,7 @@ import clue.action.SuggestAction;
 import clue.action.UnknownActionException;
 import clue.card.Card;
 import clue.card.CardType;
+import clue.player.AiAdvanced;
 import clue.player.Player;
 import clue.tile.NoSuchRoomException;
 import clue.tile.Room;
@@ -547,7 +548,7 @@ public class gameInstance {
                     System.out.println("Player " + player.getId() + " " + player.getPosition());
                     System.out.println("Player " + player.getId() + " " + player.getDrawX() + " " +  player.getDrawY());
                 }
-                if (((ShowCardAction) action).getWhoShowedTheCard().isAi()) {
+                if (((ShowCardAction) action).getWhoShowedTheCard() instanceof AiAdvanced) {
                     showCardPrompt.show();
                 }
                 suggested = true;

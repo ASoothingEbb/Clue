@@ -307,20 +307,7 @@ public class Player {
         this.notes = notes;
     }
     
-    /**
-     * Called by Ai players to indicate that they are an Ai player
-     */
-    public void setAi(){
-        isAi = true;
-    }
-    
-    /**
-     * Gets whether or not the player is an Ai player
-     * @return true if player is an Ai player, false otherwise
-     */
-    public boolean isAi(){
-        return isAi;
-    }
+
     
     /**
      * Converts player object to string form for debugging
@@ -330,7 +317,6 @@ public class Player {
     public String toString(){
         String result = "";
         result += "Player id: "+id;
-        result += " isAi: "+isAi();
         result += " position: "+getPosition();
         
         
