@@ -67,7 +67,7 @@ import javafx.util.Duration;
 
 /**
  *
- * @author hungb
+ * @author Hung Bui Quang
  */
 public class gameInstance {
     
@@ -326,7 +326,6 @@ public class gameInstance {
      */
     private void spawnWeapons(StackPane[][] board) {
         List<WeaponCard> weapons = gameInterface.getWeaponCards();
-        System.out.println(weapons.size());
         weaponSprites = new WeaponSprite[weapons.size()];
         for (int i=0; i < weapons.size(); i++) {
             int x = weapons.get(i).getDrawX();
@@ -398,9 +397,6 @@ public class gameInstance {
             MenuItem showRoomKeys = new MenuItem("Room Keys", avenirTitle);
             showRoomKeys.setAlignment(Pos.CENTER);
             RoomKeys roomKeys = new RoomKeys(gameStage);
-            
-            //System.out.println(coordinates.getMinX() + " " + coordinates.getMinY());
-            //roomKeys.setLocation(coordinates.getMinX(), coordinates.getMinY());
             showRoomKeys.hoverProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
                     Bounds coordinates = showRoomKeys.localToScene(showRoomKeys.getBoundsInLocal());
@@ -763,7 +759,6 @@ public class gameInstance {
         showCardsDisplay.setAlignment(Pos.CENTER);
         
         List<Card> cards = ((ShowCardsAction) action).getCardList();
-        System.out.println(cards.size());
         
         Label showCardsLabel = getLabel("Select a card to show", avenirTitle);
         
@@ -772,20 +767,20 @@ public class gameInstance {
         cardDisplay.setSpacing(10);
         cardDisplay.setAlignment(Pos.CENTER);
                 
-        for (Card card: cards) {
+        cards.stream().map((card) -> {
             final int cardId = card.getId();
             final CardType cardType = card.getCardType();
-
             ImageView view = new ImageView(getImage(card.getId(), card.getCardType()));
             view.setOnMouseClicked(e -> {
                 setSelectedCard(cardId, cardType, view);
             });
+            return view;
+        }).forEachOrdered((view) -> {
             cardDisplay.getChildren().add(view);
-        }
+        });
         
         MenuItem confirmCardButton = new MenuItem("Confirm Selection", avenirTitle);
         confirmCardButton.setOnMouseClicked(e -> {
-            System.out.println(selectedCardId + " " + selectedCardType.toString());
             ((ShowCardsAction) action).setCardToShow(selectedCardId, selectedCardType);
             switchPlayerScene(((ShowCardsAction) action).getSuggester().getId(), prevScene);
             gameInterface.replyToShowCards((ShowCardsAction) action);
@@ -943,7 +938,7 @@ public class gameInstance {
             
             prop.keySet();
             
-            for (Map.Entry entry: prop.entrySet()) {
+            prop.entrySet().forEach((entry) -> {
                 String key = entry.getKey().toString();
                 String value = entry.getValue().toString();
                 if (key.contains("Name")) {
@@ -953,11 +948,9 @@ public class gameInstance {
                 } else if (key.contains("Token")) {
                     TokenPathMap.put(key.substring(0, key.length() - 5), value);
                 }
-            }
-            System.out.println("here");
+            });
             input.close();
         } catch (IOException ex) {
-            System.out.println("there");
         }
     }
        
@@ -1053,7 +1046,6 @@ public class gameInstance {
      */
     public void switchToCurtain(){
         gameStage.setScene(createCurtainScene());
-        System.out.println(gameStage.getWidth() + "" + gameStage.getHeight());
     }
     
     /**
@@ -1062,7 +1054,6 @@ public class gameInstance {
     public void switchToUi(){
         uiToCurtain.play();
         gameStage.setScene(uiScene);
-        System.out.println(gameStage.getWidth() + "" + gameStage.getHeight());
     }
     
     /**
@@ -1085,7 +1076,6 @@ public class gameInstance {
      * @param actionsToNotify the list of actions to be turned into human readable strings.
      */
     public void showActionLog(LinkedList<Action> actionsToNotify) {
-        System.out.println("show history called");
         for (Action action: actionsToNotify) {
             StringBuilder message = new StringBuilder();     
             switch (action.getActionType()) {
