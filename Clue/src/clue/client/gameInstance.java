@@ -1065,7 +1065,7 @@ public class gameInstance {
      * Called by GameController when the game has finished, player is the winning player, player is null if there is no winner
      * @param player 
      */
-    public void gameOver(Player player) {
+    public void gameOver() {
         Prompt gameOverPrompt = new Prompt("No one was able to guess the murder cards");
         gameOverPrompt.setTitle("GAME OVER");
         gameOverPrompt.setOnCloseRequest(e -> {
