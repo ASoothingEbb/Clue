@@ -222,32 +222,18 @@ public class TileTest {
     }
 
     /**
-     * Test of isAdjacent method, of class Tile.
+     * Test of isAdjacent and addAdjacent method, of class Tile.
      */
     @Test
-    public void testIsAdjacent() {
+    public void testAdjacent() {
         System.out.println("isAdjacent");
-        Tile tile = null;
+        Tile tile = new Tile();
         Tile instance = new Tile();
-        boolean expResult = false;
-        boolean result = instance.isAdjacent(tile);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertFalse(instance.isAdjacent(tile));
+        instance.addAdjacent(tile);
+        assertTrue(instance.isAdjacent(tile));
     }
 
-    /**
-     * Test of addAdjacent method, of class Tile.
-     */
-    @Test
-    public void testAddAdjacent() {
-        System.out.println("addAdjacent");
-        Tile adjacentTile = null;
-        Tile instance = new Tile();
-        instance.addAdjacent(adjacentTile);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
 
     /**
      * Test of toString method, of class Tile.
@@ -256,11 +242,9 @@ public class TileTest {
     public void testToString() {
         System.out.println("toString");
         Tile instance = new Tile();
-        String expResult = "";
+        String expResult = "spec:"+instance.isSpecial()+", room:"+instance.isRoom() + ", xy:" + instance.getX() + "," + instance.getY()+ " \n";
         String result = instance.toString();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
     
 }
