@@ -21,7 +21,6 @@ import javafx.scene.paint.Color;
 public class PlayerSprite extends Label {
     private int positionX;
     private int positionY;
-    private final ImageView characterView;
     
     /**
      * 
@@ -39,7 +38,7 @@ public class PlayerSprite extends Label {
         } catch(FileNotFoundException ex) {
             
         }
-        characterView = new ImageView(image);
+        ImageView characterView = new ImageView(image);
         characterView.setFitHeight(32);
         characterView.setFitWidth(32);
         setGraphic(characterView);
