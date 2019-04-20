@@ -28,6 +28,10 @@ public class Sound {
    private float range;
    
 
+   /**
+    * Creates a sound 
+    * @param fileName the path to where the .wav file is 
+    */
     public Sound(String fileName) {
         try{
             File sound = new File(fileName);
@@ -44,6 +48,9 @@ public class Sound {
 
     }
     
+    /**
+     * Plays the sound once in a thread.
+     */
    public void play(){
        try{
            new Thread(){
@@ -63,11 +70,17 @@ public class Sound {
        }
    }
    
+  /**
+   * Stops the sound from playing
+   */
    public void stop(){
        if(clip == null) return;
        clip.stop();  
    }
    
+   /**
+    * Plays the sound on a loop until stopped.
+    */
    public void loop(){
         try{
             if(clip != null){
@@ -87,10 +100,18 @@ public class Sound {
         }
    }
    
+   /**
+    * returns whether the sound is playing or not.
+    * @return true if active false otherwise
+    */
     public boolean isActive(){
        return clip.isActive();
     }
    
+    /**
+     * Sets the volume of the sound
+     * @param f the percentage from 0 - 1 to set the volume to
+     */
     public void setVolume(float f){
         if(f == 0.0){
             muteControl.setValue(true);
@@ -104,10 +125,16 @@ public class Sound {
         volume.setValue(gain);
     }
    
+    /**
+     * Mutes/unmutes the sound without stopping it
+     */
     public void toggleSound(){
         if(!muted) muteControl.setValue(!muteControl.getValue());
     }
     
+    /**
+     * If the sound is active, it will play from the beggining.
+     */
     public void reset(){
         stop();
         clip.setFramePosition(1000);

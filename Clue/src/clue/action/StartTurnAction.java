@@ -23,6 +23,9 @@ public class StartTurnAction extends Action{
         this.actionType = ActionType.STARTTURN;
     }
 
+    /**
+     * Executes this action
+     */
     @Override
     public void execute() {
         super.execute(); //To change body of generated methods, choose Tools | Templates.

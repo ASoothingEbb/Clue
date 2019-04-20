@@ -44,6 +44,10 @@ public class selectCards {
     
     private final Background greenFill = new Background(new BackgroundFill(Color.rgb(7, 80, 2), CornerRadii.EMPTY, Insets.EMPTY));
     
+    /**
+     * Creates 
+     * @return 
+     */
     private GridPane createCardsUI() {
         GridPane cards = new GridPane();
         cards.setBackground(greenFill);
@@ -66,6 +70,8 @@ public class selectCards {
             System.out.println("File not found");
         }
         ImageView characterView = new ImageView(character);
+        characterView.setFitHeight(230);
+        characterView.setFitWidth(150);
         
         ComboBox characterOptions = new ComboBox();
         characterOptions.getItems().addAll(characters);
@@ -81,6 +87,8 @@ public class selectCards {
             System.out.println("File not found");
         }
         ImageView weaponView = new ImageView(weapon);
+        weaponView.setFitHeight(230);
+        weaponView.setFitWidth(150);
         
         ComboBox weaponOptions = new ComboBox();
         weaponOptions.getItems().addAll(weapons);
@@ -90,7 +98,6 @@ public class selectCards {
         });
         
         Image room = null;
-        ImageView roomView;
         ComboBox roomOptions = new ComboBox();
         
         try {
@@ -100,7 +107,9 @@ public class selectCards {
         }
         roomOptions.getItems().add(CardNameMap.get("room"+currentRoom));
         roomOptions.setValue(CardNameMap.get("room"+currentRoom));
-        roomView = new ImageView(room);
+        ImageView roomView = new ImageView(room);
+        roomView.setFitHeight(230);
+        roomView.setFitWidth(150);
         
         MenuItem sendCards = new MenuItem(actionType, avenir);
         sendCards.setActiveColor(color);
@@ -147,6 +156,11 @@ public class selectCards {
         return cards;
     }
     
+    /**
+     * 
+     * @param key
+     * @return 
+     */
     private Image getImage(String key) {
         try {
             Image image = new Image(new FileInputStream(new File(ImagePathMap.get(getKey(CardNameMap, key)))));
@@ -157,6 +171,12 @@ public class selectCards {
         return null;
     }
     
+    /**
+     * 
+     * @param map
+     * @param value
+     * @return 
+     */
     private String getKey(HashMap<String, String> map, String value) {
         for (HashMap.Entry entry: map.entrySet()) {
             if (entry.getValue().toString().equals(value)) {
@@ -166,6 +186,9 @@ public class selectCards {
         return "";
     }
     
+    /**
+     * 
+     */
     private void initFonts() {
         avenir = new Font(30);
         try {
@@ -174,7 +197,16 @@ public class selectCards {
             System.out.println("Font not found");
         }
     }
-    
+   
+    /**
+     * 
+     * @param name
+     * @param color
+     * @param room
+     * @param ImagePathMap
+     * @param CardNameMap
+     * @param gameController 
+     */
     public void show(String name, Color color, int room, HashMap<String,String> ImagePathMap, HashMap<String, String> CardNameMap, GameController gameController) {
         stage = new Stage();
     

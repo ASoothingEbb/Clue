@@ -90,6 +90,10 @@ public class MoveAction extends Action {
         return t;
     }
     
+    /**
+     * Finds if there is a room the player can go to with the current moves it has.
+     * @return true if there is a room within how many moves the player has.
+     */
     private boolean BFS(){   
         cost = 0;
         //System.out.println("BFS with moves left: "+player.getMoves());

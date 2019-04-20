@@ -11,6 +11,10 @@ package clue.tile;
  */
 public class NoSuchRoomException extends Exception {
 
+    /**
+     * Creates a noSuchRoomException
+     * @param message the exception message
+     */
     public NoSuchRoomException(String message) {
         super(message);
     }

@@ -11,6 +11,10 @@ package clue.card;
  */
 public class RoomCard extends Card{
 
+    /**
+     * Creates a RoomCard
+     * @param id 
+     */
     public RoomCard(int id) {
         super(id);
         cardType = CardType.ROOM;
