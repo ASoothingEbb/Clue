@@ -890,10 +890,14 @@ public final class GameController {
         } catch (UnknownActionException  | TileOccupiedException ex) {
             Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
         }
-    
-    
     }
     
-    
+    /**
+     * Gets the list of weapon cards
+     * @return List of WeaponCard
+     */
+    public List<WeaponCard> getWeaponCards() {
+        return weaponCards;
+    }
     
 }
