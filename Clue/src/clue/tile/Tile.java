@@ -78,7 +78,7 @@ public class Tile {
     
     
     /**
-     * @returns false if the tile is a non room tile and someone is already in the tile;
+     * @return false if the tile is a non room tile and someone is already in the tile;
      * 
      */
     public boolean isFull(){
@@ -138,6 +138,10 @@ public class Tile {
         return res;
     }
     
+    /**
+     * Gets the x coordinate of this tile
+     * @return the x coordinate
+     */
     public int getX(){
         return x;
     }
@@ -156,8 +160,6 @@ public class Tile {
     public List<Tile> getAdjacent(){
         return adjacentTiles;
     }
-    
-
     
     /**
      * gets the special flag from the tile

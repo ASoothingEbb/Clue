@@ -9,16 +9,13 @@ import clue.GameController;
 import clue.GameController.TooManyPlayersException;
 import clue.MissingRoomDuringCreationException;
 import clue.NotEnoughPlayersException;
-import clue.action.UnknownActionException;
 import clue.tile.NoSuchRoomException;
 import clue.tile.NoSuchTileException;
-import clue.tile.TileOccupiedException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -32,12 +29,10 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -55,7 +50,7 @@ import javafx.stage.Stage;
 
 /**
  *
- * @author hungb
+ * @author Hung Bui Quang
  */
 public class ClueClient extends Application {
     
@@ -69,7 +64,6 @@ public class ClueClient extends Application {
     
     private int width;
     private int height;
-    private String currentWindowMode;
     
     private HashMap<String, String> textureMap;
     
@@ -82,11 +76,16 @@ public class ClueClient extends Application {
     private Font avenirNormal;
     
     // BackgroundFill
-    private final Background blackFill = new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY));
     private final Background greenFill = new Background(new BackgroundFill(Color.rgb(7, 80, 2), CornerRadii.EMPTY, Insets.EMPTY));
     
+    
+    /**
+     * Starts the client
+     * 
+     * @param primaryStage the root stage that is passed by launch called in main
+     */
     @Override
-    public void start(Stage primaryStage) throws FileNotFoundException {
+    public void start(Stage primaryStage) {
         primaryStage.setTitle("Clue");
         
         width = 1280;
@@ -94,11 +93,16 @@ public class ClueClient extends Application {
         
         stage = primaryStage;
         
-        volumeOn = new Image(new FileInputStream(new File("./resources/Sprites/volumeOn.png")), 50, 50, false, false);
-        volumeOff = new Image(new FileInputStream(new File("./resources/Sprites/volumeOff.png")), 50, 50, false, false);
-        backgroundMusic = new Sound("./resources/Music/backgroundMusic.wav");
+        try {
+            volumeOn = new Image(new FileInputStream(new File("resources/Sprites/volumeOn.png")), 50, 50, false, false);
+            volumeOff = new Image(new FileInputStream(new File("resources/Sprites/volumeOff.png")), 50, 50, false, false);
+        } catch(FileNotFoundException ex) {
+            
+        }
+
+        backgroundMusic = new Sound("resources/Music/backgroundMusic.wav");
         backgroundMusic.loop();
-        backgroundMusic.setvolume(0.2f);
+        backgroundMusic.setVolume(0.6f);
         
         VBox menuOptions = new VBox();
         menuOptions.setPadding(new Insets(10));
@@ -169,6 +173,11 @@ public class ClueClient extends Application {
         editor.startEditor(stage);
     }
     
+    
+    /**
+     * Creates the gameInstance and passes the necessary parameters.
+     * @param stage parent stage
+     */
     private void startGameScene(Stage stage) {
         numberOfPlayers = 1;
         
@@ -254,7 +263,6 @@ public class ClueClient extends Application {
         
         MenuItem startGameButton = new MenuItem("Start Game", avenirTitle);
         startGameButton.setOnMouseClicked(e -> {
-            stage.hide();
             String mapDirPath = "Maps/" + maps.getValue();
             File mapDirectory = new File(mapDirPath);
             String[] mapFiles = mapDirectory.list();
@@ -283,14 +291,15 @@ public class ClueClient extends Application {
 
             try {
                 GameController gameController = new GameController(numberOfPlayers, numberOfAIs, tileFile, doorFile);
-                game.startGame(gameController, tileFile);
-            } catch(TooManyPlayersException | MissingRoomDuringCreationException | UnknownActionException | NoSuchRoomException | NoSuchTileException | TileOccupiedException | InterruptedException ex) {
+                game.startGame(gameController, stage, tileFile);
+                stage.hide();
+                stage.setScene(prevScene);
+            } catch(TooManyPlayersException | MissingRoomDuringCreationException | NoSuchRoomException | NoSuchTileException ex) {
                 System.out.println("Ice Cream Machine BROKE");
-                ex.printStackTrace();
             } catch(NotEnoughPlayersException ex) {
                 Prompt playerPrompt = new Prompt("Not Enough Players");
                 playerPrompt.setLabelTitle("Start Game Error");
-                playerPrompt.showAndWait();
+                playerPrompt.showAndWait();    
             }
             
         });
@@ -331,6 +340,11 @@ public class ClueClient extends Application {
         stage.setScene(scene);
     }
     
+    /**
+     * Updates the number of AIs counter
+     * @param increase Increase or decrease counter
+     * @param label Label to update
+     */
     private void updateNumberOfAIs(boolean increase, MenuItem label) {
         if (increase) {
             numberOfAIs++;
@@ -340,6 +354,11 @@ public class ClueClient extends Application {
         label.setText(String.valueOf(numberOfAIs));
     }
     
+    /**
+     * Updates the number of Players counter
+     * @param increase Increase or decrease counter
+     * @param label Label to update
+     */
     private void updateNumberOfPlayers(boolean increase, MenuItem label) {
         if (increase) {
             numberOfPlayers++;
@@ -353,7 +372,7 @@ public class ClueClient extends Application {
      * Creates the HowToPlay scene. Before setting the stage to the HowToPlay
      * scene, the prevScene has to be set to the currentScene which is used to
      * return to home Scene.
-     * @param stage 
+     * @param stage parent stage
      */
     private void howToPlayScene(Stage stage) {
         GridPane howToPlayLayout = new GridPane();
@@ -374,8 +393,8 @@ public class ClueClient extends Application {
     }
     
     /**
-     * 
-     * @param stage 
+     * Creates the settings 
+     * @param stage parent stage
      */
     private void settingScene(Stage stage) {        
         BorderPane settingsLayout = new BorderPane();
@@ -455,6 +474,7 @@ public class ClueClient extends Application {
     }
     
     /**
+     * Creates the JavaFX component which will be used to display the credit information in a scene
      * 
      * @param layout
      * @return 
@@ -462,17 +482,16 @@ public class ClueClient extends Application {
     private GridPane creditsScene(GridPane layout) {      
         LinkedHashMap <String, String> credits = new LinkedHashMap<>();
         credits.put("Produced By", "Big Sage Productions");
-        credits.put("Project Manager", "Jak and Whip");
+        credits.put("Project Manager", "Jak");
         credits.put("AI", "Jose");
-        credits.put("Lead Programmer", "Steve");
-        credits.put("Programmer", "Mathew");
-        credits.put(" ", "Jak");
-        credits.put("  ", "Jose");
+        credits.put("Programmer", "Steve");
+        credits.put(" ", "Steve");
+        credits.put("  ", "Jak");
+        credits.put("   ", "Jose");
         credits.put("Artist", "Hung");
         credits.put("UX Design","Hung");
-        credits.put("Composer", "What Music XD");
-        credits.put("Tester", "Your Nan");
-        credits.put("Yasuo", "DAB");
+        credits.put("Background Music", "Investigations by Kevin Macleod");
+        credits.put("Board & Card Assets", "Hasbro Cluedo Board Game(2000)");
         credits.put("Special Thanks to", "Big Sage");
         
         int index = 1;
@@ -497,42 +516,42 @@ public class ClueClient extends Application {
      * @return 
      */
     private GridPane audioSettingsScene(GridPane layout) {
-        Label masterLabel = getLabel("Master Volume", avenirTitle);
+        Label backgroundMusicLabel = getLabel("Background Music Volume", avenirTitle);
         Label toggleVolume = new Label("",new ImageView(volumeOn));
+       
         
         toggleVolume.setOnMouseClicked(e -> backgroundMusic.toggleSound());
         
-        Slider masterVolume = new Slider(0, 100, 100);
-        masterVolume.setMaxWidth(1000);
-        masterVolume.setBlockIncrement(10);
+        Slider backgroundMusicVolume = new Slider(0, 100, 100);
+        backgroundMusicVolume.setMaxWidth(1000);
+        backgroundMusicVolume.setBlockIncrement(10);
         
-        Label masterVolumeShow = getLabel("", avenirTitle);
-        masterVolumeShow.setText("20");
-        masterVolume.setValue(20);
+        Label backgroundMusicVolumeShow = getLabel("", avenirTitle);
+        backgroundMusicVolumeShow.setText("60");
+        backgroundMusicVolume.setValue(60);
                 
-        masterVolume.valueProperty().addListener(new ChangeListener() {
+        backgroundMusicVolume.valueProperty().addListener(new ChangeListener() {
             @Override
             public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-                masterVolumeShow.setText(String.valueOf((int) masterVolume.getValue()));
-                backgroundMusic.setvolume((float) ((float)masterVolume.getValue()*0.01));
-                System.out.println(masterVolume.getValue());
+                backgroundMusicVolumeShow.setText(String.valueOf((int) backgroundMusicVolume.getValue()));
+                backgroundMusic.setVolume((float) ((float)backgroundMusicVolume.getValue()*0.01));
             }
         });
         
-        layout.add(masterLabel, 0, 0);
-        GridPane.setMargin(masterLabel, new Insets(0, 10, 0, 0));
-        layout.add(masterVolume, 1, 0);
-        layout.add(masterVolumeShow, 2, 0);
+        layout.add(backgroundMusicLabel, 0, 0);
+        GridPane.setMargin(backgroundMusicLabel, new Insets(0, 10, 0, 0));
+        layout.add(backgroundMusicVolume, 1, 0);
+        layout.add(backgroundMusicVolumeShow, 2, 0);
         layout.add(toggleVolume, 3, 0);
-        GridPane.setMargin(masterVolumeShow, new Insets(0, 0, 0, 10));
+        GridPane.setMargin(backgroundMusicVolumeShow, new Insets(0, 0, 0, 10));
         
         return layout;
     }
     
     /**
-     * 
-     * @param layout
-     * @return 
+     * Creates the settings scene and elements
+     * @param layout layout to add the JavaFX nodes to
+     * @return layout with the texture settings JavaFX nodes
      */
     private GridPane textureSettingsScene(GridPane layout) {
         textureMap = new HashMap<>();
@@ -551,8 +570,8 @@ public class ClueClient extends Application {
             Label characterFile = getLabel("File", avenirTitle);
             TextField characterFilePath = getTextField(40, false);
             
-            final String propertiesCharacterName = "Character"+(i-1)+"Name";
-            final String propertiesCharacter = "Character"+(i-1)+"Texture";
+            final String propertiesCharacterName = "character"+(i-1)+"Name";
+            final String propertiesCharacter = "character"+(i-1)+"Texture";
             
             MenuItem selectCharacterFile = new MenuItem("Choose", avenirTitle);
             selectCharacterFile.setOnMouseClicked(e -> {
@@ -579,8 +598,8 @@ public class ClueClient extends Application {
             Label weaponFile = getLabel("File", avenirTitle);
             TextField weaponFilePath = getTextField(40, false);
             
-            final String propertiesWeapon = "Weapon"+(i-1)+"Texture";
-            final String propertiesWeaponName = "Weapon"+(i-1)+"Name";
+            final String propertiesWeapon = "weapon"+(i-1)+"Texture";
+            final String propertiesWeaponName = "weapon"+(i-1)+"Name";
             
             MenuItem selectWeaponFile = new MenuItem("Choose", avenirTitle);
             selectWeaponFile.setOnMouseClicked(e -> {
@@ -620,6 +639,10 @@ public class ClueClient extends Application {
         return layout;
     }
     
+    /**
+     * Creates and saves the settings to a properties file
+     * @return if the file was saved successfully or not
+     */
     private boolean saveProperties() {
         try (OutputStream output = new FileOutputStream("./resources/config.properties")) {
             Properties prop = new Properties();
@@ -641,7 +664,7 @@ public class ClueClient extends Application {
      * content be edited.
      * @param columnCount
      * @param editable
-     * @return 
+     * @return TextField with the specified columnCount and editable state set.
      */
     private TextField getTextField(int columnCount, boolean editable) {
         TextField filePath = new TextField();
@@ -654,7 +677,7 @@ public class ClueClient extends Application {
      * Returns a Label with the given text and font.
      * @param text
      * @param font
-     * @return 
+     * @return Label of the given text in the given font
      */
     private Label getLabel(String text, Font font) {
         Label label = new Label(text);

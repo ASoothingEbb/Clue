@@ -5,43 +5,39 @@
  */
 package clue.action;
 
-import clue.ai.AiAdvanced;
+import clue.player.AiAdvanced;
 import clue.card.ThrowAgainIntrigue;
 import clue.client.gameInstance;
 import clue.player.Player;
 
 /**
- *Represents a Player being able to roll again due to a roll again intrigue card
- * being used.
+ * Represents a Player being able to roll again due to a roll again intrigue
+ * card being used.
+ *
  * @author slb35
  */
-public class ThrowAgainAction extends Action{
-    gameInstance gui;
-     /**
+public class ThrowAgainAction extends Action {
+
+    /**
      * Creates a new ThrowAgainAction
+     *
      * @param player the Player to roll again
-     * @param card
-     * @param gui
+     * @param card the intrigue card
      */
-    public ThrowAgainAction(Player player,ThrowAgainIntrigue card, gameInstance gui){
-        super(player,card);
+    public ThrowAgainAction(Player player, ThrowAgainIntrigue card) {
+        super(player, card);
         this.actionType = ActionType.THROWAGAIN;
-        this.gui = gui;
     }
 
+    /**
+     * Executes the ThrowAgainAction. Allows user to roll again.
+     */
     @Override
     public void execute() {
-        player.removeCard(card);
-        if (player.isAi()){
+        player.removeIntrigue((ThrowAgainIntrigue)card);
+        if (player instanceof AiAdvanced) {
             ((AiAdvanced) player).respondToThrowAgain();
-
-        }
-        else if (gui != null){
-            gui.actionResponse(this);
-        }
-        else{
-            System.out.println("[ThrowAgainAction.execute] no gui found");
         }
     }
-        
+
 }

@@ -11,6 +11,10 @@ package clue.tile;
  */
 public class NoSuchTileException extends Exception {
 
+    /**
+     * Creates a noSuchTileException
+     * @param message the exception message
+     */
     public NoSuchTileException(String message) {
         super(message);
     }

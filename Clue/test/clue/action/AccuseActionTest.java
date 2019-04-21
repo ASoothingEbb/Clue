@@ -7,6 +7,7 @@ package clue.action;
 
 import clue.GameController;
 import clue.MissingRoomDuringCreationException;
+import clue.NotEnoughPlayersException;
 import clue.card.PersonCard;
 import clue.card.RoomCard;
 import clue.card.WeaponCard;
@@ -49,9 +50,10 @@ public class AccuseActionTest {
 
     /**
      * Test of execute method, of class AccuseAction.
+     * @deprecated needs gui to work :(
      */
     @Test
-    public void testExecute() throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException, TileOccupiedException {
+    public void testExecute() throws Exception {
         System.out.println("execute");
         PersonCard person = new PersonCard(1);
         RoomCard room = new RoomCard(1);
@@ -59,7 +61,7 @@ public class AccuseActionTest {
         
         ArrayList<Player> players = new ArrayList();
         
-        GameController game = new GameController(1,1,"testCsv/tiles1.csv", "testCsv/doors1.csv");
+        GameController game = new GameController(1,1,"resources/archersAvenueTiles.csv", "resources/archersAvenueDoors.csv");
         
         Player player = new Player(1, game);
         players.add(player);

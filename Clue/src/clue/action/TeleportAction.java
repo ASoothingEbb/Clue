@@ -5,7 +5,7 @@
  */
 package clue.action;
 
-import clue.ai.AiAdvanced;
+import clue.player.AiAdvanced;
 import clue.player.Player;
 import clue.card.TeleportIntrigue;
 import clue.client.gameInstance;
@@ -20,33 +20,42 @@ import clue.tile.TileOccupiedException;
  */
 public class TeleportAction extends Action {
 
-    private gameInstance gui;
     private Tile target;
 
-    public TeleportAction(Player p, TeleportIntrigue card, gameInstance gui) {
+    /**
+     * Creates a TeleportAction
+     * 
+     * @param p the player to be teleported
+     * @param card  the intrigue card.
+     */
+    public TeleportAction(Player p, TeleportIntrigue card) {
         super(p, card);
         this.actionType = ActionType.TELEPORT;
     }
 
+    /**
+     * Executes the TeleportAction.
+     */
     @Override
     public void execute() {
-        player.removeCard(card);
-        if (player.isAi()){
+        player.removeIntrigue((TeleportIntrigue)card);
+        if (player instanceof AiAdvanced){
             ((AiAdvanced) player).respondToTeleport(this);
 
         }
-        else if (gui != null){
-            gui.actionResponse(this);
-        }
-        else{
-            System.out.println("[TeleportAction.execute] no gui found");
-        }
     }
     
+    /**
+     * Sets the tile for the player to teleport to.
+     * @param t the tile to teleport to
+     */
     public void setTarget(Tile t){
         target = t;
     }
     
+    /**
+     * @return the tile where the player will teleport to.
+     */
     public Tile getTarget(){
         return target;
     }

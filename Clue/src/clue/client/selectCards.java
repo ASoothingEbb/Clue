@@ -28,15 +28,13 @@ import javafx.stage.Stage;
 
 /**
  *
- * @author hungb
+ * @author Hung Bui Quang
  */
 public class selectCards {
     
     private Stage stage;
-    
-    private String name;
+
     private Font avenir;
-    private Font avenirText;
     private String actionType;
     private Color color;
     private HashMap<String, String> ImagePathMap;
@@ -46,21 +44,22 @@ public class selectCards {
     
     private final Background greenFill = new Background(new BackgroundFill(Color.rgb(7, 80, 2), CornerRadii.EMPTY, Insets.EMPTY));
     
+    /**
+     * Creates all the UI elements for the select Cards window used for suggestion and accusation
+     * @return a GridPane containing all the JavaFX nodes making up the UI
+     */
     private GridPane createCardsUI() {
         GridPane cards = new GridPane();
         cards.setBackground(greenFill);
         
         ArrayList<String> characters = new ArrayList<>();
         ArrayList<String> weapons = new ArrayList<>();
-        ArrayList<String> rooms = new ArrayList<>();
-        
+
         CardNameMap.entrySet().forEach((entry) -> {
             if (entry.getKey().contains("character")) {
                 characters.add(entry.getValue());
             } else if (entry.getKey().contains("weapon")) {
                 weapons.add(entry.getValue());
-            } else if (entry.getKey().contains("room")) {
-                rooms.add(entry.getValue());
             }
         });
          
@@ -71,6 +70,8 @@ public class selectCards {
             System.out.println("File not found");
         }
         ImageView characterView = new ImageView(character);
+        characterView.setFitHeight(230);
+        characterView.setFitWidth(150);
         
         ComboBox characterOptions = new ComboBox();
         characterOptions.getItems().addAll(characters);
@@ -86,6 +87,8 @@ public class selectCards {
             System.out.println("File not found");
         }
         ImageView weaponView = new ImageView(weapon);
+        weaponView.setFitHeight(230);
+        weaponView.setFitWidth(150);
         
         ComboBox weaponOptions = new ComboBox();
         weaponOptions.getItems().addAll(weapons);
@@ -95,34 +98,22 @@ public class selectCards {
         });
         
         Image room = null;
-        ImageView roomView;
         ComboBox roomOptions = new ComboBox();
         
-        if (name.equals("Suggestion")) {
-            try {
-                room = new Image(new FileInputStream(new File(ImagePathMap.get("room"+currentRoom))));
-            } catch(FileNotFoundException ex) {
-                System.out.println("File not found");
-            }
-            roomOptions.getItems().add(CardNameMap.get("room"+currentRoom));
-            roomOptions.setValue(CardNameMap.get("room"+currentRoom));
-            roomView = new ImageView(room);
-        } else {
-            try {
-                room = new Image(new FileInputStream(new File(ImagePathMap.get("room0"))));
-            } catch(FileNotFoundException ex) {
-                System.out.println("File not found");
-            }
-            roomOptions.getItems().addAll(rooms);
-            roomOptions.setValue(CardNameMap.get("room0"));
-            roomView = new ImageView(room);
-            roomOptions.getSelectionModel().selectedItemProperty().addListener((Observable, oldValue, newValue) -> {
-            roomView.setImage(getImage(newValue.toString()));
-        });
+        try {
+            room = new Image(new FileInputStream(new File(ImagePathMap.get("room"+currentRoom))));
+        } catch(FileNotFoundException ex) {
+            System.out.println("File not found");
         }
+        roomOptions.getItems().add(CardNameMap.get("room"+currentRoom));
+        roomOptions.setValue(CardNameMap.get("room"+currentRoom));
+        ImageView roomView = new ImageView(room);
+        roomView.setFitHeight(230);
+        roomView.setFitWidth(150);
         
         MenuItem sendCards = new MenuItem(actionType, avenir);
         sendCards.setActiveColor(color);
+        
         sendCards.setOnMouseClicked(e -> {
             if (characterOptions.getValue().toString().contains("Select")) {
                 Prompt selectCard = new Prompt("Select the suspect");
@@ -135,12 +126,10 @@ public class selectCards {
                 int personCard = Integer.valueOf(personKey.substring(personKey.length() - 1));
                 String weaponKey = getKey(CardNameMap, weaponOptions.getValue().toString());
                 int weaponCard = Integer.valueOf(weaponKey.substring(weaponKey.length() - 1));
-                String roomKey = getKey(CardNameMap, roomOptions.getValue().toString());
-                int roomCard = Integer.valueOf(roomKey.substring(roomKey.length() - 1));
                 if (actionType.equals("Suggestion")) {
                     gameInterface.suggest(personCard, weaponCard);
                 } else if (actionType.equals("Accusation")) {
-                    gameInterface.accuse(personCard, weaponCard, roomCard);
+                    gameInterface.accuse(personCard, weaponCard);
                 }
                 stage.close();
             }
@@ -167,6 +156,11 @@ public class selectCards {
         return cards;
     }
     
+    /**
+     * 
+     * @param key
+     * @return 
+     */
     private Image getImage(String key) {
         try {
             Image image = new Image(new FileInputStream(new File(ImagePathMap.get(getKey(CardNameMap, key)))));
@@ -177,6 +171,12 @@ public class selectCards {
         return null;
     }
     
+    /**
+     * 
+     * @param map
+     * @param value
+     * @return 
+     */
     private String getKey(HashMap<String, String> map, String value) {
         for (HashMap.Entry entry: map.entrySet()) {
             if (entry.getValue().toString().equals(value)) {
@@ -186,22 +186,31 @@ public class selectCards {
         return "";
     }
     
+    /**
+     * Initialises the Font and tries to load the TTF file
+     */
     private void initFonts() {
         avenir = new Font(30);
-        avenirText = new Font(20);
         try {
             avenir = Font.loadFont(new FileInputStream(new File("./resources/fonts/Avenir-Book.ttf")), 30);
-            avenirText = Font.loadFont(new FileInputStream(new File("./resources/fonts/avenir-Book.ttf")), 20);
         } catch(FileNotFoundException ex) {
             System.out.println("Font not found");
         }
-        
     }
-    
+   
+    /**
+     * Creates the stage for the window and initialises all the variables from the given parameters.
+     * Calls createCardsUI which creates all the UI elements, then sets the scene and shows the stage.
+     * @param name name of the window
+     * @param color colour of the button
+     * @param room the ID of current room the player is in
+     * @param ImagePathMap the HashMap containing the paths for images
+     * @param CardNameMap the HashMap containing the names of the cards to their ID
+     * @param gameController the gameController used to interface with the backend
+     */
     public void show(String name, Color color, int room, HashMap<String,String> ImagePathMap, HashMap<String, String> CardNameMap, GameController gameController) {
         stage = new Stage();
-        
-        this.name = name;        
+    
         this.gameInterface = gameController;
         this.actionType = name;
         this.color = color;

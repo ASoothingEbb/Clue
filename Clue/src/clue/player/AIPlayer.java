@@ -23,8 +23,8 @@ public class AIPlayer extends Player {
     }
 
     /**
+     * @param id the id of the Ai player
      * @deprecated test purposes only
-     * @param i 
      */
     public AIPlayer(int id) {
         super(id);

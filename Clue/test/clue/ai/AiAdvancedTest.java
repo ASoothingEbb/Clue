@@ -5,6 +5,7 @@
  */
 package clue.ai;
 
+import clue.player.AiAdvanced;
 import clue.card.Card;
 import clue.GameController;
 import clue.MissingRoomDuringCreationException;
@@ -81,7 +82,7 @@ public class AiAdvancedTest {
 //    }
     
     //@Test
-    public void testMakeLists() throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException, TileOccupiedException{
+    public void testMakeLists() throws UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException, TileOccupiedException{
         System.out.println("makeListTest");
         Player p1 = new AiAdvanced(1, gc, 0, 0);
         Player p2 = new AiAdvanced(2, gc, 0 ,0);
@@ -112,38 +113,52 @@ public class AiAdvancedTest {
      */
     @Test
     public void testMoveToRoom() {
-        System.out.println("moveToRoom");
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        System.out.println("TEST MOVETOROOM");
+        
+        AiAdvanced p1 = new AiAdvanced(0, gc, 4, 2);
+        
+        //Board layout
+        //t1 t2 t3 t4
+        //t5 t6 t7 r8
+        
+        Tile t1 = new Tile(0, 0);
+        Tile t2 = new Tile(1, 0);
+        Tile t3 = new Tile(2, 0);
+        Tile t4 = new Tile(3, 0);
+        Tile t5 = new Tile(0, 1);
+        Tile t6 = new Tile(1, 1);
+        Tile t7 = new Tile(2, 1);
+        Tile r8 = new Room();
+        
+        t1.addAdjacentBoth(t2);
+        t1.addAdjacentBoth(t5);
+        t2.addAdjacentBoth(t3);
+        t2.addAdjacentBoth(t6);
+        t3.addAdjacentBoth(t4);
+        t3.addAdjacentBoth(t7);
+        t4.addAdjacentBoth(r8);
+        r8.addAdjacentBoth(t7);
+        t7.addAdjacentBoth(t6);
+        t6.addAdjacentBoth(t5);
+        
+        p1.setPosition(t1);
+        
+        p1.moveToRoom();
+        
+        Tile expected = r8;
+        
+        Tile result = p1.getPosition();
+        
+        assertEquals(expected, result);
     }
 
-    /**
-     * Test of getLists method, of class AiAdvanced.
-     */
-    @Test
-    public void testGetLists() {
-        System.out.println("getLists");
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getPathToRoom method, of class AiAdvanced.
-     */
-    @Test
-    public void testGetPathToRoom() {
-        System.out.println("getPathToRoom");
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
+   
 
     /**
      * Test of BFS method, of class AiAdvanced.
      */
     @Test
-
-
-    public void testBFS() throws InterruptedException{//Trying to find a room.
+    public void testBFS() {//Trying to find a room.
         System.out.println("BFS trying to find a room");
         //--Layout of map--
         // t1 t2 t3
@@ -197,8 +212,8 @@ public class AiAdvancedTest {
     
 
 
-
-    public void testBFS2() throws InterruptedException{//Testing it on a board with no room.
+    @Test
+    public void testBFS2() {//Testing it on a board with no room.
         System.out.println("BFS (no room)");
         //Board Layout
         //t1 t2 t3 t4 
@@ -234,11 +249,8 @@ public class AiAdvancedTest {
         assertTrue(resultPath.isEmpty());
     }    
     
-    
-
-
-
-    public void testBFS3() throws InterruptedException{//testing bfs with players as obstacles w/valid route
+    @Test
+    public void testBFS3() {//testing bfs with players as obstacles w/valid route
         System.out.println("BFS (with room, with valid path, with players)");
         //Board Layout
         //t1 t2 t3 t4
@@ -284,7 +296,8 @@ public class AiAdvancedTest {
         assertEquals(resultPath, expectedPath);
     }   
 
-    public void testBFS5() throws InterruptedException{//testing bfs with multiple rooms
+    @Test
+    public void testBFS4() {//testing bfs with multiple rooms
         System.out.println("BFS (many rooms)");
         //Board Layout 
         //t1 t2 t3 r4

@@ -59,39 +59,12 @@ public class GameState {
         System.out.println("[GameState.constructor]");
     }
 
-    /**
-     * Adds a Player to the list of Players.
-     *
-     * @param player The player to add
-     */
-    public void register(Player player) {
-        players.add(player);
-        playersNumber = players.size();
-    }
 
-    /**
-     * Removes a player from the game. Note that players are not actually
-     * removed from the list of players, but instead they are marked as
-     * inactive.
-     *
-     * @param player The player to remove
-     */
-    public void unregister(Player player) {
-        player.removeFromPlay();
-        playersNumber = players.size();
-    }
 
-    /**
-     * Issues a game state update to all players in the game.
-     */
-    public void notifyAllPlayers() {
-        players.forEach((p) -> {
-            p.onUpdate();
-        });
-    }
 
     /**
      * Returns the id of the next player in the player list.
+     * @return the id of the next player
      */
     public int nextPlayer() {
         System.out.println("[GameState.nextPlayer]");
@@ -115,10 +88,6 @@ public class GameState {
                 next = players.get(i);
             }
             
-            //do {
-            //    turn = getNextPointer(turn);
-            //} while (!currentPlayer.isActive());
-            //return players.get(turn).getId();
         } 
         else{
             System.out.println("[GameState.nextPlayer] running: "+running+" hasActive: "+hasActive()+"----------------");
@@ -130,7 +99,7 @@ public class GameState {
 
     /**
      * Gets the starting player in the list
-     * @return 
+     * @return the starting player
      */
     public final Player getStartingPlayer(){
         for (Player p : players){
@@ -140,6 +109,12 @@ public class GameState {
         }
         return null;
     }
+    
+    /**
+     * Gets the next pointer in the player list using wraparound
+     * @param i the current pointer
+     * @return the next pointer
+     */
     public int getNextPointer(int i) {
         System.out.println("[GameState.getNextPointer]");
         if (i + 1 == players.size()) {
@@ -166,23 +141,17 @@ public class GameState {
     /**
      * Returns the id of the current player
      *
-     * @return player id
+     * @return player id of the current player
      */
     public int getPlayerTurn() {
         System.out.println("[GameState.getPlayerTurn]turn:"+turn+" playerId: "+currentPlayer.getId());
         return currentPlayer.getId();
     }
 
-    /**
-     * Sets the previous player to be the current player
-     */
-    public void previousPlayer() {
-        System.out.println("[GameState.previousPlayer]");
-        currentPlayer = previousPlayer;
-    }
+
 
     /**
-     * gets the last Action performed on this GameState.
+     * gets the last Action performed
      *
      * @return last Action update
      */
@@ -190,7 +159,12 @@ public class GameState {
         return this.lastAction;
     }
 
-    public Player getPlayer(int id) {//TODO javadocs?
+    /**
+     * Gets a player object with the specified id
+     * @param id the id of the player object to fetch
+     * @return the fetched player
+     */
+    public Player getPlayer(int id) {
         return players.get(id);
     }
 
@@ -206,7 +180,7 @@ public class GameState {
     /**
      * Ends the current game instance.
      *
-     * @return
+     * @return the final player of the game
      */
     public Player endGame() {
         running = false;
@@ -222,18 +196,19 @@ public class GameState {
         this.lastAction = action;
     }
 
+    /**
+     * Gets the current player who's turn it is
+     * @return the current player who's turn it is
+     */
     public Player getCurrentPlayer() {
         return currentPlayer;
     }
 
-    public Player getPreviousPlayer() {
-        return previousPlayer;
-    }
 
-    public List<Player> getPlayerList() {
-        return players;
-    }
-    
+    /**
+     * Gets whether or not the game state has an active player in it
+     * @return true if game state contains an active player, false otherwise
+     */
     public boolean hasActive(){
         System.out.println("[GameState.hasActive]");
         boolean active = false;

@@ -31,8 +31,6 @@ public class Room extends Tile{
     }
     /**
      * Creates a new Room
-     * @param x
-     * @param y
      */
     public Room(){
         super(-1,-1);
@@ -92,7 +90,7 @@ public class Room extends Tile{
     
     /**
      * Returns the physical locations (x,y coordinates) of the room
-     * @return 
+     * @return returns the list of (x,y) coordinate locations
      */
     public ArrayList<int[]> getLocations(){
         return locations;
@@ -113,6 +111,7 @@ public class Room extends Tile{
     /**
      * Placeholder method from legacy version, currently still here so it is not re implemented without notice to mw434
      * 
+     * @param card the room card associated with the room
      */
     final public void setCard(RoomCard card){
         System.err.println("[Room.setCard] //DO NOT IMPLEMENT, IF YOU MUST SPEAK TO MW434"); 
@@ -132,17 +131,57 @@ public class Room extends Tile{
     
     /**
      * Gives a location resource to the caller
-     * @return 
+     * @return a (x,y) location for the token to be drawn at
      */
     public int[] assignLocation(){
         int [] location = locations.get(0);
-        if (nonOccupiedLocations.size() > 0){
-            int selected = 0;
-            location = nonOccupiedLocations.get(selected);
-            nonOccupiedLocations.remove(selected);
+        boolean assignedToMiddle = false;
+        if (nonOccupiedLocations.size() >= 9){
+            int xLow = Integer.MAX_VALUE;
+            int xHigh = 0;
+            int yLow = Integer.MAX_VALUE;
+            int yHigh = 0;
+            
+            //calculate the lowest and highest 
+            for (int[] loc : nonOccupiedLocations){
+                if (loc[0] > xHigh){
+                    xHigh = loc[0];
+                }
+                if (loc[0] < xLow){
+                    xLow = loc[0];
+                }
+                
+                if (loc[1] > yHigh){
+                    yHigh = loc[1];
+                }
+                if (loc[1] < yLow){
+                    yLow = loc[1];
+                }  
+            }
+            
+            
+            //select the first location that can fit within the 1 tile margin
+            for (int[] loc : nonOccupiedLocations){
+                if (loc[0] < xHigh && loc[0] > xLow && loc[1] > yLow && loc[1] < yHigh){
+                    location = loc;
+                    assignedToMiddle = true;
+                    break;
+                }
+            }
+            
+            
+            
+            nonOccupiedLocations.remove(location);    
+        }
+        if (!nonOccupiedLocations.isEmpty() && !assignedToMiddle){
+            location = nonOccupiedLocations.get(0);
+            nonOccupiedLocations.remove(location);   
         }
         
-        return location;
+        int[] result = new int[2];
+        result[0] = location[0];
+        result[1] = location[1];
+        return result;
 
     
     }
@@ -154,6 +193,7 @@ public class Room extends Tile{
         for (int loc[] : locations){
             if (loc[0] == location[0] && loc[1] == location[1]){//only accept the drawn location if room has this location
                 nonOccupiedLocations.add(location);
+                System.out.println("[Room.unassignLocation]"+location[0] +","+location[1]+" being assigned to room: "+getId());
                 break;
             }
         }

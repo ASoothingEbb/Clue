@@ -5,7 +5,6 @@
  */
 package clue;
 
-import clue.GameController.MovementException;
 import clue.action.Action;
 import clue.action.ActionType;
 import clue.action.MoveAction;
@@ -47,7 +46,7 @@ public class GameControllerTest {
     }
     
     @BeforeClass
-    public static void setUpClass() throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException, TileOccupiedException, NotEnoughPlayersException {
+    public static void setUpClass() throws UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException, TileOccupiedException, NotEnoughPlayersException {
 
         gc = new GameController(2,0,"resources/archersAvenueTiles.csv", "resources/archersAvenueDoors.csv");
     }
@@ -118,20 +117,20 @@ public class GameControllerTest {
      * Test of suggest method, of class GameController.
      */
     @Test
-    public void testSuggest() throws InterruptedException, UnknownActionException, TileOccupiedException {
+    public void testSuggest() {
         System.out.println("suggest");
         fail("The test case is a prototype.");
     }
 
-    /**        instance = new GameController(new ArrayList<Player>());
+    /**        
      * Test of getLastAction method, of class GameController.
      */
     @Test
-    public void testGetLastAction() throws UnknownActionException, InterruptedException, TileOccupiedException, NoSuchRoomException, MovementException {
+    public void testGetLastAction() throws NoSuchRoomException, TileOccupiedException {
         System.out.println("getLastAction");
         Card card = new CardImpl();
         gc.move(0, 0);
-        assertEquals(ActionType.MOVE,gc.getLastAction().actionType);
+        assertEquals(ActionType.MOVE,gc.getLastAction().getActionType());
     }
 
     /**
@@ -394,7 +393,7 @@ public class GameControllerTest {
         expResult.add(gc.getLastAction());
         gc.endTurn();
         Queue<Action> result = gc.getActions();
-        assertEquals(expResult.element().actionType, result.element().actionType);
+        assertEquals(expResult.element().getActionType(), result.element().getActionType());
     }
 
     /**

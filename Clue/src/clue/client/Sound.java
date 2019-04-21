@@ -7,6 +7,7 @@ package clue.client;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.BooleanControl;
@@ -24,25 +25,32 @@ public class Sound {
    private FloatControl volume;
    private BooleanControl muteControl;
    private boolean muted;
+   private float range;
    
-    public static Sound sound1 = new Sound("/resources/music/backgroundMusic.wav");
-    //public static Sound sound2 = new Sound("/sound1.wav");
-    //public static Sound sound3 = new Sound("/sound1.wav");
 
+   /**
+    * Creates a sound 
+    * @param fileName the path to where the .wav file is 
+    */
     public Sound(String fileName) {
         try{
-            AudioInputStream ais = AudioSystem.getAudioInputStream(new File(fileName));
+            File sound = new File(fileName);
+            AudioInputStream ais = AudioSystem.getAudioInputStream(sound);
             clip = AudioSystem.getClip();
             clip.open(ais);
             volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            range = volume.getMaximum() - volume.getMinimum();
             muteControl = (BooleanControl) clip.getControl(BooleanControl.Type.MUTE);
-            muteControl.setValue(true);
+            muteControl.setValue(false);
             muted = false;
         } catch (IOException | LineUnavailableException | UnsupportedAudioFileException e){
         }
 
     }
     
+    /**
+     * Plays the sound once in a thread.
+     */
    public void play(){
        try{
            new Thread(){
@@ -57,15 +65,22 @@ public class Sound {
            }.start();
            
        } catch(Exception e){
+           System.out.println("ASD");
             e.printStackTrace();
        }
    }
    
+  /**
+   * Stops the sound from playing
+   */
    public void stop(){
        if(clip == null) return;
        clip.stop();  
    }
    
+   /**
+    * Plays the sound on a loop until stopped.
+    */
    public void loop(){
         try{
             if(clip != null){
@@ -85,25 +100,43 @@ public class Sound {
         }
    }
    
+   /**
+    * returns whether the sound is playing or not.
+    * @return true if active false otherwise
+    */
     public boolean isActive(){
        return clip.isActive();
     }
    
-    public void setvolume(float f){
+    /**
+     * Sets the volume of the sound
+     * @param f the percentage from 0 - 1 to set the volume to
+     */
+    public void setVolume(float f){
         if(f == 0.0){
-            System.out.println("VOLUME:0");
             muteControl.setValue(true);
             muted = true;
             return;
         }
         muted = false;
-        float range = volume.getMaximum() - volume.getMinimum();
+        
         float gain = (range * f) + volume.getMinimum();
         muteControl.setValue(false);
         volume.setValue(gain);
     }
    
+    /**
+     * Mutes/unmutes the sound without stopping it
+     */
     public void toggleSound(){
         if(!muted) muteControl.setValue(!muteControl.getValue());
+    }
+    
+    /**
+     * If the sound is active, it will play from the beggining.
+     */
+    public void reset(){
+        stop();
+        clip.setFramePosition(1000);
     }
 }

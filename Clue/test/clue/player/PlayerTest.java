@@ -7,6 +7,7 @@ package clue.player;
 
 import clue.GameController;
 import clue.MissingRoomDuringCreationException;
+import clue.NotEnoughPlayersException;
 import clue.action.Action;
 import clue.action.UnknownActionException;
 import clue.card.Card;
@@ -36,7 +37,7 @@ public class PlayerTest {
 
     
     @BeforeClass
-    public static void setUpClass() throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException, TileOccupiedException {
+    public static void setUpClass() throws UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException, TileOccupiedException, NotEnoughPlayersException {
 
         gc = new GameController(1,1,"testCsv/tiles1.csv", "testCsv/doors1.csv");
     }
@@ -154,18 +155,6 @@ public class PlayerTest {
         fail("The test case is a prototype.");
     }
 
-    /**
-     * Test of removeCard method, of class Player.
-     */
-    @Test
-    public void testRemoveCard() {
-        System.out.println("removeCard");
-        Card card = null;
-        Player instance = new PlayerImpl(0, gc);
-        instance.removeCard(card);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
 
     /**
      * Test of hasCard method, of class Player.

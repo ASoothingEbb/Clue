@@ -5,7 +5,7 @@
  */
 package clue.action;
 
-import clue.ai.AiAdvanced;
+import clue.player.AiAdvanced;
 import clue.card.Card;
 import clue.client.gameInstance;
 import clue.player.Player;
@@ -17,34 +17,31 @@ import java.util.List;
  */
 public class ShowCardAction extends Action {
     private final Card card;
-    private gameInstance gui;
     private Player whoShowedTheCard;
     
     /**
      * Creates a new ShowCardAction
      * @param player the Player to show the Card to
      * @param card the Card to be shown.
-     * @param gui the gameInstance to be prompted
      * @param whoShowedTheCard the player who revealed the card
      */
-    public ShowCardAction(Player player,Card card, gameInstance gui, Player whoShowedTheCard) {
+    public ShowCardAction(Player player,Card card, Player whoShowedTheCard) {
         super(player);
         this.actionType = ActionType.SHOWCARD;
         this.card = card;
-        this.gui = gui;
         this.whoShowedTheCard = whoShowedTheCard;
     }
-
-    public ShowCardAction(Player player, Card card, Player shower) {
-        super(player);
-        this.card = card;
-        this.whoShowedTheCard = shower;
-    }
     
+    /**
+     * @return the player who showed the card.
+     */
     public Player getWhoShowedTheCard(){
         return whoShowedTheCard;
     }
     
+    /**
+     * @return the card to be shown
+     */
     public Card getCardToShow(){
         return card;
     }
@@ -55,15 +52,8 @@ public class ShowCardAction extends Action {
  */
     @Override
     public void execute() {
-        if (player.isAi()){
+        if (player instanceof AiAdvanced){
             ((AiAdvanced) player).revealCard(card, whoShowedTheCard);
         }
-        else if (gui!=null){
-            gui.actionResponse(this);
-        }
-        else{
-            System.out.println("[ShowCardAction.execute] no gui found");
-        }
     }
-
 }

@@ -22,8 +22,8 @@ import java.util.List;
  */
 public class SuggestAction extends Action {
 
-    public Player show;
-    public List<Card> foundCards;
+    private Player show;
+    private List<Card> foundCards;
     private final Card[] cards;
     private List<Player> players;
 
@@ -34,6 +34,7 @@ public class SuggestAction extends Action {
      * @param room the room to suggest
      * @param weapon the weapon to suggest
      * @param player the player making the suggestion
+     * @param players the list of players in the game
      * 
      */
     public SuggestAction(PersonCard person, RoomCard room, WeaponCard weapon, Player player, List<Player> players) {
@@ -61,6 +62,15 @@ public class SuggestAction extends Action {
         return (PersonCard)cards[0];
     }
     
+    /**
+     * Gets the weapon card used in the suggestion
+     * @return the weapon card used in the suggestion
+     */
+    public WeaponCard getWeaponCard(){
+        return (WeaponCard)cards[2];
+    }
+    
+    
     
     /**
      * Executes the SuggestAction. Result stores if another player has any of
@@ -80,7 +90,7 @@ public class SuggestAction extends Action {
             }
             check = players.get(i);
             playersLeftToCheck--;
-            if (check.isActive() && player.getId() != i) {
+            if (player.getId() != i) {
                 if (!check.hasIntrigue(CardType.AVOIDSUGGESTION)){
                     for (Card c : cards) {
                         if (check.hasCard(c)) {
@@ -113,10 +123,24 @@ public class SuggestAction extends Action {
     public String toString() {
         String cards = "";
         for(Card c : this.cards){
-            cards += c.cardType+ ":" + c.getId() + " ";
+            cards += c.getCardType()+ ":" + c.getId() + " ";
         }
         return super.toString() + cards;
     }
 
+    /**
+     * Gets the person who needs to show their card.
+     * @return player who needs to show card
+     */
+    public Player getShower(){
+        return show;
+    }
     
+    /**
+     * Gets the cards which the player has which match the cards that were suggested.
+     * @return list of cards of the player that match the suggested 
+     */
+    public List<Card> getFoundCards(){
+        return foundCards;
+    }
 }

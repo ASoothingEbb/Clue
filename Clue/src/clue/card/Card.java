@@ -13,8 +13,12 @@ package clue.card;
 public abstract class Card {
 
     private int id;
-    public CardType cardType = CardType.CARD;
+    protected CardType cardType = CardType.CARD;
 
+    /**
+     * Creates a card
+     * @param id the id of the card
+     */
     public Card(int id) {
         this.id = id;
     }
@@ -22,9 +26,17 @@ public abstract class Card {
     /**
      * Gets the card id.
      *
-     * @return id
+     * @return id the id of the card
      */
     public int getId() {
         return id;
+    }
+    
+    /**
+     * Gets the type of the card
+     * @return the enum type of card
+     */
+    public CardType getCardType(){
+        return cardType;
     }
 }

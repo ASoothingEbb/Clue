@@ -5,12 +5,8 @@
  */
 package clue.action;
 
-import clue.ai.AiAdvanced;
-import clue.card.Card;
+import clue.player.AiAdvanced;
 import clue.player.Player;
-import static java.lang.Thread.sleep;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *Represents the start of the next turn.
@@ -27,10 +23,14 @@ public class StartTurnAction extends Action{
         this.actionType = ActionType.STARTTURN;
     }
 
+    /**
+     * Executes this action
+     */
     @Override
     public void execute() {
         super.execute(); //To change body of generated methods, choose Tools | Templates.
-        if (player.isAi()){
+        if (player instanceof AiAdvanced){
+            System.out.println("--------------------------prompting ai for player+"+player.getId());
             ((AiAdvanced) player).respondToStartTurn();
         }
         //TODO prompt GUI

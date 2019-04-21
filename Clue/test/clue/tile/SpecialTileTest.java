@@ -51,7 +51,7 @@ public class SpecialTileTest {
         
         int oldSize = player.getCards().size();
         
-        sp.getIntrigue(player,true);
+        sp.getIntrigue(player);
         assertEquals(oldSize+1,player.getIntrigue().size());
     }
     

@@ -15,11 +15,19 @@ import clue.action.Action;
  */
 public class ThrowAgainIntrigue extends IntrigueCard {
 
+    /**
+     * Creates a ThrowAgainIntrigue Card
+     * @param id the id of the card
+     */
     public ThrowAgainIntrigue(int id) {
         super(id);
         cardType = CardType.THROWAGAIN;
     }
 
+    /**
+     * Gets the type of the card
+     * @return the enum type of the card
+     */
     @Override
     public CardType getCardType() {
         return cardType;

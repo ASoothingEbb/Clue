@@ -6,7 +6,7 @@
 package clue.action;
 
 import clue.GameController;
-import clue.ai.AiAdvanced;
+import clue.player.AiAdvanced;
 import clue.card.Card;
 import clue.card.CardType;
 import clue.client.gameInstance;
@@ -21,10 +21,8 @@ public class ShowCardsAction extends Action{
 
     private final List<Card> cards;
     private final Player suggester;
-    private gameInstance gui;
     private int idOfCardToShow;
     private CardType typeOfCardToShow;
-    private GameController gc;
 
     /**
      * Creates a new ShowCardsAction
@@ -33,31 +31,14 @@ public class ShowCardsAction extends Action{
      * @param cards the cards to prompt
      */
 
-    public ShowCardsAction(Player player, Player suggester, List<Card> cards, gameInstance gui, GameController gc) {
+    public ShowCardsAction(Player player, Player suggester, List<Card> cards) {
         super(player);
         this.actionType = ActionType.SHOWCARDS;
         this.cards = cards;
         this.suggester = suggester;
-        this.gui = gui;
-        this.gc = gc;
         idOfCardToShow = -1;
         typeOfCardToShow = null;
 
-    }
-
-    /**
-     * 
-     * @deprecated Test purposes only
-     * @param player
-     * @param suggester
-     * @param cards 
-     */
-    public ShowCardsAction(Player player, Player suggester, List<Card> cards) {
-        super(player);
-        this.cards = cards;
-        this.suggester = suggester;
-        this.gc = null;
-        this.gui = null;
     }
 
     /**
@@ -65,30 +46,34 @@ public class ShowCardsAction extends Action{
      */
     @Override
     public void execute() {
-        if (player.isAi()){
+        if (player instanceof AiAdvanced){
             Card responseCard = ((AiAdvanced) player).respondToShowCards(cards);
             idOfCardToShow = responseCard.getId();
-            typeOfCardToShow = responseCard.cardType;
-            gc.replyToShowCards(this);
+            typeOfCardToShow = responseCard.getCardType();
         }
-        else if (gui != null){
-            gui.actionResponse(this);
-        }
-        else{
-            System.out.println("[ShowCardsAction.execute] no gui found");
-        }
-
     }
     
+    /**
+     * Sets the card to be shown 
+     * 
+     * @param i the id of the card.
+     * @param type the type of the card to show  
+     */
     public void setCardToShow(int i, CardType type){
         idOfCardToShow = i;
         typeOfCardToShow = type;
     }
     
+    /**
+     * @return the ID of the card to be shown. 
+     */
     public int getIdOfCardToShow(){
         return idOfCardToShow;
     }
     
+    /**
+     * @return the TYPE of card the be shown.
+     */
     public CardType getCardTypeOfCardToShow(){
         return typeOfCardToShow;
     }

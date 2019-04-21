@@ -25,6 +25,11 @@ public class SpecialTile extends Tile {
 
     private ActionType action;
 
+    /**
+     * Creates a Special Tile 
+     * @param x the x coordinate of the tile 
+     * @param y the y coordinate of the tiles
+     */
     public SpecialTile(int x, int y) {
         super(x,y);
         special = true;
@@ -40,13 +45,4 @@ public class SpecialTile extends Tile {
         return player.addIntrigue();
     }
     
-    /**
-     * @deprecated this is a test method
-     * @param player
-     * @param bool
-     * @return 
-     */
-    public IntrigueCard getIntrigue(Player player,boolean bool){
-        return player.addIntrigue(new AvoidSuggestionIntrigue(0));
-    }
 }

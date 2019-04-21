@@ -14,14 +14,17 @@ import clue.player.Player;
 public class EndTurnAction extends Action{
 
     /**
-     *
-     * @param player
+     * Creates a new End Turn Action .
+     * @param player the player who is ending there turn
      */
     public EndTurnAction(Player player) {
         super(player);
         this.actionType = ActionType.ENDTURN;
     }
 
+    /**
+     * Executes the EndTurnAction. Ends the turn for the current player.
+     */
     @Override
     public void execute() {
         super.execute(); //To change body of generated methods, choose Tools | Templates.

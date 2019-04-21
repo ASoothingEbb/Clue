@@ -86,18 +86,34 @@ public class Prompt extends Dialog {
         }
     }
     
+    /**
+     * Sets the text message in this prompt
+     * @param message the new message
+     */
     public void setMessage(String message) {
         this.message.setText(message);
     }
     
+    /**
+     * Sets the title of this prompt
+     * @param title the title of the prompt
+     */
     public void setLabelTitle(String title) {
         this.title.setText(title);
     }
     
+    /**
+     * Sets the image of a card to be displayed
+     * @param card the image of the card
+     */
     public void setImage(ImageView  card) {
         layout.getChildren().add(2, card);
     }
     
+    /**
+     * Displays one or more Cards in the prompt
+     * @param cards list of card images to be shown
+     */
     public void setImage(ImageView[] cards) {
         HBox cardsLayout = new HBox();
         cardsLayout.setAlignment(Pos.CENTER);

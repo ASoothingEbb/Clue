@@ -45,8 +45,8 @@ public class GameStateTest {
     }
 
     @BeforeClass
-    public static void setUpClass() throws InterruptedException, UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException, TileOccupiedException {
-        game = new GameController(1, 1, "testCsv/tiles1.csv", "testCsv/doors1.csv");
+    public static void setUpClass() throws UnknownActionException, NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException, GameController.TooManyPlayersException, TileOccupiedException, NotEnoughPlayersException {
+        game = new GameController(2, 0, "Maps/archersAvenue/archersAvenueTiles.csv", "Maps/archersAvenue/archersAvenueDoor.csv");
         players = (ArrayList<Player>) game.getPlayers();
         instance = new GameState(players);
     }
@@ -63,49 +63,8 @@ public class GameStateTest {
     public void tearDown() {
     }
 
-    /**
-     * Test of register method, of class GameState.
-     */
-    @Test
-    public void testRegister() {
-        System.out.println("register");
 
-        Player player0 = new Player(0);
-        Player player1 = new Player(1);
-        ArrayList<Player> playerList = new ArrayList();
-        playerList.add(player0);
-        playerList.add(player1);
-        GameState testGame = new GameState(playerList);
-        Player testPlayer = new Player(2);
-        testGame.register(testPlayer);
-        int expNum = 3;//Since we are only adding one AIPlayer(original size + 1).
-        assertEquals(expNum, testGame.playersNumber);
-    }
 
-    /**
-     * Test of unregister method, of class GameState.
-     */
-    @Test
-    public void testUnregister() {
-        System.out.println("unregister");
-        Player player = new Player(0);
-        instance.register(new Player(1));
-        instance.register(new Player(2));
-        instance.register(player);
-        instance.unregister(player);
-        assertFalse(player.isActive());//player removed from turn order
-        instance.nextTurn(instance.getNextPointer(instance.getPlayerTurn()));
-        assertNotEquals(player,instance.getCurrentPlayer());
-    }
-
-    /**
-     * Test of notifyAllPlayers method, of class GameState.
-     */
-    @Test
-    public void testNotifyAllPlayers() {
-        System.out.println("notifyAllObservers");
-        instance.notifyAllPlayers();
-    }
 
     /**
      * Test of nextTurn method, of class GameState.
@@ -149,22 +108,7 @@ public class GameStateTest {
         assertEquals(0, instance.getPlayerTurn());
     }
 
-    /**
-     * Test of previousPlayer method, of class GameState.
-     */
-    @Test
-    public void testPreviousPlayer() {
-        System.out.println("previousPlayer");
-        instance.register(new Player(1));
-        instance.previousPlayer();
-
-        assertEquals(players.get(0), instance.getCurrentPlayer());
-        instance.nextTurn(1);
-        instance.nextTurn(2);//Skipping two turns.
-        instance.previousPlayer();
-        assertEquals(players.get(1), instance.getPreviousPlayer());//Checking if second turn player's previous player is player 1
-
-    }
+   
 
     /**
      * Test of getAction method, of class GameState.
@@ -228,21 +172,16 @@ public class GameStateTest {
         ArrayList<Player> players = new ArrayList();
         players.add(new Player(0));
         players.add(new Player(1));
-        players.get(1).removeFromPlay();
         players.add(new Player(2));
         GameState instance = new GameState(players);
-        int i = 0;
-        int expResult = 1;
-        int result = instance.getNextPointer(i);
-        assertEquals(expResult, result);
-        expResult = 2;
-        result = instance.getNextPointer(result);
-        assertEquals(expResult, result);
 
-        int test = instance.getNextPointer(instance.getPlayerList().size() - 1);//nextPointer(size of playerList)
+        assertEquals(1, instance.getNextPointer(0));
 
-        //should look back ariund to first player(0)
-        assertEquals(0, test);
+
+        assertEquals(2, instance.getNextPointer(1));
+        assertEquals(0, instance.getNextPointer(2));
+
+
 
     }
 
@@ -289,26 +228,7 @@ public class GameStateTest {
         assertEquals(expResult, result);
     }
 
-    /**
-     * Test of getPreviousPlayer method, of class GameState.
-     */
-    @Test
-    public void testGetPreviousPlayer() {
-        System.out.println("getPreviousPlayer");
-        Player expResult = instance.getCurrentPlayer();
-        instance.nextTurn(0);
-        Player result = instance.getPreviousPlayer();
-        assertEquals(expResult, result);
-    }
 
-    /**
-     * Test of getPlayerList method, of class GameState.
-     */
-    @Test
-    public void testGetPlayerList() {
-        System.out.println("getPlayerList");
-        List<Player> expResult = players;
-        List<Player> result = instance.getPlayerList();
-        assertEquals(expResult, result);
-    }
+
+
 }
