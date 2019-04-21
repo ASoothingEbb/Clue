@@ -28,7 +28,7 @@ import javafx.stage.Stage;
 
 /**
  *
- * @author hungb
+ * @author Hung Bui Quang
  */
 public class selectCards {
     
@@ -45,8 +45,8 @@ public class selectCards {
     private final Background greenFill = new Background(new BackgroundFill(Color.rgb(7, 80, 2), CornerRadii.EMPTY, Insets.EMPTY));
     
     /**
-     * Creates 
-     * @return 
+     * Creates all the UI elements for the select Cards window used for suggestion and accusation
+     * @return a GridPane containing all the JavaFX nodes making up the UI
      */
     private GridPane createCardsUI() {
         GridPane cards = new GridPane();
@@ -187,7 +187,7 @@ public class selectCards {
     }
     
     /**
-     * 
+     * Initialises the Font and tries to load the TTF file
      */
     private void initFonts() {
         avenir = new Font(30);
@@ -199,13 +199,14 @@ public class selectCards {
     }
    
     /**
-     * 
-     * @param name
-     * @param color
-     * @param room
-     * @param ImagePathMap
-     * @param CardNameMap
-     * @param gameController 
+     * Creates the stage for the window and initialises all the variables from the given parameters.
+     * Calls createCardsUI which creates all the UI elements, then sets the scene and shows the stage.
+     * @param name name of the window
+     * @param color colour of the button
+     * @param room the ID of current room the player is in
+     * @param ImagePathMap the HashMap containing the paths for images
+     * @param CardNameMap the HashMap containing the names of the cards to their ID
+     * @param gameController the gameController used to interface with the backend
      */
     public void show(String name, Color color, int room, HashMap<String,String> ImagePathMap, HashMap<String, String> CardNameMap, GameController gameController) {
         stage = new Stage();
