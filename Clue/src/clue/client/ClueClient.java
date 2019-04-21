@@ -82,11 +82,10 @@ public class ClueClient extends Application {
     /**
      * Starts the client
      * 
-     * @param primaryStage
-     * @throws FileNotFoundException 
+     * @param primaryStage the root stage that is passed by launch called in main
      */
     @Override
-    public void start(Stage primaryStage) throws FileNotFoundException {
+    public void start(Stage primaryStage) {
         primaryStage.setTitle("Clue");
         
         width = 1280;
@@ -94,8 +93,13 @@ public class ClueClient extends Application {
         
         stage = primaryStage;
         
-        volumeOn = new Image(new FileInputStream(new File("resources/Sprites/volumeOn.png")), 50, 50, false, false);
-        volumeOff = new Image(new FileInputStream(new File("resources/Sprites/volumeOff.png")), 50, 50, false, false);
+        try {
+            volumeOn = new Image(new FileInputStream(new File("resources/Sprites/volumeOn.png")), 50, 50, false, false);
+            volumeOff = new Image(new FileInputStream(new File("resources/Sprites/volumeOff.png")), 50, 50, false, false);
+        } catch(FileNotFoundException ex) {
+            
+        }
+
         backgroundMusic = new Sound("resources/Music/backgroundMusic.wav");
         backgroundMusic.loop();
         backgroundMusic.setVolume(0.6f);
