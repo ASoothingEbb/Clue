@@ -9,17 +9,14 @@ package clue.card;
  *Represents a card for a room.
  * @author slb35
  */
-public class RoomCard extends Card{
+public class RoomCard extends Card {
 
     /**
      * Creates a RoomCard
-     * @param id 
+     * @param id ID of the room
      */
     public RoomCard(int id) {
         super(id);
         cardType = CardType.ROOM;
     }
-
-    
-    
 }
