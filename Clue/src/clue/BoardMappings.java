@@ -36,8 +36,15 @@ public final class BoardMappings {
     
     class StartingTile implements Comparable<StartingTile>{
 
+        
         public Tile t;
         public int i;
+        
+        /**
+         * Creates a starting tile
+         * @param t the tile 
+         * @param i the id of the starting tile
+         */
         StartingTile(Tile t, int i){
             this.t = t;
             this.i = i;
@@ -63,21 +70,22 @@ public final class BoardMappings {
      *      tile csv: each cell in the csv represents one tile at the same location
      *          0 = basic tile
      *          -1 = no tile
-     *          S = starting tile (optionally it can be followed by a number > 0)
-     *          int n > 0 = room with id n
+     *          S = starting tile (optionally it can be followed by a number greater than 0)
+     *          int N greater than 0 = room with id N-1
      *          I = intrigue tile
      *
      *      door csv: each row represents one door
      *          index 0: the room id that the door leads to
      *          index 1: the x coordinate of the tile that leads to that room
      *          index 2: the y coordinate of the tile that leads to that room
+     *          index 3: the direction the player has to take to go from the room to the outside tile (U or D or L or R)
      *          *Note, doors cannot exist between two rooms, instead addShortcut should be used
      * 
-     * @param tileRoomLayoutPath
-     * @param doorLocationsPath
-     * @throws NoSuchRoomException
-     * @throws NoSuchTileException 
-     * @throws clue.MissingRoomDuringCreationException 
+     * @param tileRoomLayoutPath the path of the csv file that contains the tile information
+     * @param doorLocationsPath the path of the csv file that contains the door information
+     * @throws NoSuchRoomException thrown when the map failed to generate because it expected a room but it did not exist (due to being provided a bad csv pair)
+     * @throws NoSuchTileException thrown when the map failed to generate because it expected a tile but it did not exist (due to being provided a bad csv pair)
+     * @throws clue.MissingRoomDuringCreationException thrown when room with id N was found, but a no id for some id less than N was found
      */
     public BoardMappings(String tileRoomLayoutPath, String doorLocationsPath) throws NoSuchRoomException, NoSuchTileException, MissingRoomDuringCreationException{
 
@@ -237,7 +245,7 @@ public final class BoardMappings {
      * 
      * @param tiles the string cell values loaded from the tiles csv
      * @return the max room id in the tiles 2d list
-     * @throws MissingRoomDuringCreationException 
+     * @throws MissingRoomDuringCreationException thrown when room with id N was found, but a no id for some id less than N was found
      */
     public int getRoomCount(ArrayList<ArrayList<String>> tiles) throws MissingRoomDuringCreationException{
         int roomId;
@@ -293,7 +301,7 @@ public final class BoardMappings {
      * this method can be used to get a room tile if you give it the Room.x (-1) and Room.y (roomId) values
      * @param x the x coordinate of the tile
      * @param y the y coordinate of the tile
-     * @return
+     * @return the tile at the given x y coordinate
      * @throws NoSuchRoomException this is thrown when trying to get a room tile that doesn't exist
      */
     public final Tile getTile(int x, int y) throws NoSuchRoomException, ArrayIndexOutOfBoundsException{
@@ -322,6 +330,8 @@ public final class BoardMappings {
      * loads the Door objects from the csv file
      * @param path the path of the csv file
      * @return list of Door objects 
+     * @throws clue.tile.NoSuchTileException thrown when a door in the csv refers to a tile that was not found
+     * @throws clue.tile.NoSuchRoomException thrown when a door in the csv refers to a room that was not found
      */
     public ArrayList<Door> loadCsvDoors(String path) throws NoSuchTileException, NoSuchRoomException {
         ArrayList<Door> doors = new ArrayList<>();
@@ -367,20 +377,13 @@ public final class BoardMappings {
     }
 
     /**
-     * creates the mappings for non room / non empty tiles, maps int coordinates to the index of the array
-     * @param tiles
-     * @param roomCount
+     * Creates the mappings for non room / non empty tiles, maps int coordinates to the index of the array
+     * @param tiles the 2d representation of the board (outputted by loadCsv)
+     * @param roomCount the number of rooms
      * @return Tile[][] the tile mappings of the board, rooms and empty tiles will be null in this structure
-     * @throws NoSuchRoomException 
+     * @throws NoSuchRoomException thrown when it tried to fetch a room that didn't exist
      */
     public Tile[][] createTileMappings(ArrayList<ArrayList<String>> tiles, int roomCount) throws NoSuchRoomException {
-        //for (ArrayList<String> row: tiles){
-        
-        //    System.out.println(row +" : "+ row.size());
-        //}
-        
-        
-        
         
         
         Tile[][] localMappings = new Tile[boardHeight][boardWidth];      
@@ -589,9 +592,9 @@ public final class BoardMappings {
     
     /**
      * adds a shortcut between two rooms
-     * @param r1
-     * @param r2
-     * @throws NoSuchRoomException 
+     * @param r1 the id of one of the rooms in the shortcut
+     * @param r2 the id of the other of the rooms in the shortcut
+     * @throws NoSuchRoomException thrown when room with a given id cannot be found
      */
     public void addShortcut(int r1, int r2) throws NoSuchRoomException{
         Room room1 = (Room)getTile(-1,r1);

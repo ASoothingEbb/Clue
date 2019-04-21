@@ -30,8 +30,8 @@ public class MoveAction extends Action {
      *
      * 
      * @param t destination Tile
-     * @param boardWidth
-     * @param boardHeight
+     * @param boardWidth the width of the board
+     * @param boardHeight the hight of the board
      * @param player Player to move
      */
     public MoveAction(Player player, Tile t, int boardWidth, int boardHeight) {
@@ -90,6 +90,10 @@ public class MoveAction extends Action {
         return t;
     }
     
+    /**
+     * Finds if there is a room the player can go to with the current moves it has.
+     * @return true if there is a room within how many moves the player has.
+     */
     private boolean BFS(){   
         cost = 0;
         //System.out.println("BFS with moves left: "+player.getMoves());

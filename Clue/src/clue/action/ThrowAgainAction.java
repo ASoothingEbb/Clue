@@ -5,7 +5,7 @@
  */
 package clue.action;
 
-import clue.ai.AiAdvanced;
+import clue.player.AiAdvanced;
 import clue.card.ThrowAgainIntrigue;
 import clue.client.gameInstance;
 import clue.player.Player;
@@ -22,8 +22,7 @@ public class ThrowAgainAction extends Action {
      * Creates a new ThrowAgainAction
      *
      * @param player the Player to roll again
-     * @param card
-     * @param gui
+     * @param card the intrigue card
      */
     public ThrowAgainAction(Player player, ThrowAgainIntrigue card) {
         super(player, card);
@@ -35,8 +34,8 @@ public class ThrowAgainAction extends Action {
      */
     @Override
     public void execute() {
-        player.removeCard(card);
-        if (player.isAi()) {
+        player.removeIntrigue((ThrowAgainIntrigue)card);
+        if (player instanceof AiAdvanced) {
             ((AiAdvanced) player).respondToThrowAgain();
         }
     }

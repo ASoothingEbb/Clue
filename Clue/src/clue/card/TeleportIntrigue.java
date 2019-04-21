@@ -15,11 +15,19 @@ import clue.action.Action;
  */
 public class TeleportIntrigue extends IntrigueCard {
 
+    /**
+     * Creates a TeleportIntrigue Card
+     * @param id the id of the card
+     */
     public TeleportIntrigue(int id) {
         super(id);
         cardType = CardType.TELEPORT;
     }
 
+    /**
+     * Gets the type of the card
+     * @return the enum type of the card
+     */
     @Override
     public CardType getCardType() {
         return cardType;

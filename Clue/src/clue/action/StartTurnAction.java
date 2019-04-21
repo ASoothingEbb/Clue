@@ -5,7 +5,7 @@
  */
 package clue.action;
 
-import clue.ai.AiAdvanced;
+import clue.player.AiAdvanced;
 import clue.player.Player;
 
 /**
@@ -23,10 +23,14 @@ public class StartTurnAction extends Action{
         this.actionType = ActionType.STARTTURN;
     }
 
+    /**
+     * Executes this action
+     */
     @Override
     public void execute() {
         super.execute(); //To change body of generated methods, choose Tools | Templates.
-        if (player.isAi()){
+        if (player instanceof AiAdvanced){
+            System.out.println("--------------------------prompting ai for player+"+player.getId());
             ((AiAdvanced) player).respondToStartTurn();
         }
         //TODO prompt GUI

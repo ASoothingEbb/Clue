@@ -117,8 +117,6 @@ public class PlayerTest {
         assertFalse(instance.hasCard(card));
         instance.addCard(card);
         assertTrue(instance.hasCard(card));
-        instance.removeCard(card);
-        assertFalse(instance.hasCard(card));
     }
 
     /**

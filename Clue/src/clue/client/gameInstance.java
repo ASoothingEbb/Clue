@@ -11,9 +11,10 @@ import clue.action.Action;
 import clue.action.ShowCardAction;
 import clue.action.ShowCardsAction;
 import clue.action.SuggestAction;
-import clue.action.UnknownActionException;
 import clue.card.Card;
 import clue.card.CardType;
+import clue.player.AiAdvanced;
+import clue.card.WeaponCard;
 import clue.player.Player;
 import clue.tile.NoSuchRoomException;
 import clue.tile.Room;
@@ -30,7 +31,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
 import java.util.logging.Level;
@@ -38,13 +38,13 @@ import java.util.logging.Logger;
 import javafx.animation.FadeTransition;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.geometry.Bounds;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
@@ -66,56 +66,63 @@ import javafx.util.Duration;
 
 /**
  *
- * @author hungb
+ * @author Hung Bui Quang
  */
 public class gameInstance {
     
+    // Stages
+    private Stage gameStage;
     private Stage client;
     
+    // Data for constructing the game
     private static final int TILE_SIZE = 38;
+    private String boardTilePath;
+    
+    private final HashMap<String, String> ImagePathMap = new HashMap<>();
+    private final HashMap<String, String> CardNameMap = new HashMap<>();
+    private final HashMap<String, String> TokenPathMap = new HashMap<>();
+    
+    // Game board
+    private StackPane[][] board;
+    
+    // Backend Interface
+    private GameController gameInterface;
+    
+    // Game Sprites
+    private PlayerSprite currentPlayer;
+    private PlayerSprite[] playerSprites;
+    private WeaponSprite[] weaponSprites;
+    
+    // Player Data
     private int currentRoom;
     private boolean rolled;
     private String notes;
-   
     private IntegerProperty remainingMoves;
-     
-    private GameController gameInterface;
-   
-    private PlayerSprite currentPlayer;
-    private PlayerSprite[] playerSprites;
+    private boolean suggested = false;
+    private boolean accused = false;
     
-    private HashMap<String, String> ImagePathMap = new HashMap<>();
-    private HashMap<String, String> CardNameMap = new HashMap<>();
-    private HashMap<String, String> TokenPathMap = new HashMap<>();
-    
-    private String boardTilePath;
-    
-    //Sounds
-    private Sound endTurnSound;
-    
-    
-    //JavaFX
-    
+    // Player Data JavaFX Nodes
+    Label playerCardsLabel;
     private TextArea history;
     private GridPane cardsDisplay;
     private TextArea notepad;
     private Label remainingMovesLabel;
+    private Prompt showCardPrompt = null;
     
+    // Sounds
+    private Sound endTurnSound;
+    
+    //JavaFX
     private Scene prevScene;
     
-    private Prompt showCardPrompt = null;
-    private boolean suggested = false;
-    private boolean accused = false;
-    
-    Label playerCardsLabel;
+    // Data for suggestion scene
     private CardType selectedCardType;
     private int selectedCardId;
     private ImageView selectedView = null;
-            
-    private Stage gameStage;
+
+    // Transition
     private Scene uiScene;
     private Scene curtainScene;
-    private StackPane[][] board;
     private FadeTransition uiToCurtain;
     
     //Fonts
@@ -124,14 +131,13 @@ public class gameInstance {
     private Font avenirText;
     
     //Backgrounds
-    private final Background blackFill = new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY));
     private final Background greenFill = new Background(new BackgroundFill(Color.rgb(7, 80, 2), CornerRadii.EMPTY, Insets.EMPTY));
-    
+    private final Background blackFill = new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY));
     
     /**
      * Creates the Tile board in the form of a GridPane and adds it to a StackPane.
      * 
-     * @return Stackpane object 
+     * @return StackPane object
      */
     private StackPane createBoard() {
         StackPane root = new StackPane();
@@ -158,7 +164,7 @@ public class gameInstance {
         alignment.getChildren().addAll(boardview, boardPane);
         
         root.getChildren().add(alignment);
-        String line = "";
+        String line;
         
         try (BufferedReader br = new BufferedReader(new FileReader(boardTilePath))) {
             int y = 0;
@@ -200,9 +206,11 @@ public class gameInstance {
                             tileSprite.setColor(Color.rgb(222, 151,  29));
                         } else if (cell.contains("S")) {
                             tileSprite.setColor(Color.rgb(55, 136, 4));
+                        }else if (cell.contains("I")){
+                            tileSprite.setColor(Color.ALICEBLUE);
                         } else if (Integer.valueOf(cell) > 0) {
                             paintRoom(tileSprite, Integer.valueOf(cell));
-                        }
+                        } 
                     }
 
                     tilePane.getChildren().add(tileSprite);
@@ -239,44 +247,49 @@ public class gameInstance {
                 board[coords[1]][coords[0]].getChildren().add(doorSprite);
             });
         }
-
- 
+        
         spawnPlayers(board);
+        spawnWeapons(board);
         
         rolled = false;
         return root;
     }
     
+    /**
+     * Changes each rooms appearance to be different by changing their colour on the board(custom maps only).
+     * 
+     * @param tile  the Tile(Label) to change appearance
+     * @param id the id of the room 1 to 9.
+     */
     private void paintRoom(Tile tile, int id){
         Random rand = new Random(Calendar.getInstance().getTimeInMillis());
         switch(id){
-            case 1:
-                tile.setColor(Color.CORAL);
-                tile.setMessage("LIBRARY");
+            case 1://Study
+                tile.setStyle("-fx-background-color: #696969;");
                 break;
-            case 2:
-                tile.setColor(Color.CRIMSON);
+            case 2://Hall
+                tile.setStyle("-fx-background-color: #42d4f4;");
                 break;
-            case 3:
-                tile.setColor(Color.DEEPPINK);
+            case 3://Lounge
+                tile.setStyle("-fx-background-color: #000075;");
                 break;
-            case 4:
-                tile.setColor(Color.CRIMSON);
+            case 4://Library
+                tile.setStyle("-fx-background-color: #f58231;");
                 break;
-            case 5:
-                tile.setColor(Color.SALMON);
+            case 5://Billiard Room
+                tile.setStyle("-fx-background-color: #911eb4;");
                 break;
-            case 6:
-                tile.setColor(Color.HONEYDEW);
+            case 6://Dining room
+                tile.setStyle("-fx-background-color: #800000;");
                 break;
-            case 7:
-                tile.setColor(Color.THISTLE);
+            case 7://Convervatory
+                tile.setStyle("-fx-background-color: #808000;");
                 break;
-            case 8:
-                tile.setColor(Color.POWDERBLUE);
+            case 8://Ballroom
+                tile.setStyle("-fx-background-color: #fffac8;");
                 break;
-            case 9:
-                tile.setColor(Color.WHITE);
+            case 9://Kitchen
+                tile.setStyle("-fx-background-color: #fabebe;");
                 break;
             default:
                 int r = rand.nextInt(255)+1;
@@ -287,33 +300,63 @@ public class gameInstance {
         }
     }
 
+    /**
+     * Called at the beginning of a game. Renders the players in a spawn tile.
+     * 
+     * @param board the GUI representation of the board
+     */
     private void spawnPlayers(StackPane[][] board) {
         List<Player> players = gameInterface.getPlayers();
         playerSprites = new PlayerSprite[players.size()];
         for(int i = players.size()-1; i>= 0; i--) {
-            Player player = players.get(i);
+            int x = players.get(i).getDrawX();
+            int y = players.get(i).getDrawY();
 
-            int x = player.getDrawX();
-            int y = player.getDrawY();
-            PlayerSprite playerSprite = new PlayerSprite(x, y, TokenPathMap.get("character" + player.getId()));
-
-            playerSprites[i] = playerSprite;
-            board[y][x].getChildren().add(playerSprite);
+            playerSprites[i] = new PlayerSprite(x, y, TokenPathMap.get("character" + players.get(i).getId()));
+            board[y][x].getChildren().add(playerSprites[i]);
         }
         currentPlayer = playerSprites[0];
     }
     
-    private void redrawPlayers() {
-        List<Player> players = gameInterface.getPlayers();
-        for (Player player: players) {
-            PlayerSprite sprite = playerSprites[player.getId()];
-            sprite.move(player.getDrawX(), player.getDrawY(), board, sprite);
+    /**
+     * Called at the beginning of a game. Renders the weapons in a separate room.
+     * 
+     * @param board the GUI representation of the board
+     */
+    private void spawnWeapons(StackPane[][] board) {
+        List<WeaponCard> weapons = gameInterface.getWeaponCards();
+        weaponSprites = new WeaponSprite[weapons.size()];
+        for (int i=0; i < weapons.size(); i++) {
+            int x = weapons.get(i).getDrawX();
+            int y = weapons.get(i).getDrawY();
+            weaponSprites[i] = new WeaponSprite(x, y, TokenPathMap.get("weapon" + weapons.get(i).getId()));
+            board[y][x].getChildren().add(weaponSprites[i]);
         }
     }
     
+    /**
+     * Re-renders where the player tokens are on the board
+     */
+    private void redrawPlayers() {
+        gameInterface.getPlayers().forEach((player) -> {
+            PlayerSprite sprite = playerSprites[player.getId()];
+            sprite.move(player.getDrawX(), player.getDrawY(), board, sprite);
+        });
+    }
+    /**
+     * Re-renders where the weapon tokens are on the board
+     */
+    private void redrawWeapons() {
+        gameInterface.getWeaponCards().forEach((weapon) -> {
+            WeaponSprite sprite = weaponSprites[weapon.getId()];
+            sprite.move(weapon.getDrawX(), weapon.getDrawY(), board, sprite);
+        });
+    }
+    
    /**
+    * Creates the left panel where the player notes and the history for each respective player are shown.
     * 
-    * @return 
+    * @return Notes and History boxes
     */
     private VBox createLeftPanel() {
         VBox leftPanelLayout = new VBox();
@@ -332,14 +375,12 @@ public class gameInstance {
             notes = newValue;
         });
         
-        // Test
-        MenuItem print = new MenuItem("Print", avenirTitle);
-        print.setOnMouseClicked(e -> {
-            System.out.println(notepad.getText());
-        });
-        
         // suggestion accusation history
+        
+        BorderPane hiddenLayout = new BorderPane();
+        
         Label historyLabel = getLabel("History", avenirTitle); 
+        hiddenLayout.setLeft(historyLabel);
         
         history = new TextArea();
         history.setPrefRowCount(18);
@@ -349,12 +390,29 @@ public class gameInstance {
         history.setStyle("-fx-control-inner-background: #fff2ab;");
         history.setEditable(false);
         
-        leftPanelLayout.getChildren().addAll(notepadLabel, notepad, print, historyLabel, history);
+        leftPanelLayout.getChildren().addAll(notepadLabel, notepad, hiddenLayout, history);
+        
+        if (!boardTilePath.contains("archersAvenue")) {
+            MenuItem showRoomKeys = new MenuItem("Room Keys", avenirTitle);
+            showRoomKeys.setAlignment(Pos.CENTER);
+            RoomKeys roomKeys = new RoomKeys(gameStage);
+            showRoomKeys.hoverProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue) {
+                    Bounds coordinates = showRoomKeys.localToScene(showRoomKeys.getBoundsInLocal());
+                    roomKeys.setLocation(coordinates.getMaxX() - 20, coordinates.getMaxY() + coordinates.getHeight() + 6);
+                    roomKeys.show();
+                } else {
+                    roomKeys.hide();
+                }
+            });
+            hiddenLayout.setRight(showRoomKeys);
+        }
         
         return leftPanelLayout;
     }
     
     /**
+     * Renders the cards the player has.
      * 
      * @param cardsLayout 
      */
@@ -385,8 +443,11 @@ public class gameInstance {
         }
         int x = 1;
         int y = 0;
+        cardsDisplay.getChildren().clear();
         for (Card card: gameInterface.getPlayer().getCards()) {
             ImageView view = new ImageView(getImage(card.getId(), card.getCardType()));
+            view.setFitHeight(230);
+            view.setFitWidth(150);
             cardsLayout.add(view, y, x);
             GridPane.setMargin(view, new Insets(0, 10, 10, 0));
             if (y == 2) {
@@ -401,8 +462,9 @@ public class gameInstance {
     }
     
     /**
+     * Creates the Roll, suggest, accuse, end turn buttons and a label displaying roll count/status.
      * 
-     * @return 
+     * @return VBox containing all the buttons. 
      */
     private VBox createPlayerControls() {    
         //Sounds
@@ -474,7 +536,7 @@ public class gameInstance {
                 alreadyRolled.showAndWait();
             }
         });
-        
+
         MenuItem endButton = new MenuItem("End Turn", avenirLarge);
         endButton.setOnMouseClicked(e -> {
             gameInterface.getPlayer().setNotes(notes);
@@ -488,9 +550,10 @@ public class gameInstance {
     }
     
     /**
+     * Initialises the cardsWindow for accusation or suggestion.
      * 
-     * @param title
-     * @param color 
+     * @param title title of the window, either suggest or accuse
+     * @param color colour corresponding to suggest or accuse
      */
     private void createCardsWindow(String title, Color color) {
         selectCards cardsWindow = new selectCards();
@@ -498,8 +561,10 @@ public class gameInstance {
     }
     
     /**
+     * Creates The main component to be used in the Scene that is shown when people are playing the game.
+     * This will include board, player controls, history/notes, etc.
      * 
-     * @return 
+     * @return BorderPane containing the UI elements
      */
     private BorderPane createUI() {
         BorderPane main = new BorderPane();
@@ -528,8 +593,9 @@ public class gameInstance {
     }
     
     /**
+     * Used by the backend to communicate with the GUI.
      * 
-     * @param action 
+     * @param action a type of action
      */
     public void actionResponse(Action action) {
         switch (action.getActionType()) {
@@ -543,11 +609,8 @@ public class gameInstance {
                 endTurnSound.play();
                 showCard(action);
                 redrawPlayers();
-                for (Player player: gameInterface.getPlayers()) {
-                    System.out.println("Player " + player.getId() + " " + player.getPosition());
-                    System.out.println("Player " + player.getId() + " " + player.getDrawX() + " " +  player.getDrawY());
-                }
-                if (((ShowCardAction) action).getWhoShowedTheCard().isAi()) {
+                redrawWeapons();
+                if (((ShowCardAction) action).getWhoShowedTheCard() instanceof AiAdvanced) {
                     showCardPrompt.show();
                 }
                 suggested = true;
@@ -568,7 +631,12 @@ public class gameInstance {
         }
         System.out.println("return");
     }
-    
+    /**
+     * Gets the image for the corresponding card.
+     * @param cardId the ID of the card
+     * @param cardType the type of card (Character, Weapon, or Room)
+     * @return an Image object of the card
+     */
     private Image getImage(int cardId, CardType cardType) {
         Image cardImage = null;
         try {
@@ -593,6 +661,11 @@ public class gameInstance {
         return cardImage;
     }
     
+    /**
+     * Alerts the player of whether their accusation was correct or incorrect.
+     * 
+     * @param action a type of action
+     */
     public void showAccusationResult(Action action) {
         Prompt accusationResultPrompt = new Prompt("");
         if (((AccuseAction) action).wasCorrect()) { //accusation correct
@@ -619,6 +692,11 @@ public class gameInstance {
         accusationResultPrompt.showAndWait();
     }
     
+    /**
+     * Prompts the player with a Card which he suggested IF any of the players have said card. Prompts nothing otherwise.
+     * 
+     * @param action the showCardAction
+     */
     private void showCard(Action action) {
         ShowCardAction response = ((ShowCardAction) action);
         String suggestee = CardNameMap.get("character" + ((ShowCardAction) action).getWhoShowedTheCard().getId());
@@ -630,7 +708,11 @@ public class gameInstance {
             showCardPrompt = null;
         });
     }
-    
+    /**
+     * Changes the scene to a waiting scene which notifies the current player whose attention is required
+     * @param playerId ID of the player whose attention is required
+     * @param next the scene to change after the players have switched
+     */
     private void switchPlayerScene(int playerId, Scene next) {
         VBox switchPlayer = new VBox();
         switchPlayer.setBackground(blackFill);
@@ -649,20 +731,29 @@ public class gameInstance {
         Scene scene = new Scene(switchPlayer, 1736, 960);
         gameStage.setScene(scene);
     }
-    
+    /**
+     * Brings up a prompt(window) which displays a message to the player.
+     * 
+     * @param message the message to show the user
+     */
     public void notifyUser(String message) {
         Prompt notifyPrompt = new Prompt(message);
         notifyPrompt.setLabelTitle("Notice");
         notifyPrompt.show();
     }
     
+    /**
+     * This is prompted if the player has 1 or more cards that were suggested.
+     * The user will be asked to pick one of those cards.
+     * 
+     * @param action the showCardsAction
+     */
     private void showCards(Action action) {
         VBox showCardsDisplay = new VBox();
         showCardsDisplay.setBackground(greenFill);
         showCardsDisplay.setAlignment(Pos.CENTER);
         
         List<Card> cards = ((ShowCardsAction) action).getCardList();
-        System.out.println(cards.size());
         
         Label showCardsLabel = getLabel("Select a card to show", avenirTitle);
         
@@ -671,20 +762,20 @@ public class gameInstance {
         cardDisplay.setSpacing(10);
         cardDisplay.setAlignment(Pos.CENTER);
                 
-        for (Card card: cards) {
+        cards.stream().map((card) -> {
             final int cardId = card.getId();
             final CardType cardType = card.getCardType();
-
             ImageView view = new ImageView(getImage(card.getId(), card.getCardType()));
             view.setOnMouseClicked(e -> {
                 setSelectedCard(cardId, cardType, view);
             });
+            return view;
+        }).forEachOrdered((view) -> {
             cardDisplay.getChildren().add(view);
-        }
+        });
         
         MenuItem confirmCardButton = new MenuItem("Confirm Selection", avenirTitle);
         confirmCardButton.setOnMouseClicked(e -> {
-            System.out.println(selectedCardId + " " + selectedCardType.toString());
             ((ShowCardsAction) action).setCardToShow(selectedCardId, selectedCardType);
             switchPlayerScene(((ShowCardsAction) action).getSuggester().getId(), prevScene);
             gameInterface.replyToShowCards((ShowCardsAction) action);
@@ -696,6 +787,13 @@ public class gameInstance {
         switchPlayerScene(((ShowCardsAction) action).getPlayer().getId(), scene);
     }
     
+    /**
+     * Makes a card glow in the "showCards" prompt. This will mark it as selected and will be shown to the person who suggested.
+     * 
+     * @param id the id of the card  that is selected
+     * @param type the type of card that is selected
+     * @param view  the render of the card 
+     */
     private void setSelectedCard(int id, CardType type, ImageView view) {
         this.selectedCardId = id;
         this.selectedCardType = type;
@@ -716,10 +814,11 @@ public class gameInstance {
     }
 
     /**
+     * Creates a label with text and font of choosing.
      * 
-     * @param text
-     * @param font
-     * @return 
+     * @param text the text to be displayed on the label
+     * @param font the type of font to be used for the text
+     * @return a label object with message "text" and font "font".
      */
     private Label getLabel(String text, Font font) {
         Label label = new Label(text);
@@ -729,7 +828,7 @@ public class gameInstance {
     }
     
     /**
-     * Initialises the default graphics.
+     * Initialises the default graphics. The board and the cards.
      */
     private void initDefaultGraphics() {
         ImagePathMap.put("board", "resources/boardFinal.png");
@@ -737,7 +836,7 @@ public class gameInstance {
         ImagePathMap.put("character0", "resources/Character/MissScarlet.png");
         ImagePathMap.put("character1", "resources/Character/ColonelMustard.png");
         ImagePathMap.put("character2", "resources/Character/MrsWhite.png");
-        ImagePathMap.put("character3", "resources/Character/MrGreen.png");
+        ImagePathMap.put("character3", "resources/Character/ReverendGreen.png");
         ImagePathMap.put("character4", "resources/Character/MrsPeacock.png");
         ImagePathMap.put("character5", "resources/Character/ProfessorPlum.png");
         
@@ -746,7 +845,7 @@ public class gameInstance {
         ImagePathMap.put("weapon2","resources/Weapon/LeadPipe.png");
         ImagePathMap.put("weapon3","resources/Weapon/Revolver.png");
         ImagePathMap.put("weapon4","resources/Weapon/Rope.png");
-        ImagePathMap.put("weapon5","resources/Weapon/Wrench.png");
+        ImagePathMap.put("weapon5","resources/Weapon/Spanner.png");
         
         ImagePathMap.put("room0","resources/Room/Study.png");
         ImagePathMap.put("room1","resources/Room/Hall.png");
@@ -759,17 +858,28 @@ public class gameInstance {
         ImagePathMap.put("room8","resources/Room/Kitchen.png");
     }
     
+    /**
+     * Initialises the default graphical assets for the characters and weapons.
+     * These are the player tokens ie:the images rendered ON the board.
+     */
     private void initDefaultTokens() {
         TokenPathMap.put("character0", "resources/characterToken/MissScarlet.png");
         TokenPathMap.put("character1", "resources/characterToken/ColonelMustard.png");
         TokenPathMap.put("character2", "resources/characterToken/MrsWhite.png");
-        TokenPathMap.put("character3", "resources/characterToken/MrGreen.png");
+        TokenPathMap.put("character3", "resources/characterToken/ReverendGreen.png");
         TokenPathMap.put("character4", "resources/characterToken/MrsPeacock.png");
         TokenPathMap.put("character5", "resources/characterToken/ProfessorPlum.png");
+        
+        TokenPathMap.put("weapon0", "resources/weaponToken/Candlestick.png");
+        TokenPathMap.put("weapon1", "resources/weaponToken/Dagger.png");
+        TokenPathMap.put("weapon2", "resources/weaponToken/LeadPipe.png");
+        TokenPathMap.put("weapon3", "resources/weaponToken/Revolver.png");
+        TokenPathMap.put("weapon4", "resources/weaponToken/Rope.png");
+        TokenPathMap.put("weapon5", "resources/weaponToken/Spanner.png");
     }
     
     /**
-     * Initialises the default names.
+     * Initialises the default names. This is used as a HashMap.
      */
     private void initDefaultNames() {
         CardNameMap.put("character0", "Miss Scarlet");
@@ -784,7 +894,7 @@ public class gameInstance {
         CardNameMap.put("weapon2", "Lead Pipe");
         CardNameMap.put("weapon3", "Revolver");
         CardNameMap.put("weapon4", "Rope");
-        CardNameMap.put("weapon5", "Wrench");
+        CardNameMap.put("weapon5", "Spanner");
         
         CardNameMap.put("room0", "Study");
         CardNameMap.put("room1", "Hall");
@@ -798,7 +908,7 @@ public class gameInstance {
     }
     
     /**
-     * 
+     * Initialises the Fonts.
      */
     private void initFonts() {
         avenirLarge = new Font(30);
@@ -814,7 +924,7 @@ public class gameInstance {
     }
     
     /**
-     * Initialises the graphics.
+     * Initialises the custom graphics.
      */
     private void initCustomSettings() {
         try (InputStream input = new FileInputStream("resources/config.properties")) {
@@ -823,7 +933,7 @@ public class gameInstance {
             
             prop.keySet();
             
-            for (Map.Entry entry: prop.entrySet()) {
+            prop.entrySet().forEach((entry) -> {
                 String key = entry.getKey().toString();
                 String value = entry.getValue().toString();
                 if (key.contains("Name")) {
@@ -833,18 +943,18 @@ public class gameInstance {
                 } else if (key.contains("Token")) {
                     TokenPathMap.put(key.substring(0, key.length() - 5), value);
                 }
-            }
-            System.out.println("here");
+            });
             input.close();
         } catch (IOException ex) {
-            System.out.println("there");
         }
     }
        
     /**
+     * Starts the game instance, initialises the UI elements.
      * 
-     * @param gameController
-     * @param tilePath 
+     * @param gameController a reference to the gameController class (backend)
+     * @param client the main window which started gameInstance
+     * @param tilePath CSV representation of the board
      */
     public void startGame(GameController gameController, Stage client,String tilePath) {
         gameStage = new Stage();
@@ -877,8 +987,9 @@ public class gameInstance {
     }
     
     /**
+     * This creates the black Scene for when human players are meant to switch who's looking at the screen.
      * 
-     * @return 
+     * @return the switch turn scene
      */
     public Scene createCurtainScene(){
         VBox curtain = new VBox();
@@ -919,8 +1030,6 @@ public class gameInstance {
             switchToUi();
             endTurnSound.reset();
         });
-        //Button fadeSwitch = new Button("Unfade");
-        //fadeSwitch.setOnAction(e -> switchToUi());
         
         curtain.getChildren().addAll(switchPlayerLabel, fadeSwitch);
         curtainScene =  new Scene(curtain);
@@ -932,7 +1041,6 @@ public class gameInstance {
      */
     public void switchToCurtain(){
         gameStage.setScene(createCurtainScene());
-        System.out.println(gameStage.getWidth() + "" + gameStage.getHeight());
     }
     
     /**
@@ -941,26 +1049,16 @@ public class gameInstance {
     public void switchToUi(){
         uiToCurtain.play();
         gameStage.setScene(uiScene);
-        System.out.println(gameStage.getWidth() + "" + gameStage.getHeight());
     }
+    
+    
     
     /**
-     * Each time this is called, one future ShowCardsAction will be queued, the queue will be dequeued once the gui recived a StartTurnAction
-     * Switches the current scene to the uiScene and fade animation plays.
+     * Creates the "history" to be displayed in the GUI in the form of strings. These Strings are descriptions of the actions.
+     * 
+     * @param actionsToNotify the list of actions to be turned into human readable strings.
      */
-    public void aiShowCardsRequests(){
-        System.out.println("--------------------------------------------------------------------------------------------------------------");
-        throw new UnsupportedOperationException("not yet implemented");
-        
-        //TODO
-        //if this is called, the next recived showCardsAction (through actionResponse) should be added to a queue 
-        //when you recived a StartTurnAction (through actionResponse) , if the queue is not empty, first display the queued ShowCardsActions, then process the StartTurnAction
-    }
-    
-    
-
     public void showActionLog(LinkedList<Action> actionsToNotify) {
-        System.out.println("show history called");
         for (Action action: actionsToNotify) {
             StringBuilder message = new StringBuilder();     
             switch (action.getActionType()) {
@@ -1005,7 +1103,7 @@ public class gameInstance {
                     
                     break;
                 default:
-                    int[] mathew = new int[1];
+                    final int[] mathew = new int[1];
                     System.out.println(mathew[-1]);
                     break;
             }
@@ -1013,7 +1111,12 @@ public class gameInstance {
         
     }
 
-    public void newHumanPlayerTurn(Player player, LinkedList<Action> actionsToNotify) {
+    /**
+     * Starts a new human turn in the GUI This includes rendering new cards(for the next player) an switches it to a black(curtain) scene.
+     * 
+     * @param actionsToNotify the actions that have happened previously.
+     */
+    public void newHumanPlayerTurn(LinkedList<Action> actionsToNotify) {
         resetRoll();
         suggested = false;
         accused = false;
@@ -1022,22 +1125,25 @@ public class gameInstance {
         history.clear();
         switchToCurtain();
         redrawPlayers();
+        redrawWeapons();
         createCardsDisplay(cardsDisplay);
         showActionLog(actionsToNotify);
         //TODO
         //call showAction(actionsToNotify) after player turn has begun (after they click start turn and they fade in)
     }
     
+  /**
+    * Resets the Roll label which displays how many moves you have.
+    */
     private void resetRoll() {
         remainingMovesLabel.setText("Roll Available");
         rolled = false;
     }
 
     /**
-     * Called by GameController when the game has finished, player is the winning player, player is null if there is no winner
-     * @param player 
+     * Called by GameController when the game has finished, player is the winning player, player is null if there is no winner.
      */
-    public void gameOver(Player player) {
+    public void gameOver() {
         Prompt gameOverPrompt = new Prompt("No one was able to guess the murder cards");
         gameOverPrompt.setTitle("GAME OVER");
         gameOverPrompt.setOnCloseRequest(e -> {

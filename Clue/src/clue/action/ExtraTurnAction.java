@@ -19,7 +19,7 @@ public class ExtraTurnAction extends Action {
      * Creates a new ExtraTurnAction
      *
      * @param player the Player to roll again
-     * @param card
+     * @param card the intrigue card to be removed from player
      */
     public ExtraTurnAction(Player player, ExtraTurnIntrigue card) {
         super(player, card);

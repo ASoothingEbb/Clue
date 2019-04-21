@@ -34,6 +34,7 @@ public class SuggestAction extends Action {
      * @param room the room to suggest
      * @param weapon the weapon to suggest
      * @param player the player making the suggestion
+     * @param players the list of players in the game
      * 
      */
     public SuggestAction(PersonCard person, RoomCard room, WeaponCard weapon, Player player, List<Player> players) {
@@ -127,10 +128,18 @@ public class SuggestAction extends Action {
         return super.toString() + cards;
     }
 
+    /**
+     * Gets the person who needs to show their card.
+     * @return player who needs to show card
+     */
     public Player getShower(){
         return show;
     }
     
+    /**
+     * Gets the cards which the player has which match the cards that were suggested.
+     * @return list of cards of the player that match the suggested 
+     */
     public List<Card> getFoundCards(){
         return foundCards;
     }
