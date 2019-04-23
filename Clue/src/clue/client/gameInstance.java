@@ -620,6 +620,7 @@ public class gameInstance {
                 break;
             case THROWAGAIN:
                 System.out.println("[gameInstance.actionResponse] case THROWAGAIN ----");
+                resetRoll();
                 break;
             case STARTTURN:
                 System.out.println("[gameInstance.actionResponse] case STARTTURN ----");
@@ -627,6 +628,10 @@ public class gameInstance {
             case ACCUSATION:
                 System.out.println("[gameInstance.actionResponse] case ACCUSATION ----");
                 showAccusationResult(action);
+                break;
+            case TELEPORT:
+                System.out.println("[gameInstance.actionResponse] case TELEPORT ----");
+                remainingMovesLabel.setText("Teleport");
                 break;
         }
         System.out.println("return");

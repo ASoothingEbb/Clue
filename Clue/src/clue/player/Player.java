@@ -31,6 +31,7 @@ public class Player {
     private String notes;
     private int[] drawnLocation;
     private boolean isAi;
+    private boolean canReceiveIntrigue;
 
     public GameController game;
 
@@ -48,6 +49,7 @@ public class Player {
         intrigues = new ArrayList();
         drawnLocation = new int[2];
         isAi = false;
+        canReceiveIntrigue = true;
     }
 
     /**
@@ -198,6 +200,7 @@ public class Player {
      * @param card the intrigue card to be removed
      */
     public void removeIntrigue(IntrigueCard card){
+        System.out.println("[Player.removeIntrigue] : "+card.getCardType());
         intrigues.remove(card);
     }
 
@@ -224,7 +227,7 @@ public class Player {
      * Gets the list of intrigue cards held by the player
      * @return the list of intrigue cards
      */
-    public List<IntrigueCard> getIntrigue() {
+    public List<IntrigueCard> getIntrigues() {
         return intrigues;
     }
 
@@ -235,7 +238,9 @@ public class Player {
      * @return true if they have a card of that type, false otherwise
      */
     public boolean hasIntrigue(CardType type) {
+        System.out.println("[Player.hasIntrigue] intrigue count: "+intrigues.size());
         for (IntrigueCard intrigue : intrigues) {
+            System.out.println("owned intrigue: "+intrigue.getCardType());
             if (intrigue.getCardType() == type) {
                 return true;
             }
@@ -249,6 +254,7 @@ public class Player {
      * @param type the intrigue card type to remove
      */
     public void removeIntrigueOnce(CardType type) {
+        System.out.println();
         IntrigueCard toRemove = null;
 
         for (IntrigueCard intrigue : intrigues) {
@@ -318,5 +324,25 @@ public class Player {
         
         
         return result;
+    }
+    
+    
+    public void setCanReceiveIntrigue(boolean setTo){
+        canReceiveIntrigue = setTo;
+        System.out.println("[Player.setCanReceiveIntrigue] :"+setTo);
+    
+    }
+    public boolean getCanReceiveIntrigue(){
+        System.out.println("[Player.getCanReceiveIntrigue] :"+canReceiveIntrigue);
+        return canReceiveIntrigue;
+    }
+    
+    public IntrigueCard getIntrigue(CardType type){
+        for (IntrigueCard card: intrigues){
+            if (card.getCardType() == type){
+                return card;
+            }
+        }
+        return null;
     }
 }

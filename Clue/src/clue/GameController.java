@@ -40,7 +40,7 @@ public final class GameController {
 
     private GameState state;
     private final BoardMappings bm;
-    private List<IntrigueCard> cards;
+    private List<IntrigueCard> intrigueCards;
     private PersonCard murderPerson;
     private RoomCard murderRoom;
     private WeaponCard murderWeapon;
@@ -195,48 +195,27 @@ public final class GameController {
                     break;
                 case ENDTURN:
                     System.out.println("    CASE ENDTURN");
-                    if (aiWaitingForHumanResponse){//if ai is waiting, do not end the ai players turn yet
-                        queuedEndTurn = (EndTurnAction)action;
-                    }
-                    else{
-                        player.setMoves(0);
-
-
-                        int j = player.getId();
-
-                        for (Player p : players){
-                            if (p.isActive() && p.getId() !=j){
-                                state.getPlayer(j).removeIntrigueOnce(CardType.AVOIDSUGGESTION);//remove any suggestion blocks players may have 
-
-                            }    
-                        }
-
-                        moveActionLog();
-
-
-                        if (state.hasActive()){
-                            int old = player.getId();
-                            state.nextTurn(state.nextPlayer());
-                            System.out.println("[GameController.performAction] case end turn transitioning to next player turn: "+old+"->"+player.getId());
-                            nextAction = new StartTurnAction(state.getCurrentPlayer());    
-                        }
-                        else{
-                            System.out.println("[GameController.performAction] case end turn no more active players");
-                            endGame();
-                        }
-                    }
-                    
+                    nextAction = performEndTurnAction((EndTurnAction)action);  
                     break;
                 case MOVE:
                     System.out.println("    CASE MOVE "+player.getId() + "FROM: "+state.getAction().getActionType());
-                    if (action.result) {
+                    
+                    if (player.hasIntrigue(CardType.TELEPORT)){
+                        if (attemptToTeleport(((MoveAction) action).getTile())){//if teleport was successful
+                            System.out.println("Teleport successfull");
+                            action.result = true;
+                            returnCard((IntrigueCard)player.getIntrigue(CardType.TELEPORT));//remove teleport intrigue from player
+                        }
+                        else{
+                            System.out.println("Teleport unsucessful");
+                        }
+                        
+                    }
+                    else if (action.result) {//standard move
                         Tile loc = ((MoveAction) action).getTile();    
                         //player.getPosition().setOccupied(false);  
                         player.setPosition(loc); 
                         //loc.setOccupied(true);                    
-                        if (loc.isSpecial() && player.getMoves() == 0) {
-                            getSpecial(loc);
-                        }
                         System.out.println("playerId: "+player.getId()+", move attempt result: "+action.result);    
                     }
                     else{
@@ -283,24 +262,38 @@ public final class GameController {
 
                     //GIVE PLAYERS CARDS
                     handOutCards();
+                    
+                    //setup the intrigue card deck
+                    intrigueCards = new ArrayList<>();
+                    for (int i = 0; i < 4; i++){
+                        intrigueCards.add(new TeleportIntrigue(i));
+                    }
+                    for (int i = 0; i < 4; i++){
+                        intrigueCards.add(new ThrowAgainIntrigue(i));
+                    }
+                    for (int i = 0; i < 4; i++){
+                        intrigueCards.add(new ExtraTurnIntrigue(i));
+                    }
+                    for (int i = 0; i < 4; i++){
+                        intrigueCards.add(new AvoidSuggestionIntrigue(i));
+                    }
 
                     break;
                 case STARTTURN:
-                    System.out.println("    CASE STARTTURN "+player.getId() + " FROM: "+state.getAction().getActionType());
-                    
-                       
-                            moveActionLog();
-                            LinkedList<Action> actionsToNotify = getActions();
+                    System.out.println("    CASE STARTTURN " + player.getId() + " FROM: " + state.getAction().getActionType());
 
+                    moveActionLog();
+                    LinkedList<Action> actionsToNotify = getActions();
 
-                            if (gui != null && !(player instanceof AiAdvanced)){
-                                System.out.println("--------------------------prompting gui for player+"+player.getId());
-                                gui.newHumanPlayerTurn(actionsToNotify);
+                    player.setCanReceiveIntrigue(true);//allow player to receive an intrigue
 
-                            }
-                            else{
-                                System.out.println("[GameController.performAction] null gui -> gui.newHumanPlayerTurn(player, actionsToNotify)");
-                            }
+                    if (gui != null && !(player instanceof AiAdvanced)) {
+                        System.out.println("--------------------------prompting gui for player+" + player.getId());
+                        gui.newHumanPlayerTurn(actionsToNotify);
+
+                    } else {
+                        System.out.println("[GameController.performAction] null gui -> gui.newHumanPlayerTurn(player, actionsToNotify)");
+                    }
                                             
                     break;
                 case SUGGEST:
@@ -341,22 +334,9 @@ public final class GameController {
                     if(gui != null && !(player instanceof AiAdvanced)){
                         gui.actionResponse(action);
                     }
-                    returnCard((IntrigueCard)((TeleportAction) action).getCard());
+                    
 
-                    Tile target = ((TeleportAction) action).getTarget();
-                    boolean result = false;
-                    if (!target.isFull()){
-                        result = true;
-                        //player.getPosition().setOccupied(false);  
-                        player.setPosition(target); 
-                        //target.setOccupied(true);                    
-                        if (target.isSpecial()) {
-                            getSpecial(target);
-                        }
-
-                    }
-                    System.out.println("playerId: "+player.getId()+", [teleport] move attempt result: "+result);
-
+                    
                     break;
                 case THROWAGAIN:
                     System.out.println("    CASE THROWAGAIN");
@@ -403,15 +383,7 @@ public final class GameController {
         return player;
     }
     
-    /**
-     * Called by GUI when the player is on an intrigue tile and they wish to end there movement turn to receive an intrigue card.
-     */
-    public void endMovementTurn(){
-        if (player.getPosition().isSpecial()){
-            CardType type = getSpecial(player.getPosition()).getCardType();
-            gui.notifyUser("You received an intrigue card: "+type.toString());
-        }    
-    }
+
     
 
     /**
@@ -706,8 +678,8 @@ public final class GameController {
      * @return a random intrigue card
      */
     public IntrigueCard drawCard() {
-        int nextCard = random.nextInt(cards.size());
-        return cards.remove(nextCard);
+        int nextCard = random.nextInt(intrigueCards.size());
+        return intrigueCards.remove(nextCard);
     }
 
     /**
@@ -741,18 +713,18 @@ public final class GameController {
      * @param card the card to be returned to the deck.
      */
     private void returnCard(IntrigueCard card) {
-        cards.add(card);
+        intrigueCards.add(card);
     }
 
     /**
-     * Resolves special tile functionality
+     * Picks an intrigue, gives it to the player, then performs the intrigue
      *
      * @param loc special tile
      * @return returns the picked Intrigue card
      * 
      */
-    private Card getSpecial(Tile loc) {
-        IntrigueCard card = ((SpecialTile) loc).getIntrigue(player);
+    private Card pickAndPerformIntrigue(Tile loc) {
+        IntrigueCard card = ((SpecialTile) loc).getIntrigue(player);//selects an intrigue and gives it to the current player
         try{
             switch (card.getCardType()) {
                 case AVOIDSUGGESTION:
@@ -929,6 +901,19 @@ public final class GameController {
         }
     }
     
+    private boolean attemptToTeleport(Tile target){
+        boolean result = false;
+        if (!target.isFull()){
+            result = true;
+            player.setPosition(target);                    
+
+        }
+       
+        System.out.println("playerId: "+player.getId()+", [teleport] move attempt result: "+result);
+        return result;
+    
+    }
+    
     /**
      * Gets the list of weapon cards
      * @return List of WeaponCard
@@ -936,5 +921,73 @@ public final class GameController {
     public List<WeaponCard> getWeaponCards() {
         return weaponCards;
     }
+ 
+    /**
+     * Called to perform an end turn action
+     *
+     * @param action the end turn action to be performed
+     * @return the next action (to be performed) produced by the perform end
+     * turn action
+     */
+    private Action performEndTurnAction(EndTurnAction action) {
+        System.out.println("[GameController.performEndTurnAction]");
+        IntrigueCard intrigue = endTurnIntrigueTileCheck();
+        player.setMoves(0);
+        if (intrigue != null) {//do not automatically accept the end turn if player recived intrigue
+            //performAction(intrigueAction) is handled during the endTurnIntrigueTileCheck() call
+            if (intrigue.getCardType() == CardType.EXTRATURN){
+                player.setCanReceiveIntrigue(true);//allow player to get another intrigue
+            }
+        } else if (aiWaitingForHumanResponse) {//if ai is waiting for human response (from the ai players suggestion), do not end the ai players turn yet
+            queuedEndTurn = (EndTurnAction) action;
+        } else {//end the players turn
+            
+            player.setMoves(0);
+            int currentPlayerId = player.getId();
+
+            for (Player p : players) {//remove any avoid suggestion intriue that players may have, do not remove from the current player
+                if (p.isActive() && p.getId() != currentPlayerId) {
+                    for (IntrigueCard c : p.getIntrigues()){
+                        if (c.getCardType() == CardType.AVOIDSUGGESTION){
+                            p.removeIntrigue(c);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            moveActionLog();
+
+            if (state.hasActive()) {//if there are still active players in the game, continue to next turn
+                int old = player.getId();
+                state.nextTurn(state.nextPlayer());
+                System.out.println("[GameController.performAction] end turn transitioning to next player turn: " + old + "->" + players.get(state.getPlayerTurn()));
+                return new StartTurnAction(state.getCurrentPlayer());
+            } else {//end the game instead of transitioning to next players turn
+                System.out.println("[GameController.performAction] end turn no more active players");
+                endGame();
+            }
+        }
+        return null;
+    } 
+    
+    /**
+     * Called when player ends there turn, check if they should be given an intrigue card
+     * @return true if player received an intrigue card, false otherwise
+     */
+    public IntrigueCard endTurnIntrigueTileCheck(){
+        System.out.println("[GameController.endTurnIntrigueTileCheck] :"+player.getCanReceiveIntrigue());
+        if (player.getPosition().isSpecial() && player.getCanReceiveIntrigue()){
+            
+            IntrigueCard card = (IntrigueCard)pickAndPerformIntrigue(player.getPosition());
+            CardType type = card.getCardType();
+            gui.notifyUser("You received an intrigue card: "+type.toString());
+            System.out.println("[GameController.endTurnIntrigueTileCheck] player is being given an intrigue card"+type.toString());
+            player.setCanReceiveIntrigue(false);//player cannot receive another intrigue this turn
+            return card;
+        }    
+        return null;
+    }
+    
     
 }

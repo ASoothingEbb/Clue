@@ -158,14 +158,14 @@ public class PlayerTest {
     }
 
     /**
-     * Test of getIntrigue method, of class Player.
+     * Test of getIntrigues method, of class Player.
      */
     @Test
     public void testGetIntrigue() {
         System.out.println("getIntrigue");
         Player instance = new Player(0,gc);
         List<IntrigueCard> expResult = new ArrayList<IntrigueCard>();
-        List<IntrigueCard> result = instance.getIntrigue();
+        List<IntrigueCard> result = instance.getIntrigues();
         assertEquals(expResult, result);
     }
 
