@@ -28,12 +28,10 @@ import clue.client.gameInstance;
 /**
  * Performs internal game logic for a Clue game instance
  *
- * @author slb35
+ * 
  */
 public final class GameController {
 
-    public class MovementException extends Exception {
-    }
 
     public class TooManyPlayersException extends Exception {
     }
@@ -45,7 +43,7 @@ public final class GameController {
     private RoomCard murderRoom;
     private WeaponCard murderWeapon;
     private List<Player> players;
-    private Player winner;//says it isnt used but it is
+    private Player winner;
     private Player player;
     private final Random random;
     private List<Action> actionLog;
@@ -58,7 +56,7 @@ public final class GameController {
     private EndTurnAction queuedEndTurn;
 
     /**
-     * Creates a new GameController which provides the backend logic and calls
+     * Creates a new GameController which provides the backend logic and calls used by players to participate in the game
      *
      * @param human the number of human players
      * @param ai the number of ai players
@@ -154,7 +152,7 @@ public final class GameController {
     }
     
     /**
-     * Executes a given action.
+     * Performs a given action, constructs and performs the next action if the given action produces another action
      *
      * @param action the action to be executed
      * @throws UnknownActionException thrown when it was given an action that it didn't know how to handle
@@ -165,11 +163,10 @@ public final class GameController {
         if (state.isRunning()){//only execute the action if game is running
             Action nextAction = null;
 
-            player = players.get(state.getPlayerTurn());
+            player = players.get(state.getPlayerTurn());//get the current player whose turn it is
 
             System.out.println("[GameController.performAction] ----"+action.getActionType() + " executing---- player turn: "+player.getId());
             action.execute();//action.execute() handles a lot of the logic behind execution of an action
-            //Action specific lplayersogic
             switch (action.getActionType()) {
                 default:
                     throw new UnknownActionException();
@@ -213,9 +210,7 @@ public final class GameController {
                     }
                     else if (action.result) {//standard move
                         Tile loc = ((MoveAction) action).getTile();    
-                        //player.getPosition().setOccupied(false);  
-                        player.setPosition(loc); 
-                        //loc.setOccupied(true);                    
+                        player.setPosition(loc);               
                         System.out.println("playerId: "+player.getId()+", move attempt result: "+action.result);    
                     }
                     else{

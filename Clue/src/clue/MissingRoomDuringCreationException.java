@@ -6,7 +6,7 @@
 package clue;
 
 /**
- *
+ * Exception for when BoardMappings failed to create a board because the csv had a room id of N, but it was missing a room id that was less than N (board must contain all room ids from 1 to N)
  * @author Malter
  */
 public class MissingRoomDuringCreationException extends Exception {

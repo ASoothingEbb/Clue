@@ -34,7 +34,6 @@ public class AccuseAction extends Action {
      * @param murderPerson the person who conducted the murder
      * @param murderRoom the room which the murder took place
      * @param murderWeapon the weapon used in the murder
-     * @param gui the gameInstance (GUI) that may need to be prompted
      * 
      */
     public AccuseAction(Player player, PersonCard person, RoomCard room, WeaponCard weapon,

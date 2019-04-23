@@ -22,7 +22,7 @@ import java.util.PriorityQueue;
 import java.util.regex.Pattern;
 
 /**
- *
+ * Used to build the board from csv files. Also maps x y coordinates to tiles, allowing other classes to get a tile from x y coordinate
  * @author Malter
  */
 public final class BoardMappings {
