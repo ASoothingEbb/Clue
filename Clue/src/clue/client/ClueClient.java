@@ -50,7 +50,7 @@ import javafx.stage.Stage;
 
 /**
  *
- * @author hungb
+ * @author Hung Bui Quang
  */
 public class ClueClient extends Application {
     
@@ -64,7 +64,6 @@ public class ClueClient extends Application {
     
     private int width;
     private int height;
-    private String currentWindowMode;
     
     private HashMap<String, String> textureMap;
     
@@ -77,17 +76,16 @@ public class ClueClient extends Application {
     private Font avenirNormal;
     
     // BackgroundFill
-    private final Background blackFill = new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY));
     private final Background greenFill = new Background(new BackgroundFill(Color.rgb(7, 80, 2), CornerRadii.EMPTY, Insets.EMPTY));
     
     
     /**
+     * Starts the client
      * 
-     * @param primaryStage
-     * @throws FileNotFoundException 
+     * @param primaryStage the root stage that is passed by launch called in main
      */
     @Override
-    public void start(Stage primaryStage) throws FileNotFoundException {
+    public void start(Stage primaryStage) {
         primaryStage.setTitle("Clue");
         
         width = 1280;
@@ -95,8 +93,13 @@ public class ClueClient extends Application {
         
         stage = primaryStage;
         
-        volumeOn = new Image(new FileInputStream(new File("resources/Sprites/volumeOn.png")), 50, 50, false, false);
-        volumeOff = new Image(new FileInputStream(new File("resources/Sprites/volumeOff.png")), 50, 50, false, false);
+        try {
+            volumeOn = new Image(new FileInputStream(new File("resources/Sprites/volumeOn.png")), 50, 50, false, false);
+            volumeOff = new Image(new FileInputStream(new File("resources/Sprites/volumeOff.png")), 50, 50, false, false);
+        } catch(FileNotFoundException ex) {
+            
+        }
+
         backgroundMusic = new Sound("resources/Music/backgroundMusic.wav");
         backgroundMusic.loop();
         backgroundMusic.setVolume(0.6f);
@@ -172,8 +175,8 @@ public class ClueClient extends Application {
     
     
     /**
-     * 
-     * @param stage 
+     * Creates the gameInstance and passes the necessary parameters.
+     * @param stage parent stage
      */
     private void startGameScene(Stage stage) {
         numberOfPlayers = 1;
@@ -293,7 +296,6 @@ public class ClueClient extends Application {
                 stage.setScene(prevScene);
             } catch(TooManyPlayersException | MissingRoomDuringCreationException | NoSuchRoomException | NoSuchTileException ex) {
                 System.out.println("Ice Cream Machine BROKE");
-                ex.printStackTrace();
             } catch(NotEnoughPlayersException ex) {
                 Prompt playerPrompt = new Prompt("Not Enough Players");
                 playerPrompt.setLabelTitle("Start Game Error");
@@ -339,9 +341,9 @@ public class ClueClient extends Application {
     }
     
     /**
-     * 
-     * @param increase
-     * @param label 
+     * Updates the number of AIs counter
+     * @param increase Increase or decrease counter
+     * @param label Label to update
      */
     private void updateNumberOfAIs(boolean increase, MenuItem label) {
         if (increase) {
@@ -353,9 +355,9 @@ public class ClueClient extends Application {
     }
     
     /**
-     * 
-     * @param increase
-     * @param label 
+     * Updates the number of Players counter
+     * @param increase Increase or decrease counter
+     * @param label Label to update
      */
     private void updateNumberOfPlayers(boolean increase, MenuItem label) {
         if (increase) {
@@ -370,7 +372,7 @@ public class ClueClient extends Application {
      * Creates the HowToPlay scene. Before setting the stage to the HowToPlay
      * scene, the prevScene has to be set to the currentScene which is used to
      * return to home Scene.
-     * @param stage 
+     * @param stage parent stage
      */
     private void howToPlayScene(Stage stage) {
         GridPane howToPlayLayout = new GridPane();
@@ -391,8 +393,8 @@ public class ClueClient extends Application {
     }
     
     /**
-     * 
-     * @param stage 
+     * Creates the settings 
+     * @param stage parent stage
      */
     private void settingScene(Stage stage) {        
         BorderPane settingsLayout = new BorderPane();
@@ -533,7 +535,6 @@ public class ClueClient extends Application {
             public void changed(ObservableValue observable, Object oldValue, Object newValue) {
                 backgroundMusicVolumeShow.setText(String.valueOf((int) backgroundMusicVolume.getValue()));
                 backgroundMusic.setVolume((float) ((float)backgroundMusicVolume.getValue()*0.01));
-                System.out.println(backgroundMusicVolume.getValue());
             }
         });
         
@@ -548,9 +549,9 @@ public class ClueClient extends Application {
     }
     
     /**
-     * 
-     * @param layout
-     * @return 
+     * Creates the settings scene and elements
+     * @param layout layout to add the JavaFX nodes to
+     * @return layout with the texture settings JavaFX nodes
      */
     private GridPane textureSettingsScene(GridPane layout) {
         textureMap = new HashMap<>();
@@ -639,8 +640,8 @@ public class ClueClient extends Application {
     }
     
     /**
-     * 
-     * @return 
+     * Creates and saves the settings to a properties file
+     * @return if the file was saved successfully or not
      */
     private boolean saveProperties() {
         try (OutputStream output = new FileOutputStream("./resources/config.properties")) {
@@ -663,7 +664,7 @@ public class ClueClient extends Application {
      * content be edited.
      * @param columnCount
      * @param editable
-     * @return 
+     * @return TextField with the specified columnCount and editable state set.
      */
     private TextField getTextField(int columnCount, boolean editable) {
         TextField filePath = new TextField();
@@ -676,7 +677,7 @@ public class ClueClient extends Application {
      * Returns a Label with the given text and font.
      * @param text
      * @param font
-     * @return 
+     * @return Label of the given text in the given font
      */
     private Label getLabel(String text, Font font) {
         Label label = new Label(text);

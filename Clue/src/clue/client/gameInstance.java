@@ -31,7 +31,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
 import java.util.logging.Level;
@@ -165,7 +164,7 @@ public class gameInstance {
         alignment.getChildren().addAll(boardview, boardPane);
         
         root.getChildren().add(alignment);
-        String line = "";
+        String line;
         
         try (BufferedReader br = new BufferedReader(new FileReader(boardTilePath))) {
             int y = 0;
@@ -611,10 +610,6 @@ public class gameInstance {
                 showCard(action);
                 redrawPlayers();
                 redrawWeapons();
-                for (Player player: gameInterface.getPlayers()) {
-                    System.out.println("Player " + player.getId() + " " + player.getPosition());
-                    System.out.println("Player " + player.getId() + " " + player.getDrawX() + " " +  player.getDrawY());
-                }
                 if (((ShowCardAction) action).getWhoShowedTheCard() instanceof AiAdvanced) {
                     showCardPrompt.show();
                 }
@@ -1108,7 +1103,7 @@ public class gameInstance {
                     
                     break;
                 default:
-                    int[] mathew = new int[1];
+                    final int[] mathew = new int[1];
                     System.out.println(mathew[-1]);
                     break;
             }

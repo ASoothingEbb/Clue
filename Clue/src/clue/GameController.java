@@ -177,6 +177,9 @@ public final class GameController {
                     throw new UnknownActionException();
                 case ACCUSATION:
                     System.out.println("    CASE ACCUSATION");
+                    if(!(player instanceof AiAdvanced)){
+                        gui.actionResponse(action);
+                    }
                     if (action.result) {
                         //endGame(player);
                     } else if (!state.hasActive()) {
@@ -231,7 +234,7 @@ public final class GameController {
                         //player.getPosition().setOccupied(false);  
                         player.setPosition(loc); 
                         //loc.setOccupied(true);                    
-                        if (loc.special && player.getMoves() == 0) {
+                        if (loc.isSpecial() && player.getMoves() == 0) {
                             getSpecial(loc);
                         }
                         System.out.println("playerId: "+player.getId()+", move attempt result: "+action.result);    
@@ -347,7 +350,7 @@ public final class GameController {
                         //player.getPosition().setOccupied(false);  
                         player.setPosition(target); 
                         //target.setOccupied(true);                    
-                        if (target.special) {
+                        if (target.isSpecial()) {
                             getSpecial(target);
                         }
 
@@ -658,7 +661,7 @@ public final class GameController {
      */
     public AccuseAction accuse(PersonCard person, RoomCard room, WeaponCard weapon) {
         
-        AccuseAction accuseAction = new AccuseAction(player, person, room, weapon, murderPerson, murderRoom, murderWeapon, gui);
+        AccuseAction accuseAction = new AccuseAction(player, person, room, weapon, murderPerson, murderRoom, murderWeapon);
         
         try {
             performAction(accuseAction);

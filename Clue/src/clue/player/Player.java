@@ -52,10 +52,11 @@ public class Player {
 
     /**
      * Creates a new Player
+     *
      * @deprecated for test use only - please instantiate a GameController
      * @param id the id of the player instance
      */
-    public Player(int id){
+    public Player(int id) {
         this.id = id;
         notes = "";
         active = true;
@@ -123,46 +124,45 @@ public class Player {
      * @param t destination
      */
     public void setPosition(Tile t) {
-        
-        
+
         t.setOccupied(true);
-        if (position!=null){
-            position.setOccupied(false);   
-            if (position.isRoom()){
+        if (position != null) {
+            position.setOccupied(false);
+            if (position.isRoom()) {
                 ((Room) position).unassignLocation(drawnLocation);//allow room to re assign location 
             }
         }
         drawnLocation = new int[2];
-        if (t.isRoom()){
-            drawnLocation = ((Room)t).assignLocation();//get a location from the room
-            
-        } 
-        else{
-            
+        if (t.isRoom()) {
+            drawnLocation = ((Room) t).assignLocation();//get a location from the room
+
+        } else {
+
             drawnLocation[0] = t.getX();
-            drawnLocation[1] = t.getY();    
-        }   
-        
+            drawnLocation[1] = t.getY();
+        }
+
         position = t;
     }
 
     /**
      * Gets the x coordinate that the player should be drawn at
+     *
      * @return the x coordinate
      */
-    public int getDrawX(){
+    public int getDrawX() {
         return drawnLocation[0];
     }
-    
+
     /**
      * Gets the y coordinate that the player should be drawn at
+     *
      * @return the y coordinate
      */
-    public int getDrawY(){
+    public int getDrawY() {
         return drawnLocation[1];
     }
-        
-    
+
     /**
      * Adds the card to this player.
      *
@@ -181,14 +181,14 @@ public class Player {
         intrigues.add(card);
         return card;
     }
-    
+
     /**
      * Adds a given intrigue card to the players intrigue card list
      * @return the intrigue card added to players intrigue card list
      * @deprecated this is a test method
      * @param card the intrigue card to be added
      */
-    public IntrigueCard addIntrigue(IntrigueCard card){
+    public IntrigueCard addIntrigue(IntrigueCard card) {
         intrigues.add(card);
         return card;
     }
@@ -228,7 +228,6 @@ public class Player {
         return intrigues;
     }
 
-
     /**
      * Gets whether or not the player has a given intrigue card type
      *
@@ -236,8 +235,8 @@ public class Player {
      * @return true if they have a card of that type, false otherwise
      */
     public boolean hasIntrigue(CardType type) {
-        for (IntrigueCard intrigue: intrigues){
-            if (intrigue.getCardType() == type){
+        for (IntrigueCard intrigue : intrigues) {
+            if (intrigue.getCardType() == type) {
                 return true;
             }
         }
@@ -246,33 +245,23 @@ public class Player {
 
     /**
      * Removes one intrigue of the given card type from the player
+     *
      * @param type the intrigue card type to remove
      */
-    public void removeIntrigueOnce(CardType type){
+    public void removeIntrigueOnce(CardType type) {
         IntrigueCard toRemove = null;
-        
-        for (IntrigueCard intrigue: intrigues){
-            if (intrigue.getCardType() == type){
+
+        for (IntrigueCard intrigue : intrigues) {
+            if (intrigue.getCardType() == type) {
                 toRemove = intrigue;
                 break;
             }
         }
-        
-        if (toRemove != null){
-            intrigues.remove(toRemove);    
+
+        if (toRemove != null) {
+            intrigues.remove(toRemove);
         }
-        
-    }
-    
-    
-    
-    /**
-     * Returns the game controller object.
-     *
-     * @return game
-     */
-    public GameController getGameController() {
-        return game;
+
     }
     
     /**

@@ -50,7 +50,6 @@ public class AccuseActionTest {
 
     /**
      * Test of execute method, of class AccuseAction.
-     * @deprecated needs gui to work :(
      */
     @Test
     public void testExecute() throws Exception {
