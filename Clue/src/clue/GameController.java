@@ -145,7 +145,7 @@ public final class GameController {
 
     /** 
      * Add gameInstance reference to backend so that it can make GUI calls
-     * @param gui the GUI to make the call to
+     * @param gui the GUI to make the calls to for human players
      */
     public void setGameInstance(gameInstance gui){
         this.gui = gui;
