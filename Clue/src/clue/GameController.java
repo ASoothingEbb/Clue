@@ -195,7 +195,7 @@ public final class GameController {
                     nextAction = performEndTurnAction((EndTurnAction)action);  
                     break;
                 case MOVE:
-                    System.out.println("    CASE MOVE "+player.getId() + "FROM: "+state.getAction().getActionType());
+                    System.out.println("    CASE MOVE "+player.getId() + "FROM: "+state.getLastAction().getActionType());
                     
                     if (player.hasIntrigue(CardType.TELEPORT)){
                         if (attemptToTeleport(((MoveAction) action).getTile())){//if teleport was successful
@@ -225,7 +225,7 @@ public final class GameController {
                     if(gui != null && !(player instanceof AiAdvanced)){
                         gui.actionResponse(action);
                     }
-                    if (state.getAction().getActionType() == ActionType.SHOWCARDS) {
+                    if (state.getLastAction().getActionType() == ActionType.SHOWCARDS) {
 
                     }
                     actionLog.add(action);
@@ -275,7 +275,7 @@ public final class GameController {
 
                     break;
                 case STARTTURN:
-                    System.out.println("    CASE STARTTURN " + player.getId() + " FROM: " + state.getAction().getActionType());
+                    System.out.println("    CASE STARTTURN " + player.getId() + " FROM: " + state.getLastAction().getActionType());
 
                     moveActionLog();
                     LinkedList<Action> actionsToNotify = getActions();
@@ -292,8 +292,8 @@ public final class GameController {
                                             
                     break;
                 case SUGGEST:
-                    System.out.println("    CASE SUGGEST "+player.getId() + " FROM: "+state.getAction().getActionType());
-                    if (!(state.getAction().getActionType() == ActionType.SUGGEST || state.getAction().getActionType() == ActionType.ACCUSATION)) {
+                    System.out.println("    CASE SUGGEST "+player.getId() + " FROM: "+state.getLastAction().getActionType());
+                    if (!(state.getLastAction().getActionType() == ActionType.SUGGEST || state.getLastAction().getActionType() == ActionType.ACCUSATION)) {
                         if (action.result){
 
                             try {
@@ -366,7 +366,7 @@ public final class GameController {
      * @return the last action
      */
     public Action getLastAction() {
-        return state.getAction();
+        return state.getLastAction();
     }
 
     /**
