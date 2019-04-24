@@ -232,7 +232,7 @@ public final class GameController {
                         if (((ShowCardsAction)action).getSuggester() instanceof AiAdvanced ){
                         }
                         
-                        if (action.getPlayer() instanceof AiAdvanced){//if player who needs to respond is Ai, process the reply
+                        if (action.getPlayer() instanceof AiAdvanced){//if player who needs to respond is Ai, extract the reply set by the ai player in the show cards action execute
                             replyToShowCards((ShowCardsAction)action);
                         }
                         else{//else wait for the gui to set the reply before processing it
@@ -613,16 +613,13 @@ public final class GameController {
                 }
                 else if (suggestAction.getShower() instanceof AiAdvanced){//if player who needs to show is ai
                     System.out.println("AI SHOWED AI CARDS - ENDING TURN");
-                    System.out.println("AI SHOWED AI CARDS - ENDING TURN");
-                    System.out.println("AI SHOWED AI CARDS - ENDING TURN");
-                    System.out.println("AI SHOWED AI CARDS - ENDING TURN");
-                    System.out.println("AI SHOWED AI CARDS - ENDING TURN");
-                    System.out.println("AI SHOWED AI CARDS - ENDING TURN");
+
                     endTurn();
                 }
                 else{//human player needs to respond
                     //do nothing
                     System.out.println("HUMAN NEEDS TO SHOW CARD TO AI - NOT ENDING TURN");
+
                 }
                 
                 
