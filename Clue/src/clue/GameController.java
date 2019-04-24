@@ -201,7 +201,9 @@ public final class GameController {
                         if (attemptToTeleport(((MoveAction) action).getTile())){//if teleport was successful
                             System.out.println("Teleport successfull");
                             action.result = true;
-                            returnCard((IntrigueCard)player.getIntrigue(CardType.TELEPORT));//remove teleport intrigue from player
+                            IntrigueCard card = player.getIntrigue(CardType.TELEPORT);
+                            player.removeIntrigue(card);//remove intrigue from player
+                            returnCard(card);//return teleport intrigue to intrigue deck
                         }
                         else{
                             System.out.println("Teleport unsucessful");
