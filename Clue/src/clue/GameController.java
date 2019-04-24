@@ -52,8 +52,6 @@ public final class GameController {
     private List<PersonCard> personCards;
     private List<RoomCard> roomCards;
     private gameInstance gui;
-    private boolean aiWaitingForHumanResponse;
-    private EndTurnAction queuedEndTurn;
 
     /**
      * Creates a new GameController which provides the backend logic and calls used by players to participate in the game
@@ -75,7 +73,6 @@ public final class GameController {
         
         gui = null;
         winner = null;
-        aiWaitingForHumanResponse = false;
         
         weaponCards = new ArrayList<>();
         personCards = new ArrayList<>();
@@ -224,22 +221,18 @@ public final class GameController {
                     break;
                 case SHOWCARD:
                     System.out.println("    CASE SHOWCARD");
-                    if(gui != null && !(player instanceof AiAdvanced)){
+                    if(gui != null && !(action.getPlayer() instanceof AiAdvanced)){
                         gui.actionResponse(action);
-                    }
-                    if (state.getLastAction().getActionType() == ActionType.SHOWCARDS) {
-
                     }
                     actionLog.add(action);
                     break;
                 case SHOWCARDS:
                      System.out.println("    CASE SHOWCARDS");
                     if(gui != null){//if there is a gui
-                        if (player instanceof AiAdvanced){
-                            aiWaitingForHumanResponse = true;
+                        if (((ShowCardsAction)action).getSuggester() instanceof AiAdvanced ){
                         }
                         
-                        if (action.getPlayer() instanceof AiAdvanced){//if player is Ai, process the reply
+                        if (action.getPlayer() instanceof AiAdvanced){//if player who needs to respond is Ai, process the reply
                             replyToShowCards((ShowCardsAction)action);
                         }
                         else{//else wait for the gui to set the reply before processing it
@@ -277,15 +270,15 @@ public final class GameController {
 
                     break;
                 case STARTTURN:
-                    System.out.println("    CASE STARTTURN " + player.getId() + " FROM: " + state.getLastAction().getActionType());
+                    System.out.println("    CASE STARTTURN " + action.getPlayer().getId() + " FROM: " + state.getLastAction().getActionType());
 
                     moveActionLog();
                     LinkedList<Action> actionsToNotify = getActions();
 
                     player.setCanReceiveIntrigue(true);//allow player to receive an intrigue
 
-                    if (gui != null && !(player instanceof AiAdvanced)) {
-                        System.out.println("--------------------------prompting gui for player+" + player.getId());
+                    if (gui != null && !(action.getPlayer() instanceof AiAdvanced)) {
+                        System.out.println("--------------------------prompting gui for player+" + action.getPlayer());
                         gui.newHumanPlayerTurn(actionsToNotify);
 
                     } else {
@@ -294,7 +287,7 @@ public final class GameController {
                                             
                     break;
                 case SUGGEST:
-                    System.out.println("    CASE SUGGEST "+player.getId() + " FROM: "+state.getLastAction().getActionType());
+                    System.out.println("    CASE SUGGEST "+action.getPlayer().getId() + " FROM: "+state.getLastAction().getActionType());
                     if (!(state.getLastAction().getActionType() == ActionType.SUGGEST || state.getLastAction().getActionType() == ActionType.ACCUSATION)) {
                         if (action.result){
 
@@ -315,7 +308,7 @@ public final class GameController {
                             
                         }
                         else {
-                            if (gui != null && !(player instanceof AiAdvanced)){
+                            if (gui != null && !(action.getPlayer() instanceof AiAdvanced)){
                                 gui.notifyUser("No other player had to show a card due to your suggestion.");
                             }
                             else{
@@ -422,9 +415,8 @@ public final class GameController {
      */
     public void endTurn() {
         try {
-            if (!(player instanceof AiAdvanced)){//prevents player from clicking end turn multiple times quickly to end turn of ai player
-                performAction(new EndTurnAction(player));
-            }
+            performAction(new EndTurnAction(player));
+
             
         } catch (UnknownActionException | TileOccupiedException ex) {
             Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
@@ -611,8 +603,31 @@ public final class GameController {
             System.err.println("unable to find 3 cards");
             
         }
-        suggest(person, room, weapon, player);
-
+        else{
+            SuggestAction suggestAction = suggest(person, room, weapon, player);
+            
+            if (player instanceof AiAdvanced){//if current player is ai
+                if (!suggestAction.result){//if no one needs to show a card
+                    System.out.println("NO ONE NEEDS TO SHOW CARD TO AI - ENDING TURN");
+                    endTurn();
+                }
+                else if (suggestAction.getShower() instanceof AiAdvanced){//if player who needs to show is ai
+                    System.out.println("AI SHOWED AI CARDS - ENDING TURN");
+                    System.out.println("AI SHOWED AI CARDS - ENDING TURN");
+                    System.out.println("AI SHOWED AI CARDS - ENDING TURN");
+                    System.out.println("AI SHOWED AI CARDS - ENDING TURN");
+                    System.out.println("AI SHOWED AI CARDS - ENDING TURN");
+                    System.out.println("AI SHOWED AI CARDS - ENDING TURN");
+                    endTurn();
+                }
+                else{//human player needs to respond
+                    //do nothing
+                    System.out.println("HUMAN NEEDS TO SHOW CARD TO AI - NOT ENDING TURN");
+                }
+                
+                
+            }
+        }
     }    
     
     
@@ -879,22 +894,18 @@ public final class GameController {
         int id = action.getIdOfCardToShow();
         CardType type = action.getCardTypeOfCardToShow();
         Player personToShow = action.getSuggester();
-        Card cardToShow = getCard(id, type);
-                  
+        Card cardToShow = getCard(id, type);        
                   
         try {
             performAction(new ShowCardAction(personToShow, cardToShow, ((ShowCardsAction)action).getPlayer()));
+
+            if (player instanceof AiAdvanced) {//if person who made suggestion is ai
+                endTurn();//end the turn of that ai player
+
+            }  
+            
         } catch (UnknownActionException  | TileOccupiedException ex) {
             Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        if (queuedEndTurn!= null){
-            try {
-                aiWaitingForHumanResponse = false;
-                performAction(queuedEndTurn);
-                queuedEndTurn = null;
-            } catch (UnknownActionException | TileOccupiedException ex) {
-                Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
     }
     
@@ -935,8 +946,10 @@ public final class GameController {
             if (intrigue.getCardType() == CardType.EXTRATURN){
                 player.setCanReceiveIntrigue(true);//allow player to get another intrigue
             }
-        } else if (aiWaitingForHumanResponse) {//if ai is waiting for human response (from the ai players suggestion), do not end the ai players turn yet
-            queuedEndTurn = (EndTurnAction) action;
+            else if (player instanceof AiAdvanced && intrigue.getCardType() == CardType.AVOIDSUGGESTION){
+                return new EndTurnAction(player);
+            
+            }
         } else {//end the players turn
             
             player.setMoves(0);
@@ -974,11 +987,14 @@ public final class GameController {
      */
     public IntrigueCard endTurnIntrigueTileCheck(){
         System.out.println("[GameController.endTurnIntrigueTileCheck] :"+player.getCanReceiveIntrigue());
-        if (player.getPosition().isSpecial() && player.getCanReceiveIntrigue()){
+        if (player.getPosition().isSpecial() && player.getCanReceiveIntrigue()){// && !(player instanceof AiAdvanced)){
             
             IntrigueCard card = (IntrigueCard)pickAndPerformIntrigue(player.getPosition());
             CardType type = card.getCardType();
-            gui.notifyUser("You received an intrigue card: "+type.toString());
+            if (!(player instanceof AiAdvanced)){
+                gui.notifyUser("You received an intrigue card: "+type.toString());
+            }
+            
             System.out.println("[GameController.endTurnIntrigueTileCheck] player is being given an intrigue card"+type.toString());
             player.setCanReceiveIntrigue(false);//player cannot receive another intrigue this turn
             return card;
