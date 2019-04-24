@@ -196,6 +196,7 @@ public class AiAdvanced extends Player{
             unknownIds = getNextUnknown();
             suggestionsLeft--;
             gameController.suggest(unknownIds[0], unknownIds[2]);
+            myTurn = false;
         }
         else {
             unknownIds = getNextUnknown();
@@ -229,10 +230,8 @@ public class AiAdvanced extends Player{
         }
         
         for (int i = 0; i < knownCards.get(1).size(); i++){//get the lowest unknown room id
-            if (!knownCards.get(1).contains(i)){
-                result[1] = i;
-                break;
-            }
+            result[1] = 0;
+ 
         }
         
         found = false;
@@ -262,7 +261,7 @@ public class AiAdvanced extends Player{
     }
 
     /**
-     * Called by the GameConstructor when the Ai player needs to respond to a teleport action
+     * Called by TeleportAction.execute when the Ai player needs to respond to a teleport action
      * @param action the teleport action the Ai player needs to respond to
      */
     public void respondToTeleport(TeleportAction action) {
