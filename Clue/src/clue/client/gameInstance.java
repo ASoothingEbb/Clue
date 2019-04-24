@@ -539,6 +539,9 @@ public class gameInstance {
 
         MenuItem endButton = new MenuItem("End Turn", avenirLarge);
         endButton.setOnMouseClicked(e -> {
+            remainingMovesLabel.setText("Remaining Moves: 0");
+            rolled = true;
+        
             gameInterface.getPlayer().setNotes(notes);
             gameInterface.endTurn();
             endTurnSound.play();
