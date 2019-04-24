@@ -56,7 +56,6 @@ public class AvoidSuggestionAction extends Action {
     public void execute() {
         player.removeIntrigue((AvoidSuggestionIntrigue)card);
         if (player instanceof AiAdvanced){
-            //((AiAdvanced) player).notifyAvoidSuggestion();
 
         }
         else if (gui != null){
