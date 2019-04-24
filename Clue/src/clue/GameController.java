@@ -606,7 +606,7 @@ public final class GameController {
         else{
             SuggestAction suggestAction = suggest(person, room, weapon, player);
             
-            if (player instanceof AiAdvanced){//if current player is ai
+            if (suggestAction.getPlayer() instanceof AiAdvanced){//if current player is ai
                 if (!suggestAction.result){//if no one needs to show a card
                     System.out.println("NO ONE NEEDS TO SHOW CARD TO AI - ENDING TURN");
                     endTurn();
