@@ -186,7 +186,8 @@ public class gameInstance {
                     tilePane.setOnMouseClicked(e -> {
                         try {
                             if (gameInterface.move(coordX, coordY)) {
-                                currentPlayer.move(gameInterface.getPlayer().getDrawX(), gameInterface.getPlayer().getDrawY(), board, currentPlayer);
+                                //currentPlayer.move(gameInterface.getPlayer().getDrawX(), gameInterface.getPlayer().getDrawY(), board, currentPlayer);
+                                redrawPlayers();
                                 remainingMoves.set(gameInterface.getPlayer().getMoves());
                             } else {
                                 Prompt moveError = new Prompt("Invalid Move");
