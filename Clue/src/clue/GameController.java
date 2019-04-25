@@ -334,10 +334,15 @@ public final class GameController {
                     break;
                 case THROWAGAIN:
                     System.out.println("    CASE THROWAGAIN");
+                    returnCard((IntrigueCard)((ThrowAgainAction) action).getCard());
                     if(gui != null && !(player instanceof AiAdvanced)){
                         gui.actionResponse(action);
                     }
-                    returnCard((IntrigueCard)((ThrowAgainAction) action).getCard());
+                    else if (player == action.getPlayer() && player instanceof AiAdvanced){//end turn if player is ai and they didnt allready end their turn
+                        endTurnAi();
+                    
+                    }
+                    
 
                     break;
                 case EXTRATURN:
@@ -605,6 +610,7 @@ public final class GameController {
         if (player.getPosition().isRoom()){
             try {
                 room = ((Room)player.getPosition()).getCard();
+                System.out.println("---"+player.getPosition());
             } catch (NoSuchRoomException ex) {
                 Logger.getLogger(GameController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -952,7 +958,11 @@ public final class GameController {
      */
     private Action performEndTurnAction(EndTurnAction action) {
         System.out.println("[GameController.performEndTurnAction]");
-        IntrigueCard intrigue = endTurnIntrigueTileCheck();
+        IntrigueCard intrigue = null;
+        if (!(player instanceof AiAdvanced)){//TODO fix ai-intrigue interaction
+            intrigue = endTurnIntrigueTileCheck();
+        }
+        
         player.setMoves(0);
         if (intrigue != null) {//do not automatically accept the end turn if player recived intrigue
             //performAction(intrigueAction) is handled during the endTurnIntrigueTileCheck() call
@@ -1014,5 +1024,11 @@ public final class GameController {
         return null;
     }
     
-    
+    /**
+     * Gets the whole action log
+     * @return the action log
+     */
+    public List<Action> getActionLog(){
+        return actionLog;
+    }
 }
