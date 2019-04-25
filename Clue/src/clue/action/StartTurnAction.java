@@ -33,6 +33,5 @@ public class StartTurnAction extends Action{
             System.out.println("--------------------------prompting ai for player+"+player.getId());
             ((AiAdvanced) player).respondToStartTurn();
         }
-        //TODO prompt GUI
     }
 }
