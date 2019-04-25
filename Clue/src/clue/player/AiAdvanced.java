@@ -200,9 +200,11 @@ public class AiAdvanced extends Player{
             unknownIds = getNextUnknown();
             suggestionsLeft--;
             SuggestAction suggestAction = gameController.suggest(unknownIds[0], unknownIds[2]);
-            if (suggestAction.result){
-                waitingForShowCard = true;
-            }
+            if (suggestAction != null){
+                if (suggestAction.result){
+                    waitingForShowCard = true;
+                }
+            } 
         }
         else {
             unknownIds = getNextUnknown();
