@@ -35,10 +35,10 @@ public class AiAdvanced extends Player{
     private Random rand;
     private int suggestionsLeft;
     ArrayList<ArrayList<Integer>> knownCards;
+    private boolean waitingForShowCard;
     
     private ArrayList<ArrayList<Card>> cardLists;//List of each cards players have previously suggested
     private List<Card> shownCards;
-    private boolean myTurn;
     
     
     /** 
@@ -58,7 +58,6 @@ public class AiAdvanced extends Player{
         rand = new Random(Calendar.getInstance().getTimeInMillis());
         shownCards = new ArrayList<>();
         suggestionsLeft = rand.nextInt(15)+15;
-        myTurn = false;
         
         knownCards = new ArrayList<>();
         
@@ -116,7 +115,6 @@ public class AiAdvanced extends Player{
      */
     public void respondToStartTurn() {
         System.out.println("[AiAdvanced.respondToStartTurn] id: "+id);
-        myTurn = true;
         
         if (knownCards.isEmpty()){//then it is the first turn
             for (Card card : getCards()){
@@ -133,9 +131,6 @@ public class AiAdvanced extends Player{
             }
             
         }
-        if (myTurn){
-            endTurn();
-        }   
     }
 
     /**
@@ -146,7 +141,6 @@ public class AiAdvanced extends Player{
         if (!getPosition().isRoom()){
             moveToRoom();
         }
-        endTurn();
     }
     
     /**
@@ -156,9 +150,18 @@ public class AiAdvanced extends Player{
      */
     public void revealCard(Card card, Player whoShowedTheCard) {//called when a player is showing a card to AI
         System.out.println("[AiAdvanced.revealCard] id: "+id);
+        waitingForShowCard = false;
         addCardToKnownCards(card);  
     }
 
+    /**
+     * Gets whether or not if the ai player is waiting for a reply from a suggestion
+     * @return 
+     */
+    public boolean isWaiting(){
+        return waitingForShowCard;
+    }
+    
     /**
      * Adds a card to the know deck, these cards are cards which are seen by the ai player and are thus not part of the murder cards
      * @param card the card shown to the ai player
@@ -195,8 +198,10 @@ public class AiAdvanced extends Player{
         if (suggestionsLeft > 0){
             unknownIds = getNextUnknown();
             suggestionsLeft--;
-            gameController.suggest(unknownIds[0], unknownIds[2]);
-            myTurn = false;
+            SuggestAction suggestAction = gameController.suggest(unknownIds[0], unknownIds[2]);
+            if (suggestAction.result){
+                waitingForShowCard = true;
+            }
         }
         else {
             unknownIds = getNextUnknown();
@@ -250,15 +255,7 @@ public class AiAdvanced extends Player{
         
     }
 
-    /**
-     * Submits an endTurn action to the GameController
-     */
-    private void endTurn() {
-        System.out.println("[AiAdvanced.endTurn] id: "+id);
-        myTurn = false;
-        gameController.endTurnAi();
 
-    }
 
     /**
      * Called by TeleportAction.execute when the Ai player needs to respond to a teleport action
@@ -270,7 +267,6 @@ public class AiAdvanced extends Player{
         LinkedList<Tile> path = BFS();
         ((TeleportAction)action).setTarget(path.getLast());
         suggestAccuse();
-        endTurn();
     }
     
   /** 
