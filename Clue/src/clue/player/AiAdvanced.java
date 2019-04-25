@@ -6,8 +6,8 @@
 package clue.player;
 
 /**
- *
- * @author zemig
+ * Logic to AiPlayer, will respond with its move upon being called by GameController
+ * 
  */  
 
 import clue.GameController;
@@ -58,6 +58,7 @@ public class AiAdvanced extends Player{
         rand = new Random(Calendar.getInstance().getTimeInMillis());
         shownCards = new ArrayList<>();
         suggestionsLeft = rand.nextInt(15)+15;
+        waitingForShowCard = false;
         
         knownCards = new ArrayList<>();
         
