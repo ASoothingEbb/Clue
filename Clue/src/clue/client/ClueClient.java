@@ -365,12 +365,12 @@ public class ClueClient extends Application {
         }
         
         StringBuilder winner = new StringBuilder();
-        Player winningPlayer = gameController.getWinner();
-        if (winningPlayer == null) {
+        int winningPlayer = gameController.getWinner();
+        if (winningPlayer == -1) {
             winner.append("No one won");
             winner.append("\n");
         } else {
-            winner.append(CardNameMap.get("Character" + winningPlayer.getId()));
+            winner.append(CardNameMap.get("Character" + winningPlayer));
             winner.append("accused correctly and won!!!");
             winner.append("\n");
         }
