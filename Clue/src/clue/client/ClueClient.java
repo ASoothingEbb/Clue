@@ -9,6 +9,11 @@ import clue.GameController;
 import clue.GameController.TooManyPlayersException;
 import clue.MissingRoomDuringCreationException;
 import clue.NotEnoughPlayersException;
+import clue.action.AccuseAction;
+import clue.action.Action;
+import clue.action.ShowCardAction;
+import clue.action.SuggestAction;
+import clue.player.Player;
 import clue.tile.NoSuchRoomException;
 import clue.tile.NoSuchTileException;
 import java.io.File;
@@ -19,6 +24,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import javafx.application.Application;
@@ -196,7 +203,7 @@ public class ClueClient extends Application {
         HBox AIs = new HBox();
         AIs.setAlignment(Pos.CENTER);
         
-        MenuItem AIsNumber = new MenuItem("0", avenirTitle);
+        MenuItem AIsNumber = new MenuItem("2", avenirTitle);
         AIsNumber.setActiveColor(Color.GREY);
         
         MenuItem minusAI = new MenuItem("-", avenirTitle);
@@ -267,8 +274,34 @@ public class ClueClient extends Application {
     }
     
     private void DisplayAIGameLog(Stage stage, GameController gameController) {
+        HashMap<String, String> CardNameMap = new HashMap<>();
+        
+        CardNameMap.put("character0", "Miss Scarlet");
+        CardNameMap.put("character1", "Colonel Mustard");
+        CardNameMap.put("character2", "Mrs White");
+        CardNameMap.put("character3", "Reverend Green");
+        CardNameMap.put("character4", "Mrs Peacock");
+        CardNameMap.put("character5", "Professor Plum");
+        
+        CardNameMap.put("weapon0", "Candlestick");
+        CardNameMap.put("weapon1", "Dagger");
+        CardNameMap.put("weapon2", "Lead Pipe");
+        CardNameMap.put("weapon3", "Revolver");
+        CardNameMap.put("weapon4", "Rope");
+        CardNameMap.put("weapon5", "Spanner");
+        
+        CardNameMap.put("room0", "Study");
+        CardNameMap.put("room1", "Hall");
+        CardNameMap.put("room2", "Lounge");
+        CardNameMap.put("room3", "Library");
+        CardNameMap.put("room4", "Billard Room");
+        CardNameMap.put("room5", "Dining Room");
+        CardNameMap.put("room6", "Conservatory");
+        CardNameMap.put("room7", "Ball Room");
+        CardNameMap.put("room8", "Kitchen");
         
         VBox gameLog = new VBox();
+        gameLog.setBackground(greenFill);
         gameLog.setAlignment(Pos.CENTER);
         
         Label historyLabel = getLabel("History", avenirTitle); 
@@ -281,15 +314,77 @@ public class ClueClient extends Application {
         history.setStyle("-fx-control-inner-background: #fff2ab;");
         history.setEditable(false);
         
-        //history.setText(gameController);
+        List<Action> log = gameController.getActionLog();
+
+        for (Action action: log) {
+            StringBuilder message = new StringBuilder();     
+            switch (action.getActionType()) {
+                case ACCUSATION:
+                    int accuser = ((AccuseAction) action).getPlayer().getId();
+                    final int[] cards = ((AccuseAction) action).getAccusationCards();
+                    message.append(CardNameMap.get("character" + accuser));
+                    message.append(" accused ");
+                    message.append(CardNameMap.get("character" + cards[0]));
+                    message.append(" of murder in the ");
+                    message.append(CardNameMap.get("room" + cards[2]));
+                    message.append(" using the ");
+                    message.append(CardNameMap.get("weapon" + cards[1]));
+                    message.append("\n");
+                    history.appendText("--------------------\n");
+                    history.appendText(message.toString());
+                    break;
+                case SHOWCARD:
+                    int suggestee = ((ShowCardAction) action).getWhoShowedTheCard().getId();
+                    int suggester = ((ShowCardAction) action).getPlayer().getId();
+                    message.append(CardNameMap.get("character" + suggestee));
+                    message.append(" showed a card to ");
+                    message.append(CardNameMap.get("character" + suggester));
+                    message.append("\n");
+                    history.appendText("--------------------\n");
+                    history.appendText(message.toString());
+                    break;
+                case SUGGEST:
+                    SuggestAction suggestedAction = ((SuggestAction) action);
+                    message.append(CardNameMap.get("character" + suggestedAction.getPlayer().getId()));
+                    message.append(" suggested ");
+                    message.append(CardNameMap.get("character" + suggestedAction.getPersonCard().getId()));
+                    message.append(" of the murder in the ");
+                    message.append(CardNameMap.get("room" + suggestedAction.getRoomCard().getId()));
+                    message.append(" using the ");
+                    message.append(CardNameMap.get("weapon" + suggestedAction.getWeaponCard().getId()));
+                    message.append("\n");
+                    history.appendText("--------------------\n");
+                    history.appendText(message.toString());
+                    break;
+                case SHOWCARDS:
+                    
+                    break;
+                default:
+                    break;
+            }
+        }
+        
+        StringBuilder winner = new StringBuilder();
+        Player winningPlayer = gameController.getWinner();
+        if (winningPlayer == null) {
+            winner.append("No one won");
+            winner.append("\n");
+        } else {
+            winner.append(CardNameMap.get("Character" + winningPlayer.getId()));
+            winner.append("accused correctly and won!!!");
+            winner.append("\n");
+        }
+        history.appendText("--------------------\n");
+        history.appendText(winner.toString());
         
         MenuItem backButton = new MenuItem("Back", avenirTitle);
         backButton.setOnMouseClicked(e -> stage.setScene(prevScene));
         
-        gameLog.getChildren().addAll(historyLabel, backButton);
+        gameLog.getChildren().addAll(historyLabel, history, backButton);
         
         Scene scene = new Scene(gameLog, width, height);
         stage.setScene(scene);
+        stage.show();
     }
     
     /**
