@@ -32,6 +32,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -149,6 +150,9 @@ public class ClueClient extends Application {
         MenuItem createGameButton = new MenuItem("Play", avenirTitle);
         createGameButton.setOnMouseClicked(e -> startGameScene(stage));
         
+        MenuItem AiVsAiButton = new MenuItem("AI vs AI", avenirTitle);
+        AiVsAiButton.setOnMouseClicked(e -> startAIGameScene(stage));
+        
         MenuItem howToPlayButton = new MenuItem("How To Play", avenirTitle);
         howToPlayButton.setOnMouseClicked(e -> howToPlayScene(stage));
         
@@ -158,7 +162,7 @@ public class ClueClient extends Application {
         MenuItem settingsButton = new MenuItem("Settings", avenirTitle);
         settingsButton.setOnMouseClicked(e -> settingScene(stage));
 
-         menuOptions.getChildren().addAll(createGameButton, howToPlayButton, boardCreator, settingsButton);
+         menuOptions.getChildren().addAll(createGameButton, AiVsAiButton, howToPlayButton, boardCreator, settingsButton);
     }
     
     /**
@@ -173,6 +177,120 @@ public class ClueClient extends Application {
         editor.startEditor(stage);
     }
     
+    private void startAIGameScene(Stage stage) {
+        numberOfAIs = 2;
+        BorderPane alignmentPane = new BorderPane();
+        alignmentPane.setBackground(greenFill);
+        
+        GridPane AIStartGameOptions = new GridPane();
+        AIStartGameOptions.setAlignment(Pos.CENTER);
+        AIStartGameOptions.setBackground(greenFill);
+        
+        alignmentPane.setCenter(AIStartGameOptions);
+        
+        // Scene title
+        Label startGameTitle = getLabel("Create AI vs AI game", avenirTitle);
+        
+        Label numberOfAILabel = getLabel("Number of AIs", avenirNormal);
+        
+        HBox AIs = new HBox();
+        AIs.setAlignment(Pos.CENTER);
+        
+        MenuItem AIsNumber = new MenuItem("0", avenirTitle);
+        AIsNumber.setActiveColor(Color.GREY);
+        
+        MenuItem minusAI = new MenuItem("-", avenirTitle);
+        minusAI.setPadding(new Insets(0, 5, 0, 0));
+        minusAI.setBackgroundColor(Color.rgb(7, 80, 2));
+        minusAI.setMinSize(15, 15);
+        minusAI.setOnMouseClicked(e -> {
+            if (numberOfAIs > 2) {
+                updateNumberOfAIs(false, AIsNumber);
+            }
+        });
+        
+        MenuItem addAI = new MenuItem("+", avenirTitle);
+        addAI.setOnMouseClicked(e -> {
+            if (numberOfAIs < 6) {
+                updateNumberOfAIs(true, AIsNumber);
+            }
+        });
+        
+        AIs.getChildren().addAll(minusAI, AIsNumber, addAI);
+        
+        gameInstance game = new gameInstance();
+        
+        MenuItem startGameButton = new MenuItem("Start Game", avenirTitle);
+        startGameButton.setOnMouseClicked(e -> {
+            String doorFile = "resources/archersAvenueDoors.csv";
+            String tileFile = "resources/archersAvenueTiles.csv";
+            try {
+                GameController gameController = new GameController(0, numberOfAIs, tileFile, doorFile);
+                stage.hide();
+                stage.setScene(prevScene);
+                DisplayAIGameLog(stage, gameController);
+            } catch(TooManyPlayersException | MissingRoomDuringCreationException | NoSuchRoomException | NoSuchTileException ex) {
+                System.out.println("Ice Cream Machine BROKE");
+            } catch(NotEnoughPlayersException ex) {
+                Prompt playerPrompt = new Prompt("Not Enough Players");
+                playerPrompt.setLabelTitle("Start Game Error");
+                playerPrompt.showAndWait();    
+            }
+            
+        });
+
+        // Return to menu
+        MenuItem returnButton = new MenuItem("Back", avenirTitle);
+        returnButton.setOnMouseClicked(e -> {
+            stage.setScene(prevScene);
+            numberOfAIs = 0;
+         });
+        
+        AIStartGameOptions.add(startGameTitle, 0, 0, 2, 1);
+        GridPane.setHalignment(startGameTitle, HPos.CENTER);
+        
+        AIStartGameOptions.add(numberOfAILabel, 0, 1);
+        GridPane.setHalignment(numberOfAILabel, HPos.CENTER);
+        
+        AIStartGameOptions.add(AIs, 1, 1);
+        GridPane.setMargin(AIs, new Insets(0, 0, 0, 10));
+        
+        AIStartGameOptions.add(startGameButton, 0, 2, 2, 1);
+        GridPane.setHalignment(startGameButton, HPos.CENTER);
+        
+        alignmentPane.setBottom(returnButton);
+        BorderPane.setMargin(returnButton, new Insets(0,0,10,20));
+        
+        Scene scene = new Scene(alignmentPane, width, height);
+        prevScene = stage.getScene();
+        stage.setScene(scene);
+    }
+    
+    private void DisplayAIGameLog(Stage stage, GameController gameController) {
+        
+        VBox gameLog = new VBox();
+        gameLog.setAlignment(Pos.CENTER);
+        
+        Label historyLabel = getLabel("History", avenirTitle); 
+        
+        TextArea history = new TextArea();
+        history.setPrefRowCount(30);
+        history.setPrefColumnCount(30);
+        history.setWrapText(true);
+        history.setFont(avenirNormal);
+        history.setStyle("-fx-control-inner-background: #fff2ab;");
+        history.setEditable(false);
+        
+        //history.setText(gameController);
+        
+        MenuItem backButton = new MenuItem("Back", avenirTitle);
+        backButton.setOnMouseClicked(e -> stage.setScene(prevScene));
+        
+        gameLog.getChildren().addAll(historyLabel, backButton);
+        
+        Scene scene = new Scene(gameLog, width, height);
+        stage.setScene(scene);
+    }
     
     /**
      * Creates the gameInstance and passes the necessary parameters.
