@@ -98,12 +98,20 @@ public final class GameController {
         if (human+ai > startingTiles.size()){
             throw new NoSuchTileException("bad tiles map, not enough starting location for given players");
         }
+        
+        Player nonActive;
+        while (players.size() < 6){
+            System.out.println(players.size());
+            nonActive = new Player(players.size(), this);
+            nonActive.removeFromPlay();
+            players.add(nonActive); 
+        }
+        
         //assign players starting positions
         if (human + ai >= 2) {
             for (Player p : players) {
-                if (p.isActive()) {
-                    p.setPosition(startingTiles.poll());
-                }
+                p.setPosition(startingTiles.poll());
+
                 System.out.println(p);
             }
             try {
@@ -115,17 +123,9 @@ public final class GameController {
             endGame();
             throw new NotEnoughPlayersException();
         }
-        Player nonActive;
         
-        while (players.size() < 6){
-            nonActive = new Player(players.size(), this);
-            nonActive.removeFromPlay();
-            nonActive.setPosition(startingTiles.poll());
-            players.add(nonActive);
-            
-            
-            
-        }
+        
+        
         
         //assign weapon tokens starting locations
         int roomIdToBePlacedIn = 0;
@@ -298,6 +298,7 @@ public final class GameController {
                         if (action.result){
 
                             try {
+                                System.out.println("size"+players.size());
                                 System.out.println("[GameController.performAction] pulling player original position: "+players.get((((SuggestAction) action).getPersonCard().getId())).getPosition());
                                 players.get((((SuggestAction) action).getPersonCard().getId())).setPosition(bm.getRoom(((SuggestAction) action).getRoomCard().getId()));//move the person being suggested into the room of the suggestion
                                 System.out.println("[GameController.performAction] pulling player new position: "+players.get((((SuggestAction) action).getPersonCard().getId())).getPosition());
@@ -532,6 +533,7 @@ public final class GameController {
         
         int playerIndex = 0;
         while (!cardDeck.isEmpty()){
+            System.out.println(playerIndex);
             if (playerIndex >= players.size()){
                 playerIndex = 0;
             }
@@ -539,6 +541,9 @@ public final class GameController {
                 randInt = rand.nextInt(cardDeck.size());//select random index
                 players.get(playerIndex).addCard(cardDeck.get(randInt));//give card from cards list at the random index
                 cardDeck.remove(randInt);//remove the already given card from cards list
+                playerIndex++;
+            }
+            else{//non active player
                 playerIndex++;
             }
         }
