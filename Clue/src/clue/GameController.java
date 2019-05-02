@@ -177,6 +177,8 @@ public final class GameController {
                     }
                     if (action.result) {
                         //endGame(player);
+                        winner = action.getPlayer();
+                        System.out.println(action.getPlayer().getId());
                     } else if (!state.hasActive()) {
                         endGame();
                     } else {
@@ -398,6 +400,14 @@ public final class GameController {
             }
         }
         return null;
+    }
+    
+    /**
+     * Gets the winning Player
+     * @return the player who won
+     */
+    public Player getWinner() {
+        return this.winner;
     }
 
     /**
