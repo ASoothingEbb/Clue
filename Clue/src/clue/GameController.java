@@ -43,7 +43,7 @@ public final class GameController {
     private RoomCard murderRoom;
     private WeaponCard murderWeapon;
     private List<Player> players;
-    private Player winner;
+    private int winner;
     private Player player;
     private final Random random;
     private List<Action> actionLog;
@@ -72,7 +72,7 @@ public final class GameController {
         LinkedList<Tile> startingTiles = bm.getStartingTiles();
         
         gui = null;
-        winner = null;
+        winner = -1;
         
         weaponCards = new ArrayList<>();
         personCards = new ArrayList<>();
@@ -177,8 +177,11 @@ public final class GameController {
                     }
                     if (action.result) {
                         //endGame(player);
-                        winner = action.getPlayer();
-                        System.out.println(action.getPlayer().getId());
+                        if (winner == -1){
+                            winner = action.getPlayer().getId();
+                            System.out.println(action.getPlayer().getId());
+                        }
+                        
                     } else if (!state.hasActive()) {
                         endGame();
                     } else {
@@ -404,10 +407,10 @@ public final class GameController {
     }
     
     /**
-     * Gets the winning Player
-     * @return the player who won
+     * Gets the winning Player id
+     * @return the player id of who won
      */
-    public Player getWinner() {
+    public int getWinner() {
         return this.winner;
     }
 
