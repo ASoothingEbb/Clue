@@ -13,7 +13,6 @@ import clue.action.AccuseAction;
 import clue.action.Action;
 import clue.action.ShowCardAction;
 import clue.action.SuggestAction;
-import clue.player.Player;
 import clue.tile.NoSuchRoomException;
 import clue.tile.NoSuchTileException;
 import java.io.File;
@@ -24,7 +23,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -301,6 +299,7 @@ public class ClueClient extends Application {
         CardNameMap.put("room8", "Kitchen");
         
         VBox gameLog = new VBox();
+        gameLog.setPadding(new Insets(5, 10, 0, 10));
         gameLog.setBackground(greenFill);
         gameLog.setAlignment(Pos.CENTER);
         
