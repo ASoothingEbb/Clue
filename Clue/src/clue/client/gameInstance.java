@@ -768,9 +768,10 @@ public class gameInstance {
      */
     public void notifyUser(String message) {
         Prompt notifyPrompt = new Prompt(message);
+        System.out.println("message: " + message);
+        endButton.setText("End Turn");
         notifyPrompt.setLabelTitle("Notice");
         notifyPrompt.show();
-        endButton.setText("End Turn");
     }
     
     /**
@@ -1158,6 +1159,9 @@ public class gameInstance {
         redrawPlayers();
         redrawWeapons();
         createCardsDisplay(cardsDisplay);
+        if (gameInterface.getPlayer().getPosition().isSpecial() && gameInterface.getPlayer().getCanReceiveIntrigue()) {
+            endButton.setText("Use Intrigue");
+        }
         showActionLog(actionsToNotify);
         //TODO
         //call showAction(actionsToNotify) after player turn has begun (after they click start turn and they fade in)
