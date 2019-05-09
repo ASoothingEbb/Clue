@@ -587,18 +587,36 @@ public class ClueClient extends Application {
      * @param stage parent stage
      */
     private void howToPlayScene(Stage stage) {
-        GridPane howToPlayLayout = new GridPane();
+        VBox howToPlayLayout = new VBox();
+        howToPlayLayout.setPadding(new Insets(50));
         howToPlayLayout.setAlignment(Pos.CENTER);
         howToPlayLayout.setBackground(greenFill);
         
         Label howToPlayTitle = getLabel("How To Play", avenirTitle);
         
+        StringBuilder HowToPlayText = new StringBuilder();
+        HowToPlayText.append("Rules of Clue:\n");
+        HowToPlayText.append("The character Miss Scarlet (Player 1) takes the first turn.\n");
+        HowToPlayText.append("Players can move only horizontally or vertically, never diagonally.\n");
+        HowToPlayText.append("Players can't move through a yellow tile occupied by another player, but multiple players can be in the same room.\n");
+        HowToPlayText.append("Players can't enter a space or doorway they have already entered on the same turn.\n");
+        HowToPlayText.append("Players can move through a doorway to enter a room, but this ends their movement (can still suggest/accuse).\n");
+        HowToPlayText.append("Players who start their turn in a room with a secret passage can use the secret passage instead of moving. This will put their character in another room across the board, ending their movement (can still suggest/accuse).\n");
+        HowToPlayText.append("Players can only suggest/accuse inside a room.\n");
+        HowToPlayText.append("Players can suggest their own cards.\n");
+        HowToPlayText.append("Players can suggest and then accuse on the same turn.\n");
+        HowToPlayText.append("Wrong accusations means the player who accused is out of the game.\n");
+        HowToPlayText.append("If your character is suggested by another player, you will be moved the room suggested.\n");
+        HowToPlayText.append("If your character lands on an intrigue tile, the special bonus must be used on that turn.\n");
+        
+        Label HowToPlay = getLabel(HowToPlayText.toString(), avenirNormal);
+        HowToPlay.setWrapText(true);
+        
         MenuItem returnButton = new MenuItem("Back", avenirTitle);
         returnButton.setOnMouseClicked(e -> stage.setScene(prevScene));
         
-        howToPlayLayout.add(howToPlayTitle, 0, 0);
-        howToPlayLayout.add(returnButton, 0, 1);
-
+        howToPlayLayout.getChildren().addAll(howToPlayTitle, HowToPlay, returnButton);
+        
         Scene scene = new Scene(howToPlayLayout, width, height);
         prevScene = stage.getScene();
         stage.setScene(scene);
