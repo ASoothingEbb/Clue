@@ -93,6 +93,9 @@ public class gameInstance {
     private PlayerSprite[] playerSprites;
     private WeaponSprite[] weaponSprites;
     
+    //End turn button
+    private MenuItem endButton;
+    
     // Player Data
     private int currentRoom;
     private boolean rolled;
@@ -182,13 +185,20 @@ public class gameInstance {
                     }
                     final int coordX = x;
                     final int coordY = y;
+                    final boolean intrigueTile = cell.contains("I");
                     
                     tilePane.setOnMouseClicked(e -> {
+                        boolean isIntrigue = intrigueTile;
                         try {
                             if (gameInterface.move(coordX, coordY)) {
                                 //currentPlayer.move(gameInterface.getPlayer().getDrawX(), gameInterface.getPlayer().getDrawY(), board, currentPlayer);
                                 redrawPlayers();
                                 remainingMoves.set(gameInterface.getPlayer().getMoves());
+                                if (isIntrigue) {
+                                    endButton.setText("Use Intrigue");
+                                } else {
+                                    endButton.setText("End Turn");
+                                }
                             } else {
                                 Prompt moveError = new Prompt("Invalid Move");
                                 moveError.show();
@@ -200,6 +210,17 @@ public class gameInstance {
                             rollError.show();
                         }
                     });
+                    
+                    // overlay intrigue tiles
+                    if (cell.equals("I")) {
+                        tileSprite.setColor(Color.GREEN);
+                        tileSprite.setOpacity(0.70);
+                        tileSprite.setText("?");
+                        tileSprite.setAlignment(Pos.CENTER);
+                        tileSprite.setFont(avenirTitle);
+                        tileSprite.setTextFill(Color.WHITE);
+                    }
+                    
                     if (!boardTilePath.contains("archersAvenue")) {
                         if (cell.equals("-1") || cell.equals("")) {
                             tileSprite.setColor(Color.rgb(7, 80, 2));
@@ -207,7 +228,7 @@ public class gameInstance {
                             tileSprite.setColor(Color.rgb(222, 151,  29));
                         } else if (cell.contains("S")) {
                             tileSprite.setColor(Color.rgb(55, 136, 4));
-                        }else if (cell.contains("I")){
+                        }else if (cell.contains("I")) {
                             tileSprite.setColor(Color.ALICEBLUE);
                         } else if (Integer.valueOf(cell) > 0) {
                             paintRoom(tileSprite, Integer.valueOf(cell));
@@ -538,7 +559,7 @@ public class gameInstance {
             }
         });
 
-        MenuItem endButton = new MenuItem("End Turn", avenirLarge);
+        endButton = new MenuItem("End Turn", avenirLarge);
         endButton.setOnMouseClicked(e -> {
             remainingMovesLabel.setText("Remaining Moves: 0");
             rolled = true;
@@ -747,6 +768,8 @@ public class gameInstance {
      */
     public void notifyUser(String message) {
         Prompt notifyPrompt = new Prompt(message);
+        System.out.println("message: " + message);
+        endButton.setText("End Turn");
         notifyPrompt.setLabelTitle("Notice");
         notifyPrompt.show();
     }
@@ -1136,6 +1159,9 @@ public class gameInstance {
         redrawPlayers();
         redrawWeapons();
         createCardsDisplay(cardsDisplay);
+        if (gameInterface.getPlayer().getPosition().isSpecial() && gameInterface.getPlayer().getCanReceiveIntrigue()) {
+            endButton.setText("Use Intrigue");
+        }
         showActionLog(actionsToNotify);
         //TODO
         //call showAction(actionsToNotify) after player turn has begun (after they click start turn and they fade in)
