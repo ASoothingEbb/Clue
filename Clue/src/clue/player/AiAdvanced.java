@@ -57,7 +57,7 @@ public class AiAdvanced extends Player{
         gameController = gc;
         rand = new Random(Calendar.getInstance().getTimeInMillis());
         shownCards = new ArrayList<>();
-        suggestionsLeft = rand.nextInt(40)+10;
+        suggestionsLeft = rand.nextInt(20)+10;
         waitingForShowCard = false;
         
         knownCards = new ArrayList<>();
