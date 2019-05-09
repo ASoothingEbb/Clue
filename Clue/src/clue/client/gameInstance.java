@@ -194,7 +194,7 @@ public class gameInstance {
                                 //currentPlayer.move(gameInterface.getPlayer().getDrawX(), gameInterface.getPlayer().getDrawY(), board, currentPlayer);
                                 redrawPlayers();
                                 remainingMoves.set(gameInterface.getPlayer().getMoves());
-                                if (isIntrigue) {
+                                if (isIntrigue && gameInterface.getPlayer().getCanReceiveIntrigue()) {
                                     endButton.setText("Use Intrigue");
                                 } else {
                                     endButton.setText("End Turn");
@@ -1159,7 +1159,7 @@ public class gameInstance {
         redrawPlayers();
         redrawWeapons();
         createCardsDisplay(cardsDisplay);
-        if (gameInterface.getPlayer().getPosition().isSpecial() && gameInterface.getPlayer().getCanReceiveIntrigue()) {
+        if (gameInterface.getPlayer().getPosition().isSpecial()) {
             endButton.setText("Use Intrigue");
         }
         showActionLog(actionsToNotify);
