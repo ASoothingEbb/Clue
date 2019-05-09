@@ -156,9 +156,12 @@ public class GameInstance {
         board = new StackPane[boardHeight][boardWidth];
 
         Image image = null;
-        try {
-            image = new Image(new FileInputStream(new File(ImagePathMap.get("board"))));
-        } catch(FileNotFoundException ex) {
+        
+        if (boardTilePath.contains("ArchersAvenue")) {
+            try {
+                image = new Image(new FileInputStream(new File(ImagePathMap.get("board"))));
+            } catch(FileNotFoundException ex) {
+            }
         }
         
         ImageView boardview = new ImageView(image);
