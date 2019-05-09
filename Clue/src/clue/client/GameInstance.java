@@ -84,6 +84,8 @@ public class GameInstance {
     
     // Game board
     private StackPane[][] board;
+    private double stageX;
+    private double stageY;
     
     // Backend Interface
     private GameController gameInterface;
@@ -421,7 +423,7 @@ public class GameInstance {
             showRoomKeys.hoverProperty().addListener((observable, oldValue, newValue) -> {
                 if (newValue) {
                     Bounds coordinates = showRoomKeys.localToScene(showRoomKeys.getBoundsInLocal());
-                    roomKeys.setLocation(coordinates.getMaxX() - 20, coordinates.getMaxY() + coordinates.getHeight() + 6);
+                    roomKeys.setLocation(coordinates.getMaxX() - 97 + stageX, coordinates.getMaxY() + coordinates.getHeight() - 4 + stageY);
                     roomKeys.show();
                 } else {
                     roomKeys.hide();
@@ -994,6 +996,9 @@ public class GameInstance {
      */
     public void startGame(GameController gameController, Stage client,String tilePath) {
         gameStage = new Stage();
+        
+        gameStage.xProperty().addListener((observable, oldValue, newValue) -> stageX = newValue.doubleValue());
+        gameStage.yProperty().addListener((observable, oldValue, newValue) -> stageY = newValue.doubleValue());
         
         gameStage.initModality(Modality.APPLICATION_MODAL);
         gameStage.setTitle("Clue");
