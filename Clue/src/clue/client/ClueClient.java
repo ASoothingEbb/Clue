@@ -369,8 +369,8 @@ public class ClueClient extends Application {
             winner.append("No one won");
             winner.append("\n");
         } else {
-            winner.append(CardNameMap.get("Character" + winningPlayer));
-            winner.append("accused correctly and won!!!");
+            winner.append(CardNameMap.get("character" + winningPlayer));
+            winner.append(" accused correctly and won!!!");
             winner.append("\n");
         }
         history.appendText("--------------------\n");
