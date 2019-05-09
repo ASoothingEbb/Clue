@@ -110,7 +110,11 @@ public final class GameController {
         //assign players starting positions
         if (human + ai >= 2) {
             for (Player p : players) {
-                p.setPosition(startingTiles.poll());
+                Tile startLoc = startingTiles.poll();
+                if (startLoc == null){//put players in room 1 if not enough starting tiles
+                    startLoc = bm.getRoom(1);
+                }
+                p.setPosition(startLoc);
 
                 System.out.println(p);
             }
