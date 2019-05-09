@@ -68,7 +68,7 @@ import javafx.util.Duration;
  *
  * @author Hung Bui Quang
  */
-public class gameInstance {
+public class GameInstance {
     
     // Stages
     private Stage gameStage;
@@ -204,7 +204,7 @@ public class gameInstance {
                                 moveError.show();
                             }
                         } catch (NoSuchRoomException | TileOccupiedException ex) {
-                            Logger.getLogger(gameInstance.class.getName()).log(Level.SEVERE, null, ex);
+                            Logger.getLogger(GameInstance.class.getName()).log(Level.SEVERE, null, ex);
                         } catch (NullPointerException ex) {
                             Prompt rollError = new Prompt("Roll First");
                             rollError.show();
@@ -769,7 +769,11 @@ public class gameInstance {
     public void notifyUser(String message) {
         Prompt notifyPrompt = new Prompt(message);
         System.out.println("message: " + message);
-        endButton.setText("End Turn");
+        if (message.contains("EXTRATURN")) {
+            endButton.setText("Use Intrigue");
+        } else {
+            endButton.setText("End Turn");
+        }
         notifyPrompt.setLabelTitle("Notice");
         notifyPrompt.show();
     }
@@ -985,7 +989,7 @@ public class gameInstance {
      * Starts the game instance, initialises the UI elements.
      * 
      * @param gameController a reference to the gameController class (backend)
-     * @param client the main window which started gameInstance
+     * @param client the main window which started GameInstance
      * @param tilePath CSV representation of the board
      */
     public void startGame(GameController gameController, Stage client,String tilePath) {

@@ -223,7 +223,7 @@ public class ClueClient extends Application {
         
         AIs.getChildren().addAll(minusAI, AIsNumber, addAI);
         
-        gameInstance game = new gameInstance();
+        GameInstance game = new GameInstance();
         
         MenuItem startGameButton = new MenuItem("Start Game", avenirTitle);
         startGameButton.setOnMouseClicked(e -> {
@@ -387,7 +387,7 @@ public class ClueClient extends Application {
     }
     
     /**
-     * Creates the gameInstance and passes the necessary parameters.
+     * Creates the GameInstance and passes the necessary parameters.
      * @param stage parent stage
      */
     private void startGameScene(Stage stage) {
@@ -471,7 +471,7 @@ public class ClueClient extends Application {
         maps.setVisibleRowCount(8);
         maps.setValue("archersAvenue");
             
-        gameInstance game = new gameInstance();
+        GameInstance game = new GameInstance();
         
         MenuItem startGameButton = new MenuItem("Start Game", avenirTitle);
         startGameButton.setOnMouseClicked(e -> {

@@ -23,7 +23,7 @@ import java.util.Queue;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import clue.client.gameInstance;
+import clue.client.GameInstance;
 
 /**
  * Performs internal game logic for a Clue game instance
@@ -51,7 +51,7 @@ public final class GameController {
     private List<WeaponCard> weaponCards;
     private List<PersonCard> personCards;
     private List<RoomCard> roomCards;
-    private gameInstance gui;
+    private GameInstance gui;
 
     /**
      * Creates a new GameController which provides the backend logic and calls used by players to participate in the game
@@ -145,10 +145,10 @@ public final class GameController {
     }
 
     /** 
-     * Add gameInstance reference to backend so that it can make GUI calls
+     * Add GameInstance reference to backend so that it can make GUI calls
      * @param gui the GUI to make the calls to for human players
      */
-    public void setGameInstance(gameInstance gui){
+    public void setGameInstance(GameInstance gui){
         this.gui = gui;
     }
     
