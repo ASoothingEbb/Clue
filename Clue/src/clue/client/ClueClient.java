@@ -370,7 +370,7 @@ public class ClueClient extends Application {
             winner.append("\n");
         } else {
             winner.append(CardNameMap.get("character" + winningPlayer));
-            winner.append("accused correctly and won!!!");
+            winner.append(" accused correctly and won!!!");
             winner.append("\n");
         }
         history.appendText("--------------------\n");
