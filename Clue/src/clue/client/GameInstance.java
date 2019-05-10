@@ -157,7 +157,7 @@ public class GameInstance {
 
         Image image = null;
         
-        if (boardTilePath.contains("ArchersAvenue")) {
+        if (boardTilePath.contains("archersAvenue")) {
             try {
                 image = new Image(new FileInputStream(new File(ImagePathMap.get("board"))));
             } catch(FileNotFoundException ex) {
