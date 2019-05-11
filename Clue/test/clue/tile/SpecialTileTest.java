@@ -41,7 +41,7 @@ public class SpecialTileTest {
 
 
     /**
-     * Test of getIntrigue method, of class SpecialTile.
+     * Test of getIntrigues method, of class SpecialTile.
      */
     @Test
     public void testGetIntrigue() {
@@ -52,7 +52,7 @@ public class SpecialTileTest {
         int oldSize = player.getCards().size();
         
         sp.getIntrigue(player);
-        assertEquals(oldSize+1,player.getIntrigue().size());
+        assertEquals(oldSize+1,player.getIntrigues().size());
     }
     
     @Test

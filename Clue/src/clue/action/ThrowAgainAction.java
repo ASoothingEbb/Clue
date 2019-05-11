@@ -7,7 +7,7 @@ package clue.action;
 
 import clue.player.AiAdvanced;
 import clue.card.ThrowAgainIntrigue;
-import clue.client.gameInstance;
+import clue.client.GameInstance;
 import clue.player.Player;
 
 /**

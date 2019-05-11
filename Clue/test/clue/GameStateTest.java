@@ -111,7 +111,7 @@ public class GameStateTest {
    
 
     /**
-     * Test of getAction method, of class GameState.
+     * Test of getLastAction method, of class GameState.
      */
     @Test
     public void testGetAction() {
@@ -119,7 +119,7 @@ public class GameStateTest {
         Action action = new EndTurnAction(new Player(0));
         instance.setAction(action);
         Action expResult = action;
-        Action result = instance.getAction();
+        Action result = instance.getLastAction();
         assertEquals(expResult, result);
     }
 
@@ -143,7 +143,7 @@ public class GameStateTest {
         System.out.println("setAction");
         Action action = new StartAction();
         instance.setAction(action);
-        assertEquals(action, instance.getAction());
+        assertEquals(action, instance.getLastAction());
     }
 
     /**

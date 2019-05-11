@@ -7,7 +7,7 @@ package clue.action;
 
 import clue.player.AiAdvanced;
 import clue.card.Card;
-import clue.client.gameInstance;
+import clue.client.GameInstance;
 import clue.player.Player;
 import java.util.List;
 
@@ -52,6 +52,7 @@ public class ShowCardAction extends Action {
  */
     @Override
     public void execute() {
+        super.execute();
         if (player instanceof AiAdvanced){
             ((AiAdvanced) player).revealCard(card, whoShowedTheCard);
         }

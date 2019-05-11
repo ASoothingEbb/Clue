@@ -9,7 +9,7 @@ import clue.GameController;
 import clue.player.AiAdvanced;
 import clue.card.Card;
 import clue.card.CardType;
-import clue.client.gameInstance;
+import clue.client.GameInstance;
 import clue.player.Player;
 import java.util.List;
 

@@ -9,6 +9,10 @@ import clue.GameController;
 import clue.GameController.TooManyPlayersException;
 import clue.MissingRoomDuringCreationException;
 import clue.NotEnoughPlayersException;
+import clue.action.AccuseAction;
+import clue.action.Action;
+import clue.action.ShowCardAction;
+import clue.action.SuggestAction;
 import clue.tile.NoSuchRoomException;
 import clue.tile.NoSuchTileException;
 import java.io.File;
@@ -19,6 +23,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import javafx.application.Application;
@@ -32,6 +37,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -149,6 +155,9 @@ public class ClueClient extends Application {
         MenuItem createGameButton = new MenuItem("Play", avenirTitle);
         createGameButton.setOnMouseClicked(e -> startGameScene(stage));
         
+        MenuItem AiVsAiButton = new MenuItem("AI vs AI", avenirTitle);
+        AiVsAiButton.setOnMouseClicked(e -> startAIGameScene(stage));
+        
         MenuItem howToPlayButton = new MenuItem("How To Play", avenirTitle);
         howToPlayButton.setOnMouseClicked(e -> howToPlayScene(stage));
         
@@ -158,7 +167,7 @@ public class ClueClient extends Application {
         MenuItem settingsButton = new MenuItem("Settings", avenirTitle);
         settingsButton.setOnMouseClicked(e -> settingScene(stage));
 
-         menuOptions.getChildren().addAll(createGameButton, howToPlayButton, boardCreator, settingsButton);
+         menuOptions.getChildren().addAll(createGameButton, AiVsAiButton, howToPlayButton, boardCreator, settingsButton);
     }
     
     /**
@@ -173,9 +182,212 @@ public class ClueClient extends Application {
         editor.startEditor(stage);
     }
     
+    private void startAIGameScene(Stage stage) {
+        numberOfAIs = 2;
+        BorderPane alignmentPane = new BorderPane();
+        alignmentPane.setBackground(greenFill);
+        
+        GridPane AIStartGameOptions = new GridPane();
+        AIStartGameOptions.setAlignment(Pos.CENTER);
+        AIStartGameOptions.setBackground(greenFill);
+        
+        alignmentPane.setCenter(AIStartGameOptions);
+        
+        // Scene title
+        Label startGameTitle = getLabel("Create AI vs AI game", avenirTitle);
+        
+        Label numberOfAILabel = getLabel("Number of AIs", avenirNormal);
+        
+        HBox AIs = new HBox();
+        AIs.setAlignment(Pos.CENTER);
+        
+        MenuItem AIsNumber = new MenuItem("2", avenirTitle);
+        AIsNumber.setActiveColor(Color.GREY);
+        
+        MenuItem minusAI = new MenuItem("-", avenirTitle);
+        minusAI.setPadding(new Insets(0, 5, 0, 0));
+        minusAI.setBackgroundColor(Color.rgb(7, 80, 2));
+        minusAI.setMinSize(15, 15);
+        minusAI.setOnMouseClicked(e -> {
+            if (numberOfAIs > 2) {
+                updateNumberOfAIs(false, AIsNumber);
+            }
+        });
+        
+        MenuItem addAI = new MenuItem("+", avenirTitle);
+        addAI.setOnMouseClicked(e -> {
+            if (numberOfAIs < 6) {
+                updateNumberOfAIs(true, AIsNumber);
+            }
+        });
+        
+        AIs.getChildren().addAll(minusAI, AIsNumber, addAI);
+        
+        GameInstance game = new GameInstance();
+        
+        MenuItem startGameButton = new MenuItem("Start Game", avenirTitle);
+        startGameButton.setOnMouseClicked(e -> {
+            String doorFile = "resources/archersAvenueDoors.csv";
+            String tileFile = "resources/archersAvenueTiles.csv";
+            try {
+                GameController gameController = new GameController(0, numberOfAIs, tileFile, doorFile);
+                stage.hide();
+                stage.setScene(prevScene);
+                DisplayAIGameLog(stage, gameController);
+            } catch(TooManyPlayersException | MissingRoomDuringCreationException | NoSuchRoomException | NoSuchTileException ex) {
+                System.out.println("Ice Cream Machine BROKE");
+            } catch(NotEnoughPlayersException ex) {
+                Prompt playerPrompt = new Prompt("Not Enough Players");
+                playerPrompt.setLabelTitle("Start Game Error");
+                playerPrompt.showAndWait();    
+            }
+            
+        });
+
+        // Return to menu
+        MenuItem returnButton = new MenuItem("Back", avenirTitle);
+        returnButton.setOnMouseClicked(e -> {
+            stage.setScene(prevScene);
+            numberOfAIs = 0;
+         });
+        
+        AIStartGameOptions.add(startGameTitle, 0, 0, 2, 1);
+        GridPane.setHalignment(startGameTitle, HPos.CENTER);
+        
+        AIStartGameOptions.add(numberOfAILabel, 0, 1);
+        GridPane.setHalignment(numberOfAILabel, HPos.CENTER);
+        
+        AIStartGameOptions.add(AIs, 1, 1);
+        GridPane.setMargin(AIs, new Insets(0, 0, 0, 10));
+        
+        AIStartGameOptions.add(startGameButton, 0, 2, 2, 1);
+        GridPane.setHalignment(startGameButton, HPos.CENTER);
+        
+        alignmentPane.setBottom(returnButton);
+        BorderPane.setMargin(returnButton, new Insets(0,0,10,20));
+        
+        Scene scene = new Scene(alignmentPane, width, height);
+        prevScene = stage.getScene();
+        stage.setScene(scene);
+    }
+    
+    private void DisplayAIGameLog(Stage stage, GameController gameController) {
+        HashMap<String, String> CardNameMap = new HashMap<>();
+        
+        CardNameMap.put("character0", "Miss Scarlet");
+        CardNameMap.put("character1", "Colonel Mustard");
+        CardNameMap.put("character2", "Mrs White");
+        CardNameMap.put("character3", "Reverend Green");
+        CardNameMap.put("character4", "Mrs Peacock");
+        CardNameMap.put("character5", "Professor Plum");
+        
+        CardNameMap.put("weapon0", "Candlestick");
+        CardNameMap.put("weapon1", "Dagger");
+        CardNameMap.put("weapon2", "Lead Pipe");
+        CardNameMap.put("weapon3", "Revolver");
+        CardNameMap.put("weapon4", "Rope");
+        CardNameMap.put("weapon5", "Spanner");
+        
+        CardNameMap.put("room0", "Study");
+        CardNameMap.put("room1", "Hall");
+        CardNameMap.put("room2", "Lounge");
+        CardNameMap.put("room3", "Library");
+        CardNameMap.put("room4", "Billard Room");
+        CardNameMap.put("room5", "Dining Room");
+        CardNameMap.put("room6", "Conservatory");
+        CardNameMap.put("room7", "Ball Room");
+        CardNameMap.put("room8", "Kitchen");
+        
+        VBox gameLog = new VBox();
+        gameLog.setPadding(new Insets(5, 10, 0, 10));
+        gameLog.setBackground(greenFill);
+        gameLog.setAlignment(Pos.CENTER);
+        
+        Label historyLabel = getLabel("History", avenirTitle); 
+        
+        TextArea history = new TextArea();
+        history.setPrefRowCount(30);
+        history.setPrefColumnCount(30);
+        history.setWrapText(true);
+        history.setFont(avenirNormal);
+        history.setStyle("-fx-control-inner-background: #fff2ab;");
+        history.setEditable(false);
+        
+        List<Action> log = gameController.getActionLog();
+
+        for (Action action: log) {
+            StringBuilder message = new StringBuilder();     
+            switch (action.getActionType()) {
+                case ACCUSATION:
+                    int accuser = ((AccuseAction) action).getPlayer().getId();
+                    final int[] cards = ((AccuseAction) action).getAccusationCards();
+                    message.append(CardNameMap.get("character" + accuser));
+                    message.append(" accused ");
+                    message.append(CardNameMap.get("character" + cards[0]));
+                    message.append(" of murder in the ");
+                    message.append(CardNameMap.get("room" + cards[2]));
+                    message.append(" using the ");
+                    message.append(CardNameMap.get("weapon" + cards[1]));
+                    message.append("\n");
+                    history.appendText("--------------------\n");
+                    history.appendText(message.toString());
+                    break;
+                case SHOWCARD:
+                    int suggestee = ((ShowCardAction) action).getWhoShowedTheCard().getId();
+                    int suggester = ((ShowCardAction) action).getPlayer().getId();
+                    message.append(CardNameMap.get("character" + suggestee));
+                    message.append(" showed a card to ");
+                    message.append(CardNameMap.get("character" + suggester));
+                    message.append("\n");
+                    history.appendText("--------------------\n");
+                    history.appendText(message.toString());
+                    break;
+                case SUGGEST:
+                    SuggestAction suggestedAction = ((SuggestAction) action);
+                    message.append(CardNameMap.get("character" + suggestedAction.getPlayer().getId()));
+                    message.append(" suggested ");
+                    message.append(CardNameMap.get("character" + suggestedAction.getPersonCard().getId()));
+                    message.append(" of the murder in the ");
+                    message.append(CardNameMap.get("room" + suggestedAction.getRoomCard().getId()));
+                    message.append(" using the ");
+                    message.append(CardNameMap.get("weapon" + suggestedAction.getWeaponCard().getId()));
+                    message.append("\n");
+                    history.appendText("--------------------\n");
+                    history.appendText(message.toString());
+                    break;
+                case SHOWCARDS:
+                    
+                    break;
+                default:
+                    break;
+            }
+        }
+        
+        StringBuilder winner = new StringBuilder();
+        int winningPlayer = gameController.getWinner();
+        if (winningPlayer == -1) {
+            winner.append("No one won");
+            winner.append("\n");
+        } else {
+            winner.append(CardNameMap.get("character" + winningPlayer));
+            winner.append(" accused correctly and won!!!");
+            winner.append("\n");
+        }
+        history.appendText("--------------------\n");
+        history.appendText(winner.toString());
+        
+        MenuItem backButton = new MenuItem("Back", avenirTitle);
+        backButton.setOnMouseClicked(e -> stage.setScene(prevScene));
+        
+        gameLog.getChildren().addAll(historyLabel, history, backButton);
+        
+        Scene scene = new Scene(gameLog, width, height);
+        stage.setScene(scene);
+        stage.show();
+    }
     
     /**
-     * Creates the gameInstance and passes the necessary parameters.
+     * Creates the GameInstance and passes the necessary parameters.
      * @param stage parent stage
      */
     private void startGameScene(Stage stage) {
@@ -259,7 +471,7 @@ public class ClueClient extends Application {
         maps.setVisibleRowCount(8);
         maps.setValue("archersAvenue");
             
-        gameInstance game = new gameInstance();
+        GameInstance game = new GameInstance();
         
         MenuItem startGameButton = new MenuItem("Start Game", avenirTitle);
         startGameButton.setOnMouseClicked(e -> {
@@ -375,18 +587,36 @@ public class ClueClient extends Application {
      * @param stage parent stage
      */
     private void howToPlayScene(Stage stage) {
-        GridPane howToPlayLayout = new GridPane();
+        VBox howToPlayLayout = new VBox();
+        howToPlayLayout.setPadding(new Insets(50));
         howToPlayLayout.setAlignment(Pos.CENTER);
         howToPlayLayout.setBackground(greenFill);
         
         Label howToPlayTitle = getLabel("How To Play", avenirTitle);
         
+        StringBuilder HowToPlayText = new StringBuilder();
+        HowToPlayText.append("Rules of Clue:\n");
+        HowToPlayText.append("The character Miss Scarlet (Player 1) takes the first turn.\n");
+        HowToPlayText.append("Players can move only horizontally or vertically, never diagonally.\n");
+        HowToPlayText.append("Players can't move through a yellow tile occupied by another player, but multiple players can be in the same room.\n");
+        HowToPlayText.append("Players can't enter a space or doorway they have already entered on the same turn.\n");
+        HowToPlayText.append("Players can move through a doorway to enter a room, but this ends their movement (can still suggest/accuse).\n");
+        HowToPlayText.append("Players who start their turn in a room with a secret passage can use the secret passage instead of moving. This will put their character in another room across the board, ending their movement (can still suggest/accuse).\n");
+        HowToPlayText.append("Players can only suggest/accuse inside a room.\n");
+        HowToPlayText.append("Players can suggest their own cards.\n");
+        HowToPlayText.append("Players can suggest and then accuse on the same turn.\n");
+        HowToPlayText.append("Wrong accusations means the player who accused is out of the game.\n");
+        HowToPlayText.append("If your character is suggested by another player, you will be moved the room suggested.\n");
+        HowToPlayText.append("If your character lands on an intrigue tile, the special bonus must be used on that turn.\n");
+        
+        Label HowToPlay = getLabel(HowToPlayText.toString(), avenirNormal);
+        HowToPlay.setWrapText(true);
+        
         MenuItem returnButton = new MenuItem("Back", avenirTitle);
         returnButton.setOnMouseClicked(e -> stage.setScene(prevScene));
         
-        howToPlayLayout.add(howToPlayTitle, 0, 0);
-        howToPlayLayout.add(returnButton, 0, 1);
-
+        howToPlayLayout.getChildren().addAll(howToPlayTitle, HowToPlay, returnButton);
+        
         Scene scene = new Scene(howToPlayLayout, width, height);
         prevScene = stage.getScene();
         stage.setScene(scene);

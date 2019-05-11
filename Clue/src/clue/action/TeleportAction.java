@@ -8,7 +8,7 @@ package clue.action;
 import clue.player.AiAdvanced;
 import clue.player.Player;
 import clue.card.TeleportIntrigue;
-import clue.client.gameInstance;
+import clue.client.GameInstance;
 import clue.tile.Tile;
 import clue.tile.TileOccupiedException;
 
@@ -38,7 +38,6 @@ public class TeleportAction extends Action {
      */
     @Override
     public void execute() {
-        player.removeIntrigue((TeleportIntrigue)card);
         if (player instanceof AiAdvanced){
             ((AiAdvanced) player).respondToTeleport(this);
 

@@ -155,7 +155,7 @@ public class GameState {
      *
      * @return last Action update
      */
-    public Action getAction() {
+    public Action getLastAction() {
         return this.lastAction;
     }
 

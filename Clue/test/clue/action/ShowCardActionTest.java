@@ -47,7 +47,7 @@ public class ShowCardActionTest {
     @Test
     public void testExecute() {
         System.out.println("execute");
-        ShowCardAction instance = new ShowCardAction(new AIPlayer(0),new CardImpl(),new Player(1));
+        ShowCardAction instance = new ShowCardAction(new Player(0),new CardImpl(),new Player(1));
         instance.execute();
         assertTrue(instance.result);
     }

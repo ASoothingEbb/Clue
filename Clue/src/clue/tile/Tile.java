@@ -13,9 +13,9 @@ import java.util.List;
  * @author slb35
  */
 public class Tile {
-    public boolean special;
+    protected boolean special;
     private List<Tile> adjacentTiles;
-    public boolean room;
+    protected boolean room;
     private boolean occupied;
     private int x;
     private int y;

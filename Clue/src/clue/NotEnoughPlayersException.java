@@ -6,7 +6,7 @@
 package clue;
 
 /**
- *
+ * Exception for when a GameController refused to start the game because starting player count was less than 2
  * @author Malter
  */
 public class NotEnoughPlayersException extends Exception {
