@@ -9,7 +9,8 @@ We also allow players to design the layout of their maps using our map builder.
 
 #Archers Avenue game board
 
-The game is set on Archers Avenue. A murder has taken place and it is up to the players to find out the murderer, murder location and murder weapon.
+The game is set on Archers Avenue. 
+A murder has taken place and it is up to the players to find out the murderer, murder location and murder weapon.
 
 ![Archers Avenue game board](https://github.com/ASoothingEbb/Clue/blob/master/images/ArchersAvenueGame.PNG)
 
