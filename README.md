@@ -27,6 +27,7 @@ Once a player thinks they know the correct information, they can accuse the murd
 
 
 Accusations cannot be refuted and incorrect accusations cause a player to be removed from play. Correct accusations lead to victory of the game.
+
 -Player making incorrect Accusation
 
 ![Accusation](https://github.com/ASoothingEbb/Clue/blob/master/images/Accusation.PNG)
