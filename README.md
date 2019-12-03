@@ -8,5 +8,5 @@ Our version of Clue has intrigue tiles which cause special effects to the player
 We also allow players to design the layout of their maps using our map builder.
 
 
-![Archers Avenue game](https://github.com/ASoothingEbb/Clue/images/ArchersAvenueGame.png)
-![Custom board maker](https://github.com/ASoothingEbb/Clue/images/MapBuilder.png)
+![Archers Avenue game](https://github.com/ASoothingEbb/Clue/blob/master/images/ArchersAvenueGame.PNG)
+![Custom board maker](https://github.com/ASoothingEbb/Clue/blob/master/images/MapBuilder.PNG)
