@@ -7,7 +7,7 @@ Our version of Clue has intrigue tiles which cause special effects to the player
 
 We also allow players to design the layout of their maps using our map builder.
 
-#Archers Avenue game board
+# Archers Avenue game board
 
 The game is set on Archers Avenue. 
 A murder has taken place and it is up to the players to find out the murderer, murder location and murder weapon.
@@ -35,6 +35,6 @@ Accusations cannot be refuted and incorrect accusations cause a player to be rem
 
 
 
-#Custom board maker
+# Custom board maker
 
 ![Custom board maker](https://github.com/ASoothingEbb/Clue/blob/master/images/MapBuilder.PNG)
